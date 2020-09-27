@@ -1,0 +1,13 @@
+{
+  "config": "Config",
+  "save": "Save",
+  "Load": "Parsing",
+  "Selct": "Select",
+  "UnSelectAll": "UnSelect All",
+  "Clear": "Clear",
+  "error": "!!!",
+  "createAt":"createAt",
+  "updateAt":"updateAt",
+  "file":"file",
+  "action":"action"
+}

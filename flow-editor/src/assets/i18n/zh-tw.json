@@ -1,0 +1,13 @@
+{
+  "config": "設定",
+  "save": "存檔",
+  "Load": "解析",
+  "Selct": "選取",
+  "UnSelectAll": "全不選",
+  "Clear": "清除",
+  "error": "!!!",
+  "createAt": "createAt",
+  "updateAt": "updateAt",
+  "file":"file",
+  "action":"action"
+}

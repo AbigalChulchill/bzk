@@ -1,0 +1,16 @@
+version: '2'
+services:
+
+  bzkflow:
+    image: net.bzk/bzkflow
+    ports: 
+      - "9202:8080"
+  flow-gists:
+    image: net.bzk/flow-gists
+    ports: 
+      - "9203:8080"      
+  
+        
+        
+        
+        
