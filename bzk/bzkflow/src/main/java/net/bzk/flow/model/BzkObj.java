@@ -3,6 +3,7 @@ package net.bzk.flow.model;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import lombok.Data;
+import net.bzk.flow.Constant;
 import net.bzk.infrastructure.convert.OType;
 
 @Data
@@ -13,7 +14,7 @@ public class BzkObj implements OType {
 
 	public BzkObj() {
 		clazz = this.getClass().getName();
-		uid = RandomStringUtils.randomAlphanumeric(32);
+		uid = RandomStringUtils.randomAlphanumeric(Constant.MODEL_UID_SIZE);
 	}
 
 }

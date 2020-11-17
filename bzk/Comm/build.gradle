@@ -17,6 +17,12 @@ dependencies {
 	}*/
 	implementation 'org.apache.commons:commons-crypto:1.0.0'
 	implementation 'commons-io:commons-io:2.6'
+	implementation 'org.json:json:20200518'
+	
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+	
 	
 	
 }	

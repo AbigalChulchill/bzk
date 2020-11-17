@@ -1,0 +1,33 @@
+<div class="container-fluid row">
+
+  <div class="card col-2">
+    <div class="card-body">
+      <button type="button" class="btn btn-primary container-fluid">Primary</button>
+      <button type="button" class="btn btn-secondary container-fluid">Secondary</button>
+      <button type="button" class="btn btn-success container-fluid">Success</button>
+      <button type="button" class="btn btn-danger container-fluid">Danger</button>
+    </div>
+  </div>
+
+
+  <div class="card " [ngClass]="getWidthClass()">
+    <div class="card-header">
+      Flow Vars
+    </div>
+    <app-json-editor [data]="ReadJsonProvide.gen(data.flowVar)"></app-json-editor>
+  </div>
+
+  <div class="card " [ngClass]="getWidthClass()">
+    <div class="card-header">
+      Box Vars
+    </div>
+    <app-json-editor [data]="ReadJsonProvide.gen(data.boxVar)"></app-json-editor>
+  </div>
+
+  <ul class="card  col-2" *ngIf="isAction()">
+    <h6 *ngFor="let vv of toAction().varVals" class="badge badge-info"><span
+        class="badge badge-secondary">{{vv.key}}</span> {{vv.val}} <span class="badge badge-secondary">{{vv.lv}}</span>
+    </h6>
+  </ul>
+
+</div>

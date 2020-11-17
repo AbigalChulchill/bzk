@@ -8,9 +8,4 @@ export class Uids {
   public runActionUid: string;
 }
 
-export enum VarLv {
 
-  not_specify, run_flow, run_box
-
-
-}

@@ -1,4 +1,6 @@
-import { Gist, GistFile, HttpClientService } from './http-client.service';
+import { VarsStore } from './../dto/vars-store';
+
+import { HttpClientService } from './http-client.service';
 import { Injectable } from '@angular/core';
 import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -7,13 +9,15 @@ import { UrlParamsService } from './url-params.service';
 import { Router, NavigationEnd } from '@angular/router';
 import { StringUtils } from '../utils/string-utils';
 import { Flow } from '../model/flow';
+import { Gist, GistFile } from '../dto/gist';
+import { Constant } from '../infrastructure/constant';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GithubService implements HttpInterceptor {
 
-  public static KEY_MAIN_GIST_EXTENSION = '.bzk';
+
   public static KEY_TOKE = 'GitHubToken';
   public static KEY_PAGE = 'GitHubPostPage';
 
@@ -33,13 +37,7 @@ export class GithubService implements HttpInterceptor {
 
   }
 
-  public static getMainFile(g: Gist): GistFile {
-    const ks = Object.keys(g.files);
-    for (const k of ks) {
-      if (k.endsWith(GithubService.KEY_MAIN_GIST_EXTENSION)) { return g.files[k]; }
-    }
-    return null;
-  }
+
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     console.log('intercept:' + req);
@@ -78,32 +76,51 @@ export class GithubService implements HttpInterceptor {
     window.location.href = this.genAuthLink();
   }
 
-  public listGits(): Observable<Array<Gist>> {
+  public async listGits(): Promise<Array<Gist>> {
     return this.httpClient.listGits();
   }
 
   public async listBzkGits(): Promise<Array<Gist>> {
-    const gits = await this.listGits().toPromise();
-    const ans = gits.filter(g => {
-      return GithubService.getMainFile(g);
+    const gits = await this.listGits();
+    const fs = gits.filter(g => {
+      return g.getMainFile();
     });
+    const ans = new Array<Gist>();
+    for (const g of fs) {
+      ans.push(await this.getGist(g.id));
+    }
     return ans;
   }
 
-  public getGist(id: string): Observable<Gist> {
+  public getGist(id: string): Promise<Gist> {
     return this.httpClient.getGist(id);
   }
 
 
-  public async pushModel(f: Flow): Promise<void> {
-
-    const gfs = new Array<GistFile>();
-    gfs.push({
-      filename: f.name + GithubService.KEY_MAIN_GIST_EXTENSION,
-      content: JSON.stringify(f, null, 4)
-    });
-    const fo = await this.httpClient.createGits(false, 'it`s Bzk', gfs).toPromise();
+  public async createModel(f: Flow, vs: VarsStore): Promise<Gist> {
+    const fo = await this.httpClient.createGits(false, 'it`s Bzk', this.genFiles(f, vs)).toPromise();
     console.log('f:' + console.log(fo));
+    return fo;
+  }
+
+  public async updateModel(id: string, f: Flow, vs: VarsStore): Promise<Gist> {
+    const fo = await this.httpClient.updateGist(id, this.genFiles(f, vs)).toPromise();
+    return fo;
+  }
+
+  public genFiles(f: Flow, vs: VarsStore): Array<GistFile> {
+    const gfs = new Array<GistFile>();
+    const gf = new GistFile();
+    gf.filename = f.uid + Gist.KEY_MAIN_GIST_EXTENSION;
+    gf.content = JSON.stringify(f, null, 4);
+    gfs.push(gf);
+
+    const vsf = new GistFile();
+    vsf.filename = Constant.VARS_STORE_NAME;
+    vsf.content = JSON.stringify(vs, null, 4);
+    gfs.push(vsf);
+
+    return gfs;
   }
 
 }

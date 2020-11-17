@@ -7,75 +7,64 @@ import javax.inject.Inject;
 import org.springframework.stereotype.Service;
 
 import net.bzk.flow.api.dto.DtoVarQuery;
+import net.bzk.flow.model.Condition.PlainVal;
 import net.bzk.flow.model.Condition.RefVal;
-import net.bzk.flow.model.Condition.TxtVal;
 import net.bzk.flow.model.Condition.Val;
-import net.bzk.flow.model.var.BaseVar;
 import net.bzk.flow.model.var.VarLv;
+import net.bzk.flow.model.var.VarMap;
+import net.bzk.flow.model.var.VarMap.VarProvider;
+import net.bzk.flow.model.var.VarMap.VarsDao;
 import net.bzk.flow.model.var.VarVal;
 import net.bzk.flow.model.var.VarValSet;
 import net.bzk.flow.run.action.ActionCall.Uids;
 import net.bzk.flow.run.dao.RunBoxDao;
 import net.bzk.flow.run.dao.RunFlowDao;
-import net.bzk.flow.run.flow.BoxRuner;
-import net.bzk.flow.run.flow.FlowRuner;
 import net.bzk.infrastructure.ex.BzkRuntimeException;
 
 @Service
 public class RunVarService {
+
 	@Inject
 	private RunBoxDao boxDao;
 	@Inject
 	private RunFlowDao flowDao;
 
-	public Optional<String> findByQuery(DtoVarQuery q) {
+	public Optional<Object> findByQuery(DtoVarQuery q) {
 		VarLv p = q.getPoint();
-		switch (p) {
+		return findValVal(p, q.getLvUid(), q.getKey());
+	}
+
+	public VarsDao getDao(VarLv l) {
+		switch (l) {
 		case not_specify:
 		case run_box:
-			return findByRunBox(q.getUids().getRunBoxUid(), q.getKey());
+			return boxDao;
 		case run_flow:
-			return findByRunFlow(q.getUids().getRunFlowUid(), q.getKey());
+			return flowDao;
 
 		}
-		throw new BzkRuntimeException("Not Support the point:" + q.getPoint());
-
+		throw new BzkRuntimeException("Not Support the lv:" + l);
 	}
 
-	public Optional<String> findByRunBox(String rboxUid, String key) {
-		BoxRuner br = boxDao.getByUid(rboxUid);
-		BaseVar vs = br.getVars();
+	public VarProvider getProvider(VarLv l, String uid) {
+		VarsDao dao = getDao(l);
+		return dao.getByUid(uid);
+	}
+
+	public Optional<Object> findValVal(VarLv l, String uid, String key) {
+		VarMap vs = getProvider(l, uid).getVars();
 		if (!vs.containsKey(key))
 			return Optional.empty();
 		return Optional.of(vs.get(key) + "");
 	}
 
-	public Optional<String> findByRunFlow(String fUid, String key) {
-		FlowRuner fr = flowDao.getByUid(fUid);
-		BaseVar vs = fr.getVars();
-		if (!vs.containsKey(key))
-			return Optional.empty();
-		return Optional.of(vs.get(key) + "");
-	}
-
-	public void putByRunBox(String uid, String key, String val) {
-		BoxRuner fr = boxDao.getByUid(uid);
-		BaseVar vs = fr.getVars();
-		vs.putByPath(key, val);
+	public VarMap getFlowVarMap(String uid) {
+		return getProvider(VarLv.run_flow, uid).getVars();
 	}
 
 	public void putVarVal(Uids uids, VarVal val) {
-		switch (val.getLv()) {
-		case run_box:
-			putByRunBox(uids.getRunBoxUid(), val.getKey(), val.getVal());
-			return;
-		case run_flow:
-			putByRunFlow(uids.getRunFlowUid(), val.getKey(), val.getVal());
-			return;
-		case not_specify:
-			throw new BzkRuntimeException("don`t used not_specify");
-		}
-		throw new BzkRuntimeException("not support lv:" + val.getLv());
+		VarMap vs = getProvider(val.getLv(), uids.getLvUid(val.getLv())).getVars();
+		vs.putByPath(val.getKey(), val.getVal());
 	}
 
 	public void putVarVals(Uids uids, VarValSet vvs) {
@@ -84,16 +73,10 @@ public class RunVarService {
 		}
 	}
 
-	public void putByRunFlow(String uid, String key, String val) {
-		FlowRuner fr = flowDao.getByUid(uid);
-		BaseVar vs = fr.getVars();
-		vs.putByPath(key, val);
-	}
-
-	public String getByVal(Val v) {
-		if (v instanceof TxtVal) {
-			TxtVal ov = (TxtVal) v;
-			return ov.getVal();
+	public Object getByVal(Val v) {
+		if (v instanceof PlainVal) {
+			PlainVal ov = (PlainVal) v;
+			return ov.getRealVal();
 		}
 		if (v instanceof RefVal) {
 			RefVal rv = (RefVal) v;

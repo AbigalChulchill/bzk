@@ -9,5 +9,10 @@
   "createAt": "createAt",
   "updateAt": "updateAt",
   "file":"file",
-  "action":"action"
+  "action":"action",
+  "SaveNewOne":"另存新檔",
+  "Save":"存檔",
+  "publish":"發佈",
+  "entry":"進入方式",
+  "Unfold":"展開 >"
 }

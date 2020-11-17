@@ -9,5 +9,10 @@
   "createAt":"createAt",
   "updateAt":"updateAt",
   "file":"file",
-  "action":"action"
+  "action":"action",
+  "SaveNewOne":"SaveNewOne",
+  "Save":"Save",
+  "publish":"publish",
+  "entry":"entry",
+  "Unfold":"Unfold >"
 }

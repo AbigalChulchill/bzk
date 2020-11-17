@@ -22,7 +22,7 @@ public class Entry implements OType {
 	public static class FixedRateEntry extends Entry {
 
 		private long period;
-		private ChronoUnit initUnit;
+		private ChronoUnit unit;
 		private long initialDelay; 
 		
 	}

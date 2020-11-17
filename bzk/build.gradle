@@ -82,6 +82,7 @@ project(':flow-gists') {
 project(':bzkflow') {
   dependencies {
   	implementation project(':Comm')
+  	implementation project(':WsSDK')
 
   }
 }
@@ -89,7 +90,12 @@ project(':bzkflow') {
 project(':BzkDataSDK') {
   dependencies {
   	implementation project(':Comm')
+  }
+}
 
+project(':WsSDK') {
+  dependencies {
+  	implementation project(':Comm')
   }
 }
 

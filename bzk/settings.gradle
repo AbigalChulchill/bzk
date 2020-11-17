@@ -4,4 +4,4 @@ include 'bzksrv'
 include 'Comm'
 include 'BzkDataSDK'
 include 'flow-gists'
-
+include 'WsSDK'

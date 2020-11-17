@@ -16,7 +16,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import net.bzk.infrastructure.CommUtils;
 import net.bzk.infrastructure.ex.BzkRuntimeException;
 
-
 @SuppressWarnings("serial")
 public class JsonMap extends ConcurrentHashMap<String, Object> {
 
@@ -42,7 +41,7 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
 	public boolean isJsonMap(String k) {
 		return get(k) instanceof Map;
 	}
-	
+
 	public JsonMap setPathDot(String dot) {
 		pathDot = dot;
 		return this;
@@ -81,9 +80,9 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
 	public String hashUid() {
 		Set<String> set = new TreeSet<String>(keySet());
 		StringBuilder sb = new StringBuilder();
-		set.forEach(k->sb.append("@"+k+":"+get(k)+"@"));
-		String sha1= CommUtils.sha1(sb.toString());
-		int count= Math.min(16,  sha1.length());
+		set.forEach(k -> sb.append("@" + k + ":" + get(k) + "@"));
+		String sha1 = CommUtils.sha1(sb.toString());
+		int count = Math.min(16, sha1.length());
 		return sha1.substring(0, count);
 	}
 
@@ -118,6 +117,9 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private Object findByPath(String path, boolean createPath, ChildAction<Map, String> ca) {
 		String[] ps = path.split(pathDot);
+		if (ps.length <= 0) {
+			return ca.accept(this, path);
+		}
 		Map jm = this;
 		int i = 0;
 		while (i < ps.length - 1) {

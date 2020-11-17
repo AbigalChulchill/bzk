@@ -22,8 +22,8 @@ public class ConditionTxter extends Conditioner<ConditionTxt> {
 	public boolean checkSelf() {
 		Val l = getModel().getLeft();
 		Val r = getModel().getRight();
-		String ls = varService.getByVal(l);
-		String rs = varService.getByVal(r);
+		String ls = varService.getByVal(l) + "";
+		String rs = varService.getByVal(r) + "";
 		switch (getModel().getType()) {
 		case equal:
 			return StringUtils.equals(ls, rs);

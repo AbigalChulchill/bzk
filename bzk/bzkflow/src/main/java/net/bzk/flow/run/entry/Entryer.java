@@ -9,6 +9,7 @@ import net.bzk.flow.model.Entry;
 
 public abstract  class Entryer<T extends Entry> implements Runnable  {
 
+	@Getter
 	@Inject
 	private TaskScheduler scheduler;
 	@Getter

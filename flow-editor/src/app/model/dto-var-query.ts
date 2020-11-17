@@ -1,4 +1,5 @@
-import { Uids, VarLv } from './uids';
+import { VarLv } from './pojo/enums';
+import { Uids } from './uids';
 
 export class DtoVarQuery {
 

@@ -1,5 +1,6 @@
 import { DtoVarQuery } from './dto-var-query';
 
+
 export class Condition {
 
   public clazz: string;
@@ -11,14 +12,14 @@ export class Condition {
 
 export enum ConKind {
 
-  NONE, AND, OR
+  NONE = 'NONE', AND = 'AND', OR = 'OR'
 
 }
 
 
 
 export enum NumCheckType {
-  equal, greater, greater_equal, lessthan, lessthan_equal
+  equal = 'equal', greater = 'greater', greater_equal = 'greater_equal', lessthan = 'lessthan', lessthan_equal = 'lessthan_equal'
 }
 
 export class Val {

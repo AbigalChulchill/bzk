@@ -23,6 +23,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 
 import net.bzk.flow.model.parse.OTypeDeserializer;
 import net.bzk.infrastructure.CommUtils;
+import net.bzk.infrastructure.JsonUtils;
 import net.bzk.infrastructure.convert.OType;
 
 
@@ -57,7 +58,8 @@ public class BzkflowApplication {
 		 
 		 Reflections reflections = new Reflections("net.bzk");    
 		 Set<Class<? extends OType>> classes = reflections.getSubTypesOf(OType.class);
-		 List<Class<? extends OType>> incs = classes.stream().filter(c-> CommUtils.hasChild(c, classes) ).collect(Collectors.toList()); 
+		 List<Class<? extends OType>> incs = classes.stream().filter(c-> CommUtils.hasChild(c, classes) ).collect(Collectors.toList());
+		 CommUtils.pl(JsonUtils.toJson(incs));
 		 for(Class< ? extends OType> c : incs) {
 			 module.addDeserializer(c, new OTypeDeserializer(ans));
 		 }

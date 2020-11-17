@@ -1,18 +1,21 @@
 import { PropInfo, PropType } from '../utils/prop-utils';
 
-export class BzkObj {
+export class OType {
   @PropInfo({
     title: 'clazz',
-    titleI18nKey: 'clazz',
     type: PropType.Label
   })
-  public clazz: string;
+  public clazz = '';
+}
+
+export class BzkObj extends OType {
+
 
   @PropInfo({
     title: 'uid',
-    titleI18nKey: 'uid',
     type: PropType.Label
   })
-  public uid: string;
+  public uid = '';
+
 
 }

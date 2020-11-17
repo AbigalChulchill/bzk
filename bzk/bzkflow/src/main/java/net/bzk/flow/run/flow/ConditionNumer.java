@@ -39,8 +39,8 @@ public class ConditionNumer extends Conditioner<ConditionNum> {
 	}
 
 	private double parse(Val v) {
-		String vs = varService.getByVal(v);
-		return Double.parseDouble(vs);
+		Object vs = varService.getByVal(v);
+		return Double.parseDouble(vs.toString());
 	}
 
 }

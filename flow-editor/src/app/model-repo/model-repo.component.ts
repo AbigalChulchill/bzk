@@ -1,9 +1,9 @@
 import { Flow } from './../model/flow';
-import { ModifyingFlowService } from './../service/modifying-flow.service';
+import { LoadSource, ModifyingFlowService } from './../service/modifying-flow.service';
 import { GithubService } from './../service/github.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Gist, GistFile } from '../service/http-client.service';
+import { Gist, GistFile } from '../dto/gist';
 
 @Component({
   selector: 'app-model-repo',
@@ -14,7 +14,7 @@ export class ModelRepoComponent implements OnInit {
 
 
   public devGitsJson: string;
-  public bzkGists = new Array<GistRow>();;
+  public bzkGists = new Array<GistRow>();
 
   constructor(
     public githubService: GithubService,
@@ -46,11 +46,10 @@ export class ModelRepoComponent implements OnInit {
   }
 
   public async onFileEdit(gr: GistRow): Promise<void> {
-    const lg = await this.githubService.getGist(gr.gist.id).toPromise();
-    const gmf = GithubService.getMainFile(lg);
-    const f: Flow = JSON.parse(gmf.content);
-
-    this.modifyingFlow.setTarget(f);
+    this.modifyingFlow.setTarget(gr.gist.getMainFile().convertModel(), {
+      id: gr.gist.id,
+      source: LoadSource.Gist
+    });
     this.router.navigate(['model/design']);
   }
 
@@ -68,11 +67,11 @@ export class GistRow {
   }
 
   public getMainFile(): GistFile {
-    return GithubService.getMainFile(this.gist);
+    return this.gist.getMainFile();
   }
 
   public get name(): string {
-    return GithubService.getMainFile(this.gist).filename.replace(GithubService.KEY_MAIN_GIST_EXTENSION, '');
+    return this.getMainFile().convertModel().name;
   }
 
 

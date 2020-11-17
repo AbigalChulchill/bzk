@@ -19,7 +19,7 @@ public class OTypeDeserializer<T extends OType> extends StdDeserializer<T> {
 	private ObjectMapper mapper;
 
 	public OTypeDeserializer(ObjectMapper m) {
-		super(BzkObj.class);
+		super(OType.class);
 		mapper = m;
 	}
 
@@ -27,10 +27,10 @@ public class OTypeDeserializer<T extends OType> extends StdDeserializer<T> {
 	public T deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
 		try {
 			TreeNode tn = p.readValueAsTree();
-			System.out.println("deserialize:" + tn.toString());
 			TreeNode clzn = tn.get("clazz");
 			String className = clzn.toString().replace("\"", "");
 			Class tc = Class.forName(className);
+			System.out.println("deserialize:" + tn.toString()+"className:"+className);
 			return (T) mapper.readValue(tn.toString(), tc);
 		} catch (ClassNotFoundException e) {
 			throw new BzkRuntimeException();

@@ -1,0 +1,30 @@
+<p>var-store works!</p>
+<mat-accordion>
+  <mat-expansion-panel hideToggle *ngFor="let vp of list">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        {{ vp.key }}
+      </mat-panel-title>
+      <mat-panel-description>
+        This is a summary of the content
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <app-json-editor  [data]="vp"></app-json-editor>
+  </mat-expansion-panel>
+
+
+
+</mat-accordion>
+
+<div class="card container ">
+  <div class="card-body">
+    <h5 class="card-title">建立新的</h5>
+    <div class="input-group mb-3">
+      <input type="text" class="form-control" #varMaoName aria-describedby="button-addon2">
+      <div class="input-group-append">
+        <button class="btn btn-outline-secondary" type="button" id="button-addon2"
+          (click)="create(varMaoName.value)">Create</button>
+      </div>
+    </div>
+  </div>
+</div>

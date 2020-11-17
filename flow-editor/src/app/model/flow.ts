@@ -1,10 +1,10 @@
-import { Condition } from './condition';
-import { Link } from './link';
+import { Box } from './box';
 import { BzkObj } from './bzk-obj';
-import { Action } from './action';
 import { Entry } from './entry';
 import { TimeUnit } from './enums';
-import { PropInfo, PropType } from '../utils/prop-utils';
+import { PropClazz, PropInfo, PropType } from '../utils/prop-utils';
+import { OTypeClass } from '../utils/bzk-utils';
+import { Type } from 'class-transformer';
 
 /*export class BzkObj {
 
@@ -12,19 +12,40 @@ import { PropInfo, PropType } from '../utils/prop-utils';
   public uid: string;
 
 }*/
-
+@OTypeClass({
+  clazz: 'net.bzk.flow.model.Flow'
+})
+@PropClazz({
+  title: 'Flow',
+  exView: 'FlowComponent'
+})
 export class Flow extends BzkObj {
+
 
   @PropInfo({
     title: 'name',
-    titleI18nKey: 'name',
     type: PropType.Text
   })
   public name: string;
+  @Type(() => Box)
   public boxs: Array<Box>;
+  @Type(() => BaseVar)
   public vars = new BaseVar();
+  @PropInfo({
+    title: 'entry',
+    type: PropType.Object
+  })
+  @Type(() => Entry)
   public entry: Entry;
   public threadCfg = new ThreadCfg();
+
+  public getEntryBox(): Box {
+    return this.boxs.find(b => this.entry.boxUid === b.uid);
+  }
+
+  public getBoxByChild(uid: string): Box {
+    return this.boxs.find(b => b.taskSort.includes(uid));
+  }
 
 }
 
@@ -35,18 +56,8 @@ export class ThreadCfg {
   public aliveUnit = TimeUnit.MINUTES;
 }
 
-export class Box extends BzkObj {
-  public actions: Array<Action>;
-  public conditions: Array<Condition>;
-  public links: Array<Link>;
-  public vars: BaseVar;
-  public taskSort: Array<string>;
-}
 
 
-
-
-
-export class BaseVar extends Map<string, object>{
+export class BaseVar extends Object {
 
 }

@@ -15,13 +15,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import net.bzk.flow.model.Action;
+import net.bzk.flow.model.Action.NodejsAction;
 import net.bzk.flow.model.Box;
 import net.bzk.flow.model.Entry;
+import net.bzk.flow.model.Entry.FixedRateEntry;
 import net.bzk.flow.model.Flow;
 import net.bzk.flow.model.Link;
-import net.bzk.flow.model.Action.NodejsAction;
-import net.bzk.flow.model.Entry.FixedRateEntry;
-import net.bzk.infrastructure.CommUtils;
+import net.bzk.infrastructure.JsonUtils;
 
 @SpringBootTest
 public class RunFlowPoolTest {
@@ -32,7 +32,7 @@ public class RunFlowPoolTest {
 	@Test
 	void testCreateByMode() {
 		Flow flowM = genModel();
-		String fmjs = CommUtils.toJson(flowM);
+		String fmjs = JsonUtils.toJson(flowM);
 		System.out.println(fmjs);
 
 	}
@@ -52,7 +52,7 @@ public class RunFlowPoolTest {
 		FixedRateEntry e=new FixedRateEntry();
 		e.setBoxUid(boxUid);
 		e.setInitialDelay(1);
-		e.setInitUnit(ChronoUnit.SECONDS);
+		e.setUnit(ChronoUnit.SECONDS);
 		e.setPeriod(300000);
 		return e;
 	}

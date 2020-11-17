@@ -1,10 +1,11 @@
 package net.bzk.flow.run.dao;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -13,6 +14,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import lombok.Getter;
+import net.bzk.flow.api.dto.RegisteredFlow.RunInfo;
 import net.bzk.flow.model.Flow;
 import net.bzk.flow.run.entry.Entryer;
 import net.bzk.flow.run.flow.FlowRuner;
@@ -49,16 +51,31 @@ public class RunFlowPool {
 				new ThreadPoolExecutor.CallerRunsPolicy());
 	}
 
-	public FlowRuner create() {
-		FlowRuner ans = runFlowDao.create(this,model);
+	public Map<String, FlowRuner> getMap() {
+		return map;
+	}
+
+	public FlowRuner createAndStart() {
+		FlowRuner ans = runFlowDao.create( model);
 		map.put(ans.getUid(), ans);
 		ans.start(threadPool);
 		return ans;
 	}
 
 	private void schedule() {
-		Entryer e = context.getBean(getModel().getEntry().getClazz(), Entryer.class);
-		e.schedule(() -> create());
+		String beanName = getModel().getEntry().getClazz();
+		Entryer e = context.getBean(beanName, Entryer.class);
+		e.init(getModel().getEntry());
+		e.schedule(() -> createAndStart());
+	}
+
+	public List<RunInfo> listRunInfos() {
+		return map.values().stream().map(FlowRuner::getRunInfo).collect(Collectors.toList());
+	}
+
+	public void forceCancelAll() {
+		map.values().forEach(v -> v.getTask().cancel(true));
+
 	}
 
 }

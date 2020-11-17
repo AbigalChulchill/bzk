@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import net.bzk.flow.api.dto.DtoVarQuery;
 import net.bzk.flow.model.var.VarLv;
+import net.bzk.infrastructure.JsonUtils;
 import net.bzk.infrastructure.convert.OType;
 
 @Data
@@ -16,8 +17,8 @@ public class Condition implements OType {
 	}
 
 	private String clazz;
-	private ConKind kind;
-	private Condition next;
+	private ConKind kind = ConKind.NONE;
+	private Condition next ;
 
 	public Condition() {
 		clazz = this.getClass().getName();
@@ -35,13 +36,17 @@ public class Condition implements OType {
 	@Data
 	@EqualsAndHashCode(callSuper = false)
 	public static class RefVal extends Val {
-		private DtoVarQuery query;
+		private DtoVarQuery query = new DtoVarQuery();
 	}
 
 	@Data
 	@EqualsAndHashCode(callSuper = false)
-	public static class TxtVal extends Val {
+	public static class PlainVal extends Val {
 		private String val;
+		
+		public Object getRealVal() {
+			return JsonUtils.stringToValue(val);
+		}
 	}
 
 	@Data

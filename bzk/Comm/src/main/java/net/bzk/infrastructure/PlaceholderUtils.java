@@ -6,17 +6,31 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class PlaceholderUtils {
-	
-	public static List<String> getByTag(String tag,String plain) {
-		String tagr = String.format("%s(.+?)%s", tag,tag);
-		Pattern TAG_REGEX = Pattern.compile(tagr, Pattern.DOTALL);
-	    final List<String> tagValues = new ArrayList<String>();
-	    final Matcher matcher = TAG_REGEX.matcher(plain);
-	    while (matcher.find()) {
-	        tagValues.add(matcher.group(1));
-	    }
-	    return tagValues;
+
+	public static StrPlacer build(String p) {
+		return StrPlacer.build(p);
 	}
-	
+
+	/**
+	 * ${xxx}
+	 * 
+	 * @param txt Hi ${name.var}, how are you? I'm ${namevar2}.test ${!namevar2}.
+	 *            ${~namev.ar2}.
+	 * @return
+	 */
+	public static List<String> listStringSubstitutorKeys(String txt) {
+		return listPlaceHolderKeys(txt, "\\$\\{", "\\}");
+	}
+
+	public static List<String> listPlaceHolderKeys(String txt, String start, String end) {
+		String pex = String.format("%s([\\w . ! ~]*?)%s", start, end);
+		Pattern regx = Pattern.compile(pex, Pattern.DOTALL);
+		final List<String> ans = new ArrayList<String>();
+		final Matcher matcher = regx.matcher(txt);
+		while (matcher.find()) {
+			ans.add(matcher.group(1));
+		}
+		return ans;
+	}
 
 }

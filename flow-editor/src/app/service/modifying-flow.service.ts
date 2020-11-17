@@ -1,41 +1,109 @@
+import { VarsStore } from './../dto/vars-store';
+import { ModelObserve } from './../model/model-observe';
+import { async } from '@angular/core/testing';
+import { LoadingService } from './loading.service';
 import { GithubService } from './github.service';
 import { Flow } from './../model/flow';
 import { Injectable } from '@angular/core';
 import { HttpClientService } from './http-client.service';
 import { plainToClass } from 'class-transformer';
 import { PropUtils } from '../utils/prop-utils';
+import { StringUtils } from '../utils/string-utils';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ModifyingFlowService {
 
-
-  public model: Flow;
+  public static KEY_LAST = 'last-load';
+  public modelobs: ModelObserve = new ModelObserve();
+  public varsStore = new VarsStore();
 
   constructor(
     private clientService: HttpClientService,
-    private githubService: GithubService
+    private githubService: GithubService,
+    private loading: LoadingService
   ) { }
 
+
+  public async loadInit(): Promise<void> {
+    const t = this.loading.show();
+    const sl = await this.loadLast();
+    if (!sl) {
+      await this.loadDemo();
+    }
+    this.loading.dismiss(t);
+  }
+
   public async loadDemo(): Promise<void> {
-    const lm = await this.clientService.getDemoModel().toPromise();
-    this.model = plainToClass(Flow, lm);
+    const lm = await this.clientService.getDemoModel();
+    this.modelobs.setModel(lm);
+    console.log(lm);
   }
 
-  public setTarget(f: Flow): void {
-    this.model = plainToClass(Flow, f);
+  public async loadLast(): Promise<boolean> {
+    const llm = this.getLastMark();
+    if (!llm) { return null; }
+    try {
+      const gist = await this.githubService.getGist(llm.id);
+      this.modelobs.setModel(gist.getMainFile().convertModel());
+      this.varsStore = gist.getVarsStore();
+      return true;
+    } catch (ex) {
+      console.log(ex);
+      return false;
+    }
+  }
+
+  public getLastMark(): LoadLastMark {
+    const llms = localStorage.getItem(ModifyingFlowService.KEY_LAST);
+    if (StringUtils.isBlank(llms)) { return null; }
+    const llm: LoadLastMark = JSON.parse(llms);
+    return llm;
   }
 
 
-  public saveAsNew(): void {
-    this.githubService.pushModel(this.model);
+  public setTarget(f: Flow, llm: LoadLastMark | undefined): void {
+    this.modelobs.setModel(plainToClass(Flow, f));
+    if (!llm) {
+      localStorage.removeItem(ModifyingFlowService.KEY_LAST);
+    } else {
+      this.saveLast(llm);
+    }
+  }
+
+
+  public async saveAsNew(): Promise<void> {
+    const sgist = await this.githubService.createModel(this.modelobs.getModel(), this.varsStore);
+    this.saveLast({
+      id: sgist.id,
+      source: LoadSource.Gist
+    });
+  }
+
+  public async updateRemote(): Promise<void> {
+    const llm = this.getLastMark();
+    if (!llm) { throw new Error('not find last save'); }
+    await this.githubService.updateModel(llm.id, this.modelobs.getModel(), this.varsStore);
+  }
+
+  public async registerRemote(): Promise<void> {
+    if (!this.modelobs.getModel()) { throw new Error('null the model'); }
+    await this.clientService.registerFlow(this.modelobs.getModel()).toPromise();
+  }
+
+  private saveLast(iid: LoadLastMark): void {
+    const llm = JSON.stringify(iid);
+    localStorage.setItem(ModifyingFlowService.KEY_LAST, llm);
   }
 
 }
 
+export enum LoadSource {
+  Gist = 'Gist'
+}
+
 export class LoadLastMark {
-
-
-
+  public source: LoadSource;
+  public id: string;
 }

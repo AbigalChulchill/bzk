@@ -1,18 +1,21 @@
 'use strict';
-const Bridge = require('bzk/lib/Bridge').Bridge;
-const RpcObj = require('bzk/lib/Bridge').RpcObj;
-const Uids = require('bzk/lib/Bridge').Uids;
-const VarQuery = require('bzk/lib/Bridge').VarQuery;
-const VarQueryPoint = require('bzk/lib/Bridge').VarQueryPoint;
+const Bridge = require('bzk/dist/Bridge').Bridge;
+const RpcObj = require('bzk/dist/dtos').RpcObj;
+const Uids = require('bzk/dist/dtos').Uids;
+const VarQuery = require('bzk/dist/dtos').VarQuery;
+const VarQueryPoint = require('bzk/dist/dtos').VarQueryPoint;
 
-let $bzk = new Bridge();
+
 let initJson = '${initJson}';
 let initO = JSON.parse(initJson);
-$bzk.init(initO);
+let $ = Bridge.initInstance(initO);
 
 console.log("start use the bzkBridge");
 
 
-${content}
+async function call(){
+	console.log("start use the bzkBridge Call");
+	${content}
+}
 
-
+call();

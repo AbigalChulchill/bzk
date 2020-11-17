@@ -7,7 +7,7 @@ public class VarVal {
 
 	private VarLv lv;
 	private String key;
-	private String val;
+	private Object val;
 
 	@Override
 	public boolean equals(Object obj) {

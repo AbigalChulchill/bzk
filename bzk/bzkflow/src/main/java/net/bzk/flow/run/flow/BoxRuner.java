@@ -1,9 +1,8 @@
 package net.bzk.flow.run.flow;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
-import java.util.concurrent.ThreadPoolExecutor;
 
 import javax.inject.Inject;
 
@@ -16,32 +15,41 @@ import org.springframework.stereotype.Service;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import net.bzk.flow.Constant;
 import net.bzk.flow.model.Action;
 import net.bzk.flow.model.Box;
 import net.bzk.flow.model.Link;
-import net.bzk.flow.model.var.BaseVar;
+import net.bzk.flow.model.var.VarMap;
+import net.bzk.flow.model.var.VarMap.VarProvider;
 import net.bzk.flow.model.var.VarValSet;
 import net.bzk.flow.run.action.ActionCall;
+import net.bzk.flow.run.action.NodejsActionCall;
 import net.bzk.flow.run.action.ActionCall.Uids;
 import net.bzk.flow.run.service.RunVarService;
+import net.bzk.flow.utils.LogUtils;
+import net.bzk.flow.utils.LogUtils.BoxRunLog;
+import net.bzk.flow.utils.LogUtils.ActionRunLog;
+import net.bzk.flow.utils.LogUtils.BoxRunState;
 import net.bzk.infrastructure.ex.BzkRuntimeException;
 
 @Service
 @Scope("prototype")
-public class BoxRuner implements Runnable {
+@Slf4j
+public class BoxRuner implements VarProvider {
 
 	@Inject
 	private ApplicationContext context;
 	@Inject
 	private RunVarService runVarService;
 	@Getter
-	private Future<?> task;
-	@Getter
 	private Box model;
 	@Getter
 	private String uid;
 	@Getter
-	private BaseVar vars = new BaseVar();
+	@Setter
+	private VarMap vars = new VarMap();
 	@Getter
 	private Bundle bundle;
 
@@ -51,19 +59,17 @@ public class BoxRuner implements Runnable {
 		private String runFlowUid;
 		private String flowUid;
 		private FlowRuner flowRuner;
-		private ThreadPoolExecutor threadPool;
 
 	}
 
 	public BoxRuner init(Bundle b, Box m) {
 		model = m;
 		bundle = b;
-		uid = RandomStringUtils.randomAlphanumeric(32);
-		task = bundle.threadPool.submit(this);
+		uid = RandomStringUtils.randomAlphanumeric(Constant.RUN_UID_SIZE);
 		return this;
 	}
 
-	private Uids genUids() {
+	public Uids genUids() {
 		Uids ans = new Uids();
 		ans.setBoxUid(model.getUid());
 		ans.setRunBoxUid(uid);
@@ -72,33 +78,49 @@ public class BoxRuner implements Runnable {
 		return ans;
 	}
 
-	@Override
 	public synchronized void run() {
-
-		for (String uid : model.getTaskSort()) {
-			Optional<Action> ao = findAction(uid);
-			if (ao.isPresent()) {
-				Action a = ao.get();
-				VarValB vvs = callAction(a);
-				runVarService.putVarVals(vvs.call.getUids(), vvs.set);
+		LogUtils.logBoxRun(log, new BoxRunLog(this).state(BoxRunState.BoxStart));
+		List<String> taskSort = model.getTaskSort();
+		for (int i = 0; i < taskSort.size(); i++) {
+			String tuid = taskSort.get(i);
+			if (runAction(tuid)) {
 				continue;
 			}
-			Optional<Link> lo = findLink(uid);
-			if (lo.isPresent()) {
-				Link l = lo.get();
-				if (runLink(l)) {
-					return;
-				}
-				continue;
+			Link l = findLink(tuid).get();
+			if (endFlow(l)) {
+				return;
 			}
-			throw new BzkRuntimeException("not find any task uid:" + uid);
-
+			if (runLink(l)) {
+				return;
+			}
+			continue;
 		}
 
 	}
 
+
+	public boolean runAction(String aUid) {
+		Optional<Action> ao = findAction(aUid);
+		if (!ao.isPresent()) {
+			return false;
+		}
+		Action a = ao.get();
+		VarValB vvs = callAction(a);
+		runVarService.putVarVals(vvs.call.getUids(), vvs.set);
+		return true;
+	}
+
+	private boolean endFlow(Link l) {
+		if (!l.isEnd())
+			return false;
+		LogUtils.logBoxRun(log, new BoxRunLog(this).state(BoxRunState.EndFlow));
+		bundle.flowRuner.onEnd(l);
+		return true;
+	}
+
 	private boolean runLink(Link l) {
-		if (Conditioner.initConditioner(context, l.getCondition()).isTrue()) {
+		if (l.isDirected() || Conditioner.initConditioner(context, l.getCondition()).isTrue()) {
+			LogUtils.logBoxRun(log, new BoxRunLog(this).state(BoxRunState.LinkTo));
 			bundle.flowRuner.runBoxByUid(l.getToBox());
 			return true;
 		}
@@ -115,11 +137,14 @@ public class BoxRuner implements Runnable {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private VarValB callAction(Action a) {
-		ActionCall naer = context.getBean(a.getClazz(), ActionCall.class);
-		naer.initBase(genUids(), a);
-		Callable<VarValSet> cb = naer;
 		try {
-			return new VarValB(naer, cb.call());
+			LogUtils.logBoxRun(log, new ActionRunLog(this, a).state(BoxRunState.StartAction));
+			ActionCall naer = context.getBean(a.getClazz(), ActionCall.class);
+			naer.initBase(genUids(), a);
+			Callable<VarValSet> cb = naer;
+			VarValB ans = new VarValB(naer, cb.call());
+			LogUtils.logBoxRun(log, new ActionRunLog(this, a).varVals(ans.set.list()).state(BoxRunState.EndAction));
+			return ans;
 		} catch (Exception e) {
 			throw new BzkRuntimeException(e);
 		}

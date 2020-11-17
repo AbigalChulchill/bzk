@@ -23,12 +23,11 @@ import net.bzk.infrastructure.ex.BzkRuntimeException;
 public class CommUtils {
 
 	public static final Base64 base64 = new Base64();
-	private static final ObjectMapper JSON_MAPPER = new ObjectMapper();
 
-	public static <T> boolean  hasChild(Class<? extends T> bc, Set<Class<? extends T>> bcs) {
-		return bcs.stream().anyMatch(c ->  bc!=c &&  bc.isAssignableFrom(c));
+	public static <T> boolean hasChild(Class<? extends T> bc, Set<Class<? extends T>> bcs) {
+		return bcs.stream().anyMatch(c -> bc != c && bc.isAssignableFrom(c));
 	}
-	
+
 	public static <T> T orElse(T t, T nt) {
 		return t != null ? t : nt;
 	}
@@ -54,31 +53,6 @@ public class CommUtils {
 		System.out.println(String.format("%s.%s (%s) : %s", className, methodName, lineNumber, o));
 	}
 
-	public static <T> T toByJson(Object src, Class<T> clz) {
-		try {
-			String json = JSON_MAPPER.writeValueAsString(src);
-			return JSON_MAPPER.readValue(json, clz);
-		} catch (Exception e) {
-			throw new BzkRuntimeException("toByJson src:" + src + " clz:" + clz, e);
-		}
-	}
-
-	public static String toJson(Object o) {
-		try {
-			return JSON_MAPPER.writeValueAsString(o);
-		} catch (Exception e) {
-			throw new BzkRuntimeException("toJson O:" + o, e);
-		}
-	}
-	
-	public static <T> T loadByJson(String json,Class<T> clz) {
-		try {
-			return JSON_MAPPER.readValue(json, clz);
-		} catch (Exception e) {
-			throw new BzkRuntimeException(e);
-		}
-	}
-
 	public static String serializeToString(Serializable object) throws IOException {
 		try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
 				ObjectOutputStream oos = new ObjectOutputStream(baos);) {
@@ -102,21 +76,33 @@ public class CommUtils {
 	public static String sha1(String input) {
 		return DigestUtils.sha1Hex(input);
 	}
-	
+
 	public static String loadBy(Resource r) {
 		try {
-			try(InputStream is = r.getInputStream()){
+			try (InputStream is = r.getInputStream()) {
 				StringWriter writer = new StringWriter();
-				IOUtils.copy(r.getInputStream(), writer,  StandardCharsets.UTF_8);
-				return  writer.toString();
+				IOUtils.copy(is, writer, StandardCharsets.UTF_8);
+				return writer.toString();
 			}
 		} catch (Exception e) {
 			throw new BzkRuntimeException(e);
 		}
 	}
-	
+
 	public static boolean isWindows() {
-	    return System.getProperty("os.name").toLowerCase().contains("win");
+		return System.getProperty("os.name").toLowerCase().contains("win");
+	}
+
+	public static boolean isNumeric(String strNum) {
+		if (strNum == null) {
+			return false;
+		}
+		try {
+			double d = Double.parseDouble(strNum);
+		} catch (NumberFormatException nfe) {
+			return false;
+		}
+		return true;
 	}
 
 }

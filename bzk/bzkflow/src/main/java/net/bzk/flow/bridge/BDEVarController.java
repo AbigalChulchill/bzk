@@ -12,21 +12,27 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import net.bzk.flow.api.dto.DtoVarQuery;
+import net.bzk.flow.api.dto.ResultVal;
 import net.bzk.flow.run.service.RunVarService;
+import net.bzk.infrastructure.JsonUtils;
 
 @Validated
 @Controller
 @RequestMapping(value = "/bridge/var/")
 public class BDEVarController {
-	
+
 	@Inject
 	private RunVarService service;
-	
+
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	@RequestMapping(value = "", method = RequestMethod.POST)
-	public String get(@RequestBody DtoVarQuery q) {   
-		return service.findByQuery(q).get();
+	public ResultVal get(@RequestBody DtoVarQuery q) {
+		Object v = service.findByQuery(q).get();
+		ResultVal ans = new ResultVal();
+		ans.setVal(v);
+		ans.setType(JsonUtils.checkDataType(v + ""));
+		return ans;
 	}
 
 }

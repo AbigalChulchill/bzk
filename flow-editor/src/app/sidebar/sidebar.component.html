@@ -23,16 +23,16 @@
           <p>Saved Models</p>
         </a>
       </li>
-      <li>
-        <a class="nav-link" href="./table.html">
+      <li class="nav-item " [class.active]="urlParam.eqPath('/model/registered')">
+        <a class="nav-link" routerLink="model/registered">
           <i class="nc-icon nc-notes"></i>
-          <p>Table List</p>
+          <p>Registered Flow</p>
         </a>
       </li>
-      <li>
-        <a class="nav-link" href="./typography.html">
+      <li class="nav-item " [class.active]="urlParam.eqPath('/console')">
+        <a class="nav-link" routerLink="console">
           <i class="nc-icon nc-paper-2"></i>
-          <p>Typography</p>
+          <p>Console</p>
         </a>
       </li>
       <li>
