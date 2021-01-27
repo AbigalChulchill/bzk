@@ -20,8 +20,14 @@ import net.bzk.infrastructure.StrPlacer;
 @Slf4j
 public class MXparserActionCall extends ActionCall<MXparserAction> {
 
+
+
 	@Inject
 	private FastVarQueryer queryer;
+	
+	public MXparserActionCall() {
+		super(MXparserAction.class);
+	}
 
 	@Override
 	public VarValSet call() throws Exception {

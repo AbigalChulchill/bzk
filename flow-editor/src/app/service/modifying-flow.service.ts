@@ -1,3 +1,6 @@
+import { CommUtils } from './../utils/comm-utils';
+import { SubFlowAction } from './../model/action';
+import { ModelUtils } from 'src/app/utils/model-utils';
 import { VarsStore } from './../dto/vars-store';
 import { ModelObserve } from './../model/model-observe';
 import { async } from '@angular/core/testing';
@@ -9,6 +12,7 @@ import { HttpClientService } from './http-client.service';
 import { plainToClass } from 'class-transformer';
 import { PropUtils } from '../utils/prop-utils';
 import { StringUtils } from '../utils/string-utils';
+import { Gist } from '../dto/gist';
 
 @Injectable({
   providedIn: 'root'
@@ -18,12 +22,15 @@ export class ModifyingFlowService {
   public static KEY_LAST = 'last-load';
   public modelobs: ModelObserve = new ModelObserve();
   public varsStore = new VarsStore();
+  public gists = new Array<Gist>();
 
   constructor(
     private clientService: HttpClientService,
     private githubService: GithubService,
     private loading: LoadingService
-  ) { }
+  ) {
+
+  }
 
 
   public async loadInit(): Promise<void> {
@@ -33,6 +40,7 @@ export class ModifyingFlowService {
       await this.loadDemo();
     }
     this.loading.dismiss(t);
+    this.gists = await this.githubService.listBzkGits();
   }
 
   public async loadDemo(): Promise<void> {
@@ -89,7 +97,28 @@ export class ModifyingFlowService {
 
   public async registerRemote(): Promise<void> {
     if (!this.modelobs.getModel()) { throw new Error('null the model'); }
-    await this.clientService.registerFlow(this.modelobs.getModel()).toPromise();
+    const allfs = new Array<Flow>();
+    this.listAllDependsFlow(allfs, this.modelobs.getModel());
+    await this.clientService.registerFlow(allfs).toPromise();
+  }
+
+  public async testRemote(): Promise<void> {
+    if (!this.modelobs.getModel()) { throw new Error('null the model'); }
+    const allfs = new Array<Flow>();
+    this.listAllDependsFlow(allfs, this.modelobs.getModel());
+    await this.clientService.testFlow(this.modelobs.getModel().uid,allfs).toPromise();
+  }
+
+  public listAllDependsFlow(ans: Array<Flow>, f: Flow) {
+    if (!ModelUtils.pushUnique(ans, f)) return;
+    const sfas = ModelUtils.listAllAction(f).filter(a => a instanceof SubFlowAction);
+    for (const nsfa of sfas) {
+      const sfa: SubFlowAction = nsfa as SubFlowAction;
+      const g = this.gists.find(g => g.getMainFile().convertModel().uid === sfa.flowUid);
+      const df = g.getMainFile().convertModel();
+      if (!ModelUtils.pushUnique(ans, df)) continue;
+      this.listAllDependsFlow(ans, df);
+    }
   }
 
   private saveLast(iid: LoadLastMark): void {

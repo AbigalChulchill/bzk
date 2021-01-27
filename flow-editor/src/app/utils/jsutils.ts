@@ -20,6 +20,12 @@ export class JSUtils {
     $('body').append(insHtml);
   }
 
+  public static appendSrcJs(id: string, attrContent: string, content: string): void {
+    $(`#${id}`).remove();
+    const insHtml = `<script id="${id}"  ${attrContent}  >   \n  ${content}   \n  </script>`;
+    $('body').append(insHtml);
+  }
+
 
 }
 

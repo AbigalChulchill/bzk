@@ -8,6 +8,8 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
@@ -31,6 +33,8 @@ public class OauthController {
 
 	@Inject
 	private GitClientService gitClientService;
+	@Value("${github.app.default.redirect}")
+	private String defaultRedirectUrl;
 
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public ModelAndView receiveCode(@RequestParam String code, HttpServletRequest request)
@@ -46,7 +50,8 @@ public class OauthController {
 		String token = gitClientService.oauthToken(code);
 		ans.put("token", token);
 		String referer = request.getHeader("referer");
-		String rUrl = UriComponentsBuilder.fromUriString(referer).queryParam("token", token).build().toUri().toString();
+		String rUrl = StringUtils.isBlank(referer) ? defaultRedirectUrl
+				: UriComponentsBuilder.fromUriString(referer).queryParam("token", token).build().toUri().toString();
 		ans.put("rUrl", rUrl);
 		System.out.println(ans);
 		return new ModelAndView("redirect:" + rUrl);

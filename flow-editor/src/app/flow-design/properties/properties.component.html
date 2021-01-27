@@ -1,5 +1,5 @@
 <button *ngIf="getCurProperties().hasPreview()" (click)="getCurProperties().preview()" class="m-1">..</button>
-<div class="alert alert-primary" role="alert">
+<div *ngIf="getCurClassTitle()" class="alert alert-primary" role="alert">
   {{ getCurClassTitle()   }}
 </div>
 

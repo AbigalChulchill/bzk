@@ -1,3 +1,4 @@
+import { SVGZoomService } from './svgzoom.service';
 import { FlowDesignMenuService } from './flow-design-menu.service';
 import { ModelUtils } from './../utils/model-utils';
 import { CommUtils } from './../utils/comm-utils';
@@ -30,19 +31,24 @@ export enum FlowDesignClickSort {
 })
 export class FlowDesignComponent implements OnInit, ModelUpdate {
 
-  @ViewChild(PropertiesComponent) propertiesView: PropertiesComponent;
+  private static instance: FlowDesignComponent;
+  @ViewChild(PropertiesComponent) public propertiesView: PropertiesComponent;
 
   private modelChart: ModelChart = new ModelChart('#graphDiv');
   private linkCB: LinkCB;
+
 
   constructor(
     public modifyingFlow: ModifyingFlowService,
     public githubService: GithubService,
     private router: Router,
-    public menu: FlowDesignMenuService
+    public menu: FlowDesignMenuService,
+    public svgZoom:SVGZoomService
   ) {
     this.modelChart.getClicks().set(FlowDesignClickSort.Default, ci => this.onObjClick(ci));
   }
+
+  public static getInstance(): FlowDesignComponent { return FlowDesignComponent.instance; }
 
   onLinkBox(cb: LinkCB): void {
     this.linkCB = cb;
@@ -59,13 +65,11 @@ export class FlowDesignComponent implements OnInit, ModelUpdate {
   }
 
   onRefleshCart(): void {
-    this.modelChart.refleshBuilder();
+    this.svgZoom.fitCurWidth(()=> this.modelChart.refleshBuilder());
   }
 
-
-
   async ngOnInit(): Promise<void> {
-
+    FlowDesignComponent.instance = this;
     if (!this.githubService.hasAuth()) {
       this.githubService.postAuth(this.router.url);
       return;
@@ -73,6 +77,11 @@ export class FlowDesignComponent implements OnInit, ModelUpdate {
     await this.modifyingFlow.loadInit();
     this.modifyingFlow.modelobs.addObservable(this.modelChart);
     ModelUpdateAdapter.getInstance().setCurUpdater(this);
+    try {
+      this.svgZoom.setTar('#graphDiv svg','#graphDiv');
+    } catch (error) {
+      console.warn(error);
+    }
   }
 
   private onObjClick(ci: ChartClickInfo): boolean {

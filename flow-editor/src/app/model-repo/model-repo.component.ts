@@ -1,9 +1,11 @@
+import { LoadingService } from './../service/loading.service';
 import { Flow } from './../model/flow';
 import { LoadSource, ModifyingFlowService } from './../service/modifying-flow.service';
 import { GithubService } from './../service/github.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Gist, GistFile } from '../dto/gist';
+import { HttpClientService } from '../service/http-client.service';
 
 @Component({
   selector: 'app-model-repo',
@@ -18,8 +20,10 @@ export class ModelRepoComponent implements OnInit {
 
   constructor(
     public githubService: GithubService,
+    private httpClient:HttpClientService,
     private router: Router,
     private modifyingFlow: ModifyingFlowService,
+    private loading: LoadingService
   ) { }
 
   async ngOnInit(): Promise<void> {
@@ -38,6 +42,12 @@ export class ModelRepoComponent implements OnInit {
     for (const g of gds) {
       this.bzkGists.push(new GistRow(g));
     }
+  }
+
+  public async deleteGist(id: string): Promise<void> {
+    const l = this.loading.show();
+    await this.httpClient.deleteGist(id).toPromise();
+    this.loading.dismiss(l);
   }
 
   public postGitHubAuth(): void {

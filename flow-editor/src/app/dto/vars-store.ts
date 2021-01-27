@@ -1,6 +1,6 @@
-import { BaseVar } from './../model/flow';
 import { PropClazz } from '../utils/prop-utils';
-import { Type } from 'class-transformer';
+import { Type, plainToClass } from 'class-transformer';
+import { BaseVar, KV } from '../infrastructure/meta';
 
 
 
@@ -10,7 +10,8 @@ import { Type } from 'class-transformer';
 })
 export class VarsStore extends Object {
   public getVars(key: string): BaseVar {
-    return this[key];
+    const ans = this[key];
+    return plainToClass(BaseVar, ans);
   }
 
   public setVars(key: string, b: BaseVar): void {
@@ -19,6 +20,15 @@ export class VarsStore extends Object {
 
   public listKeys(): Array<string> {
     return Object.keys(this);
+  }
+
+  public listAllFlatKV(): Array<KV> {
+    const ans = new Array<KV>();
+    for (const k of this.listKeys()) {
+      const vs = this.getVars(k);
+      vs.listFlatKV().forEach(kv => ans.push(kv));
+    }
+    return ans;
   }
 
 }

@@ -1,3 +1,9 @@
-<div class="pb-5" [id]="varJsonEditorId"></div>
-<br/>
-<br/>
+<div>
+  <div [ngClass]="{'fullWidth': fullWidth}" class="mb-4 " [id]="varJsonEditorId"></div>
+
+  <div class="btn-group mt-3 mb-5" role="group" aria-label="Basic example">
+    <button type="button" class="btn btn-secondary" (click)="setMode('code')">Json</button>
+    <button type="button" class="btn btn-secondary" (click)="setMode('tree')">Tree</button>
+    <button type="button" class="btn btn-secondary" [cdkCopyToClipboard]="copyJson">Copy</button>
+  </div>
+</div>

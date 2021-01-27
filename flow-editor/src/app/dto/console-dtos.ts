@@ -1,39 +1,61 @@
-import { BaseVar } from './../model/flow';
+import { ClassType } from 'class-transformer/ClassTransformer';
+import { CommUtils } from 'src/app/utils/comm-utils';
 import { Uids } from '../model/uids';
 import { VarLv } from '../model/pojo/enums';
 import { plainToClass } from 'class-transformer';
+import { BaseVar } from '../infrastructure/meta';
 
 export class ConsoleDtos {
 
-  public static isRunLog(txt: string): boolean {
-    if (ConsoleDtos.parseBoxRunLog(txt)) { return true; }
-    if (ConsoleDtos.parseActionRunLog(txt)) { return true; }
+  public static isRunLog(dKey: string, txt: string): boolean {
+    if (ConsoleDtos.parseBoxRunLog(dKey, txt)) { return true; }
+    if (ConsoleDtos.parseActionRunLog(dKey, txt)) { return true; }
     return false;
   }
 
-  public static parseBoxRunLog(txt: string): BoxRunLog {
-    const rex = /<B\%(.+)\%B>/g;
-    const pa = rex.exec(txt);
-    if (!pa || pa.length === 0) { return null; }
-    if (pa.length > 2) { throw new Error(pa + ' is length > 1'); }
-    const jTxt = pa[1];
-    const pojo: BoxRunLog = JSON.parse(jTxt);
-    pojo.orgText = txt;
-    return plainToClass(BoxRunLog, pojo);
+  public static parseBoxRunLog(dKey: string, txt: string): BoxRunLog {
+    return this.parseRunLog<BoxRunLog>({
+      clz: BoxRunLog,
+      dKey,
+      rex: /<B\%(.+)\%B>/g,
+      txt
+    });
   }
 
-  public static parseActionRunLog(txt: string): ActionRunLog {
-    const rex = /\<A\%(.+)\%A\>/g;
-    const pa = rex.exec(txt);
-    if (!pa || pa.length === 0) { return null; }
-    if (pa.length > 2) { throw new Error(pa + ' is length > 1'); }
-    const jTxt = pa[1];
-    const pojo: ActionRunLog = JSON.parse(jTxt);
-    pojo.orgText = txt;
-    return plainToClass(ActionRunLog, pojo);
+  public static parseActionRunLog(dKey: string, txt: string): ActionRunLog {
+    return this.parseRunLog<ActionRunLog>({
+      clz: ActionRunLog,
+      dKey,
+      rex: /\<A\%(.+)\%A\>/g,
+      txt
+    });
   }
 
 
+  public static parseRunLog<T>(lb: LogB<T>): T {
+    try {
+      const pa = lb.rex.exec(lb.txt);
+      if (!pa || pa.length === 0) { return null; }
+      if (pa.length > 2) { throw new Error(pa + ' is length > 1'); }
+      const jTxt = pa[1];
+      const dj = CommUtils.decryptAES(lb.dKey, jTxt);
+      const pojo = JSON.parse(dj);
+      pojo.orgText = lb.txt;
+      return plainToClass(lb.clz, pojo);
+    } catch (ex) {
+      console.error(ex);
+      return null;
+    }
+  }
+
+
+}
+
+class LogB<T>{
+  clz: ClassType<T>;
+  rex: RegExp;
+  txt: string;
+  dKey: string;
 }
 
 export class ReadingInfo {
@@ -41,7 +63,9 @@ export class ReadingInfo {
 }
 
 export enum BoxRunState {
-  BoxStart = 'BoxStart', EndFlow = 'EndFlow', LinkTo = 'LinkTo', StartAction = 'StartAction', EndAction = 'EndAction', ActionCall = 'ActionCall'
+  BoxStart = 'BoxStart', BoxLoop = 'BoxLoop', BoxLoopDone = 'BoxLoopDone', EndFlow = 'EndFlow', LinkTo = 'LinkTo',
+  StartAction = 'StartAction', EndAction = 'EndAction', ActionCall = 'ActionCall',
+  ActionCallFail = 'ActionCallFail', ActionCallWarn = 'ActionCallWarn', ActionResult = 'ActionResult', WhileLoopBottom = 'WhileLoopBottom'
 
 }
 
@@ -53,6 +77,8 @@ export class BoxRunLog {
   public boxVar: BaseVar;
   public boxName: string;
   public state: BoxRunState;
+  public failed: boolean;
+  public exception: any;
 }
 
 export class VarVal {

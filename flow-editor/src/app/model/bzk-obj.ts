@@ -1,3 +1,4 @@
+import { BzkUtils } from './../utils/bzk-utils';
 import { PropInfo, PropType } from '../utils/prop-utils';
 
 export class OType {
@@ -6,6 +7,8 @@ export class OType {
     type: PropType.Label
   })
   public clazz = '';
+
+
 }
 
 export class BzkObj extends OType {

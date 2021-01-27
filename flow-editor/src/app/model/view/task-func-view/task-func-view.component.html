@@ -1,2 +1,10 @@
-<p>Task Action</p>
-<button type="button" (click)="delete()" class="btn btn-primary">Delete</button>
+<p>Task Method</p>
+
+
+
+<div class="btn-group" role="group" >
+  <button type="button" [disabled]="isFirst()" (click)="up()" class="btn btn-primary"><i class="fas fa-angle-up"></i></button>
+  <button type="button" [disabled]="isLast()" (click)="down()" class="btn btn-primary"><i class="fas fa-angle-down"></i></button>
+  <button type="button" (click)="delete()" class="btn btn-primary">Delete</button>
+
+</div>

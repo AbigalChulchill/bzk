@@ -1,90 +1,108 @@
-<div class="input-group mb-3" *ngIf="prop.type == 'Enum'">
-  <div class="input-group-prepend">
-    <label class="input-group-text" for="inputGroupSelect01">{{prop.title}}</label>
+<ng-container *ngIf="prop">
+  <app-prop-ref *ngIf="prop.info.refInfo" [prop]="prop"></app-prop-ref>
+
+  <div class="input-group mb-3" *ngIf=" isCurType(PropType.Enum) ">
+    <div class="input-group-prepend" *ngIf="prop.title">
+      <label class="input-group-text" for="inputGroupSelect01">{{prop.title}}</label>
+    </div>
+    <select [(ngModel)]="prop.val" class="custom-select" id="inputGroupSelect01">
+      <option *ngFor="let e of listEnums(prop)" [value]="e">{{e}}</option>
+    </select>
   </div>
-  <select [(ngModel)]="prop.val" class="custom-select" id="inputGroupSelect01">
-    <option *ngFor="let e of listEnums(prop)" [value]="e">{{e}}</option>
-  </select>
-</div>
 
-<div class="input-group mb-3" *ngIf="prop.type == 'Text'">
-  <div class="input-group-prepend">
-    <label class="input-group-text" for="inputGroupSelect01">{{prop.title}}</label>
+  <div class="input-group mb-3" *ngIf=" isCurType(PropType.Text) ">
+    <div class="input-group-prepend" *ngIf="prop.title">
+      <label class="input-group-text" for="inputGroupSelect01">{{prop.title}}</label>
+    </div>
+
+    <input type="text" [(ngModel)]="prop.val" class="form-control" matInput [formControl]="myControl"
+      [matAutocomplete]="auto">
+    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+      <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+        {{option}}
+      </mat-option>
+    </mat-autocomplete>
+
+
   </div>
-  <!-- <input [(ngModel)]="prop.val" type="text" class="form-control" placeholder="Username" aria-label="Username"
-    aria-describedby="basic-addon1" /> -->
 
+  <div class="input-group mb-3" *ngIf=" isCurType(PropType.MultipleText) ">
+    <div class="input-group-prepend" *ngIf="prop.title">
+      <label class="input-group-text" for="inputGroupSelect01">{{prop.title}}</label>
+    </div>
+    <textarea [(ngModel)]="prop.val" class="form-control" aria-describedby="basic-addon1"></textarea>
 
-
-        <input type="text"
-              [(ngModel)]="prop.val"
-              class="form-control"
-               aria-label="Number"
-               matInput
-               [formControl]="myControl"
-               [matAutocomplete]="auto">
-        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-          <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-            {{option}}
-          </mat-option>
-        </mat-autocomplete>
-
-
-</div>
-
-<div class="input-group mb-3" *ngIf="prop.type == 'MultipleText'">
-  <div class="input-group-prepend">
-    <label class="input-group-text" for="inputGroupSelect01">{{prop.title}}</label>
-  </div>
-  <textarea [(ngModel)]="prop.val" class="form-control" aria-describedby="basic-addon1"></textarea>
-</div>
-
-
-<div class="input-group mb-3" *ngIf="prop.type == 'Label'">
-  <div class="input-group-prepend">
-    <label class="input-group-text" for="inputGroupSelect01">{{prop.title}}</label>
-  </div>
-  <label class="input-group-text" for="inputGroupSelect01">{{prop.val}}</label>
-</div>
-
-
-<div class="input-group mb-3" *ngIf="prop.type == 'Number'">
-  <div class="input-group-prepend">
-    <label class="input-group-text" for="inputGroupSelect01">{{prop.title}}</label>
-  </div>
-  <input type="number" class="form-control" [(ngModel)]="prop.val" aria-describedby="basic-addon1" />
-</div>
-
-<div class="input-group mb-3" *ngIf="prop.type == 'Object'">
-  <div class="input-group-prepend">
-    <label class="input-group-text" for="inputGroupSelect01">{{prop.title}}</label>
-  </div>
-  <button (click)="onUnfold(prop.title,prop.val)" class="form-control btn btn-info"
-    aria-describedby="basic-addon1">{{'Unfold' | translate}}</button>
-</div>
-
-
-<div class="container-fuild" *ngIf="prop.type == 'List'">
-
-  <div class="input-group">
-    <label class="input-group-text form-control" for="inputGroupSelect01">{{prop.title}}</label>
-    <div class="input-group-append" id="button-addon4">
-      <button class="btn btn-outline-secondary" type="button" (click)="createListItem(prop)">Create</button>
+    <div class="input-group-append">
+      <button class="btn btn-outline-secondary" (click)="dialog.openCodeEditor(ObjTextProvide.gen(prop,'val'))"
+        type="button"><i class="fas fa-edit"></i></button>
     </div>
   </div>
 
-  <div class=" container-fluid row" *ngFor="let cp of listListProps(prop); let i = index">
 
-    <div class="input-group mb-3">
-      <span class="form-control">
-        <app-prop-row (messageEvent)="receiveOnUnfoldMessage($event)" [prop]="cp"></app-prop-row>
-      </span>
-      <div class="input-group-append">
-        <button type="button" class="btn btn-outline-secondary" (click)="removeListItem(prop,i)"><i
-            class="fas fa-trash-alt"></i></button>
-      </div>
+  <div class="input-group mb-3" *ngIf=" isCurType(PropType.Label) ">
+    <div class="input-group-prepend" *ngIf="prop.title">
+      <label class="input-group-text" for="inputGroupSelect01">{{prop.title}}</label>
     </div>
-
+    <label class="input-group-text" for="inputGroupSelect01">{{prop.val}}</label>
   </div>
 
-</div>
+
+  <div class="input-group mb-3" *ngIf=" isCurType(PropType.Number) ">
+    <div class="input-group-prepend" *ngIf="prop.title">
+      <label class="input-group-text" for="inputGroupSelect01">{{prop.title}}</label>
+    </div>
+    <input type="number" class="form-control" [(ngModel)]="prop.val" aria-describedby="basic-addon1" />
+  </div>
+
+  <div class="input-group mb-3" *ngIf=" isCurType(PropType.Object) && !prop.info.objectSamePage ">
+    <div class="input-group-prepend" *ngIf="prop.title">
+      <label class="input-group-text" for="inputGroupSelect01">{{prop.title}}</label>
+    </div>
+    <button (click)="onUnfold(prop.title,prop.val)" class="form-control btn btn-info"
+      aria-describedby="basic-addon1">{{'Unfold' | translate}} </button>
+  </div>
+
+
+
+  <mat-expansion-panel *ngIf=" isCurType(PropType.Object) && prop.info.objectSamePage " hideToggle class="mb-3">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        {{prop.title}}
+      </mat-panel-title>
+      <mat-panel-description>
+        {{prop.field}} {{prop.type}}
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <app-properties [initTar]="prop.val">
+    </app-properties>
+  </mat-expansion-panel>
+
+
+  <mat-slide-toggle class="input-group mb-3" *ngIf=" isCurType(PropType.Boolean) " [(ngModel)]="prop.val">{{prop.title}}
+  </mat-slide-toggle>
+
+  <app-prop-list *ngIf=" isCurType(PropType.List) " [prop]="prop"></app-prop-list>
+
+  <app-prop-map class="mb-3" *ngIf=" isCurType(PropType.Map) " [prop]="prop"></app-prop-map>
+
+
+
+
+  <ng-container *ngIf=" isCurType(PropType.Custom) ">
+    <mat-expansion-panel hideToggle class="mb-3" *ngIf="prop.info.customViewFolded else directShow">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{prop.title}}
+        </mat-panel-title>
+        <mat-panel-description>
+          {{prop.field}} {{prop.type}}
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <ng-container appCustom></ng-container>
+    </mat-expansion-panel>
+    <ng-template #directShow>
+      <label>{{prop.title}}</label>
+      <ng-container appCustom></ng-container>
+    </ng-template>
+  </ng-container>
+</ng-container>

@@ -1,4 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { TextProvide } from './../../infrastructure/meta';
+import { ClazzExComponent } from './../../utils/prop-utils';
+import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import { CommUtils } from 'src/app/utils/comm-utils';
 declare var jquery: any;
 declare let $: any;
@@ -9,45 +11,78 @@ declare let JSONEditor: any;
   templateUrl: './json-editor.component.html',
   styleUrls: ['./json-editor.component.css']
 })
-export class JsonEditorComponent implements OnInit {
+export class JsonEditorComponent implements OnInit, ClazzExComponent, AfterViewInit {
 
-  @Input() data: JsonDataProvide;
+  @Input() data: TextProvide;
   public varJsonEditorId = CommUtils.makeAlphanumeric(16);
+  private mode = 'tree';
+  public copyJson = '';
+  public fullWidth = false;
+  private exOrgObj: any;
 
   constructor() { }
 
-  async ngOnInit(): Promise<void> {
+  async ngAfterViewInit(): Promise<void> {
     await CommUtils.delay(10);
     this.setupJsonEditor();
   }
 
+
+  init(d: any, mataInfo: any): void {
+    this.exOrgObj = d;
+    this.data = new SimpleJsonProvide(this.exOrgObj);
+  }
+
+
+  async ngOnInit(): Promise<void> {
+
+  }
+
   private setupJsonEditor(): void {
+    $('#' + this.varJsonEditorId).empty();
+    if (!this.data) return;
+    console.log('setupJsonEditor');
     const container = document.getElementById(this.varJsonEditorId);
     const options = {
       onChangeJSON: (json) => {
-        this.data.setDataJson(JSON.stringify(json));
-      }
+        this.data.setStr(JSON.stringify(json));
+        this.copyJson = this.data.getStr();
+      },
+      onChangeText: (t) => {
+        try {
+          this.data.setStr(t);
+        } catch (ex) { console.warn(ex); }
+        this.copyJson = t;
+      },
+      mode: this.mode
     };
     const editor = new JSONEditor(container, options);
 
     // set json
-    const initialJson = this.data.getDataJson();
+    const initialJson = this.data.getStr();
     if (!initialJson) { return; }
     editor.set(JSON.parse(initialJson));
+    this.copyJson = initialJson;
   }
 
+  public setMode(m: string): void {
+    this.mode = m;
+    this.setupJsonEditor();
+  }
+
+  public setData(dp: TextProvide): void {
+    this.data = dp;
+    // this.setupJsonEditor();
+  }
+
+
+
 }
 
-export interface JsonDataProvide {
-
-  getDataJson(): string;
-
-  setDataJson(d: string): void;
-
-}
 
 
-export class ReadJsonProvide implements JsonDataProvide {
+
+export class ReadJsonProvide implements TextProvide {
 
   private jsonText: string;
 
@@ -63,9 +98,36 @@ export class ReadJsonProvide implements JsonDataProvide {
     this.jsonText = JSON.stringify(o);
   }
 
-  getDataJson(): string {
+  getStr(): string {
     return this.jsonText;
   }
-  setDataJson(d: string): void { }
+  setStr(d: string): void { }
+
+}
+
+export class SimpleJsonProvide implements TextProvide {
+
+  public obj: any;
+
+  public static gen(ino: any): SimpleJsonProvide {
+    return new SimpleJsonProvide(ino);
+  }
+
+  public constructor(o: any) {
+    this.obj = o;
+
+  }
+
+  getStr(): string {
+    return JSON.stringify(this.obj);
+  }
+
+  setStr(d: string): void {
+    CommUtils.cleanObj(this.obj);
+    const src = JSON.parse(d);
+    CommUtils.addProps(this.obj, src);
+    console.log(this.obj);
+    console.log(d);
+  }
 
 }

@@ -23,7 +23,11 @@ public class PlaceholderUtils {
 	}
 
 	public static List<String> listPlaceHolderKeys(String txt, String start, String end) {
-		String pex = String.format("%s([\\w . ! ~]*?)%s", start, end);
+		return listPlaceHolderKeys(txt,start,end,"[\\w . ! ~ $]");
+	}
+	
+	public static List<String> listPlaceHolderKeys(String txt, String start, String end,String content) {
+		String pex = String.format("%s(%s+)%s", start,content, end);
 		Pattern regx = Pattern.compile(pex, Pattern.DOTALL);
 		final List<String> ans = new ArrayList<String>();
 		final Matcher matcher = regx.matcher(txt);

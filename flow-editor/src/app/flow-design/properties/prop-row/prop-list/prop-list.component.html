@@ -1,0 +1,40 @@
+<div class="container-fuild mb-3">
+  <div class="input-group">
+    <label class="input-group-text form-control" for="inputGroupSelect01">{{prop.title}}</label>
+    <div class="input-group-append" id="button-addon4">
+      <button class="btn btn-outline-secondary" type="button" (click)="createListItem()">Create</button>
+    </div>
+  </div>
+
+  <!-- <div class=" container-fluid row" *ngFor="let cp of listListProps(); let i = index">
+
+    <div class="input-group mb-3">
+      <span class="form-control">
+        <app-prop-row (messageEvent)="receiveOnUnfoldMessage($event)" [prop]="cp"></app-prop-row>
+      </span>
+      <div class="input-group-append">
+        <button type="button" class="btn btn-outline-secondary" (click)="removeListItem(i)"><i
+            class="fas fa-trash-alt"></i></button>
+      </div>
+    </div>
+
+  </div> -->
+
+  <mat-accordion>
+    <mat-expansion-panel hideToggle *ngFor="let cp of listListProps(); let i = index">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+            {{i}}
+        </mat-panel-title>
+        <mat-panel-description>
+          <button type="button" class="btn btn-outline-secondary" (click)="removeListItem(i)"><i
+              class="fas fa-trash-alt"></i></button>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <app-prop-row (messageEvent)="receiveOnUnfoldMessage($event)" [prop]="cp"></app-prop-row>
+    </mat-expansion-panel>
+
+  </mat-accordion>
+
+
+</div>

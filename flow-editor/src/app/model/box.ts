@@ -1,15 +1,15 @@
+import { Transition } from './transition';
 import { Type } from 'class-transformer';
 import { BzkUtils, OTypeClass } from '../utils/bzk-utils';
 import { PropClazz, PropInfo, PropType } from '../utils/prop-utils';
 import { Action } from './action';
 import { BzkObj } from './bzk-obj';
-import { BaseVar } from './flow';
 import { ModelUpdateAdapter } from './service/model-update-adapter';
-import { BoxComponent } from './view/box/box.component';
-import { LinkComponent } from './view/link/link.component';
-import { Condition } from './condition';
+import { Condition, ConditionNum } from './condition';
 import { Constant } from '../infrastructure/constant';
 import { CommUtils } from '../utils/comm-utils';
+import { VarKey } from './var-key';
+import { BaseVar } from '../infrastructure/meta';
 
 @PropClazz({
   title: 'Box',
@@ -31,9 +31,32 @@ export class Box extends BzkObj {
   public actions = new Array<Action>();
   @Type(() => Link)
   public links = new Array<Link>();
-  public vars: BaseVar;
+  @Type(() => BaseVar)
+  @PropInfo({
+    title: 'Box Var Declare',
+    type: PropType.Custom,
+    customView: 'JsonEditorComponent',
+    customViewFolded: true
+  })
+  public vars = new BaseVar();
   public taskSort = Array<string>();
+  @PropInfo({
+    title: 'transition',
+    type: PropType.Object,
+    objectSamePage:true
+  })
+  @Type(() => Transition)
+  public transition = new Transition();
 
+
+  @PropInfo({
+    title: 'whileJudgment',
+    type: PropType.Custom,
+    customView:'ConditionComponent',
+    customViewFolded:true
+  })
+  @Type(() => Condition)
+  public whileJudgment :Condition;
 
 
   public getTask(uid: string): any {
@@ -68,11 +91,7 @@ export class Box extends BzkObj {
   }
 
   public appendTaskUid(uid: string): void {
-    const ll = this.getLastLink();
-    this.taskSort.splice(this.taskSort.length - 1, 1);
     this.taskSort.push(uid);
-    this.taskSort.push(ll.uid);
-
   }
 
   public appendAction(act: Action): void {
@@ -85,12 +104,7 @@ export class Box extends BzkObj {
     this.appendTaskUid(lk.uid);
   }
 
-
-
 }
-
-
-
 
 @PropClazz({
   title: 'Link',
@@ -106,15 +120,28 @@ export class Link extends BzkObj {
     updatePredicate: (p, v) => ModelUpdateAdapter.getInstance().onRefleshCart()
   })
   public name = '';
-  public toBox: string;
+
+  @PropInfo({
+    title: 'condition',
+    type: PropType.Custom,
+    customView:'ConditionComponent',
+    customViewFolded:true
+  })
+  @Type(() => Condition)
   public condition: Condition;
-  public directed: boolean;
-  public endTag: string;
+  @PropInfo({
+    title: 'transition',
+    type: PropType.Object,
+    objectSamePage:true
+  })
+  @Type(() => Transition)
+  public transition = new Transition();
 
   public static gen(): Link {
     const l = new Link();
     l.uid = CommUtils.makeAlphanumeric(Constant.UID_SIZE);
     l.clazz = BzkUtils.getOTypeInfo(l.constructor).clazz;
+    l.condition = ConditionNum.gen();
     return l;
   }
 }

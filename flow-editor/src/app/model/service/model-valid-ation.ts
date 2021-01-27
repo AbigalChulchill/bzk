@@ -4,9 +4,8 @@ export class ModelValidAtion {
 
   public static removeTask(f: Flow, uid: string): void {
     const b = f.getBoxByChild(uid);
-    if (b.taskSort.length <= 2) { throw new Error('至少要2個Task'); }
-    const llk = b.getLastLink();
-    if (llk.uid === uid) { throw new Error('最後一個Link無法移除'); }
+    if (b.taskSort.length <= 1) { throw new Error('至少要1個Task'); }
+
     b.removeTask(uid);
   }
 

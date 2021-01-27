@@ -1,0 +1,9 @@
+<mat-form-field appearance="fill">
+  <mat-label>Languages</mat-label>
+  <mat-select [(ngModel)]="editorOptions.language" (selectionChange)="onValChange($event)"  >
+    <mat-option *ngFor="let lg of languages" [value]="lg">
+      {{lg}}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+<ngx-monaco-editor  class="fullWidth" [options]="editorOptions" [(ngModel)]="code"></ngx-monaco-editor>

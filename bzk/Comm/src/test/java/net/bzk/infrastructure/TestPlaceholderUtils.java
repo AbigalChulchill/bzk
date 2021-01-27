@@ -7,7 +7,8 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import net.bzk.infrastructure.PlaceholderUtils;
+
+
 
 @SpringBootTest
 public class TestPlaceholderUtils {

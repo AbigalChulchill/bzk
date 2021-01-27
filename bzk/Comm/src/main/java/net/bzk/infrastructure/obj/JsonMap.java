@@ -3,6 +3,7 @@ package net.bzk.infrastructure.obj;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -12,9 +13,12 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
 
 import net.bzk.infrastructure.CommUtils;
+import net.bzk.infrastructure.JsonUtils;
 import net.bzk.infrastructure.ex.BzkRuntimeException;
+import net.minidev.json.JSONUtil;
 
 @SuppressWarnings("serial")
 public class JsonMap extends ConcurrentHashMap<String, Object> {
@@ -98,12 +102,23 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
 		}
 	}
 
+	/**
+	 * @param exp {@link https://github.com/json-path/JsonPath}
+	 * @return
+	 */
+	public Object findByJsonPath(String exp) {
+		return JsonUtils.findByJsonPath(this, exp);
+	}
+
 	public Object getByPath(String path) {
 		return findByPath(path, false, (jm, k) -> jm.get(k));
 	}
 
 	@SuppressWarnings("unchecked")
 	public void putByPath(String path, Object o) {
+		if (path.contains("bfxSignHeader")) {
+			System.out.println("DEBUG");
+		}
 		findByPath(path, true, (jm, k) -> {
 			try {
 				jm.put(k, o);
@@ -116,21 +131,45 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private Object findByPath(String path, boolean createPath, ChildAction<Map, String> ca) {
-		String[] ps = path.split(pathDot);
+		String[] ps = path.split("\\" + pathDot);
 		if (ps.length <= 0) {
 			return ca.accept(this, path);
 		}
 		Map jm = this;
 		int i = 0;
+
 		while (i < ps.length - 1) {
 			if (createPath && (!jm.containsKey(ps[i]) || jm.get(ps[i]) == null)) {
 				jm.put(ps[i], new JsonMap());
 			}
-			jm = (Map) jm.get(ps[i]);
+			if (isJsonPathExp(ps[i])) {
+				return findByJsonPath(ps, i, jm);
+			}
+			if (jm == null)
+				return null;
+			jm = (Map) jm.get(ps[i].trim());
 
 			i++;
 		}
+		if (jm == null)
+			return null;
 		return ca.accept(jm, ps[i]);
+	}
+
+	private Object findByJsonPath(String[] ps, int sti, Map jm) {
+		String orgQ = "";
+		for (int i = sti; i < ps.length; i++) {
+			if (i != sti)
+				orgQ += pathDot;
+			orgQ += ps[i];
+		}
+		return JsonUtils.findByJsonPath(jm, orgQ);
+	}
+
+	private boolean isJsonPathExp(String path) {
+		if (StringUtils.isBlank(path))
+			return false;
+		return path.startsWith("$");
 	}
 
 	@FunctionalInterface

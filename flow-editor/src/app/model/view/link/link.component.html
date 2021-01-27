@@ -1,37 +1,8 @@
 
-
-<div *ngIf="!isLasted()" class="btn-group" role="group" aria-label="Basic example">
-  <button (click)="createBox()" type="button" class="btn btn-primary">Create Box</button>
-  <button (click)="linkBox()" type="button" class="btn btn-primary">Link Box</button>
-
-</div>
+<!-- <app-condition-enumerator  [conditionSG]="this" ></app-condition-enumerator>
+<br/> -->
 
 
-<div *ngIf="! StringUtils.isBlank(link.toBox) " class="input-group input-group-sm mb-3">
-  <div class="input-group-prepend">
-    <span class="input-group-text" id="inputGroup-sizing-sm">ToBox</span>
-  </div>
-  <label  class="form-control"  > {{link.toBox}} </label>
-  <div class="input-group-append">
-    <button class="btn btn-outline-secondary" type="button" (click)="removeLink()" >Remove</button>
-  </div>
-</div>
-
-<div class="input-group mb-3" *ngIf="isLasted()">
-  <div *ngIf="link.endTag" class="input-group-prepend">
-    <label class="input-group-text" for="inputGroupSelect01">End Tag</label>
-  </div>
-  <input *ngIf="link.endTag && StringUtils.isBlank(link.toBox)  " [(ngModel)]="link.endTag" type="text" class="form-control" placeholder="End Tag"
-    aria-label="End Tag" />
-  <div class="input-group-append">
-    <button *ngIf="!link.endTag" class="btn btn-outline-secondary" type="button" id="button-addon2"
-      (click)="setEnd()">End</button>
-    <button class="btn btn-outline-secondary" type="button" id="button-addon2" (click)="linkBox()">Link
-    </button>
-    <button class="btn btn-outline-secondary" type="button" id="button-addon2" (click)="createBox()">Create
-    </button>
-  </div>
-</div>
 
 <app-task-func-view [task]="link" ></app-task-func-view>
 

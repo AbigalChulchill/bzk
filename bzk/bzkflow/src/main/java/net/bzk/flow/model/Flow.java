@@ -24,6 +24,7 @@ public class Flow extends BzkObj {
 	private Set<Box> boxs = new ConcurrentSkipListSet<>();
 	private VarMap vars = new VarMap();
 	private Entry entry = new Entry();
+	private String logEncryptKey = "1234567890123456";
 	private ThreadCfg threadCfg = new ThreadCfg();
 
 	@Data

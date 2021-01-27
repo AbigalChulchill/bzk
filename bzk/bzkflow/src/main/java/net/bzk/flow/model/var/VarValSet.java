@@ -6,6 +6,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.commons.lang3.StringUtils;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import net.bzk.flow.BzkFlowUtils;
+import net.bzk.flow.model.Action;
 import net.bzk.infrastructure.JsonUtils;
 
 public class VarValSet {
@@ -43,6 +49,25 @@ public class VarValSet {
 		VarValSet ans = new VarValSet();
 		ans.add(vv);
 		return ans;
+	}
+	
+	public static VarValSet genError(Action a, Exception val) {
+		return genSingle(a.getErrorVarKey(),VarLv.run_box,new ActionError(val));
+	}
+	
+	@Data
+	@NoArgsConstructor
+	public static class ActionError{
+		private String clazz;
+		private Exception exception;
+		private String msg;
+		
+		ActionError(Exception e){
+			clazz = e.getClass().getCanonicalName();
+			exception = BzkFlowUtils.toJsonSafeExcetption(e);
+			msg = e.getMessage();
+		}
+		
 	}
 
 }

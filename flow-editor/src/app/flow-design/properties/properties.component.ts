@@ -1,8 +1,10 @@
+import { CommUtils } from './../../utils/comm-utils';
+import { StringUtils } from './../../utils/string-utils';
 import { CustomDirective } from './custom.directive';
 import { UnfoldInfo } from './prop-row/prop-row.component';
 import { CurProperties, Source } from './cur-properties';
 import { LanguageService } from './../../service/language.service';
-import { Component, ComponentFactoryResolver, OnInit, ViewChild } from '@angular/core';
+import { Component, ComponentFactoryResolver, Input, OnInit, ViewChild } from '@angular/core';
 import { PropType, PropUtils } from 'src/app/utils/prop-utils';
 
 @Component({
@@ -12,12 +14,14 @@ import { PropType, PropUtils } from 'src/app/utils/prop-utils';
 })
 export class PropertiesComponent implements OnInit {
 
-  private static instance: PropertiesComponent;
+  @Input() public set initTar(o:any){
+    this.waitSetTar(o);
+  }
+
   @ViewChild(CustomDirective) dynamicComponentLoader: CustomDirective;
   public PropType: PropType;
-  private curProperties = new CurProperties(() => this.setExClazzView());
+  public curProperties = new CurProperties(() => this.setExClazzView());
 
-  public static getInstance(): PropertiesComponent { return PropertiesComponent.instance; }
 
   constructor(
     private componenFactoryResolver: ComponentFactoryResolver,
@@ -25,7 +29,6 @@ export class PropertiesComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    PropertiesComponent.instance = this;
   }
 
   public getCurProperties(): CurProperties { return this.curProperties; }
@@ -35,14 +38,25 @@ export class PropertiesComponent implements OnInit {
     this.curProperties.nextTarget(uf);
   }
 
+
+
+  private async waitSetTar(o:any):Promise<void>{
+    while(!this.dynamicComponentLoader){ await CommUtils.delay(50); }
+    this.curProperties.setTarget({
+      key: '',
+      obj: o
+    });
+  }
+
   public getCurClassTitle(): string {
     return this.getClassTitle(this.curProperties.source);
   }
 
   public getClassTitle(s: Source): string {
-    if (!s) { return ''; }
+    if (!s) { return null; }
     const ca = s.getTarClazzArgs();
-    if (!ca) { return ''; }
+    if (!ca) { return null; }
+    if (StringUtils.isBlank(ca.title)) { return null; }
     return s.target.key + ' (' + ca.title + ')';
   }
 
@@ -55,7 +69,7 @@ export class PropertiesComponent implements OnInit {
     const componentFactory = this.componenFactoryResolver.resolveComponentFactory(targetComponent);
 
     const componentRef = viewContainerRef.createComponent(componentFactory);
-    componentRef.instance.init(this.curProperties.source.target.obj);
+    componentRef.instance.init(this.curProperties.source.target.obj, this.curProperties.source);
   }
 
 

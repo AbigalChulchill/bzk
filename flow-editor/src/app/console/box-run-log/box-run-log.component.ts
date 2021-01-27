@@ -1,3 +1,4 @@
+import { StringUtils } from './../../utils/string-utils';
 import { BoxRunLog, ActionRunLog } from './../../dto/console-dtos';
 import { Component, Input, OnInit } from '@angular/core';
 import { ReadJsonProvide } from 'src/app/uikit/json-editor/json-editor.component';
@@ -9,14 +10,16 @@ import { ActionRunLogRow } from '../console.component';
   styleUrls: ['./box-run-log.component.css']
 })
 export class BoxRunLogComponent implements OnInit {
-
+  ShowType = ShowType;
+  StringUtils = StringUtils;
   ReadJsonProvide = ReadJsonProvide;
-
   @Input() public data: BoxRunLog;
+  public showType = ShowType.Vars;
 
   constructor() { }
 
   ngOnInit(): void {
+    if (this.data.failed) { this.showType = ShowType.Message; }
   }
 
   public getTest(): string {
@@ -24,16 +27,37 @@ export class BoxRunLogComponent implements OnInit {
   }
 
   public getWidthClass(): string {
-    return this.isAction() ? 'col-4' : 'col-5';
+    return this.hasReturn() ? 'col-4' : 'col-5';
   }
 
-  public isAction(): boolean {
-    const b = this.data.constructor === ActionRunLog;
-    return b;
+  public hasReturn(): boolean {
+    if (this.data.constructor === ActionRunLog) { return false; }
+    const vvs = this.toAction().varVals;
+    if (!vvs) { return false; }
+    if (vvs.length <= 0) { return false; }
+    return true;
   }
 
   public toAction(): ActionRunLog {
     return this.data as ActionRunLog;
   }
 
+  public getPlainText(): string {
+    if (this.showType === ShowType.Message) { return this.data.msg; }
+    if (this.showType === ShowType.OrgPlain) { return this.data.orgText; }
+    throw new Error('not support :' + this.showType);
+  }
+
+  public isFullView(): boolean {
+    if (this.showType === ShowType.Message) { return true; }
+    if (this.showType === ShowType.OrgPlain) { return true; }
+    if (this.showType === ShowType.OrgJson) { return true; }
+    if (this.showType === ShowType.Vars) { return false; }
+    throw new Error('not support :' + this.showType);
+  }
+
+}
+
+export enum ShowType {
+  Vars, OrgPlain, OrgJson, Message
 }

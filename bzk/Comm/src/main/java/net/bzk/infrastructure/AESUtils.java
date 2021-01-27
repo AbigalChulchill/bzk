@@ -27,6 +27,7 @@ import org.springframework.util.Base64Utils;
 public class AESUtils {
 	
 	private static final Logger log = LoggerFactory.getLogger(AESUtils.class.getSimpleName());
+	public static final int bufferSize = 256;
 	
     //32å­???åº¦ç?„ç???ï¼Œä?Ÿå°±?˜¯256ä½?
     //static final SecretKeySpec key = new SecretKeySpec(getUTF8Bytes("12345678901234561234567890123456"), "AES");
@@ -76,7 +77,6 @@ public class AESUtils {
     public static String encrypt(String pass,String text) throws IOException, InvalidAlgorithmParameterException, InvalidKeyException, ShortBufferException, BadPaddingException, IllegalBlockSizeException {
         Properties properties = new Properties();
         final ByteBuffer outBuffer;
-        final int bufferSize = 1024;
         final int updateBytes;
         final int finalBytes;
         //Creates a CryptoCipher instance with the transformation and properties.
@@ -124,7 +124,6 @@ public class AESUtils {
     public static String dencrypt(String pass,String encodedString) throws IOException, InvalidAlgorithmParameterException, InvalidKeyException, ShortBufferException, BadPaddingException, IllegalBlockSizeException {
         Properties properties = new Properties();
         final ByteBuffer outBuffer;
-        final int bufferSize = 1024;
         ByteBuffer decoded = ByteBuffer.allocateDirect(bufferSize);
         //Creates a CryptoCipher instance with the transformation and properties.
         try (CryptoCipher decipher = Utils.getCipherInstance(transform, properties)) {

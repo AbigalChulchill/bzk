@@ -30,6 +30,8 @@ public abstract  class Entryer<T extends Entry> implements Runnable  {
 
 
 	protected abstract void registerSchedule(TaskScheduler s);
+	
+	public abstract void unregister();
 
 
 	@Override

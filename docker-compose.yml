@@ -8,7 +8,11 @@ services:
   flow-gists:
     image: net.bzk/flow-gists
     ports: 
-      - "9203:8080"      
+      - "9203:8081"     
+  editor-web:
+    build: ./flow-editor
+    ports: 
+      - "9280:80"           
   
         
         

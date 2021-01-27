@@ -1,0 +1,28 @@
+
+
+
+<div *ngIf="! StringUtils.isBlank(data.toBox) " class="input-group input-group-sm mb-3">
+  <div class="input-group-prepend">
+    <span class="input-group-text" id="inputGroup-sizing-sm">ToBox</span>
+  </div>
+  <label  class="form-control"  > {{data.toBox}} </label>
+  <div class="input-group-append">
+    <button class="btn btn-outline-secondary" type="button" (click)="removeLink()" >Remove</button>
+  </div>
+</div>
+
+<div class="input-group mb-3" >
+  <div *ngIf="data.endTag" class="input-group-prepend">
+    <label class="input-group-text" for="inputGroupSelect01">End Tag</label>
+  </div>
+  <input *ngIf="isEnd() " [(ngModel)]="data.endTag" type="text" class="form-control" placeholder="End Tag"
+    aria-label="End Tag" />
+  <div class="input-group-append">
+    <button *ngIf="!isEnd()" class="btn btn-outline-secondary" type="button" id="button-addon2"
+      (click)="setEnd()">End</button>
+    <button class="btn btn-outline-secondary" type="button" id="button-addon2" (click)="linkBox()">Link
+    </button>
+    <button class="btn btn-outline-secondary" type="button" id="button-addon2" (click)="createBox()">Create
+    </button>
+  </div>
+</div>

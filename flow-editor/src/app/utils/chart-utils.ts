@@ -98,7 +98,9 @@ export class Subgraph {
   public id: string;
   private click: (e: ChartClickInfo) => void;
   public node: Node;
-  public static TEMPLATE = (name, content, styles) => `subgraph ${name}; \n ${content} \n ${styles} end; \n`;
+  public toSubgraph: Subgraph;
+  public static LINK_TEMP = (start, end) => `${start} --> ${end};  \n`;
+  public static TEMPLATE = (name, content, styles, boxlinks) => `subgraph ${name}; \n ${content} \n ${styles} end; \n ${boxlinks}`;
 
   public constructor(i: string, n: string, cl: (e: ChartClickInfo) => void) {
     this.name = n;
@@ -125,12 +127,17 @@ export class Subgraph {
     for (const n of this.node.listDeepChildren()) {
       stes += n.genStyleCode();
     }
-    return Subgraph.TEMPLATE(this.name, this.node.genCode(), stes);
+    return Subgraph.TEMPLATE(this.name, this.node.genCode(), stes, this.genBoxLinkCode());
+  }
+
+  private genBoxLinkCode(): string {
+    if (!this.toSubgraph) return '';
+    return Subgraph.LINK_TEMP(this.name, this.toSubgraph.name);
   }
 
   public injectClick(): void {
     this.node.listDeepChildren().forEach(n => n.injectClick());
-    $(`.cluster div:contains(${this.name})`).parents('.cluster').click(e => {
+    $(`#${this.name}`).click(e => {
       this.click({
         event: e,
         srcId: this.id,

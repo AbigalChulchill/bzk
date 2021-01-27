@@ -38,7 +38,7 @@
       </ul>
       <ul class="navbar-nav ml-auto">
         <li class="nav-item">
-          <a class="nav-link" href="javascript:void(0)" >
+          <a class="nav-link" href="javascript:void(0)">
             <span class="no-icon">Load Data</span>
           </a>
         </li>
@@ -97,8 +97,12 @@
           <td>{{gist.name}} </td>
           <td>{{gist.gist.created_at}} </td>
           <td>{{gist.gist.updated_at}} </td>
-          <td> <button type="button" (click)="onFileEdit(gist)" class="btn btn-primary"><i
-                class="fas fa-edit"></i></button> </td>
+          <td>
+            <button type="button" (click)="onFileEdit(gist)" class="btn btn-primary"><i
+                class="fas fa-edit"></i></button>
+            <button type="button" (click)="deleteGist(gist.gist.id)" class="btn btn-primary"><i
+                class="fas fa-trash-alt"></i></button>
+          </td>
         </tr>
       </tbody>
     </table>

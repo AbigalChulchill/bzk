@@ -1,8 +1,10 @@
 package net.bzk.flow.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import net.bzk.flow.api.dto.DtoVarQuery;
+import net.bzk.flow.model.Action.Polyglot;
 import net.bzk.flow.model.var.VarLv;
 import net.bzk.infrastructure.JsonUtils;
 import net.bzk.infrastructure.convert.OType;
@@ -24,38 +26,33 @@ public class Condition implements OType {
 		clazz = this.getClass().getName();
 	}
 
-	@Data
-	public static class Val implements OType {
-		private String clazz;
 
-		public Val() {
-			clazz = this.getClass().getName();
-		}
-	}
-
-	@Data
-	@EqualsAndHashCode(callSuper = false)
-	public static class RefVal extends Val {
-		private DtoVarQuery query = new DtoVarQuery();
-	}
-
-	@Data
-	@EqualsAndHashCode(callSuper = false)
-	public static class PlainVal extends Val {
-		private String val;
-		
-		public Object getRealVal() {
-			return JsonUtils.stringToValue(val);
-		}
-	}
 
 	@Data
 	@EqualsAndHashCode(callSuper = false)
 	public static class ConditionNum extends Condition {
 
-		private Val left;
-		private Val right;
+		private String left;
+		private String right;
 		private NumCheckType type;
+		
+		@JsonIgnore
+		public double left() {
+			return JsonUtils.loadByJson(left, Double.class);
+		}
+		
+		@JsonIgnore
+		public double right() {
+			return JsonUtils.loadByJson(right, Double.class);
+		}
+		
+		public static ConditionNum gen() {
+			ConditionNum ans = new ConditionNum();
+			ans.left = "0";
+			ans.right = "0";
+			ans.type = NumCheckType.equal;
+			return ans;
+		}
 
 	}
 
@@ -66,9 +63,20 @@ public class Condition implements OType {
 	@Data
 	@EqualsAndHashCode(callSuper = false)
 	public static class ConditionTxt extends Condition{
-		private Val left;
-		private Val right;
+		private String left;
+		private String right;
 		private TxtCheckType type;
+		
+		@JsonIgnore
+		public String left() {
+			return JsonUtils.loadByJson(left, String.class);
+		}
+		
+		@JsonIgnore
+		public String right() {
+			return JsonUtils.loadByJson(right, String.class);
+		}
+		
 	}
 	
 	public static enum TxtCheckType{
@@ -79,6 +87,13 @@ public class Condition implements OType {
 	@EqualsAndHashCode(callSuper = false)
 	public static class ConditionInclude extends Condition {
 		private Condition include;
+	}
+	
+	@Data
+	@EqualsAndHashCode(callSuper = false)
+	public static class ConditionCode extends Condition {
+		private Polyglot polyglot = Polyglot.js;
+		private String code;
 	}
 
 }

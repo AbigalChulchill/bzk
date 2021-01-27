@@ -5,6 +5,7 @@ import { TimeUnit } from './enums';
 import { PropClazz, PropInfo, PropType } from '../utils/prop-utils';
 import { OTypeClass } from '../utils/bzk-utils';
 import { Type } from 'class-transformer';
+import { BaseVar } from '../infrastructure/meta';
 
 /*export class BzkObj {
 
@@ -27,6 +28,11 @@ export class Flow extends BzkObj {
     type: PropType.Text
   })
   public name: string;
+  @PropInfo({
+    title: 'logEncryptKey',
+    type: PropType.Text
+  })
+  public logEncryptKey = '1234567890123456';
   @Type(() => Box)
   public boxs: Array<Box>;
   @Type(() => BaseVar)
@@ -54,10 +60,4 @@ export class ThreadCfg {
   public maximumPoolSize = 50;
   public keepAliveTime = 500;
   public aliveUnit = TimeUnit.MINUTES;
-}
-
-
-
-export class BaseVar extends Object {
-
 }

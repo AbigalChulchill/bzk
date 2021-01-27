@@ -4,4 +4,6 @@ the Variable ex ```  hi this ${key} can use the ${~abc.ddd} or ${!ddd.ddd} or ${
 
 . ~  : flow lv
 . ! : box lv
-
+ 
+ 
+ VarMapAction 不要用Reftext

@@ -1,12 +1,18 @@
 package net.bzk.infrastructure;
 
-import java.awt.List;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
 
 import net.bzk.infrastructure.ex.BzkRuntimeException;
 import net.bzk.infrastructure.obj.JsonMap;
@@ -88,7 +94,7 @@ public class JsonUtils {
 		case number:
 			return Double.parseDouble(v);
 		case object:
-			return JsonMap.gen(v);
+			return JsonMap.gen(JsonUtils.loadByJson(v, Object.class));
 		case string:
 			return v;
 		}
@@ -102,7 +108,35 @@ public class JsonUtils {
 		} catch (Exception e) {
 			return false;
 		}
+	}
 
+
+	public static Object findByJsonPath(Object o, String exp) {
+		Object outo = JsonPath.read(JsonUtils.toJson(o), exp);
+		String ss = toJson(outo);
+		return stringToValue(ss);
+	}
+
+	public static void main(String[] args) {
+		Object a = toJson(123);
+		System.out.println(a);
+		System.out.println(a.getClass());
+		String ints = "123";
+		a = loadByJson(ints, Object.class);
+		System.out.println(a);
+		System.out.println(a.getClass());
+		String bc = toJson("{ \"abc\": ");
+		a = loadByJson(bc, Object.class);
+		System.out.println(bc);
+		System.out.println(a);
+		System.out.println(a.getClass());
+		
+		Map m = new HashMap<String,String>();
+		m.put("q", "a");
+		net.minidev.json.JSONArray ss = JsonPath.read(JsonUtils.toJson(m), "$.q");
+
+		System.out.println(ss);
+		
 	}
 
 }

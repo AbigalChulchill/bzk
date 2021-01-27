@@ -1,0 +1,23 @@
+<div class="alert alert-primary" role="alert">
+
+  <div class="input-group mb-3">
+    <select class="custom-select" [(ngModel)]="data.clazz" (change)="onChangeClazz($event.target.value)">
+      <option *ngFor="let clz of listCoditionClz()" [value]="clz"> {{clz}} </option>
+
+    </select>
+
+  </div>
+
+  <app-properties [initTar]="data"></app-properties>
+
+</div>
+<div class="input-group mb-3">
+  <div class="input-group-prepend">
+    <label class="input-group-text" for="inputGroupSelect01">Join</label>
+  </div>
+  <select class="custom-select" (change)="onChangeConKind($event.target.value)" [ngModel]="data.kind">
+    <option *ngFor="let k of listConKinds()" [value]="k">{{k}}</option>
+  </select>
+</div>
+
+<app-condition *ngIf="data.next" [dataInit]="next" ></app-condition>

@@ -1,6 +1,6 @@
 import { ClassType } from 'class-transformer/ClassTransformer';
 import { plainToClass } from 'class-transformer';
-
+import * as CryptoJS from 'crypto-js';
 
 export class CommUtils {
 
@@ -8,6 +8,22 @@ export class CommUtils {
 
   public static delay(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  public static delayCall(ms, a: () => void): void {
+    setTimeout(cb => { a(); }, ms)
+  }
+
+
+  public static decryptAES(decPassword: string, encryptText: string): string {
+    const key = CryptoJS.enc.Utf8.parse(decPassword.trim()); // 秘钥
+    const encryptedBase64Str = encryptText.trim();
+    const decryptedData = CryptoJS.AES.decrypt(encryptedBase64Str, key, {
+      mode: CryptoJS.mode.ECB,
+      padding: CryptoJS.pad.Pkcs7
+    });
+    const decryptedStr = decryptedData.toString(CryptoJS.enc.Utf8);
+    return decryptedStr;
   }
 
   public static makeAlphanumeric(lengthOfCode: number): string {
@@ -22,6 +38,17 @@ export class CommUtils {
     return text;
   }
 
+  public static cleanObj(o: any): void {
+    for (const p of Object.keys(o)) {
+      delete o[p];
+    }
+  }
+
+  public static addProps(tar: any, src: any): void {
+    for (const p of Object.keys(src)) {
+      tar[p] = src[p];
+    }
+  }
 
   public static mergeRecursive(tar: object, src: object): object {
     for (const p of Object.keys(src)) {
@@ -58,6 +85,16 @@ export class CommUtils {
     return plainToClass(d.constructor, no);
   }
 
+  public static convertByJson<T>(clz: ClassType<T>, json: string): T {
+    const no = JSON.parse(json);
+    return plainToClass(clz, no);
+  }
+
+  public static pushUnique<T>(list: Array<T>, e: T):boolean {
+    if (list.includes(e)) return false;
+    list.push(e);
+    return true;
+  }
 
 
 }

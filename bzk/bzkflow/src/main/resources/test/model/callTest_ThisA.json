@@ -1,0 +1,82 @@
+{
+	"clazz": "net.bzk.flow.model.Flow",
+	"uid": "QfoTsBXHokU8",
+	"logEncryptKey": "1234567890123456",
+	"vars": {
+		"f": {
+			"h": "abc"
+		}
+	},
+	"threadCfg": {
+		"corePoolSize": 10,
+		"maximumPoolSize": 50,
+		"keepAliveTime": 500,
+		"aliveUnit": "MINUTES"
+	},
+	"name": "ThisA",
+	"boxs": [
+		{
+			"clazz": "net.bzk.flow.model.Box",
+			"uid": "VzPzT54lux1a8rsJ",
+			"name": "CallTest_ThisA",
+			"actions": [
+				{
+					"clazz": "net.bzk.flow.model.Action$VarModifyAction",
+					"uid": "CI23DynCI8W5",
+					"name": "Init",
+					"tryErrorble": false,
+					"polyglot": "js",
+					"flatData": [
+						{
+							"key": "A1",
+							"val": "55"
+						}
+					]
+				},
+				{
+					"clazz": "net.bzk.flow.model.Action$SubFlowAction",
+					"uid": "hxF8kKFQHjt8",
+					"name": "CallB",
+					"tryErrorble": false,
+					"polyglot": "js",
+					"inputData": [],
+					"flowUid": "fl8iq36vb2XX"
+				}
+			],
+			"links": [],
+			"vars": {
+				"f": {
+					"h": "xyz"
+				}
+			},
+			"taskSort": [
+				"CI23DynCI8W5",
+				"hxF8kKFQHjt8"
+			],
+			"transition": {
+				"toBox": "",
+				"endTag": "TODO Why End",
+				"endResultKeys": [
+					{
+						"lv": "not_specify",
+						"key": "A1"
+					},
+					{
+						"lv": "not_specify",
+						"key": "B1"
+					},
+					{
+						"lv": "not_specify",
+						"key": "f.h"
+					}
+				]
+			},
+			"whileJudgment": null
+		}
+	],
+	"entry": {
+		"clazz": "net.bzk.flow.model.Entry$PluginEntry",
+		"requiredKeys": [],
+		"boxUid": "VzPzT54lux1a8rsJ"
+	}
+}

@@ -9,6 +9,7 @@ import javax.inject.Provider;
 import org.springframework.stereotype.Service;
 
 import net.bzk.flow.model.Box;
+import net.bzk.flow.model.var.VarMap;
 import net.bzk.flow.model.var.VarMap.VarsDao;
 import net.bzk.flow.run.flow.BoxRuner;
 
@@ -22,11 +23,15 @@ public class RunBoxDao implements VarsDao {
 
 	public BoxRuner create(BoxRuner.Bundle bb, Box b) {
 		BoxRuner ans = boxRunerProvider.get().init(bb, b);
-		map.put(b.getUid(), ans);
+		map.put(ans.getUid(), ans);
 		return ans;
 	}
 
 	@Override
+	public VarMap getVarMapByUid(String uid) {
+		return map.get(uid).getVars();
+	}
+
 	public BoxRuner getByUid(String uid) {
 		return map.get(uid);
 	}

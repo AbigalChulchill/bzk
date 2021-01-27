@@ -12,12 +12,13 @@ import org.springframework.stereotype.Service;
 
 import lombok.Getter;
 import net.bzk.flow.model.Action;
+import net.bzk.flow.model.Action.NodejsAction;
 import net.bzk.flow.model.Box;
 import net.bzk.flow.model.Entry;
 import net.bzk.flow.model.Entry.FixedRateEntry;
 import net.bzk.flow.model.Flow;
 import net.bzk.flow.model.Link;
-import net.bzk.flow.model.Action.NodejsAction;
+import net.bzk.flow.model.Transition;
 
 @Service
 public class ModelBuilder {
@@ -55,6 +56,8 @@ public class ModelBuilder {
 		sort.add(ans.getActions().get(0).getUid());
 		sort.add(ans.getLinks().get(0).getUid());
 		ans.setTaskSort(sort);
+		ans.setTransition(new Transition());
+//		ans.setWhileJudgment(ConditionNum.gen());
 		return ans;
 	}
 
@@ -66,7 +69,7 @@ public class ModelBuilder {
 
 	private Link createLink() {
 		Link ans = new Link();
-		ans.setEndTag("TestEnd");
+		ans.getTransition().setEndTag("TestEnd");
 		return ans;
 	}
 

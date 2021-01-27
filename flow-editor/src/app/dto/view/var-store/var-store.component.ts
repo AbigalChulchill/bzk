@@ -1,9 +1,8 @@
-import { BaseVar } from './../../../model/flow';
 import { Component, OnInit } from '@angular/core';
-import { JsonDataProvide } from 'src/app/uikit/json-editor/json-editor.component';
 import { ClazzExComponent } from 'src/app/utils/prop-utils';
 import { VarsStore } from '../../vars-store';
 import { plainToClass } from 'class-transformer';
+import { BaseVar, TextProvide } from 'src/app/infrastructure/meta';
 
 @Component({
   selector: 'app-var-store',
@@ -21,9 +20,6 @@ export class VarStoreComponent implements OnInit, ClazzExComponent {
     this.list = this.listVProvide();
   }
 
-  getData(): any {
-    return this.varStore;
-  }
 
   public get varStore(): VarsStore {
     return this.data;
@@ -49,7 +45,7 @@ export class VarStoreComponent implements OnInit, ClazzExComponent {
 
 }
 
-class VProvide implements JsonDataProvide {
+class VProvide implements TextProvide {
 
   public varStore: VarsStore;
   public key: string;
@@ -59,12 +55,12 @@ class VProvide implements JsonDataProvide {
     this.key = k;
   }
 
-  getDataJson(): string {
+  getStr(): string {
     return JSON.stringify(this.varStore.getVars(this.key));
 
   }
 
-  setDataJson(d: string): void {
+  setStr(d: string): void {
     const o = JSON.parse(d);
     this.varStore.setVars(this.key, plainToClass(BaseVar, o));
 

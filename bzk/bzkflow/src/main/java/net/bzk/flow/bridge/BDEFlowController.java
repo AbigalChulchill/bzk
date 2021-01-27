@@ -24,14 +24,14 @@ public class BDEFlowController {
 	@ResponseBody
 	@RequestMapping(value = "{uid}/var/{key}", method = RequestMethod.GET)	
 	public String getVar(String uid,String key) {
-		return dao.getByUid(uid).getVars().getByPath(key)+"";
+		return dao.getVarMapByUid(uid).getByPath(key)+"";
 	}
 	
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	@RequestMapping(value = "{uid}/var/{key}", method = RequestMethod.POST)	
 	public void putVar(String uid,String key,String val) {
-		 dao.getByUid(uid).getVars().putByPath(key, val);
+		 dao.getVarMapByUid(uid).putByPath(key, val);
 	}
 
 }

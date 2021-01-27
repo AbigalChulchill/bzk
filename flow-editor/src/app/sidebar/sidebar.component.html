@@ -35,10 +35,10 @@
           <p>Console</p>
         </a>
       </li>
-      <li>
-        <a class="nav-link" href="./icons.html">
-          <i class="nc-icon nc-atom"></i>
-          <p>Icons</p>
+      <li [class.active]="urlParam.eqPath('/config')">
+        <a class="nav-link" routerLink="config">
+          <i class="nc-icon nc-settings-gear-64"></i>
+          <p>Config</p>
         </a>
       </li>
       <li>

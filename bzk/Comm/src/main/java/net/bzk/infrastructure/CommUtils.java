@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Set;
@@ -62,12 +63,23 @@ public class CommUtils {
 		}
 	}
 
+	public static String encodeBase64(String code) {
+		return base64.encodeToString(code.getBytes());
+	}
+
+	public static String decodeBase64(String code) {
+		try {
+			return new String(base64.decode(code), "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			throw new BzkRuntimeException("node decode :" + code);
+		}
+	}
+
 	public static String sha1(Serializable o, int max) {
 		try {
 			String sos = serializeToString(o);
-			String sha1 = sha1(sos);
-			int sl = sha1.length() < max ? sha1.length() : max;
-			return sha1.substring(0, sl - 1);
+			String sha1 = sha1(sos, max);
+			return sha1;
 		} catch (IOException e) {
 			throw new BzkRuntimeException(e);
 		}
@@ -75,6 +87,12 @@ public class CommUtils {
 
 	public static String sha1(String input) {
 		return DigestUtils.sha1Hex(input);
+	}
+
+	public static String sha1(String input, int max) {
+		String sha1 = sha1(input);
+		int sl = sha1.length() < max ? sha1.length() : max;
+		return sha1.substring(0, sl - 1);
 	}
 
 	public static String loadBy(Resource r) {

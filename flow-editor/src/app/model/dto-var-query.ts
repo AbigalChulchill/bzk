@@ -8,3 +8,5 @@ export class DtoVarQuery {
   public key: string;
 
 }
+
+

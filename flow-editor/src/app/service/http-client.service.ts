@@ -1,6 +1,7 @@
+import { FlowPoolInfo } from './../dto/flow-pool-info';
+import { InPlain, SecretResult } from './../dto/secret-dtos';
 import { ActionDebugData } from './../dto/debug-dtos';
 import { ReadingInfo } from './../dto/console-dtos';
-import { RegisteredFlow } from './../dto/registered-flow';
 import { BzkUtils } from './../utils/bzk-utils';
 import { async } from '@angular/core/testing';
 import { Gist, GistFile } from './../dto/gist';
@@ -29,48 +30,69 @@ export class HttpClientService {
     return this.httpClient.post<void>(environment.apiHost + '/flow/debug/action?delDelay=' + delDelay, d);
   }
 
-  public registerFlow(f: Flow): Observable<Flow> {
-    return this.httpClient.post<Flow>(environment.apiHost + '/flow/register', f);
+  public registerFlow(f: Flow[]): Observable<void> {
+    return this.httpClient.post<void>(environment.apiHost + '/flow/register', f);
   }
 
-  public listRegisters(): Observable<Array<RegisteredFlow>> {
-    return this.httpClient.get<Array<RegisteredFlow>>(environment.apiHost + '/flow/registers');
+  public testFlow(eUid: string, f: Flow[]): Observable<void> {
+    return this.httpClient.post<void>(environment.apiHost + `/flow/${eUid}/test`, f);
   }
 
-  public forceRemove(fuid: string): Observable<void> {
-    return this.httpClient.post<void>(environment.apiHost + `/flow/${fuid}/remove?type=force`, null);
+  public listFlowPoolInfo(): Observable<Array<FlowPoolInfo>> {
+    return this.httpClient.get<Array<FlowPoolInfo>>(environment.apiHost + '/flow/');
   }
 
-  public createGits(p: boolean, desc: string, fs: GistFile[]): Observable<Gist> {
+  public forceRemovePool(uid: string): Observable<void> {
+    return this.httpClient.post<void>(environment.apiHost + '/flow/pool/' + uid + '/remove?type=force', null);
+  }
+
+
+  public async createGits(p: boolean, ePass: string, desc: string, fs: GistFile[]): Promise<Gist> {
     const data = {
       description: desc,
       public: p,
       files: {}
     };
-    fs.forEach(f => {
+    for (const f of fs) {
+      const er = await this.encrypt({
+        name: f.filename,
+        plain: f.content,
+        passHash: ePass
+      }).toPromise();
       const fo = {
-        content: f.content,
+        content: er.data,
         type: 'application/json'
       };
       data.files[f.filename] = fo;
-    });
-    return this.httpClient.post<Gist>(environment.githubHost + 'gists', data);
+    }
+    const ans = await this.httpClient.post<Gist>(environment.githubHost + 'gists', data).toPromise();
+    return ans;
   }
 
-  public updateGist(id: string, fs: GistFile[]): Observable<Gist> {
+  public async updateGist(id: string, ePass: string, fs: GistFile[]): Promise<Gist> {
     const data = {
       description: 'BZK Update',
       public: false,
       files: {}
     };
-    fs.forEach(f => {
+    for (const f of fs) {
+      const er = await this.encrypt({
+        name: f.filename,
+        plain: f.content,
+        passHash: ePass
+      }).toPromise();
       const fo = {
-        content: f.content,
+        content: er.data,
         type: 'application/json'
       };
       data.files[f.filename] = fo;
-    });
-    return this.httpClient.patch<Gist>(environment.githubHost + 'gists/' + id, data);
+    }
+    const ans = await this.httpClient.patch<Gist>(environment.githubHost + 'gists/' + id, data).toPromise();
+    return ans;
+  }
+
+  public deleteGist(id: string): Observable<void> {
+    return this.httpClient.delete<void>(environment.githubHost + 'gists/' + id);
   }
 
   public async listGits(): Promise<Array<Gist>> {
@@ -83,9 +105,18 @@ export class HttpClientService {
     return ans;
   }
 
-  public async getGist(id: string): Promise<Gist> {
+  public async getGist(id: string, ePass: string): Promise<Gist> {
     const res = await this.httpClient.get<Gist>(environment.githubHost + 'gists/' + id).toPromise();
     const ans = plainToClass(Gist, res);
+    for (const fk of ans.files.keys()) {
+      const f = ans.files.get(fk);
+      const der = await this.decrypt({
+        name: f.filename,
+        plain: f.content,
+        passHash: ePass
+      }).toPromise();
+      f.content = der.data;
+    }
     return ans;
   }
 
@@ -99,6 +130,14 @@ export class HttpClientService {
 
   public clearTrailFile(): Observable<void> {
     return this.httpClient.post<void>(environment.console.host + 'tail/clear', null);
+  }
+
+  public encrypt(ip: InPlain): Observable<SecretResult> {
+    return this.httpClient.post<SecretResult>(environment.gistHost + 'secret/encrypt', ip);
+  }
+
+  public decrypt(ip: InPlain): Observable<SecretResult> {
+    return this.httpClient.post<SecretResult>(environment.gistHost + 'secret/decrypt', ip);
   }
 
 }

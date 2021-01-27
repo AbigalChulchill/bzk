@@ -30,7 +30,32 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { BoxRunLogComponent } from './console/box-run-log/box-run-log.component';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatFormFieldModule} from '@angular/material/form-field';
-
+import { MatInputModule } from '@angular/material/input';
+import { ConditionComponent } from './model/view/link/condition/condition.component';
+import { ConfigComponent } from './config/config.component';
+import { ConditionNumComponent } from './model/view/link/condition-num/condition-num.component';
+import { ConditionEnumeratorComponent } from './model/view/link/condition-enumerator/condition-enumerator.component';
+import { ConditionTxtComponent } from './model/view/link/condition-txt/condition-txt.component';
+import { ConditionIncludeComponent } from './model/view/link/condition-include/condition-include.component';
+import {ClipboardModule} from '@angular/cdk/clipboard';
+import { PropListComponent } from './flow-design/properties/prop-row/prop-list/prop-list.component';
+import { PropMapComponent } from './flow-design/properties/prop-row/prop-map/prop-map.component';
+import { HttpActionComponent } from './model/view/action/http-action/http-action.component';
+import {MatDialogModule} from '@angular/material/dialog';
+import { PropRefComponent } from './flow-design/properties/prop-row/prop-ref/prop-ref.component';
+import { RefTextComponent } from './uikit/ref-text/ref-text.component';
+import { PolyglotActionComponent } from './model/view/action/polyglot-action/polyglot-action.component';
+import { KVPairComponent } from './uikit/kvpair/kvpair.component';
+import { MonacoEditorModule } from 'ngx-monaco-editor';
+import { CodeEditorComponent } from './uikit/code-editor/code-editor.component';
+import { FlowPoolInfoComponent } from './registered-flow/flow-pool-info/flow-pool-info.component';
+import { VarKeyComponent } from './uikit/var-key/var-key.component';
+import { SubFlowActionComponent } from './model/view/action/sub-flow-action/sub-flow-action.component';
+import {MatTableModule} from '@angular/material/table';
+import {MatPaginatorModule} from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+import { TransitionComponent } from './model/view/transition/transition.component';
+import { VarKeyReflectComponent } from './uikit/var-key-reflect/var-key-reflect.component';
 
 export function createTranslateLoader(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -55,6 +80,25 @@ export function createTranslateLoader(http: HttpClient): TranslateHttpLoader {
     VarStoreComponent,
     ConsoleComponent,
     BoxRunLogComponent,
+    ConditionComponent,
+    ConfigComponent,
+    ConditionNumComponent,
+    ConditionEnumeratorComponent,
+    ConditionTxtComponent,
+    ConditionIncludeComponent,
+    PropListComponent,
+    PropMapComponent,
+    HttpActionComponent,
+    PropRefComponent,
+    RefTextComponent,
+    PolyglotActionComponent,
+    KVPairComponent,
+    CodeEditorComponent,
+    FlowPoolInfoComponent,
+    VarKeyComponent,
+    SubFlowActionComponent,
+    TransitionComponent,
+    VarKeyReflectComponent,
 
   ],
   imports: [
@@ -68,6 +112,12 @@ export function createTranslateLoader(http: HttpClient): TranslateHttpLoader {
     MatFormFieldModule,
     ReactiveFormsModule,
     MatExpansionModule,
+    MatSortModule,
+    MatTableModule,
+    ClipboardModule,
+    MatDialogModule,
+    MatPaginatorModule,
+    MonacoEditorModule.forRoot(),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

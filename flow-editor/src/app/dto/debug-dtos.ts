@@ -1,4 +1,5 @@
-import { BaseVar, Flow } from '../model/flow';
+import { BaseVar } from "../infrastructure/meta";
+import { Flow } from "../model/flow";
 
 export class DebugDtos {
 }

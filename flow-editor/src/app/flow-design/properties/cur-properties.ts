@@ -12,10 +12,14 @@ export class CurProperties {
     this.onChange = oc;
   }
 
-  public setSource(t: Source): void {
-    this.source = t;
+  public reflesh(): void {
     this.props = PropUtils.getInstance().list(this.source.target.obj);
     this.clazzInfo = PropUtils.getInstance().getPropClazzArgs(this.source.target.obj);
+  }
+
+  public setSource(t: Source): void {
+    this.source = t;
+    this.reflesh();
     this.onChange();
   }
 
@@ -54,6 +58,7 @@ export class CurProperties {
       }
     }
     this.props = PropUtils.getInstance().list(this.source.target.obj);
+    console.log(JSON.stringify(this.props));
   }
 
 }
@@ -66,6 +71,7 @@ export class Source {
 
   public constructor(t: STar, p: Source) {
     this.target = t;
+
     this.preview = p;
   }
 

@@ -1,12 +1,14 @@
+import { FlowDesignComponent } from './../../../flow-design/flow-design.component';
 import { HttpClientService } from './../../../service/http-client.service';
 import { ActionDebugData } from './../../../dto/debug-dtos';
 import { ModifyingFlowService } from './../../../service/modifying-flow.service';
 import { ToastService } from './../../../service/toast.service';
 import { ModelUpdateAdapter } from './../../service/model-update-adapter';
 import { Action } from './../../action';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ClazzExComponent } from 'src/app/utils/prop-utils';
 import { PropertiesComponent } from 'src/app/flow-design/properties/properties.component';
+import { BaseVar } from 'src/app/infrastructure/meta';
 
 
 
@@ -17,7 +19,7 @@ import { PropertiesComponent } from 'src/app/flow-design/properties/properties.c
 })
 export class ActionComponent implements OnInit, ClazzExComponent {
 
-  data: any;
+  @Input() protected data: any;
 
   flowVarKey: string;
   boxVarKey: string;
@@ -28,12 +30,8 @@ export class ActionComponent implements OnInit, ClazzExComponent {
     private toast: ToastService
   ) { }
 
-  init(d: any): void {
+  init(d: any, mi: any): void {
     this.data = d;
-  }
-
-  getData(): any {
-    return this.action;
   }
 
   public get action(): Action { return this.data; }
@@ -48,7 +46,9 @@ export class ActionComponent implements OnInit, ClazzExComponent {
     });
     const rb = new ActionDebugData();
     rb.boxVar = this.modifyingFlow.varsStore.getVars(this.boxVarKey);
+    if(!rb.boxVar) rb.boxVar = new BaseVar();
     rb.flowVar = this.modifyingFlow.varsStore.getVars(this.flowVarKey);
+    if(!rb.flowVar) rb.flowVar = new BaseVar();
     rb.flow = ModelUpdateAdapter.getInstance().getFlow();
     rb.uid = this.action.uid;
     await this.httpClient.debugAction(rb, -1).toPromise();
@@ -59,7 +59,7 @@ export class ActionComponent implements OnInit, ClazzExComponent {
   }
 
   public onInternalVars(): void {
-    PropertiesComponent.getInstance().getCurProperties().nextTarget({
+    FlowDesignComponent.getInstance().propertiesView.getCurProperties().nextTarget({
       key: '',
       obj: this.modifyingFlow.varsStore
     });

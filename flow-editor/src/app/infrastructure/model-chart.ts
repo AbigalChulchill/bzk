@@ -5,6 +5,8 @@ import { ChartBuilder, ChartClickInfo, ChartUtils, Node, Subgraph } from './../u
 import { Flow } from './../model/flow';
 import { ModelObservable } from '../model/model-observe';
 import { Box, Link } from '../model/box';
+import { CommUtils } from '../utils/comm-utils';
+import { Transition } from '../model/transition';
 
 
 
@@ -17,6 +19,7 @@ export class ModelChart implements ModelObservable {
   private domSelector: string;
 
   private objClicks = new Map<number, (ci: ChartClickInfo) => boolean>();
+
 
 
   public constructor(ds: string) {
@@ -52,12 +55,21 @@ export class ModelChart implements ModelObservable {
   private setupBoxLinks(): void {
     const lks = ModelUtils.listAllLinks(this.model);
     for (const lk of lks) {
-      if (StringUtils.isBlank(lk.toBox)) { continue; }
-      const subg = this.chartBuilder.getSubgraph(lk.toBox);
+      if (StringUtils.isBlank(lk.transition.toBox)) { continue; }
+      const subg = this.chartBuilder.getSubgraph(lk.transition.toBox);
       const n = this.chartBuilder.getNode(lk.uid);
       n.setSubgraph(subg);
     }
+    const bks = this.model.boxs;
+    for (const b of bks) {
+      if (StringUtils.isBlank(b.transition.toBox)) { continue; }
+      const tob = this.chartBuilder.getSubgraph(b.transition.toBox);
+      const ob = this.chartBuilder.getSubgraph(b.uid);
+      ob.toSubgraph = tob;
+    }
+
   }
+
 
   private genSubgraph(b: Box): Subgraph {
     const ans = new Subgraph(b.uid, StringUtils.opt(b.name, b.uid), e => this.onClick(e));
@@ -82,6 +94,10 @@ export class ModelChart implements ModelObservable {
       } else {
         throw new Error('not support:' + JSON.stringify(t));
       }
+    }
+    if (tks.length === 1) {
+      const nn = new Node(b.uid, 'ADD_' + b.uid, e => this.onClick(e)).setStyle('fill:#fff,stroke-width:4px,stroke-dasharray: 5 5');
+      node.addChild(nn);
     }
     return node.getRoot();
   }

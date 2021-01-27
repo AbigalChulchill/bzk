@@ -1,0 +1,52 @@
+
+
+<div class="input-group mb-3">
+  <div class="input-group-prepend">
+    <span class="input-group-text" id="basic-addon1">Return Var</span>
+  </div>
+  <app-ref-text class="form-control" [text]="this" ></app-ref-text>
+</div>
+
+<div class="mt-2 mb-2">
+  <mat-accordion>
+    <mat-expansion-panel hideToggle>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <i class="fas fa-vial mr-1"></i> Test Me
+        </mat-panel-title>
+
+      </mat-expansion-panel-header>
+      <div class="container-fluid alert alert-primary">
+        <mat-form-field appearance="fill" class=" m-2">
+          <mat-label>Flow Vars</mat-label>
+          <mat-select [(value)]="flowVarKey">
+            <mat-option *ngFor="let k of listVarKeys()" [value]="k">
+              {{k}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill" class=" m-2">
+          <mat-label>Box Vars</mat-label>
+          <mat-select [(value)]="boxVarKey">
+            <mat-option *ngFor="let k of listVarKeys()" [value]="k">
+              {{k}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <div class="btn-group pb-2" role="group" aria-label="Basic example">
+          <button type="button" (click)="onInternalVars()" class="btn btn-secondary"><i
+              class="mr-2 fas fa-spell-check"></i>Var</button>
+          <button type="button" (click)="testMe()" class="btn btn-secondary"><i class="mr-2 fas fa-play"></i>Run</button>
+          <button type="button" class="btn btn-secondary"><i class="mr-2 fas fa-glasses"></i>Console</button>
+        </div>
+
+      </div>
+    </mat-expansion-panel>
+
+  </mat-accordion>
+
+
+</div>
+
+<app-task-func-view [task]="action"></app-task-func-view>

@@ -1,3 +1,15 @@
-<button type="button" class="mr-1 btn btn-primary" (click)="createAction()">創建Action</button>
-<button type="button" class="mr-1 btn btn-primary" (click)="createLink()">創建Link</button>
-<button type="button" class="mr-1 btn btn-primary" (click)="deleteMe()"> <i class="far fa-trash-alt"></i></button>
+<mat-slide-toggle  class="mb-3" [(ngModel)]="whileEnabled" >Enable While</mat-slide-toggle>
+<div class="alert alert-success" role="alert">
+  <button type="button" class="mr-1 btn btn-primary" *ngIf="!actionClzChoosing"
+    (click)="toCreateAction()">創建Action</button>
+  <div class="input-group mb-3" *ngIf="actionClzChoosing">
+    <select class="custom-select" id="inputGroupSelect02" [(ngModel)]="actionClazz">
+      <option *ngFor="let clz of listActionClazz()" [value]="clz">{{clz}}</option>
+    </select>
+    <div class="input-group-append">
+      <button class="input-group-text" for="inputGroupSelect02" (click)="createAction()">Create Action</button>
+    </div>
+  </div>
+  <button type="button" class="mr-1 btn btn-primary" (click)="createLink()">創建Link</button>
+  <button type="button" class="mr-1 btn btn-primary" (click)="deleteMe()"> <i class="far fa-trash-alt"></i></button>
+</div>

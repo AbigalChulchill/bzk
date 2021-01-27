@@ -10,10 +10,11 @@
             <span>File</span>
           </a>
           <ul class="dropdown-menu">
-            <a class="dropdown-item" href="javascript:void(0)"
-              (click)="menu.saveAsNew()">{{ 'SaveNewOne' |translate }}</a>
+            <a class="dropdown-item" href="javascript:void(0)" (click)="menu.saveAsNew()">{{ 'SaveNewOne' |translate
+              }}</a>
             <a *ngIf="modifyingFlow.getLastMark()" class="dropdown-item" href="javascript:void(0)"
               (click)="menu.updateRemote()">{{ 'Save' |translate }} </a>
+            <a class="dropdown-item" href="javascript:void(0)" (click)="menu.showModelJson()"> Show Json </a>
           </ul>
         </li>
         <li class="dropdown nav-item">
@@ -24,6 +25,7 @@
           </a>
           <ul class="dropdown-menu">
             <a class="dropdown-item" href="javascript:void(0)" (click)="menu.register()">{{ 'publish' |translate }}</a>
+            <a class="dropdown-item" href="javascript:void(0)" (click)="menu.testRun()">Test</a>
           </ul>
         </li>
         <li class="dropdown nav-item">
@@ -52,26 +54,40 @@
         <div class="alert alert-success design-content " role="alert">
 
 
-          <button type="button" class="m-3 btn btn-primary overlay-box" (click)="onFlowSettingClick()">
+          <!-- <button type="button" class="m-3 btn btn-primary overlay-box" (click)="onFlowSettingClick()">
             <i class="fa fa-cog" aria-hidden="true"></i>
-          </button>
+          </button> -->
 
-          <div>
-            <p>This is an example of a simple HTML page with one paragraph.</p>
+          <div class="btn-group overlay-box" role="group" aria-label="Basic example"
+            *ngIf="modifyingFlow.modelobs.getModel()">
+            <span class="btn btn-info">{{ modifyingFlow.modelobs.getModel().name }}</span>
+            <button type="button" class="btn btn-secondary" (click)="svgZoom.resetPosZoom()"><i
+                class="fas fa-recycle"></i></button>
+            <button type="button" class="btn btn-secondary" (click)="svgZoom.zoomPlus()"><i
+                class="fas fa-search-plus"></i></button>
+            <button type="button" class="btn btn-secondary" (click)="svgZoom.zoomMinus()"><i
+                class="fas fa-search-minus"></i></button>
+            <button type="button" class=" btn btn-primary " (click)="onFlowSettingClick()">
+              <i class="fa fa-cog" aria-hidden="true"></i>
+            </button>
+          </div>
 
-            <div id="graphDiv" class="mermaid">
-              stateDiagram
-              [*] --> Still
-              Still --> [*]
-              Still --> Moving
-              Moving --> Still
-              Moving --> Crash
-              Crash --> [*]
 
-            </div>
 
+
+          <div id="graphDiv" class="mermaid">
+            stateDiagram
+            [*] --> Still
+            Still --> [*]
+            Still --> Moving
+            Moving --> Still
+            Moving --> Crash
+            Crash --> [*]
 
           </div>
+
+
+
 
 
         </div>

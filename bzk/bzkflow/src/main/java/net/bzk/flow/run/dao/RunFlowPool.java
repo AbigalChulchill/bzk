@@ -14,10 +14,10 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import lombok.Getter;
-import net.bzk.flow.api.dto.RegisteredFlow.RunInfo;
 import net.bzk.flow.model.Flow;
 import net.bzk.flow.run.entry.Entryer;
 import net.bzk.flow.run.flow.FlowRuner;
+import net.bzk.flow.run.flow.FlowRuner.RunInfo;
 
 /*
  * @Link https://docs.spring.io/spring/docs/4.2.x/spring-framework-reference/html/scheduling.html
@@ -36,12 +36,16 @@ public class RunFlowPool {
 	private ThreadPoolExecutor threadPool;
 
 	private Map<String, FlowRuner> map = new ConcurrentHashMap<>();
+	private Entryer entryer;
 
 	public RunFlowPool init(Flow fm) {
 		model = fm;
 		configThreadPool();
-		schedule();
 		return this;
+	}
+
+	public void launch() {
+		schedule();
 	}
 
 	private void configThreadPool() {
@@ -55,26 +59,36 @@ public class RunFlowPool {
 		return map;
 	}
 
+	public FlowRuner create() {
+		FlowRuner ans = runFlowDao.create(model);
+		map.put(ans.getInfo().getUid(), ans);
+		return ans;
+	}
+
 	public FlowRuner createAndStart() {
-		FlowRuner ans = runFlowDao.create( model);
-		map.put(ans.getUid(), ans);
+		FlowRuner ans = create();
 		ans.start(threadPool);
 		return ans;
 	}
 
 	private void schedule() {
 		String beanName = getModel().getEntry().getClazz();
-		Entryer e = context.getBean(beanName, Entryer.class);
-		e.init(getModel().getEntry());
-		e.schedule(() -> createAndStart());
+		entryer = context.getBean(beanName, Entryer.class);
+		entryer.init(getModel().getEntry());
+		entryer.schedule(() -> createAndStart());
 	}
 
 	public List<RunInfo> listRunInfos() {
-		return map.values().stream().map(FlowRuner::getRunInfo).collect(Collectors.toList());
+		return map.values().stream().map(FlowRuner::getInfo).collect(Collectors.toList());
 	}
 
 	public void forceCancelAll() {
-		map.values().forEach(v -> v.getTask().cancel(true));
+		entryer.unregister();
+		map.values().forEach(v -> {
+			if (v.getTask() != null) {
+				v.getTask().cancel(true);
+			}
+		});
 
 	}
 

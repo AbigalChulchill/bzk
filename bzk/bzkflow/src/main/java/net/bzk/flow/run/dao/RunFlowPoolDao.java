@@ -27,6 +27,10 @@ public class RunFlowPoolDao {
 		map.put(fm.getUid(), ans);
 		return true;
 	}
+	
+	public void launch(String flowUid) {
+		map.get(flowUid).launch();
+	}
 
 	public RunFlowPool getPool(String fUid) {
 		return map.get(fUid);

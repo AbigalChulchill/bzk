@@ -1,3 +1,4 @@
+import { CommUtils } from './../utils/comm-utils';
 import { VarsStore } from './../dto/vars-store';
 
 import { HttpClientService } from './http-client.service';
@@ -20,6 +21,9 @@ export class GithubService implements HttpInterceptor {
 
   public static KEY_TOKE = 'GitHubToken';
   public static KEY_PAGE = 'GitHubPostPage';
+  public static KEY_ENCRYPTION = 'GitHub_ENCRYPTION_PASS';
+
+  public encryptionPass = '';
 
   constructor(
     private urlParams: UrlParamsService,
@@ -34,7 +38,7 @@ export class GithubService implements HttpInterceptor {
         }
       }
     });
-
+    this.encryptionPass = localStorage.getItem(GithubService.KEY_ENCRYPTION);
   }
 
 
@@ -87,24 +91,30 @@ export class GithubService implements HttpInterceptor {
     });
     const ans = new Array<Gist>();
     for (const g of fs) {
-      ans.push(await this.getGist(g.id));
+      try {
+        ans.push(await this.getGist(g.id));
+      } catch (ex) {
+        console.warn(ex);
+      }
     }
     return ans;
   }
 
   public getGist(id: string): Promise<Gist> {
-    return this.httpClient.getGist(id);
+    return this.httpClient.getGist(id, this.encryptionPass);
   }
 
 
-  public async createModel(f: Flow, vs: VarsStore): Promise<Gist> {
-    const fo = await this.httpClient.createGits(false, 'it`s Bzk', this.genFiles(f, vs)).toPromise();
+  public async createModel(inf: Flow, vs: VarsStore): Promise<Gist> {
+    const f:Flow = CommUtils.clone(inf);
+    f.uid =  CommUtils.makeAlphanumeric(Constant.UID_SIZE);
+    const fo = await this.httpClient.createGits(false, this.encryptionPass, 'it`s Bzk', this.genFiles(f, vs));
     console.log('f:' + console.log(fo));
     return fo;
   }
 
   public async updateModel(id: string, f: Flow, vs: VarsStore): Promise<Gist> {
-    const fo = await this.httpClient.updateGist(id, this.genFiles(f, vs)).toPromise();
+    const fo = await this.httpClient.updateGist(id, this.encryptionPass, this.genFiles(f, vs));
     return fo;
   }
 
@@ -112,12 +122,12 @@ export class GithubService implements HttpInterceptor {
     const gfs = new Array<GistFile>();
     const gf = new GistFile();
     gf.filename = f.uid + Gist.KEY_MAIN_GIST_EXTENSION;
-    gf.content = JSON.stringify(f, null, 4);
+    gf.content = JSON.stringify(f);
     gfs.push(gf);
 
     const vsf = new GistFile();
     vsf.filename = Constant.VARS_STORE_NAME;
-    vsf.content = JSON.stringify(vs, null, 4);
+    vsf.content = JSON.stringify(vs);
     gfs.push(vsf);
 
     return gfs;

@@ -1,0 +1,104 @@
+{
+	"clazz": "net.bzk.flow.model.Flow",
+	"uid": "QfoTsBXHokU8",
+	"logEncryptKey": "1234567890123456",
+	"vars": {
+		
+	},
+	"threadCfg": {
+		"corePoolSize": 10,
+		"maximumPoolSize": 50,
+		"keepAliveTime": 500,
+		"aliveUnit": "MINUTES"
+	},
+	"name": "TestGoNextBox",
+	"boxs": [
+		{
+			"clazz": "net.bzk.flow.model.Box",
+			"uid": "wqsVB8wC0BSx",
+			"name": "EndBox",
+			"actions": [
+				{
+					"clazz": "net.bzk.flow.model.Action$VarModifyAction",
+					"uid": "U67M1L6Qmmxm",
+					"name": "End",
+					"tryErrorble": false,
+					"polyglot": "js",
+					"flatData": [
+						{
+							"key": "END",
+							"val": "true"
+						}
+					]
+				}
+			],
+			"links": [],
+			"vars": {
+				
+			},
+			"taskSort": [
+				"U67M1L6Qmmxm"
+			],
+			"transition": {
+				"toBox": "",
+				"endTag": "TODO Why End",
+				"endResultKeys": [
+					{
+						"lv": "not_specify",
+						"key": "checkNum"
+					},
+					{
+						"lv": "not_specify",
+						"key": "END"
+					}
+				]
+			},
+			"whileJudgment": null
+		},
+		{
+			"clazz": "net.bzk.flow.model.Box",
+			"uid": "VzPzT54lux1a8rsJ",
+			"name": "CheckCanFund",
+			"actions": [
+				{
+					"clazz": "net.bzk.flow.model.Action$VarModifyAction",
+					"uid": "CI23DynCI8W5",
+					"name": "Init",
+					"tryErrorble": false,
+					"polyglot": "js",
+					"flatData": [
+						{
+							"key": "checkNum",
+							"val": "100"
+						}
+					]
+				}
+			],
+			"links": [],
+			"vars": {
+				
+			},
+			"taskSort": [
+				"CI23DynCI8W5"
+			],
+			"transition": {
+				"toBox": "wqsVB8wC0BSx",
+				"endTag": null,
+				"endResultKeys": [
+					{
+						"lv": "not_specify",
+						"key": "checkNum"
+					}
+				]
+			},
+			"whileJudgment": null
+		}
+	],
+	"entry": {
+		"clazz": "net.bzk.flow.model.Entry$FixedRateEntry",
+		"period": -1,
+		"unit": "SECONDS",
+		"initialDelay": 2,
+		"boxUid": "VzPzT54lux1a8rsJ"
+	}
+}

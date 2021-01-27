@@ -1,0 +1,13 @@
+<div class="input-group mb-3">
+  <div class="input-group-prepend">
+    <app-prop-row *ngIf="leftProp"  [prop]="leftProp" ></app-prop-row>
+  </div>
+
+  <select class="form-control custom-select m-2" [(ngModel)]="condition.type" >
+    <option *ngFor="let j of listJudgment()" [value]="j">{{j}}</option>
+  </select>
+
+  <div class="input-group-append">
+    <app-prop-row *ngIf="rightProp" [prop]="rightProp" ></app-prop-row>
+  </div>
+</div>

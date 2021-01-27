@@ -5,13 +5,17 @@ import org.springframework.stereotype.Service;
 
 import net.bzk.flow.model.Condition.ConditionInclude;
 
-@Service("net.bzk.flow.model.flow.Condition$ConditionInclude")
+@Service("net.bzk.flow.model.Condition$ConditionInclude")
 @Scope("prototype")
 public class ConditionIncluder extends Conditioner<ConditionInclude> {
 
+	public ConditionIncluder() {
+		super(ConditionInclude.class);
+	}
+
 	@Override
 	public boolean checkSelf() {
-		return initConditioner(context,getModel().getInclude()).isTrue();
+		return initConditioner(context,getUids(),getModel().getInclude()).isTrue();
 	}
 
 }

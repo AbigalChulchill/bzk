@@ -6,9 +6,9 @@ const VarQuery = require('bzk/dist/dtos').VarQuery;
 const VarQueryPoint = require('bzk/dist/dtos').VarQueryPoint;
 
 
-let initJson = '${initJson}';
-let initO = JSON.parse(initJson);
-let $ = Bridge.initInstance(initO);
+const initJson = '${initJson}';
+const initO = JSON.parse(initJson);
+const $ = Bridge.initInstance(initO);
 
 console.log("start use the bzkBridge");
 
@@ -16,6 +16,7 @@ console.log("start use the bzkBridge");
 async function call(){
 	console.log("start use the bzkBridge Call");
 	${content}
+	$.ouputSets();
 }
 
 call();

@@ -2,32 +2,47 @@
 
   <div class="card col-2">
     <div class="card-body">
-      <button type="button" class="btn btn-primary container-fluid">Primary</button>
-      <button type="button" class="btn btn-secondary container-fluid">Secondary</button>
-      <button type="button" class="btn btn-success container-fluid">Success</button>
-      <button type="button" class="btn btn-danger container-fluid">Danger</button>
+      <button type="button" class="btn btn-primary container-fluid" (click)="showType = ShowType.OrgPlain">Show
+        Plain</button>
+      <button *ngIf="!StringUtils.isBlank( data.msg)" type="button" class="btn btn-secondary container-fluid"
+        (click)="showType = ShowType.Message">Show Message</button>
+      <button type="button" class="btn btn-success container-fluid"  (click)="showType = ShowType.OrgJson">Show Data Json</button>
+      <button type="button" class="btn btn-danger container-fluid" (click)="showType = ShowType.Vars">Vars</button>
     </div>
   </div>
 
+  <ng-container *ngIf="showType === ShowType.Vars">
 
-  <div class="card " [ngClass]="getWidthClass()">
-    <div class="card-header">
-      Flow Vars
+    <div class="card " [ngClass]="getWidthClass()">
+      <div class="card-header">
+        Flow Vars
+      </div>
+      <app-json-editor [data]="ReadJsonProvide.gen(data.flowVar)"></app-json-editor>
     </div>
-    <app-json-editor [data]="ReadJsonProvide.gen(data.flowVar)"></app-json-editor>
+
+    <div class="card " [ngClass]="getWidthClass()">
+      <div class="card-header">
+        Box Vars
+      </div>
+      <app-json-editor [data]="ReadJsonProvide.gen(data.boxVar)"></app-json-editor>
+    </div>
+
+    <ul class="card  col-2" *ngIf="hasReturn()">
+      <h6 *ngFor="let vv of toAction().varVals" class="badge badge-info"><span
+          class="badge badge-secondary">{{vv.key}}</span> {{vv.val}} <span
+          class="badge badge-secondary">{{vv.lv}}</span>
+      </h6>
+    </ul>
+
+  </ng-container>
+
+  <div class="card col-10" *ngIf="isFullView()">
+    <textarea *ngIf="showType === ShowType.Message || showType === ShowType.OrgPlain" class="container-fluid h-100  " (click)="$event.target.select()">
+      {{ getPlainText()  }}
+    </textarea>
+    <app-json-editor class="container-fluid h-100  " *ngIf="showType === ShowType.OrgJson" [data]="ReadJsonProvide.gen(data)"></app-json-editor>
   </div>
 
-  <div class="card " [ngClass]="getWidthClass()">
-    <div class="card-header">
-      Box Vars
-    </div>
-    <app-json-editor [data]="ReadJsonProvide.gen(data.boxVar)"></app-json-editor>
-  </div>
 
-  <ul class="card  col-2" *ngIf="isAction()">
-    <h6 *ngFor="let vv of toAction().varVals" class="badge badge-info"><span
-        class="badge badge-secondary">{{vv.key}}</span> {{vv.val}} <span class="badge badge-secondary">{{vv.lv}}</span>
-    </h6>
-  </ul>
 
 </div>

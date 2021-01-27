@@ -1,3 +1,5 @@
+import { ModifyingFlowService } from './../service/modifying-flow.service';
+import { StringUtils } from './../utils/string-utils';
 import { ConsoleDtos, BoxRunLog, ActionRunLog } from './../dto/console-dtos';
 import { LoadingService } from './../service/loading.service';
 import { CommUtils } from './../utils/comm-utils';
@@ -19,17 +21,21 @@ export class ConsoleComponent implements OnInit {
   @ViewChild('listlineDom') private listlineDom: ElementRef;
   ConsoleDtos = ConsoleDtos;
   LineType = LineType;
+  StringUtils = StringUtils;
   lineList = new Array<Row>();
   stompClient = null;
   keepReading = false;
   allLoged = false;
+  decryptKey = '';
 
   constructor(
     public httpClient: HttpClientService,
-    private loading: LoadingService
+    private loading: LoadingService,
+    private modifyingFlow: ModifyingFlowService
   ) { }
 
   async ngOnInit(): Promise<void> {
+    this.decryptKey = this.modifyingFlow.modelobs.getModel().logEncryptKey;
     const socket = new SockJS(environment.console.host + 'bzk-websocket');
     this.stompClient = Stomp.over(socket);
     this.stompClient.connect({}, (frame) => {
@@ -81,9 +87,9 @@ export class ConsoleComponent implements OnInit {
   }
 
   private parseByLine(l: string): Row {
-    const bl = ConsoleDtos.parseBoxRunLog(l);
+    const bl = ConsoleDtos.parseBoxRunLog(this.decryptKey, l);
     if (bl) { return new BoxRunLogRow(bl); }
-    const al = ConsoleDtos.parseActionRunLog(l);
+    const al = ConsoleDtos.parseActionRunLog(this.decryptKey, l);
     if (al) { return new ActionRunLogRow(al); }
     return new TextRow(l);
   }

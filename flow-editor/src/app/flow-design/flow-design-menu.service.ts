@@ -1,3 +1,5 @@
+import { JsonEditorComponent, ReadJsonProvide, SimpleJsonProvide } from './../uikit/json-editor/json-editor.component';
+import { DialogService } from './../uikit/dialog.service';
 import { Injectable } from '@angular/core';
 import { LoadingService } from '../service/loading.service';
 import { LoadLastMark, ModifyingFlowService } from '../service/modifying-flow.service';
@@ -11,6 +13,7 @@ export class FlowDesignMenuService {
 
   constructor(
     public modifyingFlow: ModifyingFlowService,
+    private dialog: DialogService,
     private loading: LoadingService,
     private toast: ToastService
   ) { }
@@ -28,9 +31,26 @@ export class FlowDesignMenuService {
     });
   }
 
+  public showModelJson(): void {
+    console.log('showModelJson');
+    const df= this.dialog.open(JsonEditorComponent);
+    const jsonC:JsonEditorComponent = df.componentInstance;
+    jsonC.fullWidth = true;
+    jsonC.setData(SimpleJsonProvide.gen(this.modifyingFlow.modelobs.getModel()));
+  }
+
+
   public async register(): Promise<void> {
     await this.waitLoad(async () => {
       await this.modifyingFlow.registerRemote();
+    });
+  }
+
+  public testRun():void{
+    this.modifyingFlow.testRemote();
+    this.toast.twinkle({
+      title: 'RUN!',
+      msg: 'test submmited'
     });
   }
 

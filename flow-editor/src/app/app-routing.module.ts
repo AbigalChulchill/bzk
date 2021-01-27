@@ -1,3 +1,4 @@
+import { ConfigComponent } from './config/config.component';
 import { ConsoleComponent } from './console/console.component';
 import { RegisteredFlowComponent } from './registered-flow/registered-flow.component';
 import { PathGuideService } from './service/path-guide.service';
@@ -13,6 +14,7 @@ const routes: Routes = [
   { path: 'model/design', component: FlowDesignComponent , canActivate: [PathGuideService] },
   { path: 'model/repo', component: ModelRepoComponent, canActivate: [PathGuideService] },
   { path: 'model/registered', component: RegisteredFlowComponent, canActivate: [PathGuideService] },
+  { path: 'config', component: ConfigComponent, canActivate: [PathGuideService] },
 ];
 
 @NgModule({

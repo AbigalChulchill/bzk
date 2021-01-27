@@ -1,0 +1,46 @@
+<div class="container-fuild mb-3">
+  <div class="input-group">
+    <label class="input-group-text form-control" for="inputGroupSelect01">{{prop.title}}</label>
+    <div class="input-group-append" id="button-addon4">
+      <button *ngIf="!toCreate" class="btn btn-outline-secondary" type="button" (click)="toCreate=true">Create</button>
+    </div>
+  </div>
+
+  <div *ngIf="toCreate" class="input-group mb-3">
+    <input type="text" class="form-control" placeholder="Field Name" aria-label="Field Name" [(ngModel)]="createingKey">
+    <div class="input-group-append">
+      <button class="btn btn-outline-secondary" (click)="createItem()" type="button" id="button-addon2">Create</button>
+    </div>
+  </div>
+
+  <!-- <div class=" container-fluid row" *ngFor="let key of listKeys() ">
+
+    <div class="input-group mb-3">
+      <span class="form-control">
+        <app-prop-row (messageEvent)="receiveOnUnfoldMessage($event)" [prop]="getCProp(key)"></app-prop-row>
+      </span>
+      <div class="input-group-append">
+        <button type="button" class="btn btn-outline-secondary" (click)="removeItem(key)"><i
+            class="fas fa-trash-alt"></i></button>
+      </div>
+    </div>
+
+  </div> -->
+
+  <mat-accordion>
+    <mat-expansion-panel hideToggle *ngFor="let key of listKeys() ">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{key}}
+        </mat-panel-title>
+        <mat-panel-description>
+          <button type="button" class="btn btn-outline-secondary" (click)="removeItem(key)"><i
+              class="fas fa-trash-alt"></i></button>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <app-prop-row (messageEvent)="receiveOnUnfoldMessage($event)" [prop]="getCProp(key)"></app-prop-row>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+
+</div>

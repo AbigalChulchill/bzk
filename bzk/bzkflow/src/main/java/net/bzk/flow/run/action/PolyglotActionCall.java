@@ -1,9 +1,8 @@
 package net.bzk.flow.run.action;
 
-import java.awt.List;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
-import javax.inject.Inject;
 
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Value;
@@ -14,61 +13,51 @@ import lombok.extern.slf4j.Slf4j;
 import net.bzk.flow.model.Action.PolyglotAction;
 import net.bzk.flow.model.var.VarVal;
 import net.bzk.flow.model.var.VarValSet;
-import net.bzk.flow.run.service.FastVarQueryer;
-import net.bzk.flow.utils.LogUtils;
-import net.bzk.infrastructure.JsonUtils;
-import net.bzk.infrastructure.JsonUtils.DataType;
-import net.bzk.infrastructure.ex.BzkRuntimeException;
 
 @Service("net.bzk.flow.model.Action$PolyglotAction")
 @Scope("prototype")
 @Slf4j
 public class PolyglotActionCall extends ActionCall<PolyglotAction> {
-	@Inject
-	private FastVarQueryer fastQueryer;
+
+	public PolyglotActionCall() {
+		super(PolyglotAction.class);
+	}
 
 	@Override
 	public VarValSet call() throws Exception {
+//		if(getModel().getUid().equals("1pfZVtQ4gnmO")) {
+//			System.out.println("DEBUG");
+//		}
 		VarValSet set = new VarValSet();
-		fastQueryer.init(getUids());
-		try (Context context = Context.create()) {
-			Value v = context.getBindings(getModel().getPolyglot().toString());
-			v.putMember("bzk", fastQueryer);
-			Value function = context.eval(getModel().getPolyglot().toString(), getModel().getCode());
-//			if (!function.canExecute()) {
-//				throw new BzkRuntimeException("Not Execute:" + JsonUtils.toJson(getUids()));
-//			}
-			Object ans = executeByType(function, getModel().getResultType());
-			logUtils.logActionCall(log, getUids(), "get ans {0}", ans);
-			if (ans != null) {
-				VarVal vv = new VarVal();
-				vv.setKey(getModel().getResultKey());
-				vv.setVal(ans);
-				vv.setLv(getModel().getResultLv());
-				set.add(vv);
-			}
+		String code = getModel().getCode();
+		logUtils.logActionCall(log, getUids(), "code: " + code);
+		Object ans = callPolyglot(varQueryer, getModel().getPolyglot().toString(), code);
+		logUtils.logActionCall(log, getUids(), "get ans " + ans);
+		if (ans != null) {
+			VarVal vv = new VarVal();
+			vv.setKey(getModel().getResultKey());
+			vv.setVal(ans);
+			vv.setLv(getModel().getResultLv());
+			set.add(vv);
 		}
 		return set;
 	}
 
-	private Object executeByType(Value function, DataType dt) {
-		switch (dt) {
-		case string:
-			return function.asString();
-		case Boolean:
-			return function.asBoolean();
-		case number:
-			return function.asDouble();
-		case array:
-			return function.as(List.class);
-		case object:
-			return function.as(Map.class);
-		case NotSupport:
-		case NULL:
-			function.asByte();
-			break;
+	public static void main(String[] args) {
+		try (Context context = Context.newBuilder().allowAllAccess(true).build()) {
+			Map<String, Integer> m = new HashMap<>();
+			m.put("test", 110);
+			context.getBindings("js").putMember("map", m);
+			Value function = context.eval("js", "[1,2,3,4,5]");
+			Object ans = function.as(Object.class);
+			if (ans instanceof Map) {
+				Map map = (Map) ans;
+				System.out.println(map.toString());
+			}
+			System.out.println(ans.getClass() + " " + ans);
+
 		}
-		return null;
+
 	}
 
 }

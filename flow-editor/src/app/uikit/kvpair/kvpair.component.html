@@ -1,0 +1,22 @@
+<!-- <div class="row">
+  <div class="col-6">
+    <app-ref-text  [text]="getKeyProvider()"></app-ref-text>
+  </div>
+  <app-ref-text class="form-control" [text]="getValProvider()"></app-ref-text> -->
+  <!-- <app-prop-row class="col-6" *ngIf="valProp" [prop]="valProp" ></app-prop-row>
+
+</div> -->
+
+
+
+<div class="input-group mb-3" >
+  <div class="input-group-prepend"  >
+    <app-ref-text class="input-group-text" [text]="getKeyProvider()"></app-ref-text>
+  </div>
+  <textarea [(ngModel)]="data.val" class="form-control" ></textarea>
+
+  <div class="input-group-append">
+    <button class="btn btn-outline-secondary" (click)="dialog.openCodeEditor(ObjTextProvide.gen(data,'val'))"
+      type="button"><i class="fas fa-edit"></i></button>
+  </div>
+</div>

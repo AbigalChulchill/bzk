@@ -20,6 +20,8 @@ public class Box extends BzkObj {
 	private List<Link> links = new CopyOnWriteArrayList<>();
 	private VarMap vars = new VarMap();
 	private List<String> taskSort = new CopyOnWriteArrayList<>();
+	private Condition whileJudgment;
+	private Transition transition = new Transition();
 
 	@JsonIgnore
 	public Optional<Action> findAction(String aUid) {
