@@ -24,7 +24,7 @@ export class AuthenticationService {
   ) { }
 
   authenticate(username, password) {
-    const url = environment.apiHost + '/authenticate';
+    const url = environment.apiHost + 'authenticate';
     console.log('url:' + url);
     return this.httpClient.post<JwtOutDto>(url, { username, password }).pipe(
       map(

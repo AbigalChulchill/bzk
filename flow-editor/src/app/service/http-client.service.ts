@@ -22,28 +22,28 @@ export class HttpClientService {
   ) { }
 
   public async getDemoModel(): Promise<Flow> {
-    const ans = await this.httpClient.get<Flow>(environment.apiHost + '/flow/demo').toPromise();
+    const ans = await this.httpClient.get<Flow>(environment.apiHost + 'flow/demo').toPromise();
     return BzkUtils.fitClzz(Flow, ans);
   }
 
   public debugAction(d: ActionDebugData, delDelay: number): Observable<void> {
-    return this.httpClient.post<void>(environment.apiHost + '/flow/debug/action?delDelay=' + delDelay, d);
+    return this.httpClient.post<void>(environment.apiHost + 'flow/debug/action?delDelay=' + delDelay, d);
   }
 
   public registerFlow(f: Flow[]): Observable<void> {
-    return this.httpClient.post<void>(environment.apiHost + '/flow/register', f);
+    return this.httpClient.post<void>(environment.apiHost + 'flow/register', f);
   }
 
   public testFlow(eUid: string, f: Flow[]): Observable<void> {
-    return this.httpClient.post<void>(environment.apiHost + `/flow/${eUid}/test`, f);
+    return this.httpClient.post<void>(environment.apiHost + `flow/${eUid}/test`, f);
   }
 
   public listFlowPoolInfo(): Observable<Array<FlowPoolInfo>> {
-    return this.httpClient.get<Array<FlowPoolInfo>>(environment.apiHost + '/flow/');
+    return this.httpClient.get<Array<FlowPoolInfo>>(environment.apiHost + 'flow/');
   }
 
   public forceRemovePool(uid: string): Observable<void> {
-    return this.httpClient.post<void>(environment.apiHost + '/flow/pool/' + uid + '/remove?type=force', null);
+    return this.httpClient.post<void>(environment.apiHost + 'flow/pool/' + uid + '/remove?type=force', null);
   }
 
 
