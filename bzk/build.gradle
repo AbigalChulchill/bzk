@@ -65,7 +65,7 @@ subprojects{
 }
 
 
-project(':bzksrv') {
+project(':Auth') {
   dependencies {
   	implementation project(':Comm')
 
