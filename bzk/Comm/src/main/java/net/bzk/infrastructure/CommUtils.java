@@ -8,6 +8,8 @@ import java.io.Serializable;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -121,6 +123,10 @@ public class CommUtils {
 			return false;
 		}
 		return true;
+	}
+	
+	public static Date nowUtc0() {
+		return Date.from(java.time.ZonedDateTime.now(ZoneId.of("UTC+0")).toInstant());
 	}
 
 }
