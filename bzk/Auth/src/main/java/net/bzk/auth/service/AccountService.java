@@ -20,8 +20,7 @@ public class AccountService implements UserDetailsService {
 
 	@Inject
 	private AccountDao dao;
-	@Inject
-	private EndUserService endUserService;
+
 	@Inject
 	private PasswordEncoder bcryptEncoder;
 
@@ -46,10 +45,7 @@ public class AccountService implements UserDetailsService {
 		newUser.setRefCode(user.getRefCode());
 		newUser.setEmail(user.getEmail());
 		newUser = dao.save(newUser);
-		if (user.isTobeEndUser()) {
-			endUserService.becomeEndUser(newUser, eu -> {
-			});
-		}
+
 		return newUser;
 	}
 }

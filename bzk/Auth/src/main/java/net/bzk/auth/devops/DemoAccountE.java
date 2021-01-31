@@ -5,8 +5,8 @@ import net.bzk.auth.model.Account.Authority;
 
 public enum DemoAccountE {
 
-	Admin1(Authority.Admin), EndUser1(Authority.EndUser), Payer1(Authority.Payer),
-	domidev(Authority.Admin, Authority.EndUser, Authority.Payer);
+	Admin1(Authority.Admin), 
+	domidev(Authority.Admin); 
 
 	@Getter
 	private Authority[] authoritys;

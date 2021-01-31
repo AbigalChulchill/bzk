@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import net.bzk.auth.aop.JwtTokenUtil;
-import net.bzk.auth.controllers.AdminPayerController.QueryDto;
 import net.bzk.auth.dto.JwtInDto;
 import net.bzk.auth.dto.JwtOutDto;
 import net.bzk.auth.dto.UserDto;
@@ -53,10 +52,7 @@ public class JwtAuthenticationController {
 		return ResponseEntity.ok(userDetailsService.save(user));
 	}
 
-	@RequestMapping(value = "/test", method = RequestMethod.GET)
-	public QueryDto testQp(QueryDto tq) {
-		return tq;
-	}
+
 
 	private void authenticate(String username, String password) throws Exception {
 		try {

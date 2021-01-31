@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import net.bzk.auth.aop.CurrentUser;
 import net.bzk.auth.model.Account;
 import net.bzk.auth.service.AccountService;
-import net.bzk.auth.service.EndUserService;
-import net.bzk.auth.service.EndUserService.BecomeEndUserBundle;
 
 @CrossOrigin(maxAge = 3600, methods = { RequestMethod.GET, RequestMethod.PUT, RequestMethod.POST, RequestMethod.PATCH,
 		RequestMethod.OPTIONS, RequestMethod.HEAD }, allowedHeaders = "*", origins = "*")
@@ -26,16 +24,7 @@ public class AccountController {
 
 	@Inject
 	private AccountService service;
-	@Inject
-	private EndUserService endUserService;
 
-	@ResponseStatus(HttpStatus.OK)
-	@ResponseBody
-	@RequestMapping(value = "enduser/become", method = RequestMethod.POST)
-	public BecomeEndUserBundle becomeEndUser(@CurrentUser Account a) {
-		return endUserService.becomeEndUser(a, eu -> {
-		});
-	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody

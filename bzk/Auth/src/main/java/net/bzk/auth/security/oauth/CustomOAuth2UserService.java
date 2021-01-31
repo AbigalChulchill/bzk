@@ -2,8 +2,6 @@ package net.bzk.auth.security.oauth;
 
 import java.util.Optional;
 
-import javax.inject.Inject;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
@@ -15,25 +13,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import net.bzk.auth.dao.AccountDao;
-import net.bzk.auth.dao.EndUserDao;
 import net.bzk.auth.exception.OAuth2AuthenticationProcessingException;
 import net.bzk.auth.model.Account;
-import net.bzk.auth.model.EndUser;
 import net.bzk.auth.model.Account.AuthProvider;
 import net.bzk.auth.security.UserPrincipal;
 import net.bzk.auth.security.oauth.user.OAuth2UserInfo;
 import net.bzk.auth.security.oauth.user.OAuth2UserInfoFactory;
-import net.bzk.auth.service.EndUserService;
 
 @Service
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
 	@Autowired
 	private AccountDao userRepository;
-	@Inject
-	private EndUserService endUserService;
-	@Inject
-	private EndUserDao endUserDao;
+
+
 
 	@Override
 	public OAuth2User loadUser(OAuth2UserRequest oAuth2UserRequest) throws OAuth2AuthenticationException {
@@ -67,7 +60,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 						"Looks like you're signed up with " + user.getProvider() + " account. Please use your "
 								+ user.getProvider() + " account to login.");
 			}
-			user = updateExistingUser(user, oAuth2UserInfo);
 		} else {
 			user = registerNewUser(oAuth2UserRequest, oAuth2UserInfo);
 		}
@@ -83,19 +75,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 		user.setEmail(oAuth2UserInfo.getEmail());
 		user.setUsername(oAuth2UserInfo.getEmail());
 		user = userRepository.save(user);
-		endUserService.becomeEndUser(user, eu -> {
-			eu.setDisplayName(oAuth2UserInfo.getName());
-			eu.setAvatarUrl(oAuth2UserInfo.getImageUrl());
-		});
 		return user;
 	}
 
-	private Account updateExistingUser(Account existingUser, OAuth2UserInfo oAuth2UserInfo) {
-		EndUser eu = endUserDao.findByAccountOid(existingUser.getUid()).get();
-		eu.setDisplayName(oAuth2UserInfo.getName());
-		eu.setAvatarUrl(oAuth2UserInfo.getImageUrl());
-		endUserDao.save(eu);
-		return existingUser;
-	}
 
 }

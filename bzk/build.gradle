@@ -83,6 +83,8 @@ project(':bzkflow') {
   dependencies {
   	implementation project(':Comm')
   	implementation project(':WsSDK')
+  	implementation project(':Auth')
+  	
 
   }
 }

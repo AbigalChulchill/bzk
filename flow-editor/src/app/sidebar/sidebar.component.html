@@ -41,10 +41,10 @@
           <p>Config</p>
         </a>
       </li>
-      <li>
-        <a class="nav-link" href="./maps.html">
-          <i class="nc-icon nc-pin-3"></i>
-          <p>Maps</p>
+      <li [class.active]="urlParam.eqPath('/login')">
+        <a class="nav-link" routerLink="login">
+          <i class="fas fa-sign-in-alt"></i>
+          <p>Login</p>
         </a>
       </li>
       <li>

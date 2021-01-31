@@ -79,7 +79,7 @@ public class Account implements org.springframework.security.core.userdetails.Us
 	}
 
 	public static enum Authority implements GrantedAuthority {
-		Admin, Payer, EndUser;
+		Admin;
 
 		@Override
 		public String getAuthority() {

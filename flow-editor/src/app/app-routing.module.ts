@@ -1,3 +1,4 @@
+import { LoginComponent } from './login/login.component';
 import { ConfigComponent } from './config/config.component';
 import { ConsoleComponent } from './console/console.component';
 import { RegisteredFlowComponent } from './registered-flow/registered-flow.component';
@@ -15,6 +16,7 @@ const routes: Routes = [
   { path: 'model/repo', component: ModelRepoComponent, canActivate: [PathGuideService] },
   { path: 'model/registered', component: RegisteredFlowComponent, canActivate: [PathGuideService] },
   { path: 'config', component: ConfigComponent, canActivate: [PathGuideService] },
+  { path: 'login', component: LoginComponent },
 ];
 
 @NgModule({
