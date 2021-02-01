@@ -15,10 +15,14 @@ public abstract class JsonPojoConverter<T> implements AttributeConverter<T, Stri
 	private static final ObjectMapper mapper = new ObjectMapper()
 			.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS).setDateFormat(new StdDateFormat());
 
+	protected ObjectMapper mapper() {
+		return mapper;
+	}
+	
 	@Override
 	public String convertToDatabaseColumn(T attribute) {
 		try {
-			return mapper.writeValueAsString(attribute);
+			return mapper().writeValueAsString(attribute);
 		} catch (JsonProcessingException e) {
 			throw new BzkRuntimeException(e);
 		}
@@ -29,7 +33,7 @@ public abstract class JsonPojoConverter<T> implements AttributeConverter<T, Stri
 		try {
 			if (StringUtils.isBlank(dbData))
 				return null;
-			return mapper.readValue(dbData, getTClass());
+			return mapper().readValue(dbData, getTClass());
 		} catch (Exception e) {
 			throw new BzkRuntimeException(e);
 		}
