@@ -1,3 +1,4 @@
+import { FlowClientService } from './../../../service/flow-client.service';
 import { FlowDesignComponent } from './../../../flow-design/flow-design.component';
 import { HttpClientService } from './../../../service/http-client.service';
 import { ActionDebugData } from './../../../dto/debug-dtos';
@@ -26,7 +27,7 @@ export class ActionComponent implements OnInit, ClazzExComponent {
 
   constructor(
     private modifyingFlow: ModifyingFlowService,
-    private httpClient: HttpClientService,
+    private flowClient: FlowClientService,
     private toast: ToastService
   ) { }
 
@@ -51,7 +52,7 @@ export class ActionComponent implements OnInit, ClazzExComponent {
     if(!rb.flowVar) rb.flowVar = new BaseVar();
     rb.flow = ModelUpdateAdapter.getInstance().getFlow();
     rb.uid = this.action.uid;
-    await this.httpClient.debugAction(rb, -1).toPromise();
+    await this.flowClient.debugAction(rb, -1).toPromise();
   }
 
   public listVarKeys(): Array<string> {

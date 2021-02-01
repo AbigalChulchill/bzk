@@ -1,3 +1,4 @@
+import { FlowClientService } from './flow-client.service';
 import { CommUtils } from './../utils/comm-utils';
 import { SubFlowAction } from './../model/action';
 import { ModelUtils } from 'src/app/utils/model-utils';
@@ -26,6 +27,7 @@ export class ModifyingFlowService {
 
   constructor(
     private clientService: HttpClientService,
+    private flowClient:FlowClientService,
     private githubService: GithubService,
     private loading: LoadingService
   ) {
@@ -44,7 +46,7 @@ export class ModifyingFlowService {
   }
 
   public async loadDemo(): Promise<void> {
-    const lm = await this.clientService.getDemoModel();
+    const lm = await this.flowClient.getDemoModel();
     this.modelobs.setModel(lm);
     console.log(lm);
   }
@@ -99,14 +101,14 @@ export class ModifyingFlowService {
     if (!this.modelobs.getModel()) { throw new Error('null the model'); }
     const allfs = new Array<Flow>();
     this.listAllDependsFlow(allfs, this.modelobs.getModel());
-    await this.clientService.registerFlow(allfs).toPromise();
+    await this.flowClient.registerFlow(allfs).toPromise();
   }
 
   public async testRemote(): Promise<void> {
     if (!this.modelobs.getModel()) { throw new Error('null the model'); }
     const allfs = new Array<Flow>();
     this.listAllDependsFlow(allfs, this.modelobs.getModel());
-    await this.clientService.testFlow(this.modelobs.getModel().uid,allfs).toPromise();
+    await this.flowClient.testFlow(this.modelobs.getModel().uid,allfs).toPromise();
   }
 
   public listAllDependsFlow(ans: Array<Flow>, f: Flow) {

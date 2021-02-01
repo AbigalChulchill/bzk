@@ -1,3 +1,4 @@
+import { FlowClientService } from './../service/flow-client.service';
 import { LoadingService } from './../service/loading.service';
 import { FlowPoolInfo } from './../dto/flow-pool-info';
 import { Component, OnInit } from '@angular/core';
@@ -14,7 +15,8 @@ export class RegisteredFlowComponent implements OnInit {
   // panelOpenState = false;
   constructor(
     private httpClient: HttpClientService,
-    private loading: LoadingService
+    private loading: LoadingService,
+    private flowClient:FlowClientService
   ) { }
 
   async ngOnInit(): Promise<void> {
@@ -23,13 +25,13 @@ export class RegisteredFlowComponent implements OnInit {
 
   private async reflesh(): Promise<void> {
     const t = this.loading.show();
-    this.list = await this.httpClient.listFlowPoolInfo().toPromise();
+    this.list = await this.flowClient.listFlowPoolInfo().toPromise();
     this.loading.dismiss(t);
 
   }
 
   public async forceRemovePool(uid: string): Promise<void> {
-    await this.httpClient.forceRemovePool(uid).toPromise();
+    await this.flowClient.forceRemovePool(uid).toPromise();
     await this.reflesh();
   }
 
