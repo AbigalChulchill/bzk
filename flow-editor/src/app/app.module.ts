@@ -58,6 +58,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { TransitionComponent } from './model/view/transition/transition.component';
 import { VarKeyReflectComponent } from './uikit/var-key-reflect/var-key-reflect.component';
 import { LoginComponent } from './login/login.component';
+import { CloudBackupListComponent } from './uikit/cloud-backup-list/cloud-backup-list.component';
 
 export function createTranslateLoader(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -102,6 +103,7 @@ export function createTranslateLoader(http: HttpClient): TranslateHttpLoader {
     TransitionComponent,
     VarKeyReflectComponent,
     LoginComponent,
+    CloudBackupListComponent,
 
   ],
   imports: [
