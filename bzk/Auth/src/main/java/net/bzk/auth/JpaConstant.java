@@ -7,7 +7,7 @@ package net.bzk.auth;
  */
 public class JpaConstant {
 
-	public static final int COLUMN_DEFIN_UID_SIZE = 12;
+	public static final int COLUMN_DEFIN_UID_SIZE = 32;
 	public static final String COLUMN_DEFIN_ID = "int(11) unsigned";
 	public static final String COLUMN_DEFIN_INT = "int(11) default 0";
 	public static final String COLUMN_DEFIN_UID = "varchar(" + COLUMN_DEFIN_UID_SIZE + ")";

@@ -34,6 +34,12 @@ public class SavedFlow implements Serializable, CreateUpdateDate {
 
 	private Date updateAt;
 	private Date createAt;
+	
+	public static SavedFlow gen(Flow f) {
+		SavedFlow ans = new SavedFlow();
+		ans.uid = f.getUid();
+		return ans;
+	}
 
 	public static class FlowConvert extends JsonPojoConverter<Flow> {
 
