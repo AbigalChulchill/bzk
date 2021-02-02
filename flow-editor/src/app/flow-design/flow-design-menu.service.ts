@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { LoadingService } from '../service/loading.service';
 import { LoadLastMark, ModifyingFlowService } from '../service/modifying-flow.service';
 import { ToastService } from '../service/toast.service';
+import { saveAs } from 'file-saver';
 
 @Injectable({
   providedIn: 'root'
@@ -37,6 +38,12 @@ export class FlowDesignMenuService {
     const jsonC:JsonEditorComponent = df.componentInstance;
     jsonC.fullWidth = true;
     jsonC.setData(SimpleJsonProvide.gen(this.modifyingFlow.modelobs.getModel()));
+  }
+
+  public exportFile():void{
+    const m= this.modifyingFlow.modelobs.getModel();
+    var blob = new Blob([JSON.stringify(m,null,4)], {type: "application/json;charset=utf-8"});
+    saveAs(blob, `${m.uid}.json` );
   }
 
 
