@@ -13,10 +13,10 @@
         <li class="dropdown nav-item">
           <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
             <i class="nc-icon nc-planet"></i>
-            <span class="d-lg-none">Notification</span>
+            <span class="d-lg-none">Cloud Backup</span>
           </a>
           <ul class="dropdown-menu">
-            <a class="dropdown-item" href="#">Notification 1</a>
+            <a class="dropdown-item" href="javascript:void(0)" (click)="openImportGistDialog()" >Import Github Gist</a>
             <a class="dropdown-item" href="#">Notification 2</a>
             <a class="dropdown-item" href="#">Notification 3</a>
             <a class="dropdown-item" href="#">Notification 4</a>
@@ -41,11 +41,18 @@
         <mat-panel-title>
           <span class="col-2 alert alert-secondary">{{rf.model.name}}</span>
           <span class="col-2 alert alert-secondary">{{rf.uid}}</span>
-          <span class="col-1 alert alert-info">
-            Running
-            <span class="badge badge-light">{{ getStateCount(rf,FlowState.Running) }}</span>
+          <span class="col-5 alert alert-info">
+            <span class="badge badge-primary">{{ getStateCount(rf,FlowState.Running) }}</span>
+            /
+            <span class="badge badge-danger">{{ getStateCount(rf,FlowState.Fail) }}</span>
+            /
+            <span class="badge badge-success">{{ getStateCount(rf,FlowState.Done) }}</span>
+            /
+            <span class="badge badge-secondary">{{ getStateCount(rf,FlowState.Pedding) }}</span>
+            /
+            <span class="badge badge-light">{{ getAllRunCount(rf) }}</span>
           </span>
-          <span class="col-1 alert alert-info">
+          <!-- <span class="col-1 alert alert-info">
             Fail
             <span class="badge badge-light">{{ getStateCount(rf,FlowState.Fail) }}</span>
           </span>
@@ -60,7 +67,7 @@
           <span class="col-1 alert alert-info">
             ALL
             <span class="badge badge-light">{{ getAllRunCount(rf) }}</span>
-          </span>
+          </span> -->
           <span class="col-3 alert alert-success">Action</span>
         </mat-panel-title>
 

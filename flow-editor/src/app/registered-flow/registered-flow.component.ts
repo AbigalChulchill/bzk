@@ -1,3 +1,5 @@
+import { async } from '@angular/core/testing';
+import { DialogService } from './../uikit/dialog.service';
 import { SavedFlowClientService } from './../service/saved-flow-client.service';
 import { FlowClientService } from './../service/flow-client.service';
 import { LoadingService } from './../service/loading.service';
@@ -19,7 +21,8 @@ export class RegisteredFlowComponent implements OnInit {
   constructor(
     private loading: LoadingService,
     private flowClient: FlowClientService,
-    private savedFlowClient: SavedFlowClientService
+    private savedFlowClient: SavedFlowClientService,
+    private dialog: DialogService
   ) { }
 
   async ngOnInit(): Promise<void> {
@@ -34,24 +37,30 @@ export class RegisteredFlowComponent implements OnInit {
   }
 
   public getPoolInfo(sf: SavedFlow): FlowPoolInfo {
-    return this.flowPoolInfos.find(fp=> fp.flow.uid === sf.uid);
+    return this.flowPoolInfos.find(fp => fp.flow.uid === sf.uid);
   }
 
   public getAllRunCount(sf: SavedFlow): number {
-    const ri= this.flowPoolInfos.find(fp=> fp.flow.uid === sf.uid);
-    if(!ri) return 0;
+    const ri = this.flowPoolInfos.find(fp => fp.flow.uid === sf.uid);
+    if (!ri) return 0;
     return ri.runInfos.length;
   }
 
-  public getStateCount(sf: SavedFlow,st:FlowState): number {
-    const ri= this.flowPoolInfos.find(fp=> fp.flow.uid === sf.uid);
-    if(!ri) return 0;
-    return ri.runInfos.filter(r=> r.state === st).length;
+  public getStateCount(sf: SavedFlow, st: FlowState): number {
+    const ri = this.flowPoolInfos.find(fp => fp.flow.uid === sf.uid);
+    if (!ri) return 0;
+    return ri.runInfos.filter(r => r.state === st).length;
   }
 
   public async forceRemovePool(uid: string): Promise<void> {
     await this.flowClient.forceRemovePool(uid).toPromise();
     await this.reflesh();
+  }
+
+  public openImportGistDialog(): void {
+    this.dialog.openCloudBackup(async () => {
+      await this.reflesh();
+    });
   }
 
 }

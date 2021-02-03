@@ -27,7 +27,12 @@ public class SavedFlowService {
 	
 	@PostConstruct
 	public void loadInitData() {
-		var ffs= FileUtils.listFiles(new File(initDataPath),new String[] {"json"}, false);
+		
+		var dir = new File(initDataPath);
+		if(!dir.exists()) {
+			dir.mkdirs();
+		}
+		var ffs= FileUtils.listFiles(dir,new String[] {"json"}, false);
 		ffs.forEach(this::importByFile);
 	}
 	

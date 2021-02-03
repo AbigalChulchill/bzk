@@ -1,3 +1,4 @@
+import { CloudBackupListComponent } from './cloud-backup-list/cloud-backup-list.component';
 import { TextProvide } from './../infrastructure/meta';
 import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
@@ -19,12 +20,17 @@ export class DialogService {
      return this.dialogRef;
   }
 
-
   public openCodeEditor(tp:TextProvide): void {
     console.log('openCodeEditor');
     const df= this.dialog.open(CodeEditorComponent);
     const cec:CodeEditorComponent = df.componentInstance;
     cec.data = tp;
+  }
+
+  public openCloudBackup(impCB:()=>void):void{
+    const df= this.dialog.open(CloudBackupListComponent);
+    const cbc:CloudBackupListComponent = df.componentInstance;
+    cbc.onImportDoneAction = impCB;
   }
 
 }

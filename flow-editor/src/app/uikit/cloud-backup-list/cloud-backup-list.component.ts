@@ -1,3 +1,4 @@
+import { SavedFlowClientService } from './../../service/saved-flow-client.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Gist, GistFile } from 'src/app/dto/gist';
@@ -16,13 +17,15 @@ export class CloudBackupListComponent implements OnInit {
 
   public devGitsJson: string;
   public bzkGists = new Array<GistRow>();
+  public onImportDoneAction = () => {};
 
   constructor(
     public githubService: GithubService,
-    private httpClient:HttpClientService,
+    private httpClient: HttpClientService,
     private router: Router,
     private modifyingFlow: ModifyingFlowService,
-    private loading: LoadingService
+    private loading: LoadingService,
+    private savedFlowClient: SavedFlowClientService
   ) { }
 
   async ngOnInit(): Promise<void> {
@@ -54,12 +57,14 @@ export class CloudBackupListComponent implements OnInit {
     this.githubService.postAuth(this.router.url);
   }
 
-  public async onFileEdit(gr: GistRow): Promise<void> {
-    this.modifyingFlow.setTarget(gr.gist.getMainFile().convertModel(), {
-      id: gr.gist.id,
-      source: LoadSource.Gist
-    });
-    this.router.navigate(['model/design']);
+  public async onImport(gr: GistRow): Promise<void> {
+
+    const t = this.loading.show();
+    const fm = gr.gist.getMainFile().convertModel();
+    const sf = await this.savedFlowClient.save(fm).toPromise();
+    await this.onImportDoneAction();
+    this.loading.dismiss(t);
+
   }
 
 

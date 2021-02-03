@@ -28,7 +28,7 @@ export class SavedFlowClientService {
   }
 
   public save(m: Flow): Observable<SavedFlow> {
-    return this.httpClient.post<SavedFlow>(environment.apiHost + SavedFlowClientService.URL_PREFIX, m);
+    return this.httpClient.post<SavedFlow>(environment.apiHost + SavedFlowClientService.URL_PREFIX+'save', m);
   }
 
 
