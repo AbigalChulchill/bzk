@@ -1,3 +1,6 @@
+import { Constant } from './../infrastructure/constant';
+import { CommUtils } from './../utils/comm-utils';
+import { async } from '@angular/core/testing';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { SavedFlow } from '../model/saved-flow';
@@ -8,6 +11,7 @@ import { Flow } from '../model/flow';
   providedIn: 'root'
 })
 export class SavedFlowClientService {
+
 
   public static URL_PREFIX = 'saved/flow/';
 
@@ -28,7 +32,13 @@ export class SavedFlowClientService {
   }
 
   public save(m: Flow): Observable<SavedFlow> {
-    return this.httpClient.post<SavedFlow>(environment.apiHost + SavedFlowClientService.URL_PREFIX+'save', m);
+    return this.httpClient.post<SavedFlow>(environment.apiHost + SavedFlowClientService.URL_PREFIX + 'save', m);
+  }
+
+  public async create(f: Flow): Promise<SavedFlow> {
+    f.uid = CommUtils.makeAlphanumeric(Constant.UID_SIZE);
+    const ans = await this.save(f).toPromise();
+    return ans;
   }
 
 

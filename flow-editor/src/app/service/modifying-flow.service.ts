@@ -1,3 +1,4 @@
+import { SavedFlowClientService } from './saved-flow-client.service';
 import { FlowClientService } from './flow-client.service';
 import { CommUtils } from './../utils/comm-utils';
 import { SubFlowAction } from './../model/action';
@@ -22,13 +23,11 @@ export class ModifyingFlowService {
 
   public static KEY_LAST = 'last-load';
   public modelobs: ModelObserve = new ModelObserve();
-  public varsStore = new VarsStore();
-  public gists = new Array<Gist>();
 
   constructor(
     private clientService: HttpClientService,
     private flowClient:FlowClientService,
-    private githubService: GithubService,
+    private savedFlowClient: SavedFlowClientService,
     private loading: LoadingService
   ) {
 
@@ -42,7 +41,6 @@ export class ModifyingFlowService {
       await this.loadDemo();
     }
     this.loading.dismiss(t);
-    this.gists = await this.githubService.listBzkGits();
   }
 
   public async loadDemo(): Promise<void> {
@@ -55,9 +53,8 @@ export class ModifyingFlowService {
     const llm = this.getLastMark();
     if (!llm) { return null; }
     try {
-      const gist = await this.githubService.getGist(llm.id);
-      this.modelobs.setModel(gist.getMainFile().convertModel());
-      this.varsStore = gist.getVarsStore();
+      const lfm = await this.savedFlowClient.getByUid(llm.id).toPromise();
+      this.modelobs.setModel(lfm.model);
       return true;
     } catch (ex) {
       console.log(ex);
@@ -84,44 +81,30 @@ export class ModifyingFlowService {
 
 
   public async saveAsNew(): Promise<void> {
-    const sgist = await this.githubService.createModel(this.modelobs.getModel(), this.varsStore);
+    const sgist = await this.savedFlowClient.create(this.modelobs.getModel());
     this.saveLast({
-      id: sgist.id,
-      source: LoadSource.Gist
+      id: sgist.uid,
+      source: LoadSource.terminal
     });
   }
 
   public async updateRemote(): Promise<void> {
     const llm = this.getLastMark();
     if (!llm) { throw new Error('not find last save'); }
-    await this.githubService.updateModel(llm.id, this.modelobs.getModel(), this.varsStore);
+    await this.savedFlowClient.save(this.modelobs.getModel());
   }
 
   public async registerRemote(): Promise<void> {
     if (!this.modelobs.getModel()) { throw new Error('null the model'); }
-    const allfs = new Array<Flow>();
-    this.listAllDependsFlow(allfs, this.modelobs.getModel());
-    await this.flowClient.registerFlow(allfs).toPromise();
+    await this.flowClient.registerFlowByUid(this.modelobs.getModel().uid).toPromise();
   }
 
   public async testRemote(): Promise<void> {
     if (!this.modelobs.getModel()) { throw new Error('null the model'); }
-    const allfs = new Array<Flow>();
-    this.listAllDependsFlow(allfs, this.modelobs.getModel());
-    await this.flowClient.testFlow(this.modelobs.getModel().uid,allfs).toPromise();
+    await this.flowClient.testFlow(this.modelobs.getModel().uid).toPromise();
   }
 
-  public listAllDependsFlow(ans: Array<Flow>, f: Flow) {
-    if (!ModelUtils.pushUnique(ans, f)) return;
-    const sfas = ModelUtils.listAllAction(f).filter(a => a instanceof SubFlowAction);
-    for (const nsfa of sfas) {
-      const sfa: SubFlowAction = nsfa as SubFlowAction;
-      const g = this.gists.find(g => g.getMainFile().convertModel().uid === sfa.flowUid);
-      const df = g.getMainFile().convertModel();
-      if (!ModelUtils.pushUnique(ans, df)) continue;
-      this.listAllDependsFlow(ans, df);
-    }
-  }
+
 
   private saveLast(iid: LoadLastMark): void {
     const llm = JSON.stringify(iid);
@@ -131,7 +114,7 @@ export class ModifyingFlowService {
 }
 
 export enum LoadSource {
-  Gist = 'Gist'
+  terminal = 'terminal'
 }
 
 export class LoadLastMark {

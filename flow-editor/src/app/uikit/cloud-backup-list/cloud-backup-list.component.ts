@@ -53,7 +53,7 @@ export class CloudBackupListComponent implements OnInit {
   }
 
   public postGitHubAuth(): void {
-    alert(this.router.url);
+    // alert(this.router.url);
     this.githubService.postAuth(this.router.url);
   }
 

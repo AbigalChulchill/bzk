@@ -40,7 +40,6 @@ export class FlowDesignComponent implements OnInit, ModelUpdate {
 
   constructor(
     public modifyingFlow: ModifyingFlowService,
-    public githubService: GithubService,
     private router: Router,
     public menu: FlowDesignMenuService,
     public svgZoom:SVGZoomService
@@ -70,10 +69,6 @@ export class FlowDesignComponent implements OnInit, ModelUpdate {
 
   async ngOnInit(): Promise<void> {
     FlowDesignComponent.instance = this;
-    if (!this.githubService.hasAuth()) {
-      this.githubService.postAuth(this.router.url);
-      return;
-    }
     await this.modifyingFlow.loadInit();
     this.modifyingFlow.modelobs.addObservable(this.modelChart);
     ModelUpdateAdapter.getInstance().setCurUpdater(this);
@@ -108,7 +103,7 @@ export class FlowDesignComponent implements OnInit, ModelUpdate {
   public onInternalVars(): void {
     this.propertiesView.getCurProperties().setTarget({
       key: '',
-      obj: this.modifyingFlow.varsStore
+      obj: null // TODO
     });
   }
 

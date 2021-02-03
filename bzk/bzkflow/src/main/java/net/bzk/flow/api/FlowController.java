@@ -1,6 +1,7 @@
 package net.bzk.flow.api;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -23,6 +24,7 @@ import net.bzk.flow.model.demo.ModelBuilder;
 import net.bzk.flow.run.flow.FlowRuner;
 import net.bzk.flow.run.flow.FlowRuner.RunInfo;
 import net.bzk.flow.run.service.RunFlowService;
+import net.bzk.flow.run.service.SavedFlowService;
 
 @CrossOrigin(maxAge = 3600, methods = { RequestMethod.GET, RequestMethod.PUT, RequestMethod.POST, RequestMethod.PATCH,
 		RequestMethod.OPTIONS, RequestMethod.HEAD }, allowedHeaders = "*", origins = "*")
@@ -35,6 +37,8 @@ public class FlowController {
 	private ModelBuilder modelBuilder;
 	@Inject
 	private RunFlowService runFlowService;
+	@Inject
+	private SavedFlowService savedFlowService;
 
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
@@ -50,9 +54,19 @@ public class FlowController {
 	}
 	
 	@ResponseStatus(HttpStatus.OK)
+	@RequestMapping(value = "{uid}/register", method = RequestMethod.POST)
+	public void register(@PathVariable String uid) {
+		var sfs = savedFlowService.listDepends(uid);
+		List< Flow> fs = sfs.stream().map(sf-> sf.getModel()).collect(Collectors.toList());
+		register(fs);
+	}
+	
+	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	@RequestMapping(value = "{uid}/test", method = RequestMethod.POST)
-	public RunInfo testFlow(@PathVariable String uid ,@RequestBody List< Flow> fs) {
+	public RunInfo testFlow(@PathVariable String uid ) {
+		var sfs = savedFlowService.listDepends(uid);
+		List< Flow> fs = sfs.stream().map(sf-> sf.getModel()).collect(Collectors.toList());
 		return runFlowService.test(uid, fs);
 	}
 

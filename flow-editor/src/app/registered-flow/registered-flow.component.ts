@@ -7,6 +7,8 @@ import { FlowPoolInfo, FlowState } from './../dto/flow-pool-info';
 import { Component, OnInit } from '@angular/core';
 import { HttpClientService } from '../service/http-client.service';
 import { SavedFlow } from '../model/saved-flow';
+import { LoadSource, ModifyingFlowService } from '../service/modifying-flow.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-registered-flow',
@@ -22,6 +24,8 @@ export class RegisteredFlowComponent implements OnInit {
     private loading: LoadingService,
     private flowClient: FlowClientService,
     private savedFlowClient: SavedFlowClientService,
+    private modifyingFlow: ModifyingFlowService,
+    private router: Router,
     private dialog: DialogService
   ) { }
 
@@ -61,6 +65,14 @@ export class RegisteredFlowComponent implements OnInit {
     this.dialog.openCloudBackup(async () => {
       await this.reflesh();
     });
+  }
+
+  public async onFileEdit(gr: SavedFlow): Promise<void> {
+    this.modifyingFlow.setTarget(gr.model, {
+      id: gr.uid,
+      source: LoadSource.terminal
+    });
+    this.router.navigate(['model/design']);
   }
 
 }

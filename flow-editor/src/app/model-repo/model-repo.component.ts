@@ -21,16 +21,12 @@ export class ModelRepoComponent implements OnInit {
   constructor(
     public githubService: GithubService,
     private httpClient:HttpClientService,
-    private router: Router,
-    private modifyingFlow: ModifyingFlowService,
+
+
     private loading: LoadingService
   ) { }
 
   async ngOnInit(): Promise<void> {
-    if (!this.githubService.hasAuth()) {
-      this.githubService.postAuth(this.router.url);
-      return;
-    }
     this.reflesh();
   }
 
@@ -51,17 +47,11 @@ export class ModelRepoComponent implements OnInit {
   }
 
   public postGitHubAuth(): void {
-    alert(this.router.url);
-    this.githubService.postAuth(this.router.url);
+    // alert(this.router.url);
+    // this.githubService.postAuth(this.router.url);
   }
 
-  public async onFileEdit(gr: GistRow): Promise<void> {
-    this.modifyingFlow.setTarget(gr.gist.getMainFile().convertModel(), {
-      id: gr.gist.id,
-      source: LoadSource.Gist
-    });
-    this.router.navigate(['model/design']);
-  }
+
 
 
 

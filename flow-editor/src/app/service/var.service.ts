@@ -21,12 +21,11 @@ export class VarService {
 
   public listAllKeys(): Array<string> {
     const list = VarUtils.listVarKeyByFlow(ModelUpdateAdapter.getInstance().getFlow());
-    const kvs = this.modifyingFlow.varsStore.listAllFlatKV();
+    // TODO  const kvs = this.modifyingFlow.varsStore.listAllFlatKV();
     const ans = new Array<string>();
     list.forEach(s => {
       if (!StringUtils.isBlank(s)) CommUtils.pushUnique(ans, s);
     });
-    kvs.forEach(kv => CommUtils.pushUnique(ans, kv.key));
     return ans;
   }
 

@@ -52,23 +52,9 @@
             /
             <span class="badge badge-light">{{ getAllRunCount(rf) }}</span>
           </span>
-          <!-- <span class="col-1 alert alert-info">
-            Fail
-            <span class="badge badge-light">{{ getStateCount(rf,FlowState.Fail) }}</span>
+          <span class="col-3 alert alert-success">
+            <button type="button" class="badge badge-primary button" (click)="onFileEdit(rf)"><i class="fas fa-edit"></i></button>
           </span>
-          <span class="col-1 alert alert-info">
-            Done
-            <span class="badge badge-light">{{ getStateCount(rf,FlowState.Done) }}</span>
-          </span>
-          <span class="col-1 alert alert-info">
-            Pedding
-            <span class="badge badge-light">{{ getStateCount(rf,FlowState.Pedding) }}</span>
-          </span>
-          <span class="col-1 alert alert-info">
-            ALL
-            <span class="badge badge-light">{{ getAllRunCount(rf) }}</span>
-          </span> -->
-          <span class="col-3 alert alert-success">Action</span>
         </mat-panel-title>
 
       </mat-expansion-panel-header>

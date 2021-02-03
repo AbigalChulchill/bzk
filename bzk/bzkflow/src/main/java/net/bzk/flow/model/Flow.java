@@ -1,5 +1,7 @@
 package net.bzk.flow.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
@@ -48,7 +50,13 @@ public class Flow extends BzkObj {
 			return new ActionFindInfo(b, ao.get());
 		}
 		throw new BzkRuntimeException("not find any action uid:" + aUid);
-
+	}
+	
+	@JsonIgnore
+	public List<Action> listAllActions(){
+		List<Action> ans = new ArrayList<>();
+		boxs.forEach(b-> ans.addAll(b.getActions()) );
+		return ans;
 	}
 
 	@Data

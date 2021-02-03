@@ -46,9 +46,9 @@ export class ActionComponent implements OnInit, ClazzExComponent {
       title: ''
     });
     const rb = new ActionDebugData();
-    rb.boxVar = this.modifyingFlow.varsStore.getVars(this.boxVarKey);
+    rb.boxVar = null; //TODO
     if(!rb.boxVar) rb.boxVar = new BaseVar();
-    rb.flowVar = this.modifyingFlow.varsStore.getVars(this.flowVarKey);
+    rb.flowVar =null; //TODO
     if(!rb.flowVar) rb.flowVar = new BaseVar();
     rb.flow = ModelUpdateAdapter.getInstance().getFlow();
     rb.uid = this.action.uid;
@@ -56,13 +56,13 @@ export class ActionComponent implements OnInit, ClazzExComponent {
   }
 
   public listVarKeys(): Array<string> {
-    return this.modifyingFlow.varsStore.listKeys();
+    return null; //TODO
   }
 
   public onInternalVars(): void {
     FlowDesignComponent.getInstance().propertiesView.getCurProperties().nextTarget({
       key: '',
-      obj: this.modifyingFlow.varsStore
+      obj: null //TODO
     });
   }
 

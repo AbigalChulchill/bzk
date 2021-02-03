@@ -31,8 +31,12 @@ export class FlowClientService {
     return this.httpClient.post<void>(environment.apiHost + FlowClientService.URL_PREFIX + 'register', f);
   }
 
-  public testFlow(eUid: string, f: Flow[]): Observable<void> {
-    return this.httpClient.post<void>(environment.apiHost + FlowClientService.URL_PREFIX + `${eUid}/test`, f);
+  public registerFlowByUid(fuid: string): Observable<void> {
+    return this.httpClient.post<void>(environment.apiHost + FlowClientService.URL_PREFIX + fuid+'/register',null);
+  }
+
+  public testFlow(eUid: string): Observable<void> {
+    return this.httpClient.post<void>(environment.apiHost + FlowClientService.URL_PREFIX + `${eUid}/test`,null);
   }
 
   public listFlowPoolInfo(): Observable<Array<FlowPoolInfo>> {
