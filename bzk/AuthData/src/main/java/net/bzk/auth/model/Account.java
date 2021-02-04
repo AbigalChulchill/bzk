@@ -22,31 +22,31 @@ import net.bzk.auth.JpaConstant;
 @SuppressWarnings("serial")
 @Data
 @Entity
-@Table(name = "account")
+@Table
 public class Account implements org.springframework.security.core.userdetails.UserDetails {
 
 	@Id
-	@Column(nullable = false, columnDefinition = JpaConstant.COLUMN_DEFIN_UID)
+	@Column(nullable = false)
 	private String uid;
-	@Column(nullable = false, columnDefinition = JpaConstant.COLUMN_DEFIN_MEDIUM_TEXT, unique = true)
+	@Column(nullable = false, unique = true)
 	private String username;
-	@Column(nullable = false, columnDefinition = JpaConstant.COLUMN_DEFIN_MEDIUM_TEXT, unique = true)
+	@Column(nullable = false, unique = true)
 	private String email;
-	@Column(nullable = false, columnDefinition = JpaConstant.COLUMN_DEFIN_LARGE_TEXT)
+	@Column(nullable = false)
 	@JsonIgnore
 	private String password;
-	@Column(nullable = false, columnDefinition = JpaConstant.COLUMN_DEFIN_BOOLEAN)
+	@Column(nullable = false)
 	private boolean accountNonExpired;
-	@Column(nullable = false, columnDefinition = JpaConstant.COLUMN_DEFIN_BOOLEAN)
+	@Column(nullable = false)
 	private boolean accountNonLocked;
-	@Column(nullable = false, columnDefinition = JpaConstant.COLUMN_DEFIN_BOOLEAN)
+	@Column(nullable = false)
 	private boolean credentialsNonExpired;
-	@Column(nullable = false, columnDefinition = JpaConstant.COLUMN_DEFIN_BOOLEAN)
+	@Column(nullable = false)
 	private boolean enabled;
-	@Column(nullable = true, columnDefinition = JpaConstant.COLUMN_DEFIN_UID)
+	@Column(nullable = true)
 	private String refCode;
 
-	@Column(nullable = true, columnDefinition = JpaConstant.COLUMN_DEFIN_XLARGE_TEXT)
+	@Column(nullable = true)
 	@Convert(converter = AuthorityListConvert.class)
 	private AuthorityList authorities = new AuthorityList();
 

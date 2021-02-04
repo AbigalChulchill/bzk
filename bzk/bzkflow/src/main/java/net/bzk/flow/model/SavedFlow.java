@@ -23,12 +23,12 @@ import net.bzk.flow.BzkFlowUtils;
 @Data
 @Entity
 @EntityListeners(CommService.class)
-@Table(name = "saved_flow")
+@Table
 public class SavedFlow implements Serializable, CreateUpdateDate {
 	@Id
-	@Column(nullable = false, columnDefinition = JpaConstant.COLUMN_DEFIN_UID)
+	@Column(nullable = false)
 	private String uid;
-	@Column(nullable = true, columnDefinition = JpaConstant.COLUMN_DEFIN_XLARGE_TEXT)
+	@Column(nullable = true)
 	@Convert(converter = FlowConvert.class)
 	private Flow model;
 
