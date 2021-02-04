@@ -82,9 +82,8 @@ project(':flow-gists') {
 project(':bzkflow') {
   dependencies {
   	implementation project(':Comm')
-  	implementation project(':WsSDK')
   	implementation project(':AuthData')
-  	
+  	implementation project(':WsSDK')
 
   }
 }

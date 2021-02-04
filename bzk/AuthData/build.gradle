@@ -5,15 +5,8 @@ plugins {
 	id "com.palantir.docker" version "0.20.1"
 }
 
-apply plugin: "com.palantir.docker"
-
-group = 'net.bzk'
-version = '0.0.1-SNAPSHOT'
-
-
-repositories {
-	mavenCentral()
-}
+bootJar.enabled=false
+jar.enabled=true
 
 dependencies {
 
@@ -34,18 +27,4 @@ dependencies {
 	}
 }
 
-test {
-	useJUnitPlatform()
-}
 
-
-task unpack(type: Copy) {
-    dependsOn bootJar
-    from(zipTree(tasks.bootJar.outputs.files.singleFile))
-    into("build/dependency")
-}
-docker {
-    name "${project.group}/${bootJar.baseName}"
-    copySpec.from(tasks.unpack.outputs).into("dependency")
-    buildArgs(['DEPENDENCY': "dependency"])
-}

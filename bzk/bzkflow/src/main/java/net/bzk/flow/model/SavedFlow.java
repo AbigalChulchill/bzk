@@ -13,7 +13,6 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.Data;
-import net.bzk.auth.JpaConstant;
 import net.bzk.auth.model.CreateUpdateDate;
 import net.bzk.auth.model.JsonPojoConverter;
 import net.bzk.auth.service.CommService;

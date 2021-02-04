@@ -107,7 +107,6 @@ public abstract class ActionCall<T extends Action> implements Callable<VarValSet
 		return JsonUtils.toByJson(ans, Object.class);
 	}
 
-	//THIS IS¡@com.oracle.truffle.polyglot.PolyglotMap bug
 	public static void main(String[] args) {
 		try (Context context = Context.newBuilder().allowAllAccess(true).build()) {
 			Value function = context.eval("js", "const ans ={a:'b',c:[1,{a:'d'},3]}; ans;");

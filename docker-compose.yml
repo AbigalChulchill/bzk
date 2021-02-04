@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 services:
 
   bzkflow:
@@ -12,7 +12,14 @@ services:
   editor-web:
     build: ./flow-editor
     ports: 
-      - "9280:80"           
+      - "9280:80"   
+  db:
+    image: postgres
+    environment:
+       - POSTGRES_USER=root
+       - POSTGRES_PASSWORD=root
+    ports: 
+      - "5432:5432"
   
         
         
