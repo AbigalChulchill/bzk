@@ -5,4 +5,4 @@ COPY ${DEPENDENCY}/BOOT-INF/lib /app/lib
 COPY ${DEPENDENCY}/META-INF /app/META-INF
 COPY ${DEPENDENCY}/BOOT-INF/classes /app
 CMD ["java","-version"]
-ENTRYPOINT ["java","-Denv=prod","-cp","app:app/lib/*","net.bzk.flow.BzkflowApplication",">","/console.log"]
+ENTRYPOINT ["java","-Dspring.profiles.active=prod","-cp","app:app/lib/*","net.bzk.flow.BzkflowApplication",">","/console.log"]

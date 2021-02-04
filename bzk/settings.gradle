@@ -1,6 +1,6 @@
 rootProject.name = 'bzk'
 include 'bzkflow'
-include 'Auth'
+include 'AuthData'
 include 'Comm'
 include 'BzkDataSDK'
 include 'flow-gists'

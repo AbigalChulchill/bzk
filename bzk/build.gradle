@@ -65,7 +65,7 @@ subprojects{
 }
 
 
-project(':Auth') {
+project(':AuthData') {
   dependencies {
   	implementation project(':Comm')
 
@@ -83,7 +83,7 @@ project(':bzkflow') {
   dependencies {
   	implementation project(':Comm')
   	implementation project(':WsSDK')
-  	implementation project(':Auth')
+  	implementation project(':AuthData')
   	
 
   }
