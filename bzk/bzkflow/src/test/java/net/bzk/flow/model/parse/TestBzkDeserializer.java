@@ -3,15 +3,14 @@ package net.bzk.flow.model.parse;
 import static org.junit.Assert.assertEquals;
 
 import javax.inject.Inject;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import lombok.Data;
 import net.bzk.flow.model.Action;
 import net.bzk.flow.model.Action.NodejsAction;
 
@@ -24,11 +23,22 @@ public class TestBzkDeserializer {
 	@Inject
 	private ObjectMapper mapper;
 
-	@Data
 	public static class B {
 
 		private String key = "1";
 		private Action action;
+		public String getKey() {
+			return key;
+		}
+		public void setKey(String key) {
+			this.key = key;
+		}
+		public Action getAction() {
+			return action;
+		}
+		public void setAction(Action action) {
+			this.action = action;
+		}
 		
 		
 

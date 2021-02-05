@@ -29,11 +29,8 @@ public class AESUtils {
 	private static final Logger log = LoggerFactory.getLogger(AESUtils.class.getSimpleName());
 	public static final int bufferSize = 256;
 	
-    //32Â≠???Â∫¶Á?ÑÁ???Ôºå‰?üÂ∞±?òØ256‰Ω?
-    //static final SecretKeySpec key = new SecretKeySpec(getUTF8Bytes("12345678901234561234567890123456"), "AES");
-    //?õ∫ÂÆ?16Â≠???Â∫?
+
     static final IvParameterSpec iv = new IvParameterSpec(getUTF8Bytes("1234567890123456"));
-    //??†Â?ÜÊñπÊ≥?/??†Â?ÜÊ®°Âº?/Â°´Â?ÖÊñπÂºèÔ?åCBC?òØÂÆâÂÖ®?ßÂ•Ω‰∫éECB,?ÇÂ?????Â∫?????????,?òØSSL?ÅIPSec???????
     static final String transform = "AES/CBC/PKCS5Padding";
 
     public static SecretKeySpec key(String pass) {
@@ -63,17 +60,6 @@ public class AESUtils {
         return new String(bytes, StandardCharsets.UTF_8);
     }
 
-    /**
-     * ??†Â??
-     * @param text ??Ë¶ÅÂ?†Â?ÜÁ?ÑÊ?éÊ??
-     * @return ??base64??†Â?ÜÂ?éÁ?ÑÂ?ÜÊ??
-     * @throws IOException
-     * @throws InvalidAlgorithmParameterException
-     * @throws InvalidKeyException
-     * @throws ShortBufferException
-     * @throws BadPaddingException
-     * @throws IllegalBlockSizeException
-     */
     public static String encrypt(String pass,String text) throws IOException, InvalidAlgorithmParameterException, InvalidKeyException, ShortBufferException, BadPaddingException, IllegalBlockSizeException {
         Properties properties = new Properties();
         final ByteBuffer outBuffer;
@@ -110,17 +96,6 @@ public class AESUtils {
         return encodedString;
     }
 
-    /**
-     * Ëß?ÂØ?
-     * @param encodedString ??base64??†Â?ÜÂ?éÁ?ÑÂ?ÜÊ??
-     * @return ??éÊ??
-     * @throws IOException
-     * @throws InvalidAlgorithmParameterException
-     * @throws InvalidKeyException
-     * @throws ShortBufferException
-     * @throws BadPaddingException
-     * @throws IllegalBlockSizeException
-     */
     public static String dencrypt(String pass,String encodedString) throws IOException, InvalidAlgorithmParameterException, InvalidKeyException, ShortBufferException, BadPaddingException, IllegalBlockSizeException {
         Properties properties = new Properties();
         final ByteBuffer outBuffer;
