@@ -2,11 +2,17 @@ version: '3'
 services:
 
   bzkflow:
-    image: net.bzk/bzkflow
+    build:
+        context: ./bzk/
+        dockerfile: bzkflow/Dockerfile
     ports: 
       - "9202:8080"
+    depends_on:
+      - "db"
   flow-gists:
-    image: net.bzk/flow-gists
+    build:
+        context: ./bzk/
+        dockerfile: flow-gists/Dockerfile
     ports: 
       - "9203:8081"     
   editor-web:

@@ -7,6 +7,7 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
@@ -22,15 +23,16 @@ import net.bzk.infrastructure.JsonUtils;
 @Profile({ "dev", "prod" })
 public class DataGenner {
 
-	
 	@Inject
 	private AccountService accountService;
-
 	@Inject
 	private AccountDao accountDao;
+	@Value("${bzk.auth.default.username}")
+	private String username;
+	@Value("${bzk.auth.default.password}")
+	private String password;
 
 	private Map<String, Object> userOMap = new HashMap<>();
-	private Map<DemoAccountE, Account> accMap = new HashMap<>();
 
 	@Transactional
 	@PostConstruct
@@ -39,27 +41,19 @@ public class DataGenner {
 		createAccounts();
 
 		CommUtils.pl(JsonUtils.toJson(userOMap));
-		CommUtils.pl(JsonUtils.toJson(accMap));
 
 		CommUtils.pl("DataGenner init DONE");
 	}
 
 	private void createAccounts() {
-		for (DemoAccountE dae : DemoAccountE.values()) {
-			UserDto ud = new UserDto();
-			ud.setUsername(dae.name());
-			ud.setPassword("password");
-			ud.setEmail(dae + "@dev.com");
-			Account a = accountService.save(ud);
-			accMap.put(dae, a);
-			if (dae.hasAuthority(Authority.Admin)) {
-				a.getAuthorities().add(Authority.Admin);
-				accountDao.save(a);
-			}
+		UserDto ud = new UserDto();
+		ud.setUsername(username);
+		ud.setPassword(password);
+		ud.setEmail(username + "@dev.com");
+		Account a = accountService.save(ud);
+		a.getAuthorities().add(Authority.Admin);
+		accountDao.save(a);
 
-		}
 	}
-
-
 
 }

@@ -63,3 +63,8 @@ app:
       - https://p2c.domiearth.com/oauth2/redirect
       - myandroidapp://oauth2/redirect
       - myiosapp://oauth2/redirect
+bzk:
+  auth:
+    default:
+      username: admin
+      password: admin    

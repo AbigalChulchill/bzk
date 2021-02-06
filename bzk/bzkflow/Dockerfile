@@ -1,20 +1,11 @@
-FROM oracle/graalvm-ce:20.1.0-java11
+FROM kirinddt/gradle-graalvm:latest 
 VOLUME /tmp
-ARG DEPENDENCY=target/dependency
-COPY ${DEPENDENCY}/BOOT-INF/lib /app/lib
-COPY ${DEPENDENCY}/META-INF /app/META-INF
-COPY ${DEPENDENCY}/BOOT-INF/classes /app
-CMD ["java","-version"]
-ENTRYPOINT ["java","-Dspring.profiles.active=prod","-cp","app:app/lib/*","net.bzk.flow.BzkflowApplication",">","/console.log"]
-
-#FROM gradle:6.8-jdk11 AS build
-
-#COPY . /app
-#WORKDIR /app
+COPY . /app
+WORKDIR /app
 #RUN java -version
 
 
-#RUN gradle :bzkflow:bootJar --refresh-dependencies 
+RUN gradle :bzkflow:bootJar --refresh-dependencies 
+#RUN ls -laR | grep bzkflow
 #FROM springci/graalvm-ce:master-java11
-#RUN java -version
-#ENTRYPOINT ["java","-Dspring.profiles.active=prod","-cp","app:app/lib/*","net.bzk.flow.BzkflowApplication",">","/console.log"]
+ENTRYPOINT ["java","-Dspring.profiles.active=prod","-jar","/app/bzkflow/build/libs/bzkflow-0.0.1-SNAPSHOT.jar"]

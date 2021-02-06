@@ -27,13 +27,13 @@ public class SavedFlow implements Serializable, CreateUpdateDate {
 	@Id
 	@Column(nullable = false)
 	private String uid;
-	@Column(nullable = true)
+	@Column(nullable = true, columnDefinition = "TEXT")
 	@Convert(converter = FlowConvert.class)
 	private Flow model;
 
 	private Date updateAt;
 	private Date createAt;
-	
+
 	public static SavedFlow gen(Flow f) {
 		SavedFlow ans = new SavedFlow();
 		ans.uid = f.getUid();
