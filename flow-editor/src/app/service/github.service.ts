@@ -1,3 +1,4 @@
+import { Flow } from 'src/app/model/flow';
 import { CommUtils } from './../utils/comm-utils';
 import { VarsStore } from './../dto/vars-store';
 
@@ -9,7 +10,6 @@ import { environment } from 'src/environments/environment';
 import { UrlParamsService } from './url-params.service';
 import { Router, NavigationEnd } from '@angular/router';
 import { StringUtils } from '../utils/string-utils';
-import { Flow } from '../model/flow';
 import { Gist, GistFile } from '../dto/gist';
 import { Constant } from '../infrastructure/constant';
 
@@ -17,6 +17,7 @@ import { Constant } from '../infrastructure/constant';
   providedIn: 'root'
 })
 export class GithubService implements HttpInterceptor {
+
 
 
   public static KEY_TOKE = 'GitHubToken';
@@ -100,35 +101,44 @@ export class GithubService implements HttpInterceptor {
     return ans;
   }
 
+  public async save(ml: Flow[]) :Promise<void> {
+    const clist= await this.listBzkGits();
+    for(const cm of ml){
+      const gf= clist.find(cgf=> cm.uid === cgf.getMainFile().convertModel().uid);
+      if(gf){
+        await this.updateModel(gf.id,cm);
+      }else{
+        await this.createModel(cm);
+      }
+    }
+  }
+
   public getGist(id: string): Promise<Gist> {
     return this.httpClient.getGist(id, this.encryptionPass);
   }
 
 
-  public async createModel(inf: Flow, vs: VarsStore): Promise<Gist> {
+  public async createModel(inf: Flow): Promise<Gist> {
     const f:Flow = CommUtils.clone(inf);
     f.uid =  CommUtils.makeAlphanumeric(Constant.UID_SIZE);
-    const fo = await this.httpClient.createGits(false, this.encryptionPass, 'it`s Bzk', this.genFiles(f, vs));
+    const fo = await this.httpClient.createGits(false, this.encryptionPass, 'it`s Bzk', this.genFiles(f));
     console.log('f:' + console.log(fo));
     return fo;
   }
 
-  public async updateModel(id: string, f: Flow, vs: VarsStore): Promise<Gist> {
-    const fo = await this.httpClient.updateGist(id, this.encryptionPass, this.genFiles(f, vs));
+  public async updateModel(id: string, f: Flow): Promise<Gist> {
+    const fo = await this.httpClient.updateGist(id, this.encryptionPass, this.genFiles(f));
     return fo;
   }
 
-  public genFiles(f: Flow, vs: VarsStore): Array<GistFile> {
+  public genFiles(f: Flow): Array<GistFile> {
     const gfs = new Array<GistFile>();
     const gf = new GistFile();
     gf.filename = f.uid + Gist.KEY_MAIN_GIST_EXTENSION;
     gf.content = JSON.stringify(f);
     gfs.push(gf);
 
-    const vsf = new GistFile();
-    vsf.filename = Constant.VARS_STORE_NAME;
-    vsf.content = JSON.stringify(vs);
-    gfs.push(vsf);
+
 
     return gfs;
   }

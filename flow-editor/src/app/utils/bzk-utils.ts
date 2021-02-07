@@ -38,9 +38,6 @@ export class BzkUtils {
     for (const k of keys) {
       const ko = inPo[k];
       if (typeof ko === 'object') {
-        if(k === 'left'){
-          console.log('QQ'+ko);
-        }
         inPo[k] = BzkUtils.fixType(ko);
       }
     }

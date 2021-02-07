@@ -1,3 +1,5 @@
+import { Flow } from 'src/app/model/flow';
+import { GithubService } from 'src/app/service/github.service';
 import { async } from '@angular/core/testing';
 import { DialogService } from './../uikit/dialog.service';
 import { SavedFlowClientService } from './../service/saved-flow-client.service';
@@ -26,6 +28,7 @@ export class RegisteredFlowComponent implements OnInit {
     private savedFlowClient: SavedFlowClientService,
     private modifyingFlow: ModifyingFlowService,
     private router: Router,
+    private githubService: GithubService,
     private dialog: DialogService
   ) { }
 
@@ -65,6 +68,16 @@ export class RegisteredFlowComponent implements OnInit {
     this.dialog.openCloudBackup(async () => {
       await this.reflesh();
     });
+  }
+
+  public async uploadAllGistDialog(): Promise<void> {
+    const t= this.loading.show();
+    const ml = new Array<Flow>();
+    for (const sf of this.savedFlows) {
+      ml.push(sf.model);
+    }
+    await this.githubService.save(ml);
+    this.loading.dismiss(t);
   }
 
   public async onFileEdit(gr: SavedFlow): Promise<void> {
