@@ -17,7 +17,7 @@ export class CloudBackupListComponent implements OnInit {
 
   public devGitsJson: string;
   public bzkGists = new Array<GistRow>();
-  public onImportDoneAction = () => {};
+  public onImportDoneAction = () => { };
 
   constructor(
     public githubService: GithubService,
@@ -60,13 +60,37 @@ export class CloudBackupListComponent implements OnInit {
   public async onImport(gr: GistRow): Promise<void> {
 
     const t = this.loading.show();
-    const fm = gr.gist.getMainFile().convertModel();
-    const sf = await this.savedFlowClient.save(fm).toPromise();
+    this.import(gr);
     await this.onImportDoneAction();
     this.loading.dismiss(t);
-
   }
 
+  private async import(gr: GistRow): Promise<void> {
+    const fm = gr.gist.getMainFile().convertModel();
+    const sf = await this.savedFlowClient.save(fm).toPromise();
+  }
+
+  public selectAll(): void {
+    this.bzkGists.forEach(b => b.selected = true);
+  }
+
+  public unselectAll(): void {
+    this.bzkGists.forEach(b => b.selected = false);
+  }
+
+  public hasSelected(): boolean {
+    return this.bzkGists.filter(b => b.selected).length > 0;
+  }
+
+  public async importSelect(): Promise<void> {
+    const t = this.loading.show();
+    const sl = this.bzkGists.filter(b => b.selected);
+    for (const sb of sl) {
+      await this.import(sb);
+    }
+    await this.onImportDoneAction();
+    this.loading.dismiss(t);
+  }
 
 }
 

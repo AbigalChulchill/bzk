@@ -35,7 +35,7 @@ export class RegisteredFlowComponent implements OnInit {
 
   private async reflesh(): Promise<void> {
     const t = this.loading.show();
-    this.savedFlows = await this.savedFlowClient.listAll().toPromise();
+    this.savedFlows = await this.savedFlowClient.listAll();
     this.loading.dismiss(t);
     this.flowPoolInfos = await this.flowClient.listFlowPoolInfo().toPromise();
   }

@@ -53,7 +53,7 @@ export class ModifyingFlowService {
     const llm = this.getLastMark();
     if (!llm) { return null; }
     try {
-      const lfm = await this.savedFlowClient.getByUid(llm.id).toPromise();
+      const lfm = await this.savedFlowClient.getByUid(llm.id);
       this.modelobs.setModel(lfm.model);
       return true;
     } catch (ex) {

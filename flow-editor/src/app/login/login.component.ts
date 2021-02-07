@@ -10,8 +10,8 @@ import { environment } from '../../environments/environment';
 })
 export class LoginComponent implements OnInit {
 
-  username = 'domidev';
-  password = 'password';
+  username = 'admin';
+  password = 'admin';
   invalidLogin = false;
 
   constructor(

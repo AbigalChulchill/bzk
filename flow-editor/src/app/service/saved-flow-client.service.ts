@@ -1,3 +1,5 @@
+import { Flow } from 'src/app/model/flow';
+import { BzkUtils } from 'src/app/utils/bzk-utils';
 import { Constant } from './../infrastructure/constant';
 import { CommUtils } from './../utils/comm-utils';
 import { async } from '@angular/core/testing';
@@ -6,7 +8,6 @@ import { Injectable } from '@angular/core';
 import { SavedFlow } from '../model/saved-flow';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Flow } from '../model/flow';
 @Injectable({
   providedIn: 'root'
 })
@@ -19,12 +20,16 @@ export class SavedFlowClientService {
     private httpClient: HttpClient
   ) { }
 
-  public listAll(): Observable<Array<SavedFlow>> {
-    return this.httpClient.get<Array<SavedFlow>>(environment.apiHost + SavedFlowClientService.URL_PREFIX + 'all');
+  public async listAll(): Promise<Array<SavedFlow>> {
+    const resp = await this.httpClient.get<Array<SavedFlow>>(environment.apiHost + SavedFlowClientService.URL_PREFIX + 'all').toPromise();
+    resp.forEach(sf => sf.model = BzkUtils.fitClzz(Flow, sf.model));
+    return resp;
   }
 
-  public getByUid(uid: string): Observable<SavedFlow> {
-    return this.httpClient.get<SavedFlow>(environment.apiHost + SavedFlowClientService.URL_PREFIX + uid);
+  public async getByUid(uid: string): Promise<SavedFlow> {
+    const resp = await this.httpClient.get<SavedFlow>(environment.apiHost + SavedFlowClientService.URL_PREFIX + uid).toPromise();
+    resp.model = BzkUtils.fitClzz(Flow, resp.model);
+    return resp;
   }
 
   public remove(uid: string): Observable<void> {
