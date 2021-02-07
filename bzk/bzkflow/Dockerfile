@@ -3,6 +3,7 @@ VOLUME /tmp
 COPY . /app
 WORKDIR /app
 #RUN java -version
+RUN mkdir -p /bzk/model/flow/
 RUN mv ./init-model/flow/* /bzk/model/flow/
 
 RUN gradle :bzkflow:bootJar --refresh-dependencies 
