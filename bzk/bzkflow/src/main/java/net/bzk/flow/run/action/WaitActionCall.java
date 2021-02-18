@@ -21,7 +21,7 @@ public class WaitActionCall extends ActionCall<WaitAction> {
 	@Override
 	public VarValSet call() throws Exception {
 		long ms= Duration.of(getModel().getStep(), getModel().getUnit()).toMillis();
-		logUtils.logActionCall(log, getUids(), "sleep:"+ ms);
+		logUtils.logActionCall( getUids(), "sleep:"+ ms);
 		Thread.sleep(ms);
 		return null;
 	}

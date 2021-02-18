@@ -9,6 +9,7 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,9 @@ import net.bzk.flow.Constant;
 import net.bzk.flow.model.Action;
 import net.bzk.flow.model.Box;
 import net.bzk.flow.model.Condition;
+import net.bzk.flow.model.ConvertInfra.VarValList;
 import net.bzk.flow.model.Link;
+import net.bzk.flow.model.RunLog.RunState;
 import net.bzk.flow.model.Transition;
 import net.bzk.flow.model.var.VarLv.VarKey;
 import net.bzk.flow.model.var.VarMap;
@@ -32,9 +35,6 @@ import net.bzk.flow.run.action.ActionCall;
 import net.bzk.flow.run.action.ActionCall.Uids;
 import net.bzk.flow.run.service.RunVarService;
 import net.bzk.flow.utils.LogUtils;
-import net.bzk.flow.utils.LogUtils.ActionRunLog;
-import net.bzk.flow.utils.LogUtils.BoxRunLog;
-import net.bzk.flow.utils.LogUtils.BoxRunState;
 import net.bzk.infrastructure.ex.BzkRuntimeException;
 
 @Service
@@ -84,7 +84,9 @@ public class BoxRuner {
 	}
 
 	public synchronized void run() {
-		logUtils.logBoxRun(log, new BoxRunLog(this).state(BoxRunState.BoxStart));
+
+		logUtils.log(genUids(), RunState.BoxStart, l -> {
+		});
 		if (model.getWhileJudgment() == null) {
 			if (rundownAndLog())
 				return;
@@ -93,7 +95,7 @@ public class BoxRuner {
 				if (rundownAndLog()) {
 					return;
 				}
-				logUtils.logBoxRun(log, new BoxRunLog(this).state(BoxRunState.WhileLoopBottom));
+				logUtils.log(genUids(), RunState.WhileLoopBottom);
 			}
 		}
 		if (model.getTransition().isEnd()) {
@@ -104,9 +106,12 @@ public class BoxRuner {
 	}
 
 	private boolean rundownAndLog() {
-		logUtils.logBoxRun(log, new BoxRunLog(this).state(BoxRunState.BoxLoop));
+		logUtils.log(genUids(), RunState.BoxLoop);
 		boolean b = rundown();
-		logUtils.logBoxRun(log, new BoxRunLog(this).state(BoxRunState.BoxLoopDone).msg("break:" + b));
+		logUtils.log(genUids(), RunState.BoxLoopDone, l -> {
+			l.setMsg("break:" + b);
+		});
+
 		return b;
 	}
 
@@ -135,16 +140,20 @@ public class BoxRuner {
 		VarValSet vvs = callAction(a);
 		if (vvs != null) {
 			runVarService.putVarVals(genUids(), vvs);
-			logUtils.logBoxRun(log, new ActionRunLog(this, a).varVals(vvs.list()).state(BoxRunState.ActionResult));
+
+			logUtils.log(genUids(), RunState.ActionResult, l -> l.setVarVals(VarValList.gen(vvs.list())));
+
 		}
-		logUtils.logBoxRun(log, new BoxRunLog(this).state(BoxRunState.EndAction));
+
+		logUtils.log(genUids(), RunState.EndAction);
+
 		return true;
 	}
 
 	private boolean endFlow(Transition t) {
 		if (!t.isEnd())
 			return false;
-		logUtils.logBoxRun(log, new BoxRunLog(this).state(BoxRunState.EndFlow).msg(t.getEndTag()));
+		logUtils.log(genUids(), RunState.EndFlow, l -> l.setMsg(t.getEndTag()));
 		bundle.flowRuner.onEnd(t, listEndResult(t));
 		return true;
 	}
@@ -173,7 +182,7 @@ public class BoxRuner {
 	}
 
 	private void transitBox(Transition t) {
-		logUtils.logBoxRun(log, new BoxRunLog(this).state(BoxRunState.LinkTo));
+		logUtils.log(genUids(), RunState.LinkTo);
 		var rl = listEndResult(t);
 		bundle.flowRuner.runBoxByUid(t.getToBox(), rl);
 	}
@@ -194,15 +203,19 @@ public class BoxRuner {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private VarValSet callAction(Action a) {
 		try {
-			logUtils.logBoxRun(log, new ActionRunLog(this, a).state(BoxRunState.StartAction));
+			logUtils.log(genUids(), RunState.StartAction);
 			ActionCall naer = context.getBean(a.getClazz(), ActionCall.class);
 			naer.initBase(genUids(), a);
 			Callable<VarValSet> cb = naer;
 			VarValSet ans = cb.call();
 			return ans;
 		} catch (Exception e) {
-			logUtils.logBoxRun(log, new ActionRunLog(this, a).state(BoxRunState.ActionCallFail).msg(e.getMessage())
-					.failed(true).exception(e));
+			logUtils.log(genUids(), RunState.ActionCallFail,l->{
+				l.setFailed(true);
+				l.setMsg(e.getMessage());
+				l.setException(ExceptionUtils.getStackTrace(e));
+				l.setExceptionClazz(e.getClass().toGenericString());
+			});
 			if (a.isTryErrorble()) {
 				return VarValSet.genError(a, e);
 			}

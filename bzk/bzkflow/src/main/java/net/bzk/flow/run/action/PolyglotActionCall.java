@@ -1,7 +1,6 @@
 package net.bzk.flow.run.action;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.graalvm.polyglot.Context;
@@ -30,9 +29,9 @@ public class PolyglotActionCall extends ActionCall<PolyglotAction> {
 //		}
 		VarValSet set = new VarValSet();
 		String code = getModel().getCode();
-		logUtils.logActionCall(log, getUids(), "code: " + code);
+		logUtils.logActionCall( getUids(), "code: " + code);
 		Object ans = callPolyglot(varQueryer, getModel().getPolyglot().toString(), code);
-		logUtils.logActionCall(log, getUids(), "get ans " + ans);
+		logUtils.logActionCall( getUids(), "get ans " + ans);
 		if (ans != null) {
 			VarVal vv = new VarVal();
 			vv.setKey(getModel().getResultKey());

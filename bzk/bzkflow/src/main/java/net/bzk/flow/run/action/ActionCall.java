@@ -1,6 +1,5 @@
 package net.bzk.flow.run.action;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -10,7 +9,6 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Value;
-import org.graalvm.polyglot.proxy.ProxyObject;
 import org.slf4j.Logger;
 
 import lombok.Data;
@@ -68,7 +66,7 @@ public abstract class ActionCall<T extends Action> implements Callable<VarValSet
 		return ro;
 	}
 
-	public static Object callPolyglot(FastVarQueryer varQueryer,String polyglot, String code) {
+	public static Object callPolyglot(FastVarQueryer varQueryer, String polyglot, String code) {
 		try (Context context = Context.newBuilder().allowAllAccess(true).build()) {
 			context.getBindings(polyglot).putMember("bzk", varQueryer);
 			Value function = context.eval(polyglot, code);
@@ -76,23 +74,22 @@ public abstract class ActionCall<T extends Action> implements Callable<VarValSet
 			return fixListObj(ans, function);
 		}
 	}
-	
-	public  Object parseByStringCode(Logger log,String polyglot,String ifCode) {
-		logUtils.logActionCall(log, getUids(), ifCode);
-		Object o= JsonUtils.stringToValue(ifCode);
-		logUtils.logActionCall(log, getUids(), o.getClass()+" "+o);
-		if(o instanceof String) {
+
+	public Object parseByStringCode( String polyglot, String ifCode) {
+		logUtils.logActionCall( getUids(), ifCode);
+		Object o = JsonUtils.stringToValue(ifCode);
+		logUtils.logActionCall( getUids(), o.getClass() + " " + o);
+		if (o instanceof String) {
 			try {
-				Object ans= callPolyglot(varQueryer,polyglot, o.toString());
-				logUtils.logActionCall(log, getUids(),  "callPolyglot "+ans.getClass()+" "+ans);
+				Object ans = callPolyglot(varQueryer, polyglot, o.toString());
+				logUtils.logActionCall( getUids(), "callPolyglot " + ans.getClass() + " " + ans);
 				return ans;
 			} catch (Exception e) {
-				logUtils.logActionCallWarn(log, getUids(), e.getMessage());
+				logUtils.logActionCallWarn(this, e.getMessage());
 			}
 		}
 		return o;
 	}
-	
 
 	public static Object fixListObj(Object ans, Value function) {
 		if (ans instanceof Map) {
@@ -112,7 +109,7 @@ public abstract class ActionCall<T extends Action> implements Callable<VarValSet
 			Value function = context.eval("js", "const ans ={a:'b',c:[1,{a:'d'},3]}; ans;");
 			Object ans = function.as(Object.class);
 			System.out.println(ans.getClass() + " " + ans.toString());
-			String js= JsonUtils.toJson(ans);
+			String js = JsonUtils.toJson(ans);
 			System.out.println(js);
 			function = context.eval("js", "const g =[1,{a:'d',c:[1,2,3]},3]; g;");
 			List l = function.as(List.class);

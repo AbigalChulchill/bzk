@@ -7,6 +7,7 @@ import java.util.function.Consumer;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.io.Resource;
@@ -22,8 +23,6 @@ import net.bzk.infrastructure.StrPlacer;
 import net.bzk.infrastructure.ex.BzkRuntimeException;
 import net.bzk.infrastructure.process.ProcessUtils;
 import net.bzk.infrastructure.process.ProcessUtils.ExecResult;
-
-import org.apache.commons.text.StringEscapeUtils;
 
 @Service("net.bzk.flow.model.Action$NodejsAction")
 @Scope("prototype")
@@ -94,13 +93,13 @@ public class NodejsActionCall extends ActionCall<NodejsAction> {
 	}
 
 	private void runCmd(Consumer<String> c, String... cmd) {
-		logUtils.logActionCall(log, getUids(), "runCmd:" + cmd);
+		logUtils.logActionCall( getUids(), "runCmd:" + cmd);
 		ExecResult ec = ProcessUtils.exec(projectDir, cains -> {
-			logUtils.logActionCall(log, getUids(), cains);
+			logUtils.logActionCall( getUids(), cains);
 			c.accept(cains);
 		}, cmd);
 		if (StringUtils.isNotBlank(ec.getErrorMsg())) {
-			logUtils.logActionCallWarn(log, getUids(), ec.getErrorMsg());
+			logUtils.logActionCallWarn( this, ec.getErrorMsg());
 		}
 		if (ec.getExit() != 0) {
 			throw new BzkRuntimeException(

@@ -23,13 +23,13 @@ public class ConvertActionCall extends ActionCall<ConvertAction> {
 	@Override
 	public VarValSet call() throws Exception {
 		String code = getModel().getCode();
-		Object o = parseByStringCode(log,getModel().getPolyglot().toString(),code);
-		logUtils.logActionCall(log, getUids(), o.getClass() +":"+ o);
+		Object o = parseByStringCode(getModel().getPolyglot().toString(),code);
+		logUtils.logActionCall( getUids(), o.getClass() +":"+ o);
 		Object oo = convert(o);
 		var logm = new HashMap<String,Object>();
 		logm.put("original", o);
 		logm.put("result", oo);
-		logUtils.logActionCall(log, getUids(), JsonUtils.toJson(logm));
+		logUtils.logActionCall( getUids(), JsonUtils.toJson(logm));
 		return VarValSet.genSingle(getModel().getOutput().getKey(), getModel().getOutput().getLv(), oo);
 	}
 

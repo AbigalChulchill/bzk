@@ -63,7 +63,7 @@ public class HttpActionCall extends ActionCall<HttpAction> {
 		logm.put("headers", hs);
 		logm.put("url", url);
 		logm.put("method", mt);
-		logUtils.logActionCall(log, getUids(), JsonUtils.toJson(logm));
+		logUtils.logActionCall( getUids(), JsonUtils.toJson(logm));
 		HttpEntity<Object> requestEntity = new HttpEntity<Object>(body, hs);
 		ResponseEntity<Object> o = restTemplate.exchange(url, mt, requestEntity,
 				Object.class, getModel().getUriVariables());

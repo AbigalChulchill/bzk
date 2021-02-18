@@ -8,6 +8,8 @@ import javax.persistence.Convert;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,7 +23,6 @@ import net.bzk.flow.model.ConvertInfra.VarValList;
 import net.bzk.flow.model.ConvertInfra.VarValListConvert;
 import net.bzk.flow.model.var.VarMap;
 import net.bzk.flow.run.action.ActionCall.Uids;
-import net.bzk.flow.utils.LogUtils.BoxRunState;
 
 @SuppressWarnings("serial")
 @Data
@@ -51,7 +52,8 @@ public class RunLog implements Serializable, CreateUpdateDate {
 	@Convert(converter = VarMapConvert.class)
 	private VarMap boxVar;
 	private String boxName;
-	private BoxRunState state;
+	@Enumerated(EnumType.STRING)
+	private RunState state;
 	private boolean failed = false;
 	private String exception;
 	private String exceptionClazz;
