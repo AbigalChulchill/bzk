@@ -16,10 +16,10 @@ import net.bzk.flow.model.var.VarVal;
 import net.bzk.flow.run.action.ActionCall.Uids;
 import net.bzk.flow.run.dao.RunBoxDao;
 import net.bzk.flow.run.dao.RunFlowDao;
+import net.bzk.flow.run.dao.RunLogDao;
 import net.bzk.flow.run.flow.BoxRuner;
 import net.bzk.flow.run.flow.FlowRuner;
 import net.bzk.infrastructure.AES256Util;
-import net.bzk.infrastructure.CommUtils;
 import net.bzk.infrastructure.JsonUtils;
 import net.bzk.infrastructure.ex.BzkRuntimeException;
 
@@ -31,6 +31,9 @@ public class LogUtils {
 	private static final String LOCATE_BOX_TAG_SUBFIX = "%B>";
 	private static final String LOCATE_ACTION_TAG_PREFIX = "<A%";
 	private static final String LOCATE_ACTION_TAG_SUBFIX = "%A>";
+	
+	@Inject
+	private RunLogDao dao;
 	@Inject
 	private RunBoxDao runBoxDao;
 	@Inject
