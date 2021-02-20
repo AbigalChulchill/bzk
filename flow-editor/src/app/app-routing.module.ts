@@ -1,9 +1,9 @@
+import { JobComponent } from './jobs/job/job.component';
+import { JobsComponent } from './jobs/jobs.component';
 import { LoginComponent } from './login/login.component';
 import { ConfigComponent } from './config/config.component';
 import { ConsoleComponent } from './console/console.component';
-import { RegisteredFlowComponent } from './registered-flow/registered-flow.component';
 import { PathGuideService } from './service/path-guide.service';
-import { ModelRepoComponent } from './model-repo/model-repo.component';
 import { FlowDesignComponent } from './flow-design/flow-design.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
@@ -13,8 +13,8 @@ const routes: Routes = [
   { path: '', component: FlowDesignComponent , canActivate: [PathGuideService] },
   { path: 'console', component: ConsoleComponent , canActivate: [PathGuideService] },
   { path: 'model/design', component: FlowDesignComponent , canActivate: [PathGuideService] },
-  { path: 'model/repo', component: ModelRepoComponent, canActivate: [PathGuideService] },
-  { path: 'model/registered', component: RegisteredFlowComponent, canActivate: [PathGuideService] },
+  { path: 'model/jobs', component: JobsComponent, canActivate: [PathGuideService] },
+  { path: 'job/:uid', component: JobComponent, canActivate: [PathGuideService] },
   { path: 'config', component: ConfigComponent, canActivate: [PathGuideService] },
   { path: 'login', component: LoginComponent },
 ];

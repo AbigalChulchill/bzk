@@ -23,7 +23,7 @@ import net.bzk.flow.BzkFlowUtils;
 @Entity
 @EntityListeners(CommService.class)
 @Table
-public class SavedFlow implements Serializable, CreateUpdateDate {
+public class Job implements Serializable, CreateUpdateDate {
 	@Id
 	@Column(nullable = false)
 	private String uid;
@@ -34,8 +34,8 @@ public class SavedFlow implements Serializable, CreateUpdateDate {
 	private Date updateAt;
 	private Date createAt;
 
-	public static SavedFlow gen(Flow f) {
-		SavedFlow ans = new SavedFlow();
+	public static Job gen(Flow f) {
+		Job ans = new Job();
 		ans.uid = f.getUid();
 		return ans;
 	}

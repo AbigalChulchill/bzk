@@ -18,11 +18,12 @@ import { MatSort } from '@angular/material/sort';
 
 
 @Component({
-  selector: 'app-registered-flow',
-  templateUrl: './registered-flow.component.html',
-  styleUrls: ['./registered-flow.component.css']
+  selector: 'app-jobs',
+  templateUrl: './jobs.component.html',
+  styleUrls: ['./jobs.component.css']
 })
-export class RegisteredFlowComponent implements OnInit,AfterViewInit {
+export class JobsComponent implements OnInit,AfterViewInit {
+
 
   displayedColumns: string[] = ['id', 'name', 'lastState', 'lastTriggerAt', 'triggerInfo', 'actions'];
   dataSource: MatTableDataSource<Row>;
@@ -135,6 +136,7 @@ export class RegisteredFlowComponent implements OnInit,AfterViewInit {
     ans.lastState = lri.state;
     return ans;
   }
+
 
 }
 

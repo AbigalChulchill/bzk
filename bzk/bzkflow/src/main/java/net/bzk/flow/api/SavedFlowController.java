@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import net.bzk.flow.model.Flow;
-import net.bzk.flow.model.SavedFlow;
-import net.bzk.flow.run.dao.SavedFlowDao;
-import net.bzk.flow.run.service.SavedFlowService;
+import net.bzk.flow.model.Job;
+import net.bzk.flow.run.dao.JobsDao;
+import net.bzk.flow.run.service.JobsService;
 
 @CrossOrigin(maxAge = 3600, methods = { RequestMethod.GET, RequestMethod.PUT, RequestMethod.POST, RequestMethod.PATCH,
 		RequestMethod.OPTIONS, RequestMethod.HEAD }, allowedHeaders = "*", origins = "*")
@@ -31,21 +31,21 @@ import net.bzk.flow.run.service.SavedFlowService;
 public class SavedFlowController {
 
 	@Inject
-	private SavedFlowDao dao;
+	private JobsDao dao;
 	@Inject
-	private SavedFlowService service;
+	private JobsService service;
 
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	@RequestMapping(value = "all", method = RequestMethod.GET)
-	public List<SavedFlow> listAll() {
+	public List<Job> listAll() {
 		return StreamSupport.stream(dao.findAll().spliterator(), false).collect(Collectors.toList());
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	@RequestMapping(value = "{uid}", method = RequestMethod.GET)
-	public SavedFlow getByUid(@PathVariable String uid) {
+	public Job getByUid(@PathVariable String uid) {
 		return dao.findById(uid).get();
 	}
 	
@@ -58,7 +58,7 @@ public class SavedFlowController {
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	@RequestMapping(value = "save", method = RequestMethod.POST)
-	public SavedFlow save(@RequestBody Flow f) {
+	public Job save(@RequestBody Flow f) {
 		return service.save(f);
 	}
 	

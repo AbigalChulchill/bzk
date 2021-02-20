@@ -9,7 +9,6 @@ import { FlowDesignComponent } from './flow-design/flow-design.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { PropertiesComponent } from './flow-design/properties/properties.component';
-import { ModelRepoComponent } from './model-repo/model-repo.component';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -21,7 +20,6 @@ import { CustomDirective } from './flow-design/properties/custom.directive';
 import { BoxComponent } from './model/view/box/box.component';
 import { ActionComponent } from './model/view/action/action.component';
 import { FlowComponent } from './model/view/flow/flow.component';
-import { RegisteredFlowComponent } from './registered-flow/registered-flow.component';
 import { LinkComponent } from './model/view/link/link.component';
 import { TaskFuncViewComponent } from './model/view/task-func-view/task-func-view.component';
 import { JsonEditorComponent } from './uikit/json-editor/json-editor.component';
@@ -49,7 +47,6 @@ import { PolyglotActionComponent } from './model/view/action/polyglot-action/pol
 import { KVPairComponent } from './uikit/kvpair/kvpair.component';
 import { MonacoEditorModule } from 'ngx-monaco-editor';
 import { CodeEditorComponent } from './uikit/code-editor/code-editor.component';
-import { FlowPoolInfoComponent } from './registered-flow/flow-pool-info/flow-pool-info.component';
 import { VarKeyComponent } from './uikit/var-key/var-key.component';
 import { SubFlowActionComponent } from './model/view/action/sub-flow-action/sub-flow-action.component';
 import { MatTableModule } from '@angular/material/table';
@@ -59,6 +56,8 @@ import { TransitionComponent } from './model/view/transition/transition.componen
 import { VarKeyReflectComponent } from './uikit/var-key-reflect/var-key-reflect.component';
 import { LoginComponent } from './login/login.component';
 import { CloudBackupListComponent } from './uikit/cloud-backup-list/cloud-backup-list.component';
+import { JobsComponent } from './jobs/jobs.component';
+import { JobComponent } from './jobs/job/job.component';
 
 export function createTranslateLoader(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -70,13 +69,11 @@ export function createTranslateLoader(http: HttpClient): TranslateHttpLoader {
     FlowDesignComponent,
     SidebarComponent,
     PropertiesComponent,
-    ModelRepoComponent,
     PropRowComponent,
     CustomDirective,
     BoxComponent,
     ActionComponent,
     FlowComponent,
-    RegisteredFlowComponent,
     LinkComponent,
     TaskFuncViewComponent,
     JsonEditorComponent,
@@ -97,13 +94,14 @@ export function createTranslateLoader(http: HttpClient): TranslateHttpLoader {
     PolyglotActionComponent,
     KVPairComponent,
     CodeEditorComponent,
-    FlowPoolInfoComponent,
     VarKeyComponent,
     SubFlowActionComponent,
     TransitionComponent,
     VarKeyReflectComponent,
     LoginComponent,
     CloudBackupListComponent,
+    JobsComponent,
+    JobComponent,
 
   ],
   imports: [

@@ -19,17 +19,17 @@ import org.springframework.stereotype.Service;
 import net.bzk.flow.BzkFlowUtils;
 import net.bzk.flow.model.Action.SubFlowAction;
 import net.bzk.flow.model.Flow;
-import net.bzk.flow.model.SavedFlow;
-import net.bzk.flow.run.dao.SavedFlowDao;
+import net.bzk.flow.model.Job;
+import net.bzk.flow.run.dao.JobsDao;
 import net.bzk.infrastructure.ex.BzkRuntimeException;
 
 @Service
-public class SavedFlowService {
+public class JobsService {
 
 	public static final String initDataPath = "/bzk/model/flow/";
 
 	@Inject
-	private SavedFlowDao dao;
+	private JobsDao dao;
 
 	@PostConstruct
 	public void loadInitData() {
@@ -51,31 +51,31 @@ public class SavedFlowService {
 		}
 	}
 
-	public Collection<SavedFlow> listDepends(String uid) {
-		Set<SavedFlow> ans = new HashSet<>();
+	public Collection<Job> listDepends(String uid) {
+		Set<Job> ans = new HashSet<>();
 		var tar = dao.findById(uid).get();
 		recListDepends(ans, tar);
 		return ans;
 	}
 
-	private void recListDepends(Set<SavedFlow> ans, SavedFlow sf) {
+	private void recListDepends(Set<Job> ans, Job sf) {
 		if (ans.stream().anyMatch(_f -> StringUtils.equals(_f.getUid(), sf.getUid()))) {
 			return;
 		}
 		ans.add(sf);
 		Set<SubFlowAction> sas = sf.getModel().listAllActions().stream().filter(a -> a instanceof SubFlowAction)
 				.map(a -> (SubFlowAction) a).collect(Collectors.toSet());
-		Set<SavedFlow> csf = sas.stream().map(a -> dao.findById(a.getFlowUid()).get()).collect(Collectors.toSet());
-		for (SavedFlow sfchild : csf) {
+		Set<Job> csf = sas.stream().map(a -> dao.findById(a.getFlowUid()).get()).collect(Collectors.toSet());
+		for (Job sfchild : csf) {
 			recListDepends(ans, sfchild);
 		}
 
 	}
 
 	@Transactional
-	public SavedFlow save(Flow f) {
+	public Job save(Flow f) {
 		var sfo = dao.findById(f.getUid());
-		var sf = sfo.orElse(SavedFlow.gen(f));
+		var sf = sfo.orElse(Job.gen(f));
 		sf.setModel(f);
 		return dao.save(sf);
 	}

@@ -24,7 +24,7 @@ import net.bzk.flow.model.demo.ModelBuilder;
 import net.bzk.flow.run.flow.FlowRuner;
 import net.bzk.flow.run.flow.FlowRuner.RunInfo;
 import net.bzk.flow.run.service.RunFlowService;
-import net.bzk.flow.run.service.SavedFlowService;
+import net.bzk.flow.run.service.JobsService;
 
 @CrossOrigin(maxAge = 3600, methods = { RequestMethod.GET, RequestMethod.PUT, RequestMethod.POST, RequestMethod.PATCH,
 		RequestMethod.OPTIONS, RequestMethod.HEAD }, allowedHeaders = "*", origins = "*")
@@ -38,7 +38,7 @@ public class FlowController {
 	@Inject
 	private RunFlowService runFlowService;
 	@Inject
-	private SavedFlowService savedFlowService;
+	private JobsService savedFlowService;
 
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
