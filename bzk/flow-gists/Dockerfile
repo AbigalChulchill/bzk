@@ -1,5 +1,8 @@
-FROM kirinddt/gradle-graalvm:latest 
-VOLUME /tmp
+FROM kirinddt/gradle-graalvm:latest
+ 
+ENV GRADLE_USER_HOME /path/to/custom/cache/dir
+VOLUME $GRADLE_USER_HOME
+
 COPY . /app
 WORKDIR /app
 #RUN java -version
