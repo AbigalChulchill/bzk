@@ -14,7 +14,7 @@ import { CommUtils } from '../utils/comm-utils';
 export class JobClientService {
 
 
-  public static URL_PREFIX = 'job';
+  public static URL_PREFIX = 'job/';
 
   constructor(
     private httpClient: HttpClient
