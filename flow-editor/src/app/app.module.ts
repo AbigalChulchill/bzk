@@ -58,6 +58,8 @@ import { LoginComponent } from './login/login.component';
 import { CloudBackupListComponent } from './uikit/cloud-backup-list/cloud-backup-list.component';
 import { JobsComponent } from './jobs/jobs.component';
 import { JobComponent } from './jobs/job/job.component';
+import { RootSidebarComponent } from './sidebar/root-sidebar/root-sidebar.component';
+import { JobSidebarComponent } from './jobs/job/job-sidebar/job-sidebar.component';
 
 export function createTranslateLoader(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -102,6 +104,8 @@ export function createTranslateLoader(http: HttpClient): TranslateHttpLoader {
     CloudBackupListComponent,
     JobsComponent,
     JobComponent,
+    RootSidebarComponent,
+    JobSidebarComponent,
 
   ],
   imports: [
@@ -129,7 +133,7 @@ export function createTranslateLoader(http: HttpClient): TranslateHttpLoader {
       }
     }),
     BrowserAnimationsModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
   ],
   providers: [
     {

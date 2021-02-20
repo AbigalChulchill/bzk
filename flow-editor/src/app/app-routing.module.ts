@@ -7,6 +7,8 @@ import { PathGuideService } from './service/path-guide.service';
 import { FlowDesignComponent } from './flow-design/flow-design.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { RootSidebarComponent } from './sidebar/root-sidebar/root-sidebar.component';
+import { JobSidebarComponent } from './jobs/job/job-sidebar/job-sidebar.component';
 
 // https://www.techiediaries.com/angular-router-multiple-outlets/ NOT WORK
 const routes: Routes = [
@@ -14,9 +16,13 @@ const routes: Routes = [
   { path: 'console', component: ConsoleComponent , canActivate: [PathGuideService] },
   { path: 'model/design', component: FlowDesignComponent , canActivate: [PathGuideService] },
   { path: 'model/jobs', component: JobsComponent, canActivate: [PathGuideService] },
-  { path: 'job/:uid', component: JobComponent, canActivate: [PathGuideService] },
+  { path: 'job/:uid',   component: JobComponent, canActivate: [PathGuideService] },
+  { path: 'job', component: JobSidebarComponent, outlet:'sidebar' },
   { path: 'config', component: ConfigComponent, canActivate: [PathGuideService] },
   { path: 'login', component: LoginComponent },
+
+
+  { path: '', component: RootSidebarComponent , outlet:'sidebar' },
 ];
 
 @NgModule({

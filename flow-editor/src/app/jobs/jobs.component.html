@@ -76,7 +76,7 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
           id
       </th>
-      <td mat-cell *matCellDef="let row"> <a [routerLink]="['/job',row.id]" > {{row.id}} </a> </td>
+      <td mat-cell *matCellDef="let row"> <a [routerLink]="['/job',row.id,{ outlets: { sidebar: ['job'] } }]" > {{row.id}} </a> </td>
     </ng-container>
 
     <ng-container matColumnDef="name">
