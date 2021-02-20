@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import javax.inject.Inject;
-import javax.transaction.Transactional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -27,8 +26,8 @@ import net.bzk.flow.run.service.JobsService;
 		RequestMethod.OPTIONS, RequestMethod.HEAD }, allowedHeaders = "*", origins = "*")
 @Validated
 @Controller
-@RequestMapping(value = "saved/flow/")
-public class SavedFlowController {
+@RequestMapping(value = "job")
+public class JobController {
 
 	@Inject
 	private JobsDao dao;

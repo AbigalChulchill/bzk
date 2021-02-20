@@ -1,4 +1,4 @@
-import { SavedFlowClientService } from './../../service/saved-flow-client.service';
+import { JobClientService } from './../../service/job-client.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Gist, GistFile } from 'src/app/dto/gist';
@@ -25,7 +25,7 @@ export class CloudBackupListComponent implements OnInit {
     private router: Router,
     private modifyingFlow: ModifyingFlowService,
     private loading: LoadingService,
-    private savedFlowClient: SavedFlowClientService
+    private jobClient: JobClientService
   ) { }
 
   async ngOnInit(): Promise<void> {
@@ -67,7 +67,7 @@ export class CloudBackupListComponent implements OnInit {
 
   private async import(gr: GistRow): Promise<void> {
     const fm = gr.gist.getMainFile().convertModel();
-    const sf = await this.savedFlowClient.save(fm).toPromise();
+    const sf = await this.jobClient.save(fm).toPromise();
   }
 
   public selectAll(): void {

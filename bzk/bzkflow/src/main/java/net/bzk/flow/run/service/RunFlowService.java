@@ -37,16 +37,16 @@ public class RunFlowService {
 		if (!b)
 			throw new BzkRuntimeException("exist :" + f);
 	}
-	
-	public RunInfo test(String entryUid,List<Flow> fs) {
-		Flow ef= fs.stream().filter(f-> StringUtils.equals(f.getUid(), entryUid) ).findFirst().get();
+
+	public RunInfo test(String entryUid, List<Flow> fs) {
+		Flow ef = fs.stream().filter(f -> StringUtils.equals(f.getUid(), entryUid)).findFirst().get();
 		fs.remove(ef);
-		fs.forEach(f->{
+		fs.forEach(f -> {
 			runPoolDao.create(f);
 		});
-		var fr= dao.create(ef);
+		var fr = dao.create(ef);
 		fr.run();
-		fs.forEach(f->{
+		fs.forEach(f -> {
 			runPoolDao.forceRemove(f.getUid());
 		});
 		return fr.getInfo();
@@ -55,6 +55,11 @@ public class RunFlowService {
 	public List<FlowPoolInfo> listFlowPoolInfo() {
 		return runPoolDao.listPools().stream().map(p -> new FlowPoolInfo(p.getModel(), p.listRunInfos()))
 				.collect(Collectors.toList());
+	}
+
+	public FlowPoolInfo getFlowPoolInfo(String uid) {
+		var p = runPoolDao.getPool(uid);
+		return new FlowPoolInfo(p.getModel(), p.listRunInfos());
 	}
 
 	public void forceRemove(String fuid) {

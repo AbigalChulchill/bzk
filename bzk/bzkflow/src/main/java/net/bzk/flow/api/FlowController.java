@@ -21,10 +21,9 @@ import net.bzk.flow.api.dto.ActionDebugData;
 import net.bzk.flow.api.dto.FlowPoolInfo;
 import net.bzk.flow.model.Flow;
 import net.bzk.flow.model.demo.ModelBuilder;
-import net.bzk.flow.run.flow.FlowRuner;
 import net.bzk.flow.run.flow.FlowRuner.RunInfo;
-import net.bzk.flow.run.service.RunFlowService;
 import net.bzk.flow.run.service.JobsService;
+import net.bzk.flow.run.service.RunFlowService;
 
 @CrossOrigin(maxAge = 3600, methods = { RequestMethod.GET, RequestMethod.PUT, RequestMethod.POST, RequestMethod.PATCH,
 		RequestMethod.OPTIONS, RequestMethod.HEAD }, allowedHeaders = "*", origins = "*")
@@ -75,6 +74,13 @@ public class FlowController {
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public List<FlowPoolInfo> listFlowPoolInfo() {
 		return runFlowService.listFlowPoolInfo();
+	}
+	
+	@ResponseStatus(HttpStatus.OK)
+	@ResponseBody
+	@RequestMapping(value = "{uid}", method = RequestMethod.GET)
+	public FlowPoolInfo getPoolInfo(@PathVariable String uid ) {
+		return runFlowService.getFlowPoolInfo(uid);
 	}
 
 	@ResponseStatus(HttpStatus.OK)

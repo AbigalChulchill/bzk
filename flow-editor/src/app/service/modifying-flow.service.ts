@@ -1,4 +1,4 @@
-import { SavedFlowClientService } from './saved-flow-client.service';
+import { JobClientService } from './job-client.service';
 import { FlowClientService } from './flow-client.service';
 import { CommUtils } from './../utils/comm-utils';
 import { SubFlowAction } from './../model/action';
@@ -27,7 +27,7 @@ export class ModifyingFlowService {
   constructor(
     private clientService: HttpClientService,
     private flowClient:FlowClientService,
-    private savedFlowClient: SavedFlowClientService,
+    private jobClient: JobClientService,
     private loading: LoadingService
   ) {
 
@@ -53,7 +53,7 @@ export class ModifyingFlowService {
     const llm = this.getLastMark();
     if (!llm) { return null; }
     try {
-      const lfm = await this.savedFlowClient.getByUid(llm.id);
+      const lfm = await this.jobClient.getByUid(llm.id);
       this.modelobs.setModel(lfm.model);
       return true;
     } catch (ex) {
@@ -81,7 +81,7 @@ export class ModifyingFlowService {
 
 
   public async saveAsNew(): Promise<void> {
-    const sgist = await this.savedFlowClient.create(this.modelobs.getModel());
+    const sgist = await this.jobClient.create(this.modelobs.getModel());
     this.saveLast({
       id: sgist.uid,
       source: LoadSource.terminal
@@ -91,7 +91,7 @@ export class ModifyingFlowService {
   public async updateRemote(): Promise<void> {
     const llm = this.getLastMark();
     if (!llm) { throw new Error('not find last save'); }
-    await this.savedFlowClient.save(this.modelobs.getModel());
+    await this.jobClient.save(this.modelobs.getModel());
   }
 
   public async registerRemote(): Promise<void> {

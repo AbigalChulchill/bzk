@@ -1,8 +1,8 @@
+import { JobClientService } from './../service/job-client.service';
 import { Flow } from 'src/app/model/flow';
 import { GithubService } from 'src/app/service/github.service';
 import { async } from '@angular/core/testing';
 import { DialogService } from './../uikit/dialog.service';
-import { SavedFlowClientService } from './../service/saved-flow-client.service';
 import { FlowClientService } from './../service/flow-client.service';
 import { LoadingService } from './../service/loading.service';
 import { FlowPoolInfo, FlowState } from './../dto/flow-pool-info';
@@ -38,7 +38,7 @@ export class JobsComponent implements OnInit,AfterViewInit {
   constructor(
     private loading: LoadingService,
     private flowClient: FlowClientService,
-    private savedFlowClient: SavedFlowClientService,
+    private jobClient: JobClientService,
     private modifyingFlow: ModifyingFlowService,
     private router: Router,
     private githubService: GithubService,
@@ -67,7 +67,7 @@ export class JobsComponent implements OnInit,AfterViewInit {
 
   private async reflesh(): Promise<void> {
     const t = this.loading.show();
-    this.savedFlows = await this.savedFlowClient.listAll();
+    this.savedFlows = await this.jobClient.listAll();
     this.flowPoolInfos = await this.flowClient.listFlowPoolInfo().toPromise();
     const vdata = new Array<Row>();
     for (const sf of this.savedFlows) {
