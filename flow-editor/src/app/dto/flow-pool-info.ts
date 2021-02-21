@@ -14,8 +14,9 @@ export class RunInfo {
 
   public uid: string;
   public state = FlowState.Pedding;
-  public endLink : Link;
-
+  public endLink: Link;
+  public startAt = '-';
+  public endAt = '-';
 
 }
 

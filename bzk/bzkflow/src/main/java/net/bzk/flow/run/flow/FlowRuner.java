@@ -1,5 +1,6 @@
 package net.bzk.flow.run.flow;
 
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -18,12 +19,11 @@ import lombok.extern.slf4j.Slf4j;
 import net.bzk.flow.Constant;
 import net.bzk.flow.model.Box;
 import net.bzk.flow.model.Flow;
-import net.bzk.flow.model.Link;
 import net.bzk.flow.model.Transition;
 import net.bzk.flow.model.var.VarMap;
 import net.bzk.flow.model.var.VarVal;
 import net.bzk.flow.run.dao.RunBoxDao;
-import net.bzk.flow.run.entry.Entryer;
+import net.bzk.infrastructure.CommUtils;
 import net.bzk.infrastructure.JsonUtils;
 
 @Service
@@ -52,6 +52,7 @@ public class FlowRuner implements Runnable {
 		callback = c;
 		model = f;
 		info.uid = RandomStringUtils.randomAlphanumeric(Constant.RUN_UID_SIZE);
+		
 		vars = JsonUtils.toByJson(model.getVars(), VarMap.class);
 		return this;
 	}
@@ -64,6 +65,7 @@ public class FlowRuner implements Runnable {
 	public void run() {
 		try {
 			info.state = State.Running;
+			info.startAt = CommUtils.nowUtc0();
 			Box ob = model.findEntryBox();
 			currentBoxRuner = runBoxDao.create(genBoxBundle(), ob);
 			currentBoxRuner.run();
@@ -99,6 +101,7 @@ public class FlowRuner implements Runnable {
 		info.state = State.Done;
 		info.transition = l;
 		info.endResult = re;
+		info.endAt = CommUtils.nowUtc0();
 		runBoxDao.remove(currentBoxRuner);
 		callback.accept(this);
 	}
@@ -111,6 +114,8 @@ public class FlowRuner implements Runnable {
 		private State state = State.Pedding;;
 		private Transition transition;
 		private List<VarVal> endResult;
+		private Date startAt;
+		private Date endAt;
 
 	}
 

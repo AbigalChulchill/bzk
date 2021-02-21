@@ -1,30 +1,75 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { FlowPoolInfo, FlowState, RunInfo } from 'src/app/dto/flow-pool-info';
 import { FlowClientService } from 'src/app/service/flow-client.service';
+import { LoadingService } from 'src/app/service/loading.service';
 
 @Component({
   selector: 'app-job',
   templateUrl: './job.component.html',
   styleUrls: ['./job.component.css']
 })
-export class JobComponent implements OnInit {
+export class JobComponent implements OnInit,AfterViewInit {
 
+
+  displayedColumns: string[] = ['runUid', 'startAt', 'endAt', 'state', 'endTag', 'actions'];
+  dataSource: MatTableDataSource<Row>;
+
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
   public uid = '';
   public flowPoolInfo: FlowPoolInfo;
 
   constructor(
+    private loading: LoadingService,
     private flowClient: FlowClientService
-  ) { }
+  ) {
+    this.dataSource = new MatTableDataSource(new Array<Row>());
+   }
 
-  async ngOnInit(): Promise<void> {
-    this.flowPoolInfo = await this.flowClient.getFlowPoolInfo(this.uid).toPromise();
+
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
-  private genRow(ri:RunInfo):Row{
+  async ngOnInit(): Promise<void> {
+    await this.reflesh();
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+
+  public async reflesh(): Promise<void>{
+    const t = this.loading.show();
+    this.flowPoolInfo = await this.flowClient.getFlowPoolInfo(this.uid).toPromise();
+    this.dataSource.data = this.genRows();
+    this.loading.dismiss(t);
+  }
+
+  private genRows(): Array<Row> {
+    const ans = new Array<Row>();
+    for (const ri of this.flowPoolInfo.runInfos) {
+      ans.push(this.genRow(ri));
+    }
+    return ans;
+  }
+
+  private genRow(ri: RunInfo): Row {
     const ans = new Row();
     ans.runUid = ri.uid;
     ans.state = ri.state;
-     ans.endTag = ri. TODO
+    ans.startAt = ri.startAt;
+    ans.endAt = ri.endAt;
+    if (ri.endLink && ri.endLink.transition) ans.endTag = ri.endLink.transition.endTag;
     return ans;
   }
 
@@ -32,7 +77,8 @@ export class JobComponent implements OnInit {
 
 export class Row {
   public runUid: string;
-  public triggerAt: string;
-  public state:FlowState;
-  public endTag:string;
+  public startAt: string;
+  public endAt: string;
+  public state: FlowState;
+  public endTag = '';
 }

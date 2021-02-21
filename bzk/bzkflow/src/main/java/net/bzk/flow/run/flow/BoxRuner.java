@@ -33,8 +33,8 @@ import net.bzk.flow.model.var.VarVal;
 import net.bzk.flow.model.var.VarValSet;
 import net.bzk.flow.run.action.ActionCall;
 import net.bzk.flow.run.action.ActionCall.Uids;
+import net.bzk.flow.run.service.RunLogService;
 import net.bzk.flow.run.service.RunVarService;
-import net.bzk.flow.utils.LogUtils;
 import net.bzk.infrastructure.ex.BzkRuntimeException;
 
 @Service
@@ -47,7 +47,7 @@ public class BoxRuner {
 	@Inject
 	private RunVarService runVarService;
 	@Inject
-	private LogUtils logUtils;
+	private RunLogService logUtils;
 	@Getter
 	private Box model;
 	@Getter

@@ -20,8 +20,8 @@ import net.bzk.flow.model.var.VarLv;
 import net.bzk.flow.model.var.VarMap;
 import net.bzk.flow.model.var.VarValSet;
 import net.bzk.flow.run.service.FastVarQueryer;
+import net.bzk.flow.run.service.RunLogService;
 import net.bzk.flow.run.service.RunVarService;
-import net.bzk.flow.utils.LogUtils;
 import net.bzk.infrastructure.JsonUtils;
 import net.bzk.infrastructure.ex.BzkRuntimeException;
 
@@ -33,7 +33,7 @@ public abstract class ActionCall<T extends Action> implements Callable<VarValSet
 	@Getter
 	private Uids uids;
 	@Inject
-	protected LogUtils logUtils;
+	protected RunLogService logUtils;
 	@Inject
 	protected RunVarService varService;
 	@Inject

@@ -1,13 +1,11 @@
-package net.bzk.flow.utils;
+package net.bzk.flow.run.service;
 
 import java.util.function.Consumer;
 
 import javax.inject.Inject;
 
-import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 
-import net.bzk.flow.model.Action;
 import net.bzk.flow.model.Box;
 import net.bzk.flow.model.RunLog;
 import net.bzk.flow.model.RunLog.RunState;
@@ -18,12 +16,9 @@ import net.bzk.flow.run.dao.RunFlowDao;
 import net.bzk.flow.run.dao.RunLogDao;
 import net.bzk.flow.run.flow.BoxRuner;
 import net.bzk.flow.run.flow.FlowRuner;
-import net.bzk.infrastructure.AES256Util;
-import net.bzk.infrastructure.JsonUtils;
-import net.bzk.infrastructure.ex.BzkRuntimeException;
 
 @Service
-public class LogUtils {
+public class RunLogService {
 
 //	private static final String Encrypt_KEY_PREFIX = "MI87nnw)mi1";
 //	private static final String LOCATE_BOX_TAG_PREFIX = "<B%";

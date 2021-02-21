@@ -26,7 +26,7 @@ import net.bzk.flow.run.service.JobsService;
 		RequestMethod.OPTIONS, RequestMethod.HEAD }, allowedHeaders = "*", origins = "*")
 @Validated
 @Controller
-@RequestMapping(value = "job")
+@RequestMapping(value = "job/")
 public class JobController {
 
 	@Inject
