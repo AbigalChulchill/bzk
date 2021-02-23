@@ -3,9 +3,9 @@
   <div class="card col-2">
     <div class="card-body">
       <button *ngIf="!StringUtils.isBlank( log.msg)" type="button" class="btn btn-secondary container-fluid"
-        (click)="showType = ShowType.Message">Show Message</button>
-      <button type="button" class="btn btn-success container-fluid"  (click)="showType = ShowType.OrgJson">Show Data Json</button>
-      <button type="button" class="btn btn-danger container-fluid" (click)="showType = ShowType.Vars">Vars</button>
+        (click)="parentView.showType = ShowType.Message">Show Message</button>
+      <button type="button" class="btn btn-success container-fluid"  (click)="parentView.showType = ShowType.OrgJson">Show Data Json</button>
+      <button type="button" class="btn btn-danger container-fluid" (click)="parentView.showType = ShowType.Vars">Vars</button>
     </div>
   </div>
 
