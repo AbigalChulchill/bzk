@@ -1,5 +1,8 @@
+import { RunLog } from './../model/run-log';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -11,8 +14,8 @@ export class RunLogClientService {
     private httpClient: HttpClient
   ) { }
 
-  // public listByRunFlowUid(d: ActionDebugData, delDelay: number): Observable<List<RunLog>> {
-  //   return this.httpClient.post<void>(environment.apiHost + FlowClientService.URL_PREFIX + 'debug/action?delDelay=' + delDelay, d);
-  // }
+  public listByRunFlowUid(uid:string): Observable<Array<RunLog>> {
+    return this.httpClient.get<Array<RunLog>>(environment.apiHost + RunLogClientService.URL_PREFIX + uid+'?type=runflow' );
+  }
 
 }

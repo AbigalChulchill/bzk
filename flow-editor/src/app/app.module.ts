@@ -61,6 +61,7 @@ import { JobComponent } from './jobs/job/job.component';
 import { RootSidebarComponent } from './sidebar/root-sidebar/root-sidebar.component';
 import { JobSidebarComponent } from './jobs/job/job-sidebar/job-sidebar.component';
 import { RunLogComponent } from './run-log/run-log.component';
+import { LogRowComponent } from './run-log/log-row/log-row.component';
 
 export function createTranslateLoader(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -108,6 +109,7 @@ export function createTranslateLoader(http: HttpClient): TranslateHttpLoader {
     RootSidebarComponent,
     JobSidebarComponent,
     RunLogComponent,
+    LogRowComponent,
 
   ],
   imports: [

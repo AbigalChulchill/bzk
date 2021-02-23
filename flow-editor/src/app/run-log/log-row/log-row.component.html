@@ -1,0 +1,43 @@
+<div class="container-fluid row">
+
+  <div class="card col-2">
+    <div class="card-body">
+      <button *ngIf="!StringUtils.isBlank( log.msg)" type="button" class="btn btn-secondary container-fluid"
+        (click)="showType = ShowType.Message">Show Message</button>
+      <button type="button" class="btn btn-success container-fluid"  (click)="showType = ShowType.OrgJson">Show Data Json</button>
+      <button type="button" class="btn btn-danger container-fluid" (click)="showType = ShowType.Vars">Vars</button>
+    </div>
+  </div>
+
+  <ng-container *ngIf="parentView.showType === ShowType.Vars">
+
+    <div class="card " [ngClass]="getWidthClass()">
+      <div class="card-header">
+        Flow Vars
+      </div>
+      <app-json-editor [data]="ReadJsonProvide.gen(log.flowVar)"></app-json-editor>
+    </div>
+
+    <div class="card " [ngClass]="getWidthClass()">
+      <div class="card-header">
+        Box Vars
+      </div>
+      <app-json-editor [data]="ReadJsonProvide.gen(log.boxVar)"></app-json-editor>
+    </div>
+
+    <ul class="card  col-2" *ngIf="hasReturn()">
+      <app-json-editor [data]="ReadJsonProvide.gen(log.varVals)"></app-json-editor>
+    </ul>
+
+  </ng-container>
+
+  <div class="card col-10" *ngIf="isFullView()">
+    <textarea *ngIf="parentView.showType === ShowType.Message " class="container-fluid h-100  " (click)="$event.target.select()">
+      {{ log.msg  }}
+    </textarea>
+    <app-json-editor class="container-fluid h-100  " *ngIf="parentView.showType === ShowType.OrgJson" [data]="ReadJsonProvide.gen(log)"></app-json-editor>
+  </div>
+
+
+
+</div>

@@ -3,28 +3,28 @@ import { RunState, VarLv } from "./pojo/enums";
 
 export class RunLog {
 
-  private id: number;
+  public id: number;
 
-  private flowUid: string;
-  private runFlowUid: string;
-  private boxUid: string;
-  private runBoxUid: string;
-  private actionUid: string;
-  private runActionUid: string;
+  public flowUid: string;
+  public runFlowUid: string;
+  public boxUid: string;
+  public runBoxUid: string;
+  public actionUid: string;
+  public runActionUid: string;
 
-  private msg: string;
-  private flowVar: BaseVar;
-  private boxVar: BaseVar;
-  private boxName: string;
-  private state = RunState.ActionCall;
-  private failed = false;
-  private exception: string;
-  private exceptionClazz: string;
-  private  varVals:Array<VarVal>;
-  private actionName: string;
+  public msg: string;
+  public flowVar: BaseVar;
+  public boxVar: BaseVar;
+  public boxName: string;
+  public state = RunState.ActionCall;
+  public failed = false;
+  public exception: string;
+  public exceptionClazz: string;
+  public  varVals:Array<VarVal>;
+  public actionName: string;
 
-  private updateAt: string;
-  private createAt: string;
+  public updateAt: string;
+  public createAt: string;
 
 }
 
