@@ -42,6 +42,7 @@ public class JobsService {
 		ffs.forEach(this::importByFile);
 	}
 
+	@Transactional
 	private void importByFile(File f) {
 		try {
 			Flow flow = BzkFlowUtils.getFlowJsonMapper().readValue(f, Flow.class);

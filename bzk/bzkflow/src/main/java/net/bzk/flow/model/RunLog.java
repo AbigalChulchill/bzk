@@ -41,8 +41,13 @@ public class RunLog implements Serializable, CreateUpdateDate {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(nullable = false)
 	private long id;
-    @Embedded
-	private Uids uids;
+	
+	private String flowUid;
+	private String runFlowUid;
+	private String boxUid;
+	private String runBoxUid;
+	private String actionUid;
+	private String runActionUid;
 
 	private String msg;
 	@Column(nullable = true, columnDefinition = "TEXT")

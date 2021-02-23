@@ -5,6 +5,7 @@ import java.util.function.Consumer;
 import javax.inject.Inject;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import net.bzk.flow.model.Box;
 import net.bzk.flow.model.RunLog;
@@ -16,6 +17,7 @@ import net.bzk.flow.run.dao.RunFlowDao;
 import net.bzk.flow.run.dao.RunLogDao;
 import net.bzk.flow.run.flow.BoxRuner;
 import net.bzk.flow.run.flow.FlowRuner;
+import net.bzk.infrastructure.convert.Overwrite;
 
 @Service
 public class RunLogService {
@@ -33,15 +35,14 @@ public class RunLogService {
 	@Inject
 	private RunFlowDao runFlowDao;
 
-	public void logActionCall( Uids u, String msg) {
+	public void logActionCall(Uids u, String msg) {
 		RunLog brl = genLog(u);
-		brl.setUids(u);
 		brl.setState(RunState.ActionCall);
 		brl.setMsg(msg);
 		dao.save(brl);
 	}
 
-	public void logActionCallWarn( ActionCall ac, String wmsg) {
+	public void logActionCallWarn(ActionCall ac, String wmsg) {
 		RunLog brl = genLog(ac.getUids());
 		brl.setState(RunState.ActionCallWarn);
 		brl.setMsg(wmsg);
@@ -49,11 +50,13 @@ public class RunLogService {
 		dao.save(brl);
 	}
 
+	
 	public void log(Uids u, RunState sr) {
 		log(u, sr, l -> {
 		});
 	}
 
+	@Transactional
 	public void log(Uids u, RunState sr, Consumer<RunLog> cs) {
 		var ans = genLog(u);
 		ans.setState(sr);
@@ -72,9 +75,12 @@ public class RunLogService {
 		ans.setBoxName(b.getName());
 		if (ao.isPresent())
 			ans.setActionName(ao.get().getName());
-		ans.setUids(u);
-		return ans;
+		return setupUids(ans, u);
+	}
 
+	public RunLog setupUids(RunLog rl, Uids u) {
+		RunLog ans = Overwrite.overwrite(u, rl);
+		return ans;
 	}
 
 }
