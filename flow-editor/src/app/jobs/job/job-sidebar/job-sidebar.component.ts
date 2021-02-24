@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { UrlParamsService } from 'src/app/service/url-params.service';
 
 @Component({
   selector: 'app-job-sidebar',
@@ -7,7 +8,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class JobSidebarComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    public urlParam:UrlParamsService
+  ) { }
 
   ngOnInit(): void {
   }

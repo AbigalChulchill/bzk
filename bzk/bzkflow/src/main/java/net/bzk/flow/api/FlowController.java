@@ -37,7 +37,7 @@ public class FlowController {
 	@Inject
 	private RunFlowService runFlowService;
 	@Inject
-	private JobsService savedFlowService;
+	private JobsService jobsService;
 
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
@@ -55,7 +55,7 @@ public class FlowController {
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(value = "{uid}/register", method = RequestMethod.POST)
 	public void register(@PathVariable String uid) {
-		var sfs = savedFlowService.listDepends(uid);
+		var sfs = jobsService.listDepends(uid);
 		List< Flow> fs = sfs.stream().map(sf-> sf.getModel()).collect(Collectors.toList());
 		register(fs);
 	}
@@ -64,7 +64,7 @@ public class FlowController {
 	@ResponseBody
 	@RequestMapping(value = "{uid}/test", method = RequestMethod.POST)
 	public RunInfo testFlow(@PathVariable String uid ) {
-		var sfs = savedFlowService.listDepends(uid);
+		var sfs = jobsService.listDepends(uid);
 		List< Flow> fs = sfs.stream().map(sf-> sf.getModel()).collect(Collectors.toList());
 		return runFlowService.test(uid, fs);
 	}

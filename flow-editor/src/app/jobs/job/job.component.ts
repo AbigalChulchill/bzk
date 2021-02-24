@@ -1,3 +1,4 @@
+import { UrlParamsService } from './../../service/url-params.service';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -25,6 +26,8 @@ export class JobComponent implements OnInit,AfterViewInit {
   constructor(
     private loading: LoadingService,
     private flowClient: FlowClientService
+
+
   ) {
     this.dataSource = new MatTableDataSource(new Array<Row>());
    }
