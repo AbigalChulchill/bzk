@@ -14,5 +14,31 @@
       </div>
       <button (click)="saveGistPass()" class="btn btn-primary">Save</button>
     </div>
+
+    <div class="alert alert-success">
+      <div class="form-group">
+        <label for="exampleInputPassword1">Time Zone</label>
+      </div>
+
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="basic-addon1">Choose Time Zone Id</span>
+        </div>
+
+        <input type="text" class="form-control" placeholder="Pick one" aria-label="Number" matInput [(ngModel)]="localStore.zoneId"
+          [formControl]="myControl" [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+            {{option}}
+          </mat-option>
+        </mat-autocomplete>
+
+      </div>
+
+    </div>
+
   </div>
+
+
+
 </div>

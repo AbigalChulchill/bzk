@@ -1,10 +1,14 @@
 import { ClassType } from 'class-transformer/ClassTransformer';
 import { plainToClass } from 'class-transformer';
 import * as CryptoJS from 'crypto-js';
+import { DateTimeFormatter, ZonedDateTime, ZoneId } from '@js-joda/core';
 
 export class CommUtils {
 
 
+  public static getZoneDateStr(ds: string,zoneId:string): string {
+    return ZonedDateTime.parse(ds).withZoneSameInstant(ZoneId.of(zoneId)).format(DateTimeFormatter.ofPattern('yyyy-MM-dd HH:mm:ss'));
+  }
 
   public static delay(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));

@@ -17,42 +17,30 @@
 
     <ng-container matColumnDef="startAt">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> startAt </th>
-      <td mat-cell *matCellDef="let row"> <a [routerLink]="['/job',row.id]" >{{row.startAt}}</a>  </td>
+      <td mat-cell *matCellDef="let row"> {{row.startAt}} </td>
     </ng-container>
 
-    <ng-container matColumnDef="lastState">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> lastState </th>
-      <td mat-cell *matCellDef="let row"> {{row.lastState}} </td>
+    <ng-container matColumnDef="endAt">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> endAt </th>
+      <td mat-cell *matCellDef="let row"> {{row.endAt}} </td>
     </ng-container>
 
-    <ng-container matColumnDef="lastTriggerAt">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> lastTriggerAt </th>
-      <td mat-cell *matCellDef="let row" > {{row.lastTriggerAt}} </td>
+    <ng-container matColumnDef="state">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> state </th>
+      <td mat-cell *matCellDef="let row" > {{row.state}} </td>
     </ng-container>
 
-    <ng-container matColumnDef="triggerInfo">
-      <th mat-header-cell *matHeaderCellDef > triggerInfo </th>
-      <td mat-cell *matCellDef="let row" >
-        <span class="col-5 alert alert-info">
-          <span class="badge badge-primary">{{ getStateCount( getSavedFlow(row.id) ,FlowState.Running) }}</span>
-          /
-          <span class="badge badge-danger">{{ getStateCount(getSavedFlow(row.id),FlowState.Fail) }}</span>
-          /
-          <span class="badge badge-success">{{ getStateCount(getSavedFlow(row.id),FlowState.Done) }}</span>
-          /
-          <span class="badge badge-secondary">{{ getStateCount(getSavedFlow(row.id),FlowState.Pedding) }}</span>
-          /
-          <span class="badge badge-light">{{ getAllRunCount(getSavedFlow(row.id)) }}</span>
-        </span>
-      </td>
+    <ng-container matColumnDef="endTag">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header > endTag </th>
+      <td mat-cell *matCellDef="let row" > {{row.endTag}} </td>
     </ng-container>
 
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef > actions </th>
       <td mat-cell *matCellDef="let row" >
         <span class="col-3 alert alert-success">
-          <button type="button" class="badge badge-primary button" (click)="onFileEdit(row.id)"><i class="fas fa-edit"></i></button>
-          <button type="button" class="badge badge-primary button" (click)="onFileEdit(row.id)"><i class="fas fa-terminal"></i></button>
+          <button type="button" class="badge badge-primary button" ><i class="fas fa-edit"></i></button>
+          <button type="button" class="badge badge-primary button" ><i class="fas fa-terminal"></i></button>
         </span>
       </td>
     </ng-container>

@@ -57,6 +57,7 @@ export class JobComponent implements OnInit,AfterViewInit {
 
   private genRows(): Array<Row> {
     const ans = new Array<Row>();
+    if(!this.flowPoolInfo || this.flowPoolInfo.runInfos) return ans;
     for (const ri of this.flowPoolInfo.runInfos) {
       ans.push(this.genRow(ri));
     }
