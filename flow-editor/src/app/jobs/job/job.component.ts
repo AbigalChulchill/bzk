@@ -6,6 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { FlowPoolInfo, FlowState, RunInfo } from 'src/app/dto/flow-pool-info';
 import { FlowClientService } from 'src/app/service/flow-client.service';
 import { LoadingService } from 'src/app/service/loading.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-job',
@@ -25,7 +26,8 @@ export class JobComponent implements OnInit,AfterViewInit {
 
   constructor(
     private loading: LoadingService,
-    private flowClient: FlowClientService
+    private flowClient: FlowClientService,
+    private route: ActivatedRoute
 
 
   ) {
@@ -39,6 +41,7 @@ export class JobComponent implements OnInit,AfterViewInit {
   }
 
   async ngOnInit(): Promise<void> {
+    this.uid = this.route.snapshot.paramMap.get('uid');
     await this.reflesh();
   }
 
@@ -53,14 +56,18 @@ export class JobComponent implements OnInit,AfterViewInit {
 
   public async reflesh(): Promise<void>{
     const t = this.loading.show();
-    this.flowPoolInfo = await this.flowClient.getFlowPoolInfo(this.uid).toPromise();
-    this.dataSource.data = this.genRows();
+    try{
+      this.flowPoolInfo = await this.flowClient.getFlowPoolInfo(this.uid).toPromise();
+      this.dataSource.data = this.genRows();
+    }catch(e){
+
+    }
     this.loading.dismiss(t);
   }
 
   private genRows(): Array<Row> {
     const ans = new Array<Row>();
-    if(!this.flowPoolInfo || this.flowPoolInfo.runInfos) return ans;
+    if(!this.flowPoolInfo || !this.flowPoolInfo.runInfos) return ans;
     for (const ri of this.flowPoolInfo.runInfos) {
       ans.push(this.genRow(ri));
     }

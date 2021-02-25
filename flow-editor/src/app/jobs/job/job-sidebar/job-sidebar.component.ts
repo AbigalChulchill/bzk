@@ -1,4 +1,9 @@
+import { async } from '@angular/core/testing';
+import { LoadingService } from './../../../service/loading.service';
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { FlowPoolInfo } from 'src/app/dto/flow-pool-info';
+import { FlowClientService } from 'src/app/service/flow-client.service';
 import { UrlParamsService } from 'src/app/service/url-params.service';
 
 @Component({
@@ -8,11 +13,59 @@ import { UrlParamsService } from 'src/app/service/url-params.service';
 })
 export class JobSidebarComponent implements OnInit {
 
+  public uid = '';
+  public flowPoolInfo: FlowPoolInfo;
+
   constructor(
-    public urlParam:UrlParamsService
+    public urlParam: UrlParamsService,
+    private route: ActivatedRoute,
+    private flowClient: FlowClientService,
+    private loading: LoadingService
   ) { }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    this.uid = this.route.snapshot.paramMap.get('uid');
+    await this.reflesh();
+  }
+
+  private async reflesh(a = () => { }): Promise<void> {
+    const t = this.loading.show();
+    await a();
+    try {
+      this.flowPoolInfo = await this.flowClient.getFlowPoolInfo(this.uid).toPromise();
+    } catch (e) {
+
+    }
+    this.loading.dismiss(t);
+  }
+
+  public isEnable(): boolean {
+    return this.flowPoolInfo != null;
+  }
+
+  public runManual(): void {
+
+    this.reflesh(async () => {
+      await this.flowClient.runManual(this.uid).toPromise();
+    });
+  }
+
+
+  public toggleEnable(): void {
+    if (this.isEnable()) {
+      //TODO imp remove
+    } else {
+      this.enableJob();
+    }
+  }
+
+  public async enableJob(): Promise<void> {
+
+
+    await this.reflesh(async () => {
+      await this.flowClient.registerFlowByUid(this.uid).toPromise();
+    });
+
   }
 
 }

@@ -17,7 +17,7 @@ const routes: Routes = [
   { path: 'model/design', component: FlowDesignComponent , canActivate: [PathGuideService] },
   { path: 'model/jobs', component: JobsComponent, canActivate: [PathGuideService] },
   { path: 'job/:uid',   component: JobComponent, canActivate: [PathGuideService] },
-  { path: 'job', component: JobSidebarComponent, outlet:'sidebar' },
+  { path: 'job/:uid', component: JobSidebarComponent, outlet:'sidebar' },
   { path: 'config', component: ConfigComponent, canActivate: [PathGuideService] },
   { path: 'login', component: LoginComponent },
 

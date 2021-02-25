@@ -35,6 +35,10 @@ export class FlowClientService {
     return this.httpClient.post<void>(environment.apiHost + FlowClientService.URL_PREFIX + fuid+'/register',null);
   }
 
+  public runManual(fuid: string): Observable<void> {
+    return this.httpClient.post<void>(environment.apiHost + FlowClientService.URL_PREFIX + `${fuid}/run?type=manual`,null);
+  }
+
   public testFlow(eUid: string): Observable<void> {
     return this.httpClient.post<void>(environment.apiHost + FlowClientService.URL_PREFIX + `${eUid}/test`,null);
   }

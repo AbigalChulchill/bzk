@@ -51,6 +51,11 @@ public class RunFlowService {
 		});
 		return fr.getInfo();
 	}
+	
+	public void runManual( String uid ) {
+		var p= runPoolDao.getPool(uid);
+		p.createAndStart();
+	}
 
 	public List<FlowPoolInfo> listFlowPoolInfo() {
 		return runPoolDao.listPools().stream().map(p -> new FlowPoolInfo(p.getModel(), p.listRunInfos()))

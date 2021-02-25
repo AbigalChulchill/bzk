@@ -53,6 +53,12 @@ public class FlowController {
 	}
 	
 	@ResponseStatus(HttpStatus.OK)
+	@RequestMapping(value = "{uid}/run", method = RequestMethod.POST, params = "type=manual")
+	public void runManual(@PathVariable String uid ) {
+		runFlowService.runManual(uid);
+	}
+	
+	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(value = "{uid}/register", method = RequestMethod.POST)
 	public void register(@PathVariable String uid) {
 		var sfs = jobsService.listDepends(uid);

@@ -48,7 +48,7 @@ public class RunLog implements Serializable, CreateUpdateDate {
 	private String runBoxUid;
 	private String actionUid;
 	private String runActionUid;
-
+	@Column(nullable = true, columnDefinition = "TEXT")
 	private String msg;
 	@Column(nullable = true, columnDefinition = "TEXT")
 	@Convert(converter = VarMapConvert.class)
@@ -60,7 +60,9 @@ public class RunLog implements Serializable, CreateUpdateDate {
 	@Enumerated(EnumType.STRING)
 	private RunState state;
 	private boolean failed = false;
+	@Column(nullable = true, columnDefinition = "TEXT")
 	private String exception;
+	@Column(nullable = true, columnDefinition = "TEXT")
 	private String exceptionClazz;
 	@Column(nullable = true, columnDefinition = "TEXT")
 	@Convert(converter = VarValListConvert.class)
