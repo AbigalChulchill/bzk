@@ -40,7 +40,6 @@ export class FlowDesignComponent implements OnInit, ModelUpdate {
 
   constructor(
     public modifyingFlow: ModifyingFlowService,
-    private router: Router,
     public menu: FlowDesignMenuService,
     public svgZoom:SVGZoomService
   ) {

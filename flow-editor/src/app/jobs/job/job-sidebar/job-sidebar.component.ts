@@ -53,19 +53,22 @@ export class JobSidebarComponent implements OnInit {
 
   public toggleEnable(): void {
     if (this.isEnable()) {
-      //TODO imp remove
+      this.disableJob();
     } else {
       this.enableJob();
     }
   }
 
+  public async disableJob(): Promise<void> {
+    await this.reflesh(async () => {
+      await this.flowClient.forceRemovePool(this.uid);
+    });
+  }
+
   public async enableJob(): Promise<void> {
-
-
     await this.reflesh(async () => {
       await this.flowClient.registerFlowByUid(this.uid).toPromise();
     });
-
   }
 
 }

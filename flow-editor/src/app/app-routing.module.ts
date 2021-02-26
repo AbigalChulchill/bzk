@@ -1,3 +1,4 @@
+import { RunLogComponent } from './run-log/run-log.component';
 import { JobComponent } from './jobs/job/job.component';
 import { JobsComponent } from './jobs/jobs.component';
 import { LoginComponent } from './login/login.component';
@@ -18,6 +19,7 @@ const routes: Routes = [
   { path: 'model/jobs', component: JobsComponent, canActivate: [PathGuideService] },
   { path: 'job/:uid',   component: JobComponent, canActivate: [PathGuideService] },
   { path: 'job/:uid', component: JobSidebarComponent, outlet:'sidebar' },
+  { path: 'job/:uid/log/:runFlowUid', component: RunLogComponent,canActivate: [PathGuideService]  },
   { path: 'config', component: ConfigComponent, canActivate: [PathGuideService] },
   { path: 'login', component: LoginComponent },
 

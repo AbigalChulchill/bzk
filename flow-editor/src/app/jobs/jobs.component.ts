@@ -25,7 +25,7 @@ import { MatSort } from '@angular/material/sort';
 export class JobsComponent implements OnInit,AfterViewInit {
 
 
-  displayedColumns: string[] = ['id', 'name', 'lastState', 'lastTriggerAt', 'triggerInfo', 'actions'];
+  displayedColumns: string[] = ['enable','id', 'name', 'lastState', 'lastTriggerAt', 'triggerInfo', 'actions'];
   dataSource: MatTableDataSource<Row>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -131,6 +131,7 @@ export class JobsComponent implements OnInit,AfterViewInit {
     ans.id = sf.uid;
     ans.name = sf.model.name;
     const fr = this.getPoolInfo(sf);
+    ans.enable = fr!=null;
     if (!fr || fr.runInfos.length <= 0) return ans;
     const lri = fr.runInfos[fr.runInfos.length - 1];
     ans.lastState = lri.state;
@@ -145,4 +146,5 @@ export class Row {
   public name: string;
   public lastState: string;
   public lastTriggerAt: string;
+  public enable:boolean;
 }

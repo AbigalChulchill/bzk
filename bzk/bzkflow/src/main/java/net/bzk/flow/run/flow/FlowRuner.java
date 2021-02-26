@@ -13,6 +13,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.Data;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -52,7 +54,7 @@ public class FlowRuner implements Runnable {
 		callback = c;
 		model = f;
 		info.uid = RandomStringUtils.randomAlphanumeric(Constant.RUN_UID_SIZE);
-		
+
 		vars = JsonUtils.toByJson(model.getVars(), VarMap.class);
 		return this;
 	}
@@ -87,7 +89,7 @@ public class FlowRuner implements Runnable {
 			runBoxDao.remove(currentBoxRuner);
 		}
 		currentBoxRuner = createBoxByUid(boxUid);
-		rl.forEach(r-> currentBoxRuner.getVars().putByPath(r.getKey(), r.getVal()));
+		rl.forEach(r -> currentBoxRuner.getVars().putByPath(r.getKey(), r.getVal()));
 		currentBoxRuner.run();
 	}
 
@@ -105,8 +107,6 @@ public class FlowRuner implements Runnable {
 		runBoxDao.remove(currentBoxRuner);
 		callback.accept(this);
 	}
-	
-	
 
 	@Data
 	public static class RunInfo {
@@ -114,7 +114,9 @@ public class FlowRuner implements Runnable {
 		private State state = State.Pedding;;
 		private Transition transition;
 		private List<VarVal> endResult;
+		@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
 		private Date startAt;
+		@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
 		private Date endAt;
 
 	}

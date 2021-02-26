@@ -72,6 +72,14 @@
 <div class="mat-elevation-z8">
   <table mat-table [dataSource]="dataSource" matSort>
 
+    <ng-container matColumnDef="enable">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> enable </th>
+      <td mat-cell *matCellDef="let row" >
+        <i *ngIf="row.enable" class="fas fa-running text-success"></i>
+        <i *ngIf="!row.enable" class="fas fa-ban text-secondary"></i>
+      </td>
+    </ng-container>
+
     <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
           id
