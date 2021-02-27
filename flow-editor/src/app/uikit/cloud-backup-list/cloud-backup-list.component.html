@@ -27,11 +27,11 @@
           <th scope="row">{{ i }}</th>
           <td><input type="checkbox" id="vehicle1" name="vehicle1" [(ngModel)]="gist.selected"></td>
           <td>{{gist.name}} </td>
-          <td>{{gist.gist.created_at}} </td>
-          <td>{{gist.gist.updated_at}} </td>
+          <td>{{gist.createdAt}} </td>
+          <td>{{gist.updateAt}} </td>
           <td>
             <button type="button" (click)="onImport(gist)" class="btn btn-primary"><i class="fas fa-file-import"></i></button>
-            <button type="button" (click)="deleteGist(gist.gist.id)" class="btn btn-primary"><i
+            <button type="button" (click)="deleteGist(gist.cuid)" class="btn btn-primary"><i
                 class="fas fa-trash-alt"></i></button>
           </td>
         </tr>

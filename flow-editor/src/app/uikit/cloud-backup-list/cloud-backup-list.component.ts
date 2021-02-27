@@ -1,3 +1,4 @@
+import { Flow } from './../../model/flow';
 import { JobClientService } from './../../service/job-client.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
@@ -6,6 +7,7 @@ import { GithubService } from 'src/app/service/github.service';
 import { HttpClientService } from 'src/app/service/http-client.service';
 import { LoadingService } from 'src/app/service/loading.service';
 import { LoadSource, ModifyingFlowService } from 'src/app/service/modifying-flow.service';
+import { BzkUtils } from 'src/app/utils/bzk-utils';
 
 @Component({
   selector: 'app-cloud-backup-list',
@@ -16,7 +18,7 @@ export class CloudBackupListComponent implements OnInit {
 
 
   public devGitsJson: string;
-  public bzkGists = new Array<GistRow>();
+  public bzkGists = new Array<Row>();
   public onImportDoneAction = () => { };
 
   constructor(
@@ -37,13 +39,24 @@ export class CloudBackupListComponent implements OnInit {
   }
 
   private async reflesh(): Promise<void> {
-    this.bzkGists = null;
     const gds = await this.githubService.listBzkGits();
     this.devGitsJson = JSON.stringify(gds, null, 4);
-    this.bzkGists = new Array<GistRow>();
+    this.bzkGists = new Array<Row>();
     for (const g of gds) {
-      this.bzkGists.push(new GistRow(g));
+      const e = this.genRow(g);
+      this.bzkGists.push(e);
+
     }
+
+  }
+
+  private genRow(g: Gist): Row {
+    const ans = new Row();
+    ans.setContent(g.getMainFile().content);
+    ans.createdAt = g.created_at;
+    ans.updateAt = g.updated_at;
+    ans.cuid = g.id;
+    return ans;
   }
 
   public async deleteGist(id: string): Promise<void> {
@@ -57,7 +70,7 @@ export class CloudBackupListComponent implements OnInit {
     this.githubService.postAuth(this.router.url);
   }
 
-  public async onImport(gr: GistRow): Promise<void> {
+  public async onImport(gr: Row): Promise<void> {
 
     const t = this.loading.show();
     this.import(gr);
@@ -65,8 +78,8 @@ export class CloudBackupListComponent implements OnInit {
     this.loading.dismiss(t);
   }
 
-  private async import(gr: GistRow): Promise<void> {
-    const fm = gr.gist.getMainFile().convertModel();
+  private async import(gr: Row): Promise<void> {
+    const fm = gr.getFlow();
     const sf = await this.jobClient.save(fm).toPromise();
   }
 
@@ -94,21 +107,28 @@ export class CloudBackupListComponent implements OnInit {
 
 }
 
-export class GistRow {
-
-  public gist: Gist;
+export class Row {
+  public cuid: string; //ungue cloud id
+  private content: string;
   public selected: boolean;
+  public createdAt: Date;
+  public updateAt: Date;
 
-  constructor(g: Gist) {
-    this.gist = g;
+  public setContent(f: string):void {
+    this.content = f;
   }
 
-  public getMainFile(): GistFile {
-    return this.gist.getMainFile();
+  public getFlow():Flow{
+    const o = JSON.parse(this.content);
+    const ans = BzkUtils.fitClzz(Flow, o);
+    console.log(ans);
+    return ans;
   }
+
+
 
   public get name(): string {
-    return this.getMainFile().convertModel().name;
+    return this.getFlow().name;
   }
 
 
