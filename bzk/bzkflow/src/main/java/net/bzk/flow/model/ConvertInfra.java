@@ -3,6 +3,7 @@ package net.bzk.flow.model;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import net.bzk.auth.model.JsonPojoConverter;
 import net.bzk.flow.model.var.VarMap;
@@ -33,6 +34,14 @@ public class ConvertInfra {
 		@Override
 		public Class<VarValList> getTClass() {
 			return VarValList.class;
+		}
+	}
+	
+	public static class MapConvert extends JsonPojoConverter<Map> {
+
+		@Override
+		public Class<Map> getTClass() {
+			return Map.class;
 		}
 	}
 }

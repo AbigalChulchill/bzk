@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -21,6 +22,7 @@ import net.bzk.flow.model.Action.SubFlowAction;
 import net.bzk.flow.model.Flow;
 import net.bzk.flow.model.Job;
 import net.bzk.flow.run.dao.JobsDao;
+import net.bzk.infrastructure.JsonUtils;
 import net.bzk.infrastructure.ex.BzkRuntimeException;
 
 @Service
@@ -64,7 +66,7 @@ public class JobsService {
 			return;
 		}
 		ans.add(sf);
-		Set<SubFlowAction> sas = sf.getModel().listAllActions().stream().filter(a -> a instanceof SubFlowAction)
+		Set<SubFlowAction> sas = sf.getFlow().listAllActions().stream().filter(a -> a instanceof SubFlowAction)
 				.map(a -> (SubFlowAction) a).collect(Collectors.toSet());
 		Set<Job> csf = sas.stream().map(a -> dao.findById(a.getFlowUid()).get()).collect(Collectors.toSet());
 		for (Job sfchild : csf) {
@@ -76,8 +78,9 @@ public class JobsService {
 	@Transactional
 	public Job save(Flow f) {
 		var sfo = dao.findById(f.getUid());
-		var sf = sfo.orElse(Job.gen(f));
-		sf.setModel(f);
+		Job sf = sfo.orElse(Job.gen(f));
+		String json = JsonUtils.toJson(f);
+		sf.setModel(json);
 		return dao.save(sf);
 	}
 

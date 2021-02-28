@@ -54,6 +54,7 @@ export class CloudBackupListComponent implements OnInit {
     const ans = new Row();
     ans.setContent(g.getMainFile().content);
     ans.createdAt = g.created_at;
+    ans.name = ans.getFlow().name;
     ans.updateAt = g.updated_at;
     ans.cuid = g.id;
     return ans;
@@ -110,6 +111,7 @@ export class CloudBackupListComponent implements OnInit {
 export class Row {
   public cuid: string; //ungue cloud id
   private content: string;
+  public name:string;
   public selected: boolean;
   public createdAt: Date;
   public updateAt: Date;
@@ -127,9 +129,6 @@ export class Row {
 
 
 
-  public get name(): string {
-    return this.getFlow().name;
-  }
 
 
 
