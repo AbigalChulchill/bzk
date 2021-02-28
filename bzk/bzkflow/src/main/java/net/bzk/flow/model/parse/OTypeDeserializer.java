@@ -30,9 +30,6 @@ public class OTypeDeserializer<T extends OType> extends StdDeserializer<T> {
 			String className = clzn.toString().replace("\"", "");
 			Class tc = Class.forName(className);
 			System.out.println("deserialize:" + tn.toString()+" className:"+tc);
-			if(tc == NodejsAction.class) {
-				System.out.println("debug");
-			}
 			T ans = (T) mapper.readValue(tn.toString(), tc);
 			return ans;
 		} catch (ClassNotFoundException e) {

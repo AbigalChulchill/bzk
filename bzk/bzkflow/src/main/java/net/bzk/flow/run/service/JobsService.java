@@ -72,7 +72,7 @@ public class JobsService {
 			return;
 		}
 		ans.add(sf);
-		Set<SubFlowAction> sas = sf.getFlow().listAllActions().stream().filter(a -> a instanceof SubFlowAction)
+		Set<SubFlowAction> sas = sf.getModel().listAllActions().stream().filter(a -> a instanceof SubFlowAction)
 				.map(a -> (SubFlowAction) a).collect(Collectors.toSet());
 		Set<Job> csf = sas.stream().map(a -> dao.findById(a.getFlowUid()).get()).collect(Collectors.toSet());
 		for (Job sfchild : csf) {
@@ -85,8 +85,7 @@ public class JobsService {
 	public Job save(Flow f) {
 		var sfo = dao.findById(f.getUid());
 		Job sf = sfo.orElse(Job.gen(f));
-		String json = JsonUtils.toJson(f);
-		sf.setModel(json);
+		sf.setModel(f);
 		return dao.save(sf);
 	}
 

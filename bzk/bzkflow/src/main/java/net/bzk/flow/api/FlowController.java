@@ -62,7 +62,7 @@ public class FlowController {
 	@RequestMapping(value = "{uid}/register", method = RequestMethod.POST)
 	public void register(@PathVariable String uid) {
 		var sfs = jobsService.listDepends(uid);
-		List< Flow> fs = sfs.stream().map(sf-> sf.getFlow()).collect(Collectors.toList());
+		List< Flow> fs = sfs.stream().map(sf-> sf.getModel()).collect(Collectors.toList());
 		register(fs);
 	}
 	
@@ -71,7 +71,7 @@ public class FlowController {
 	@RequestMapping(value = "{uid}/test", method = RequestMethod.POST)
 	public RunInfo testFlow(@PathVariable String uid ) {
 		var sfs = jobsService.listDepends(uid);
-		List< Flow> fs = sfs.stream().map(sf-> sf.getFlow()).collect(Collectors.toList());
+		List< Flow> fs = sfs.stream().map(sf-> sf.getModel()).collect(Collectors.toList());
 		return runFlowService.test(uid, fs);
 	}
 
