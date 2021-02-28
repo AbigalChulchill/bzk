@@ -1,7 +1,6 @@
 package net.bzk.flow.model.parse;
 
 import java.io.IOException;
-import java.util.Set;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -10,7 +9,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
-import net.bzk.flow.model.BzkObj;
+import net.bzk.flow.model.Action.NodejsAction;
 import net.bzk.infrastructure.convert.OType;
 import net.bzk.infrastructure.ex.BzkRuntimeException;
 
@@ -30,8 +29,12 @@ public class OTypeDeserializer<T extends OType> extends StdDeserializer<T> {
 			TreeNode clzn = tn.get("clazz");
 			String className = clzn.toString().replace("\"", "");
 			Class tc = Class.forName(className);
-			System.out.println("deserialize:" + tn.toString()+"className:"+className);
-			return (T) mapper.readValue(tn.toString(), tc);
+			System.out.println("deserialize:" + tn.toString()+" className:"+tc);
+			if(tc == NodejsAction.class) {
+				System.out.println("debug");
+			}
+			T ans = (T) mapper.readValue(tn.toString(), tc);
+			return ans;
 		} catch (ClassNotFoundException e) {
 			throw new BzkRuntimeException();
 		}

@@ -17,11 +17,14 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import net.bzk.flow.BzkFlowUtils;
 import net.bzk.flow.model.Action.SubFlowAction;
 import net.bzk.flow.model.Flow;
 import net.bzk.flow.model.Job;
 import net.bzk.flow.run.dao.JobsDao;
+import net.bzk.infrastructure.CommUtils;
 import net.bzk.infrastructure.JsonUtils;
 import net.bzk.infrastructure.ex.BzkRuntimeException;
 
@@ -32,6 +35,8 @@ public class JobsService {
 
 	@Inject
 	private JobsDao dao;
+	@Inject
+	private ObjectMapper mapper;
 
 	@PostConstruct
 	public void loadInitData() {
@@ -42,6 +47,7 @@ public class JobsService {
 		}
 		var ffs = FileUtils.listFiles(dir, new String[] { "json" }, false);
 		ffs.forEach(this::importByFile);
+		CommUtils.pl("mapper:" + mapper);
 	}
 
 	@Transactional

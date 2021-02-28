@@ -31,8 +31,8 @@ public class BzkFlowUtils {
 		}
 		return e;
 	}
-	
-	public static <T> T replaceModel(FastVarQueryer varQueryer,T _m,Class<T> modelClazz) {
+
+	public static <T> T replaceModel(FastVarQueryer varQueryer, T _m, Class<T> modelClazz) {
 		String aJson = JsonUtils.toJson(_m);
 		List<String> keys = PlaceholderUtils.listStringSubstitutorKeys(aJson);
 		if (keys.size() == 0)
@@ -50,21 +50,21 @@ public class BzkFlowUtils {
 		return JsonUtils.loadByJson(rJson, modelClazz);
 
 	}
-	
+
 	public static ObjectMapper getFlowJsonMapper() {
-		 ObjectMapper ans = new ObjectMapper();
-		 SimpleModule module = new SimpleModule();
-		 
-		 
-		 Reflections reflections = new Reflections("net.bzk");    
-		 Set<Class<? extends OType>> classes = reflections.getSubTypesOf(OType.class);
-		 List<Class<? extends OType>> incs = classes.stream().filter(c-> CommUtils.hasChild(c, classes) ).collect(Collectors.toList());
-		 CommUtils.pl(JsonUtils.toJson(incs));
-		 for(Class< ? extends OType> c : incs) {
-			 module.addDeserializer(c, new OTypeDeserializer(ans));
-		 }
-		 ans.registerModule(module);
-		 return ans;
+		ObjectMapper ans = new ObjectMapper();
+		SimpleModule module = new SimpleModule();
+		Reflections reflections = new Reflections("net.bzk");
+		Set<Class<? extends OType>> classes = reflections.getSubTypesOf(OType.class);
+		List<Class<? extends OType>> incs = classes.stream().filter(c -> CommUtils.hasChild(c, classes))
+				.collect(Collectors.toList());
+		CommUtils.pl(JsonUtils.toJson(incs));
+		for (Class<? extends OType> c : incs) {
+			module.addDeserializer(c, new OTypeDeserializer(ans));
+		}
+		ans.registerModule(module);
+		CommUtils.pl("Init getFlowJsonMapper " + ans);
+		return ans;
 	}
 
 }
