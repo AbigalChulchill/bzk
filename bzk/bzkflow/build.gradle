@@ -25,7 +25,6 @@ dependencies {
 	implementation 'org.mariuszgromada.math:MathParser.org-mXparser:4.4.2'
 	implementation 'com.jayway.jsonpath:json-path:2.5.0'
 	
-	implementation 'org.graalvm.truffle:truffle-api:21.0.0.2'
 	
 	
 	compileOnly    'org.projectlombok:lombok'
