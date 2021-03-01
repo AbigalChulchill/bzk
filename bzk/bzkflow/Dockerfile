@@ -1,4 +1,5 @@
 FROM kirinddt/gradle-graalvm:latest
+FROM ghcr.io/graalvm/graalvm-ce:latest	
  
 ENV GRADLE_USER_HOME /path/to/custom/cache/dir
 VOLUME $GRADLE_USER_HOME
