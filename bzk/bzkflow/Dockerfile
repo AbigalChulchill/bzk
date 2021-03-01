@@ -11,5 +11,6 @@ RUN mv ./init-model/flow/* /bzk/model/flow/
 
 RUN gradle :bzkflow:bootJar --refresh-dependencies 
 #RUN ls -laR | grep bzkflow
-FROM oracle/graalvm-ce:20.1.0-java11
+FROM ghcr.io/graalvm/graalvm-ce:java11-20.3.1
+
 ENTRYPOINT ["java","-Dspring.profiles.active=prod","-jar","/app/bzkflow/build/libs/bzkflow-0.0.1-SNAPSHOT.jar"]
