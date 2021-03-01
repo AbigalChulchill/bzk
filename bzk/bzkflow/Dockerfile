@@ -1,4 +1,4 @@
-FROM kirinddt/gradle-graalvm:latest
+FROM kirinddt/gradle-graalvm:20.3-dev-java11
  
 ENV GRADLE_USER_HOME /path/to/custom/cache/dir
 VOLUME $GRADLE_USER_HOME
