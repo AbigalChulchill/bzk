@@ -9,7 +9,8 @@ export const environment = {
   // apiHost: 'http://127.0.0.1:8080/',
   githubHost: 'https://api.github.com/',
   console: {
-      host: 'http://127.0.0.1:5555/'
+      host: 'http://127.0.0.1:5555/',
+      hostws: 'ws://127.0.0.1:5555/'
   }
 };
 

@@ -1,3 +1,4 @@
+import { myRxStompConfig } from './my-rx-stomp.config';
 import { BasicAuthHtppInterceptorService } from './service/basic-auth-htpp-interceptor.service';
 import { GithubService } from './service/github.service';
 import { BrowserModule } from '@angular/platform-browser';
@@ -62,6 +63,7 @@ import { RootSidebarComponent } from './sidebar/root-sidebar/root-sidebar.compon
 import { JobSidebarComponent } from './jobs/job/job-sidebar/job-sidebar.component';
 import { RunLogComponent } from './run-log/run-log.component';
 import { LogRowComponent } from './run-log/log-row/log-row.component';
+import { InjectableRxStompConfig, RxStompService, rxStompServiceFactory } from '@stomp/ng2-stompjs';
 
 export function createTranslateLoader(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -140,6 +142,15 @@ export function createTranslateLoader(http: HttpClient): TranslateHttpLoader {
     MatSlideToggleModule,
   ],
   providers: [
+    {
+      provide: InjectableRxStompConfig,
+      useValue: myRxStompConfig,
+    },
+    {
+      provide: RxStompService,
+      useFactory: rxStompServiceFactory,
+      deps: [InjectableRxStompConfig],
+    },
     {
       provide: HTTP_INTERCEPTORS, useClass: GithubService, multi: true
     },

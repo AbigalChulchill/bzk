@@ -7,11 +7,12 @@ import { HttpClientService } from './../service/http-client.service';
 import { environment } from 'src/environments/environment';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { state } from '@angular/animations';
+import { RxStompService } from '@stomp/ng2-stompjs';
 
-declare let $: any;
-declare let Stomp: any;
-declare let SockJS: any;
-
+// declare let $: any;
+// declare let Stomp: any;
+// declare let SockJS: any;
+//https://stomp-js.github.io/guide/ng2-stompjs/ng2-stomp-with-angular7.html
 @Component({
   selector: 'app-console',
   templateUrl: './console.component.html',
@@ -23,33 +24,47 @@ export class ConsoleComponent implements OnInit {
   LineType = LineType;
   StringUtils = StringUtils;
   lineList = new Array<Row>();
-  stompClient = null;
   keepReading = false;
 
   constructor(
     public httpClient: HttpClientService,
     private loading: LoadingService,
-    private modifyingFlow: ModifyingFlowService
+    private modifyingFlow: ModifyingFlowService,
+    private rxStompService: RxStompService
   ) { }
 
   async ngOnInit(): Promise<void> {
-    const socket = new SockJS(environment.console.host + 'bzk-websocket');
-    this.stompClient = Stomp.over(socket);
+    // const socket = new SockJS(environment.console.host + 'bzk-websocket');
+    // this.stompClient = Stomp.over(socket);
 
-    const header = {
-      Authorization: 'Basic token'
-      }
+    // const header = {
+    //   Authorization: 'Basic token'
+    //   }
 
-    this.stompClient.connect(header, (frame) => {
-      console.log('Connected: ' + frame);
-      this.stompClient.subscribe('/topic/tail', (m) => {
-        console.log(m);
-        this.lineList.push(this.parseByLine(m.body));
-        this.scrollToBottom();
-      });
-      this.startRead();
+    // this.stompClient.connect(header, (frame) => {
+    //   console.log('Connected: ' + frame);
+    //   this.stompClient.subscribe('/topic/tail', (m) => {
+    //     console.log(m);
+    //     this.lineList.push(this.parseByLine(m.body));
+    //     this.scrollToBottom();
+    //   });
+    //   this.startRead();
 
+    // });
+
+    this.rxStompService.watch('/topic/tail',{
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Credentials': 'true',
+      'Access-Control-Allow-Headers': 'Access-Control-Allow-Methods,Access-Control-Allow-Credentials,Access-Control-Allow-Origin,Access-Control-Allow-Headers,Authorization,Accept,Origin,DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range',
+      'Access-Control-Allow-Methods': 'GET, PUT, POST, DELETE, OPTIONS, PATCH',
+      'Access-Control-Max-Age': '86400',
+      'Authorization': sessionStorage.getItem('token')
+    }).subscribe(m => {
+      console.log(m);
+      this.lineList.push(this.parseByLine(m.body));
+      this.scrollToBottom();
     });
+
     await this.refleshReading();
   }
 
@@ -62,7 +77,7 @@ export class ConsoleComponent implements OnInit {
   }
 
   public startRead(): void {
-    this.stompClient.send('/app/tail', {}, {});
+    this.rxStompService.publish({ destination: '/app/tail' });
     this.keepReading = true;
   }
 
@@ -96,7 +111,7 @@ export class ConsoleComponent implements OnInit {
 
 
   public listResult(): Array<Row> {
-    return  this.lineList ;
+    return this.lineList;
   }
 
 

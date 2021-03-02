@@ -4,6 +4,8 @@ export const environment = {
   githubHost: 'https://api.github.com/',
   gistHost: 'http://p2ccloud.domiearth.com:9203/',
   console: {
-    host: 'http://api.domiearth.com:9202/'
+    host: 'http://api.domiearth.com:9202/',
+    hostws: 'ws://p2ccloud.domiearth.com:9202/'
+
   }
 };
