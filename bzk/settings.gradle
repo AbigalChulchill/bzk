@@ -10,6 +10,6 @@ include 'WsSDK'
 buildCache {
     local {
         // Set local build cache directory.
-        directory = "/gradle/build-cache"
+        directory = "/gradle-build-cache/"
     }
 }
