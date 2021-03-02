@@ -25,7 +25,6 @@ export class ConsoleComponent implements OnInit {
   lineList = new Array<Row>();
   stompClient = null;
   keepReading = false;
-  decryptKey = '';
 
   constructor(
     public httpClient: HttpClientService,
@@ -34,10 +33,14 @@ export class ConsoleComponent implements OnInit {
   ) { }
 
   async ngOnInit(): Promise<void> {
-    this.decryptKey = this.modifyingFlow.modelobs.getModel().logEncryptKey;
     const socket = new SockJS(environment.console.host + 'bzk-websocket');
     this.stompClient = Stomp.over(socket);
-    this.stompClient.connect({}, (frame) => {
+
+    const header = {
+      Authorization: 'Basic token'
+      }
+
+    this.stompClient.connect(header, (frame) => {
       console.log('Connected: ' + frame);
       this.stompClient.subscribe('/topic/tail', (m) => {
         console.log(m);
