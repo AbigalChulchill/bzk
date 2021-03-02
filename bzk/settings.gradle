@@ -5,3 +5,11 @@ include 'Comm'
 include 'BzkDataSDK'
 include 'flow-gists'
 include 'WsSDK'
+
+
+buildCache {
+    local {
+        // Set local build cache directory.
+        directory = "/gradle/build-cache"
+    }
+}

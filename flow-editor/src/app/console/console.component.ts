@@ -25,7 +25,6 @@ export class ConsoleComponent implements OnInit {
   lineList = new Array<Row>();
   stompClient = null;
   keepReading = false;
-  allLoged = false;
   decryptKey = '';
 
   constructor(
@@ -87,19 +86,14 @@ export class ConsoleComponent implements OnInit {
   }
 
   private parseByLine(l: string): Row {
-    const bl = ConsoleDtos.parseBoxRunLog(this.decryptKey, l);
-    if (bl) { return new BoxRunLogRow(bl); }
-    const al = ConsoleDtos.parseActionRunLog(this.decryptKey, l);
-    if (al) { return new ActionRunLogRow(al); }
+
     return new TextRow(l);
   }
 
 
-  public toBoxRunLogRow(l: Row): BoxRunLogRow { return l as BoxRunLogRow; }
-  public toActionRunLogRow(l: Row): BoxRunLogRow { return l as ActionRunLogRow; }
 
   public listResult(): Array<Row> {
-    return this.allLoged ? this.lineList : this.lineList.filter(s => s.type === LineType.ActionLog || s.type === LineType.BoxLog);
+    return  this.lineList ;
   }
 
 
@@ -107,7 +101,7 @@ export class ConsoleComponent implements OnInit {
 }
 
 export enum LineType {
-  Text, BoxLog, ActionLog
+  Text,
 }
 
 export class Row {
@@ -129,28 +123,4 @@ export class TextRow extends Row {
   }
 }
 
-export class BoxRunLogRow extends Row {
 
-  public log: BoxRunLog;
-
-  public constructor(l: BoxRunLog) {
-    super(l.orgText, LineType.BoxLog);
-    this.log = l;
-  }
-
-  public getHeadClass(): string {
-    return 'btn-danger';
-  }
-
-}
-
-export class ActionRunLogRow extends BoxRunLogRow {
-  public constructor(l: ActionRunLog) {
-    super(l);
-    this.type = LineType.ActionLog;
-  }
-
-  public getHeadClass(): string {
-    return 'btn-primary';
-  }
-}

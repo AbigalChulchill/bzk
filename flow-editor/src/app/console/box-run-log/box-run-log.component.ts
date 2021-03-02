@@ -2,7 +2,6 @@ import { StringUtils } from './../../utils/string-utils';
 import { BoxRunLog, ActionRunLog } from './../../dto/console-dtos';
 import { Component, Input, OnInit } from '@angular/core';
 import { ReadJsonProvide } from 'src/app/uikit/json-editor/json-editor.component';
-import { ActionRunLogRow } from '../console.component';
 
 @Component({
   selector: 'app-box-run-log',

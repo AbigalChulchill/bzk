@@ -36,11 +36,7 @@
             <span>Delete Log</span>
           </a>
         </li>
-        <li class="dropdown nav-item">
-          <a href="javascript:void(0)" class=" nav-link ">
-            <mat-slide-toggle class="pt-2" [(ngModel)]="allLoged">{{ allLoged ? 'ALL' : 'Run' }} Log</mat-slide-toggle>
-          </a>
-        </li>
+
         <li class="dropdown nav-item">
           <div class=" nav-link">
             <i class="far fa-trash-alt"></i>
@@ -73,16 +69,7 @@
         <mat-expansion-panel-header>
           <mat-panel-title>
             <p *ngIf="line.type === LineType.Text"> {{ line.orgText | slice:0:225 }} </p>
-            <div *ngIf="line.type === LineType.BoxLog || line.type === LineType.ActionLog">
-              <span [ngClass]="toBoxRunLogRow(line).getHeadClass()"
-                class="btn btn-primary mr-2">{{ toBoxRunLogRow(line).log.boxName }}<span
-                  class="badge badge-secondary">BOX</span></span>
-              <span class="btn btn-info mr-2">{{ toBoxRunLogRow(line).log.state }}<span
-                  class="badge badge-secondary">STATE</span></span>
-              <span *ngIf=" !StringUtils.isBlank( toBoxRunLogRow(line).log.msg)"
-                class="btn btn-light mr-2">{{  toBoxRunLogRow(line).log.msg | slice:0:120 }}<span
-                  class="badge badge-secondary">Message</span></span>
-            </div>
+
 
           </mat-panel-title>
 
@@ -92,11 +79,7 @@
           {{line.orgText  }}
         </textarea>
 
-        <app-box-run-log *ngIf="line.type === LineType.BoxLog " [data]="toBoxRunLogRow(line).log">
-        </app-box-run-log>
 
-        <app-box-run-log *ngIf=" line.type === LineType.ActionLog" [data]="toActionRunLogRow(line).log">
-        </app-box-run-log>
 
       </mat-expansion-panel>
 
