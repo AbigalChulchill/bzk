@@ -13,6 +13,7 @@ import { RxStompService } from '@stomp/ng2-stompjs';
 // declare let Stomp: any;
 // declare let SockJS: any;
 //https://stomp-js.github.io/guide/ng2-stompjs/ng2-stomp-with-angular7.html
+//https://github.com/batiwo/spring-websocket-angular6
 @Component({
   selector: 'app-console',
   templateUrl: './console.component.html',
