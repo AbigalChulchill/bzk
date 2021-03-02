@@ -19,6 +19,7 @@ EXPOSE 8080
 
 RUN mkdir /app
 
+COPY --from=build /bzk/model/flow/* /bzk/model/flow/
 COPY --from=build /app/bzkflow/build/libs/bzkflow-0.0.1-SNAPSHOT.jar /app/spring-boot-application.jar
 
 ENTRYPOINT ["java","-Dspring.profiles.active=prod","-jar","/app/spring-boot-application.jar"]
