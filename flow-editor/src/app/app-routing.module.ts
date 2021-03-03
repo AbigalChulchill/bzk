@@ -10,11 +10,13 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { RootSidebarComponent } from './sidebar/root-sidebar/root-sidebar.component';
 import { JobSidebarComponent } from './jobs/job/job-sidebar/job-sidebar.component';
+import { VarCfgComponent } from './var-cfg/var-cfg.component';
 
 // https://www.techiediaries.com/angular-router-multiple-outlets/ NOT WORK
 const routes: Routes = [
   { path: '', component: FlowDesignComponent , canActivate: [PathGuideService] },
   { path: 'console', component: ConsoleComponent , canActivate: [PathGuideService] },
+  { path: 'varcfg', component: VarCfgComponent , canActivate: [PathGuideService] },
   { path: 'model/design', component: FlowDesignComponent , canActivate: [PathGuideService] },
   { path: 'model/jobs', component: JobsComponent, canActivate: [PathGuideService] },
   { path: 'job/:uid',   component: JobComponent, canActivate: [PathGuideService] },

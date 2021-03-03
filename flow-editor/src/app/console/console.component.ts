@@ -6,12 +6,8 @@ import { CommUtils } from './../utils/comm-utils';
 import { HttpClientService } from './../service/http-client.service';
 import { environment } from 'src/environments/environment';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { state } from '@angular/animations';
-import { RxStompService } from '@stomp/ng2-stompjs';
 
-// declare let $: any;
-// declare let Stomp: any;
-// declare let SockJS: any;
+
 //https://stomp-js.github.io/guide/ng2-stompjs/ng2-stomp-with-angular7.html
 //https://github.com/batiwo/spring-websocket-angular6
 @Component({
@@ -25,48 +21,15 @@ export class ConsoleComponent implements OnInit {
   LineType = LineType;
   StringUtils = StringUtils;
   lineList = new Array<Row>();
-  keepReading = false;
 
   constructor(
     public httpClient: HttpClientService,
     private loading: LoadingService,
     private modifyingFlow: ModifyingFlowService,
-    private rxStompService: RxStompService
   ) { }
 
   async ngOnInit(): Promise<void> {
-    // const socket = new SockJS(environment.console.host + 'bzk-websocket');
-    // this.stompClient = Stomp.over(socket);
-
-    // const header = {
-    //   Authorization: 'Basic token'
-    //   }
-
-    // this.stompClient.connect(header, (frame) => {
-    //   console.log('Connected: ' + frame);
-    //   this.stompClient.subscribe('/topic/tail', (m) => {
-    //     console.log(m);
-    //     this.lineList.push(this.parseByLine(m.body));
-    //     this.scrollToBottom();
-    //   });
-    //   this.startRead();
-
-    // });
-
-    this.rxStompService.watch('/topic/tail',{
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Credentials': 'true',
-      'Access-Control-Allow-Headers': 'Access-Control-Allow-Methods,Access-Control-Allow-Credentials,Access-Control-Allow-Origin,Access-Control-Allow-Headers,Authorization,Accept,Origin,DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range',
-      'Access-Control-Allow-Methods': 'GET, PUT, POST, DELETE, OPTIONS, PATCH',
-      'Access-Control-Max-Age': '86400',
-      'Authorization': sessionStorage.getItem('token')
-    }).subscribe(m => {
-      console.log(m);
-      this.lineList.push(this.parseByLine(m.body));
-      this.scrollToBottom();
-    });
-
-    await this.refleshReading();
+    await this.reflesh();
   }
 
   scrollToBottom(): void {
@@ -77,20 +40,17 @@ export class ConsoleComponent implements OnInit {
     a();
   }
 
-  public startRead(): void {
-    this.rxStompService.publish({ destination: '/app/tail' });
-    this.keepReading = true;
+
+  public async reflesh(): Promise<void> {
+    this.clear();
+    const list = await this.httpClient.getTailContent().toPromise();
+    for(const l of list){
+      // console.log(m);
+      this.lineList.push(this.parseByLine(l));
+    }
+    this.scrollToBottom();
   }
 
-  public async refleshReading(): Promise<void> {
-    const ri = await this.httpClient.isTralKeepReading().toPromise();
-    this.keepReading = ri.keepReading;
-  }
-
-  public async stopRead(): Promise<void> {
-    await this.httpClient.stopTralKeepReading().toPromise();
-    await this.refleshReading();
-  }
 
   public clear(): void {
     this.lineList = new Array<Row>();
@@ -100,7 +60,7 @@ export class ConsoleComponent implements OnInit {
     const t = this.loading.show();
     await this.httpClient.clearTrailFile().toPromise();
     this.clear();
-    await this.refleshReading();
+    await this.reflesh();
     this.loading.dismiss(t);
   }
 

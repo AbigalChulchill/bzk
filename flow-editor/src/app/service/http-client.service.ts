@@ -109,6 +109,10 @@ export class HttpClientService {
     return this.httpClient.post<void>(environment.console.host + 'tail/clear', null);
   }
 
+  public getTailContent(): Observable<Array<string>>{
+    return this.httpClient.get<Array<string>>(environment.console.host + 'tail/content');
+  }
+
   public encrypt(ip: InPlain): Observable<SecretResult> {
     return this.httpClient.post<SecretResult>(environment.gistHost + 'secret/encrypt', ip);
   }

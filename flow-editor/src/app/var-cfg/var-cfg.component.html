@@ -1,0 +1,79 @@
+<nav class="navbar navbar-expand-lg  fixed-navbar " color-on-scroll="500">
+  <div class="container-fluid">
+
+    <div class="collapse navbar-collapse justify-content-end" id="navigation">
+      <ul class="nav navbar-nav mr-auto">
+
+        <li class="dropdown nav-item">
+          <a href="javascript:void(0)" (click)="createEmpty()"  class=" nav-link">
+            <i class="fas fa-eraser"></i>
+            <span class="d-lg-none"></span>
+            <span>Create</span>
+          </a>
+        </li>
+
+      </ul>
+
+      <ul class="navbar-nav ml-auto">
+        <li class="dropdown nav-item">
+          <a href="javascript:void(0)"  class=" nav-link">
+            <i class="fas fa-sync"></i>
+            <span class="d-lg-none"></span>
+          </a>
+
+        </li>
+
+      </ul>
+
+    </div>
+  </div>
+</nav>
+<div class="content">
+  <mat-progress-bar *ngIf="loading"  mode="indeterminate"></mat-progress-bar>
+  <div *ngIf="!loading" class="listline" >
+    <mat-accordion>
+      <mat-expansion-panel hideToggle *ngFor="let vc of list">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <span *ngIf="isUpdating(vc) " class="badge badge-danger">*</span>{{vc.name}}<span class="badge badge-secondary">{{vc.uid}}</span>
+          </mat-panel-title>
+
+          <mat-panel-description>
+            {{vc.description}}
+          </mat-panel-description>
+
+        </mat-expansion-panel-header>
+
+
+
+        <div class="container row">
+          <mat-form-field class="col-3">
+            <mat-label>Name</mat-label>
+            <input matInput placeholder="Ex. Nasdaq" [(ngModel)]="vc.name">
+          </mat-form-field>
+
+          <mat-form-field class="col-9">
+            <mat-label>description</mat-label>
+            <input matInput placeholder="Ex. TODO what" [(ngModel)]="vc.description">
+          </mat-form-field>
+
+          <app-json-editor class="col-12" [data]="getTxtProvide(vc)"></app-json-editor>
+
+          <button *ngIf="StringUtils.isBlank(vc.uid) " (click)="createToServer(vc)"  type="button" class="col-2 ml-2 mr-2 btn btn-primary">Create</button>
+          <button *ngIf="isUpdating(vc) " (click)="updateToServer(vc)"  type="button" class="col-2 ml-2 mr-2 btn btn-success">Update</button>
+          <button *ngIf="!StringUtils.isBlank(vc.uid) " (click)="removeToServer(vc.uid)"   type="button" class="col-2 ml-2 mr-2 btn btn-secondary">Remove</button>
+
+        </div>
+
+
+
+      </mat-expansion-panel>
+
+    </mat-accordion>
+  </div>
+
+
+
+
+
+</div>

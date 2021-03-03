@@ -40,7 +40,6 @@ public class JobsService {
 
 	@PostConstruct
 	public void loadInitData() {
-
 		var dir = new File(initDataPath);
 		if (!dir.exists()) {
 			dir.mkdirs();
