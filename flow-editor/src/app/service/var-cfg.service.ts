@@ -48,6 +48,10 @@ export class VarCfgService {
     await this.reflesh();
   }
 
+  public get(uid:string):VarCfg{
+    return this.list.find(c=> c.uid === uid );
+  }
+
 
 }
 

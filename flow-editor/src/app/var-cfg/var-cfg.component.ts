@@ -1,9 +1,9 @@
+import { FetchState, VarCfgService } from './../service/var-cfg.service';
 import { VarCfg } from './../model/var-cfg';
 import { StringUtils } from './../utils/string-utils';
 import { BaseVar } from './../infrastructure/meta';
 import { plainToClass } from 'class-transformer';
-import { VarCfgClientService } from './../service/var-cfg-client.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { TextProvide } from '../infrastructure/meta';
 import { __assign } from 'tslib';
 
@@ -15,55 +15,52 @@ export  const UPDATEING_HEX = '<___UPDATE___>'
 })
 export class VarCfgComponent implements OnInit {
   StringUtils = StringUtils;
-  public list = new Array<VarCfg>();
-  public loading = true;
+  FetchState=FetchState;
+
+  @Input() selectHandler:SelectHandler;
 
   constructor(
-    private varCfgClient: VarCfgClientService
+    public varCfgService: VarCfgService
   ) { }
 
   async ngOnInit(): Promise<void> {
-    await this.reflesh();
+    await this.varCfgService.reflesh();
   }
 
   public createEmpty(): void {
-    this.list.push(new VarCfg());
+    this.varCfgService.list.push(new VarCfg());
   }
 
-  public async reflesh(): Promise<void> {
-    this.list = new Array<VarCfg>();
-    this.loading = true;
-    this.list = await this.varCfgClient.listAll();
-    this.loading = false;
+  public getBgClass(i:number):string{
+    const c = i%2;
+    return c === 0 ? 'bg-warning' : 'bg-light'
   }
+
+  public getTxtClass(i:number):string{
+    const c = i%2;
+    return c === 0 ? 'text-dark' : 'text-primary'
+  }
+
+  public isSelected(v: VarCfg):boolean{
+    if(!this.selectHandler) return false;
+    return this.selectHandler.getSelectUid() === v.uid;
+  }
+
 
   public getTxtProvide(v: VarCfg): VarCfgTextProvide { return new VarCfgTextProvide(v); }
 
-  public async createToServer(v: VarCfg): Promise<void> {
-    this.list = new Array<VarCfg>();
-    this.loading = true;
-    await this.varCfgClient.create(v);
-    await this.reflesh();
-  }
-
-  public async updateToServer(v: VarCfg): Promise<void> {
-    this.list = new Array<VarCfg>();
-    this.loading = true;
-    await this.varCfgClient.save(v);
-    await this.reflesh();
-  }
-
-  public async removeToServer(uid:string): Promise<void> {
-    this.list = new Array<VarCfg>();
-    this.loading = true;
-    await this.varCfgClient.remove(uid).toPromise();
-    await this.reflesh();
-  }
 
   public isUpdating(vc: VarCfg): boolean {
     if (StringUtils.isBlank(vc.uid)) return false;
     return vc.sha256 === UPDATEING_HEX;
   }
+
+}
+
+export interface SelectHandler{
+  getSelectUid() : string;
+
+  select(v:VarCfg):void;
 
 }
 

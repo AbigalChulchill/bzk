@@ -37,6 +37,8 @@ export class Flow extends BzkObj {
   public boxs: Array<Box>;
   @Type(() => BaseVar)
   public vars = new BaseVar();
+
+  public varCfgUid = '';
   @PropInfo({
     title: 'entry',
     type: PropType.Object

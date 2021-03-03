@@ -24,6 +24,7 @@ public class Flow extends BzkObj {
 
 	private String name = "Flow";
 	private Set<Box> boxs = new ConcurrentSkipListSet<>();
+	private String varCfgUid;
 	private VarMap vars = new VarMap();
 	private Entry entry = new Entry();
 	private String logEncryptKey = "1234567890123456";
@@ -51,11 +52,11 @@ public class Flow extends BzkObj {
 		}
 		throw new BzkRuntimeException("not find any action uid:" + aUid);
 	}
-	
+
 	@JsonIgnore
-	public List<Action> listAllActions(){
+	public List<Action> listAllActions() {
 		List<Action> ans = new ArrayList<>();
-		boxs.forEach(b-> ans.addAll(b.getActions()) );
+		boxs.forEach(b -> ans.addAll(b.getActions()));
 		return ans;
 	}
 

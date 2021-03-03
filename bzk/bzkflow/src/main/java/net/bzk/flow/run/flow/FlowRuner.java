@@ -25,6 +25,7 @@ import net.bzk.flow.model.Transition;
 import net.bzk.flow.model.var.VarMap;
 import net.bzk.flow.model.var.VarVal;
 import net.bzk.flow.run.dao.RunBoxDao;
+import net.bzk.flow.run.dao.VarCfgDao;
 import net.bzk.infrastructure.CommUtils;
 import net.bzk.infrastructure.JsonUtils;
 
@@ -39,6 +40,8 @@ public class FlowRuner implements Runnable {
 
 	@Inject
 	private RunBoxDao runBoxDao;
+	@Inject
+	private VarCfgDao varCfgDao;
 	@Getter
 	private RunInfo info = new RunInfo();
 	@Getter
@@ -54,9 +57,15 @@ public class FlowRuner implements Runnable {
 		callback = c;
 		model = f;
 		info.uid = RandomStringUtils.randomAlphanumeric(Constant.RUN_UID_SIZE);
-
-		vars = JsonUtils.toByJson(model.getVars(), VarMap.class);
+		initVar();
 		return this;
+	}
+	
+	private void initVar() {
+		vars = JsonUtils.toByJson(model.getVars(), VarMap.class);
+		if(StringUtils.isBlank(model.getVarCfgUid())) return;
+		var rv = varCfgDao.findById(model.getVarCfgUid()).get();
+		vars.merge(rv.getContent().parsePathValue());
 	}
 
 	public void start(ThreadPoolExecutor tp) {

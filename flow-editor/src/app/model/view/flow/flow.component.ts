@@ -1,3 +1,5 @@
+import { VarCfgService } from './../../../service/var-cfg.service';
+import { StringUtils } from './../../../utils/string-utils';
 import { OType } from './../../bzk-obj';
 import { BzkUtils } from './../../../utils/bzk-utils';
 import { CommUtils } from './../../../utils/comm-utils';
@@ -7,6 +9,8 @@ import { ClazzExComponent } from 'src/app/utils/prop-utils';
 import { plainToClass } from 'class-transformer';
 import { BaseVar, TextProvide } from 'src/app/infrastructure/meta';
 import { Entry } from '../../entry';
+import { SelectHandler } from 'src/app/var-cfg/var-cfg.component';
+import { VarCfg } from '../../var-cfg';
 
 declare var jquery: any;
 declare let $: any;
@@ -17,11 +21,22 @@ declare let JSONEditor: any;
   templateUrl: './flow.component.html',
   styleUrls: ['./flow.component.css']
 })
-export class FlowComponent implements OnInit, ClazzExComponent, TextProvide {
-
+export class FlowComponent implements OnInit, ClazzExComponent, TextProvide, SelectHandler {
+  StringUtils = StringUtils;
   data: any;
   public entryTypes = new Array<OType>();
-  constructor() { }
+  constructor(
+    private varCfgService:VarCfgService
+  ) { }
+
+  getSelectUid(): string {
+    return this.flow.varCfgUid;
+  }
+  select(v: VarCfg): void {
+    this.flow.varCfgUid = v.uid;
+  }
+
+
   getStr(): string {
     const o = plainToClass(Object, this.flow.vars);
     return JSON.stringify(o);
@@ -63,6 +78,12 @@ export class FlowComponent implements OnInit, ClazzExComponent, TextProvide {
     this.flow.entry.boxUid = orgEbUid;
     this.flow.entry.clazz = BzkUtils.getOTypeInfo(ot).clazz;
 
+  }
+
+  public getVarCfgTitle():string{
+    if(StringUtils.isBlank(this.flow.varCfgUid)) return 'TODO select';
+    const sv= this.varCfgService.get(this.flow.varCfgUid);
+    return `(${sv.uid})${sv.name}`;
   }
 
 
