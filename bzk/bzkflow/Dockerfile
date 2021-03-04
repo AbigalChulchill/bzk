@@ -6,7 +6,7 @@ COPY . /app
 WORKDIR /app
 #RUN java -version
 RUN mkdir -p /bzk/model/flow/
-RUN mv ./init-model/flow/* /bzk/model/flow/
+RUN mv ./init-model/* /bzk/model/
 
 RUN gradle :bzkflow:bootJar --refresh-dependencies 
 
@@ -19,7 +19,7 @@ EXPOSE 8080
 
 RUN mkdir /app
 
-COPY --from=build /bzk/model/flow/* /bzk/model/flow/
+COPY --from=build /bzk/model/* /bzk/model/
 COPY --from=build /app/bzkflow/build/libs/bzkflow-0.0.1-SNAPSHOT.jar /app/spring-boot-application.jar
 
 ENTRYPOINT ["java","-Dspring.profiles.active=prod","-jar","/app/spring-boot-application.jar"]

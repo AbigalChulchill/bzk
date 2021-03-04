@@ -21,20 +21,15 @@ declare let JSONEditor: any;
   templateUrl: './flow.component.html',
   styleUrls: ['./flow.component.css']
 })
-export class FlowComponent implements OnInit, ClazzExComponent, TextProvide, SelectHandler {
+export class FlowComponent implements OnInit, ClazzExComponent, TextProvide {
   StringUtils = StringUtils;
   data: any;
   public entryTypes = new Array<OType>();
+  public varCfgs = new Array<IdxVarCfg>();
   constructor(
     private varCfgService:VarCfgService
   ) { }
 
-  getSelectUid(): string {
-    return this.flow.varCfgUid;
-  }
-  select(v: VarCfg): void {
-    this.flow.varCfgUid = v.uid;
-  }
 
 
   getStr(): string {
@@ -50,8 +45,6 @@ export class FlowComponent implements OnInit, ClazzExComponent, TextProvide, Sel
   init(d: any, mi: any): void {
     this.data = d;
   }
-
-
 
   public get flow(): Flow { return this.data; }
 
@@ -80,11 +73,51 @@ export class FlowComponent implements OnInit, ClazzExComponent, TextProvide, Sel
 
   }
 
-  public getVarCfgTitle():string{
-    if(StringUtils.isBlank(this.flow.varCfgUid)) return 'TODO select';
-    const sv= this.varCfgService.get(this.flow.varCfgUid);
-    return `(${sv.uid})${sv.name}`;
+  public getVarCfgTitle(vn:string):string{
+    if(StringUtils.isBlank(vn)) return 'TODO select';
+    const sv= this.varCfgService.get(vn);
+    return sv.name;
   }
 
+
+  public listVarCfgs():Array<IdxVarCfg>{
+    if(!this.varCfgs){
+      this.varCfgs = new Array<IdxVarCfg>();
+      for(let i =0;i<this.flow.varCfgNames.length;i++){
+        this.varCfgs.push(new IdxVarCfg(this.flow.varCfgNames,i));
+      }
+    }
+    return this.varCfgs;
+  }
+
+  public createVarCfg():void{
+    this.flow.varCfgNames.push('');
+    this.varCfgs = null;
+  }
+
+  public removeVarCfg(vn:string):void{
+    CommUtils.removeArray(this.flow.varCfgNames,e=> e===vn);
+    this.varCfgs = null;
+  }
+
+
+}
+
+export class IdxVarCfg implements SelectHandler{
+
+  private idx:number;
+  private list:Array<string>;
+
+  public constructor(l:Array<string>,n:number){
+    this.list = l;
+    this.idx = n;
+  }
+
+  getSelectName(): string {
+    return this.list[this.idx];
+  }
+  select(v: VarCfg): void {
+    this.list[this.idx] = v.name;
+  }
 
 }

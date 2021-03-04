@@ -7,7 +7,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { TextProvide } from '../infrastructure/meta';
 import { __assign } from 'tslib';
 
-export  const UPDATEING_HEX = '<___UPDATE___>'
+export const UPDATEING_HEX = '<___UPDATE___>'
 @Component({
   selector: 'app-var-cfg',
   templateUrl: './var-cfg.component.html',
@@ -15,9 +15,9 @@ export  const UPDATEING_HEX = '<___UPDATE___>'
 })
 export class VarCfgComponent implements OnInit {
   StringUtils = StringUtils;
-  FetchState=FetchState;
+  FetchState = FetchState;
 
-  @Input() selectHandler:SelectHandler;
+  @Input() selectHandler: SelectHandler;
 
   constructor(
     public varCfgService: VarCfgService
@@ -28,22 +28,28 @@ export class VarCfgComponent implements OnInit {
   }
 
   public createEmpty(): void {
-    this.varCfgService.list.push(new VarCfg());
+    const v = new VarCfg();
+    v.sha256 = UPDATEING_HEX;
+    this.varCfgService.list.push(v);
   }
 
-  public getBgClass(i:number):string{
-    const c = i%2;
+  public txtChange(v: VarCfg): void {
+    v.sha256 = UPDATEING_HEX;
+  }
+
+  public getBgClass(i: number): string {
+    const c = i % 2;
     return c === 0 ? 'bg-warning' : 'bg-light'
   }
 
-  public getTxtClass(i:number):string{
-    const c = i%2;
+  public getTxtClass(i: number): string {
+    const c = i % 2;
     return c === 0 ? 'text-dark' : 'text-primary'
   }
 
-  public isSelected(v: VarCfg):boolean{
-    if(!this.selectHandler) return false;
-    return this.selectHandler.getSelectUid() === v.uid;
+  public isSelected(v: VarCfg): boolean {
+    if (!this.selectHandler) return false;
+    return this.selectHandler.getSelectName() === v.name;
   }
 
 
@@ -51,16 +57,16 @@ export class VarCfgComponent implements OnInit {
 
 
   public isUpdating(vc: VarCfg): boolean {
-    if (StringUtils.isBlank(vc.uid)) return false;
+    if (StringUtils.isBlank(vc.name)) return true;
     return vc.sha256 === UPDATEING_HEX;
   }
 
 }
 
-export interface SelectHandler{
-  getSelectUid() : string;
+export interface SelectHandler {
+  getSelectName(): string;
 
-  select(v:VarCfg):void;
+  select(v: VarCfg): void;
 
 }
 

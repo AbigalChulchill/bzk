@@ -30,11 +30,6 @@ export class VarCfgClientService {
     return resp;
   }
 
-  public async create(c: VarCfg): Promise<VarCfg> {
-    const resp = await this.httpClient.post<VarCfg>(environment.apiHost + VarCfgClientService.URL_PREFIX + 'create', c).toPromise();
-    resp.content = plainToClass(BaseVar, resp.content);
-    return resp;
-  }
 
   public  remove(uid: string): Observable<void> {
     return this.httpClient.delete<void>(environment.apiHost + VarCfgClientService.URL_PREFIX + uid);

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
@@ -24,7 +25,7 @@ public class Flow extends BzkObj {
 
 	private String name = "Flow";
 	private Set<Box> boxs = new ConcurrentSkipListSet<>();
-	private String varCfgUid;
+	private List<String> varCfgNames = new CopyOnWriteArrayList<>();
 	private VarMap vars = new VarMap();
 	private Entry entry = new Entry();
 	private String logEncryptKey = "1234567890123456";

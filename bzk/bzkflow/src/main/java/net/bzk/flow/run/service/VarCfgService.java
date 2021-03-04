@@ -44,18 +44,12 @@ public class VarCfgService {
 			VarCfg cfg = new VarCfg();
 			cfg.setName(f.getName());
 			cfg.setContent(v);
-			create(cfg);
+			save(cfg);
 		} catch (IOException e) {
 			throw new BzkRuntimeException(e);
 		}
 	}
 	
-	@Transactional
-	public VarCfg create(VarCfg ans) {
-		ans.setUid(RandomStringUtils.randomAlphanumeric(Constant.MODEL_UID_SIZE));
-		replaceHex(ans);
-		return dao.save(ans);
-	}
 	
 	@Transactional
 	public VarCfg save(VarCfg c) {

@@ -22,16 +22,25 @@
   <app-json-editor [data]="this"></app-json-editor>
 </mat-expansion-panel>
 
-<mat-expansion-panel class="mt-2" hideToggle>
-  <mat-expansion-panel-header>
-    <mat-panel-title>
 
-      {{getVarCfgTitle() }}
 
-    </mat-panel-title>
-    <mat-panel-description>
-      reference Var Config
-    </mat-panel-description>
-  </mat-expansion-panel-header>
-  <app-var-cfg [selectHandler]="this"> </app-var-cfg>
-</mat-expansion-panel>
+<div class="card container-fluid mt-2" >
+    <h5 class="card-title">Ref Var Config</h5>
+    <mat-accordion class="mt-2">
+      <mat-expansion-panel hideToggle *ngFor="let vn of listVarCfgs() ">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <a href="javascript:void(0)" (click)="removeVarCfg(vn)" class="card-link mr-2"><i class="fas fa-times-circle"></i></a>
+            {{getVarCfgTitle(vn.getSelectName()) }}
+
+          </mat-panel-title>
+          <mat-panel-description>
+            reference Var Config
+
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <app-var-cfg [selectHandler]="vn"> </app-var-cfg>
+      </mat-expansion-panel>
+    </mat-accordion>
+    <a href="javascript:void(0)" (click)="createVarCfg()" class="card-link mt-2">Create</a>
+</div>

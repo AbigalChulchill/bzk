@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import net.bzk.flow.model.VarCfg;
-import net.bzk.flow.model.var.VarMap;
 import net.bzk.flow.run.dao.VarCfgDao;
 import net.bzk.flow.run.service.VarCfgService;
 
@@ -48,12 +47,6 @@ public class VarCfgController {
 		return service.save(v);
 	}
 
-	@ResponseStatus(HttpStatus.OK)
-	@ResponseBody
-	@RequestMapping(value = "create", method = RequestMethod.POST)
-	public VarCfg create(@RequestBody VarCfg v) {
-		return service.create(v);
-	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(value = "{uid}", method = RequestMethod.DELETE)

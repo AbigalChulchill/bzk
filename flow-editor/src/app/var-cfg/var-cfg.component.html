@@ -35,7 +35,7 @@
       <mat-expansion-panel hideToggle *ngFor="let vc of varCfgService.list;let i = index">
         <mat-expansion-panel-header [class]="getBgClass(i)" >
           <mat-panel-title [class]="getTxtClass(i)" >
-             <i *ngIf="isSelected(vc)" class="mr-2 fas fa-check-square"></i><span *ngIf="isUpdating(vc) " class="badge badge-danger">*</span>{{vc.name}}<span class="badge badge-secondary">{{vc.uid}}</span>
+             <i *ngIf="isSelected(vc)" class="mr-2 fas fa-check-square"></i><span *ngIf="isUpdating(vc) " class="badge badge-danger">*</span>{{vc.name}}
           </mat-panel-title>
 
           <mat-panel-description>
@@ -49,20 +49,19 @@
         <div class="container row">
           <mat-form-field class="col-3">
             <mat-label>Name</mat-label>
-            <input matInput placeholder="Ex. Nasdaq" [(ngModel)]="vc.name">
+            <input matInput placeholder="Ex. Nasdaq" [(ngModel)]="vc.name" (change)="txtChange()" >
           </mat-form-field>
 
           <mat-form-field class="col-9">
             <mat-label>description</mat-label>
-            <input matInput placeholder="Ex. TODO what" [(ngModel)]="vc.description">
+            <input matInput placeholder="Ex. TODO what" [(ngModel)]="vc.description" (change)="txtChange()">
           </mat-form-field>
 
           <app-json-editor class="col-12" [data]="getTxtProvide(vc)"></app-json-editor>
 
-          <button *ngIf="StringUtils.isBlank(vc.uid) " (click)="varCfgService.createToServer(vc)"  type="button" class="col-2 ml-2 mr-2 btn btn-primary">Create</button>
-          <button *ngIf="isUpdating(vc) " (click)="varCfgService.updateToServer(vc)"  type="button" class="col-2 ml-2 mr-2 btn btn-success">Update</button>
-          <button *ngIf="selectHandler && !StringUtils.isBlank(vc.uid) " (click)="selectHandler.select(vc)"  type="button" class="col-2 ml-2 mr-2 btn btn-info ">Select</button>
-          <button *ngIf="!StringUtils.isBlank(vc.uid) " (click)="varCfgService.removeToServer(vc.uid)"   type="button" class="col-2 ml-2 mr-2 btn btn-secondary">Remove</button>
+          <button *ngIf="isUpdating(vc)" (click)="varCfgService.updateToServer(vc)"  type="button" class="col-2 ml-2 mr-2 btn btn-success">Save</button>
+          <button *ngIf="selectHandler && !isUpdating(vc) " (click)="selectHandler.select(vc)"  type="button" class="col-2 ml-2 mr-2 btn btn-info ">Select</button>
+          <button *ngIf="!isUpdating(vc) " (click)="varCfgService.removeToServer(vc.name)"   type="button" class="col-2 ml-2 mr-2 btn btn-secondary">Remove</button>
 
         </div>
 

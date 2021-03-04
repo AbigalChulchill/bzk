@@ -63,9 +63,11 @@ public class FlowRuner implements Runnable {
 	
 	private void initVar() {
 		vars = JsonUtils.toByJson(model.getVars(), VarMap.class);
-		if(StringUtils.isBlank(model.getVarCfgUid())) return;
-		var rv = varCfgDao.findById(model.getVarCfgUid()).get();
-		vars.merge(rv.getContent().parsePathValue());
+		if(model.getVarCfgNames().size()<=0) return;
+		for(String vn : model.getVarCfgNames() ) {
+			var rv = varCfgDao.findById(vn).get();
+			vars.merge(rv.getContent().parsePathValue());
+		}
 	}
 
 	public void start(ThreadPoolExecutor tp) {

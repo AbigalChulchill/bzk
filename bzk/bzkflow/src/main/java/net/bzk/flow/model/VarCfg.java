@@ -24,8 +24,6 @@ import net.bzk.flow.model.var.VarMap;
 public class VarCfg implements Serializable, CreateUpdateDate {
 	@Id
 	@Column(nullable = false)
-	private String uid;
-	
 	private String name;
 	private String description;
 	private String sha256;

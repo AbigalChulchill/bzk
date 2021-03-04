@@ -27,13 +27,6 @@ export class VarCfgService {
   }
 
 
-  public async createToServer(v: VarCfg): Promise<void> {
-    this.list = new Array<VarCfg>();
-    this.state = FetchState.Loading;
-    await this.varCfgClient.create(v);
-    await this.reflesh();
-  }
-
   public async updateToServer(v: VarCfg): Promise<void> {
     this.list = new Array<VarCfg>();
     this.state = FetchState.Loading;
@@ -49,7 +42,7 @@ export class VarCfgService {
   }
 
   public get(uid:string):VarCfg{
-    return this.list.find(c=> c.uid === uid );
+    return this.list.find(c=> c.name === uid );
   }
 
 
