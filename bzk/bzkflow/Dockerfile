@@ -5,8 +5,10 @@ FROM kirinddt/gradle-graalvm:latest AS build
 COPY . /app
 WORKDIR /app
 #RUN java -version
-RUN mkdir -p /bzk/model/flow/
-RUN mv ./init-model/* /bzk/model/
+RUN mkdir -p /bzk/model/
+
+RUN mv -r ./init-model/ /bzk/model/
+
 
 RUN gradle :bzkflow:bootJar --refresh-dependencies 
 
