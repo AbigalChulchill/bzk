@@ -179,7 +179,7 @@
                     "inputData": [
                         {
                             "key": "balance",
-                            "val": "${bfx.fund.balance}"
+                            "val": "TODO"
                         }
                     ],
                     "outputReflects": [
@@ -187,11 +187,11 @@
                             "srcKey": "bfx.fund.strategy",
                             "toKey": {
                                 "lv": "not_specify",
-                                "key": "bfx.fund.strategy"
+                                "key": ""
                             }
                         }
                     ],
-                    "flowUid": "ebBli92LdIYagOo7"
+                    "flowUid": "ccBli92LdIYagOo7"
                 },
                 {
                     "clazz": "net.bzk.flow.model.Action$SubFlowAction",

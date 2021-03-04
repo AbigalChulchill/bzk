@@ -1,7 +1,9 @@
+import { SavedFlow } from './../model/saved-flow';
 import { Injectable } from '@angular/core';
 import { Gist } from '../dto/gist';
 import { Flow } from '../model/flow';
 import { GithubService } from './github.service';
+import { JobClientService } from './job-client.service';
 
 
 
@@ -9,24 +11,15 @@ export class FlowRaw {
   public id: string;
   public name: string;
   public actions: string;
+  private job:SavedFlow;
 
-  public getModel(): Flow { throw new Error('not support!'); }
-
-}
-
-export class GistFlowRaw extends FlowRaw {
-
-
-  public gist: Gist
-  public model: Flow;
-  public constructor(g: Gist) {
-    super();
-    this.model = g.getMainFile().convertModel();
-    this.id = this.model.uid;
-    this.name = this.model.name;
+  public constructor(j:SavedFlow){
+    this.job = j;
+    this.id = j.uid;
+    this.name = j.model.name;
   }
 
-  public getModel(): Flow { return this.model; }
+  public getModel(): Flow { return this.job.model; }
 
 }
 
@@ -37,7 +30,7 @@ export class FlowLoadService {
   private static instance: FlowLoadService;
   private raws : Array<FlowRaw>;
   constructor(
-    public githubService: GithubService,
+    public jobClient: JobClientService,
   ) {
     FlowLoadService.instance = this;
   }
@@ -46,10 +39,10 @@ export class FlowLoadService {
     if(this.raws){
       return this.raws;
     }
-    const gs = await this.githubService.listBzkGits();
+    const gs = await this.jobClient.listAll();
     this.raws = new Array<FlowRaw>();
     for (const g of gs) {
-      this.raws.push(new GistFlowRaw(g));
+      this.raws.push(new FlowRaw(g));
     }
     return this.raws;
   }
