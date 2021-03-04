@@ -1,5 +1,6 @@
-import { Flow } from './flow';
-export class SavedFlow {
+import { Flow } from "./flow";
+
+export class Job {
 
   public uid:string;
   public model:Flow;

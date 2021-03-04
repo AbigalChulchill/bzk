@@ -1,4 +1,4 @@
-import { SavedFlow } from './../model/saved-flow';
+import { Job } from './../model/job';
 import { Injectable } from '@angular/core';
 import { Gist } from '../dto/gist';
 import { Flow } from '../model/flow';
@@ -11,9 +11,9 @@ export class FlowRaw {
   public id: string;
   public name: string;
   public actions: string;
-  private job:SavedFlow;
+  private job:Job;
 
-  public constructor(j:SavedFlow){
+  public constructor(j:Job){
     this.job = j;
     this.id = j.uid;
     this.name = j.model.name;

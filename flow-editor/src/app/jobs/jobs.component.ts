@@ -8,12 +8,12 @@ import { LoadingService } from './../service/loading.service';
 import { FlowPoolInfo, FlowState } from './../dto/flow-pool-info';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClientService } from '../service/http-client.service';
-import { SavedFlow } from '../model/saved-flow';
 import { LoadSource, ModifyingFlowService } from '../service/modifying-flow.service';
 import { Router } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { Job } from '../model/job';
 
 
 
@@ -33,7 +33,7 @@ export class JobsComponent implements OnInit,AfterViewInit {
 
   public FlowState = FlowState;
   public flowPoolInfos = new Array<FlowPoolInfo>();
-  public savedFlows: Array<SavedFlow>;
+  public savedFlows: Array<Job>;
   // panelOpenState = false;
   constructor(
     private loading: LoadingService,
@@ -78,17 +78,17 @@ export class JobsComponent implements OnInit,AfterViewInit {
 
   }
 
-  public getPoolInfo(sf: SavedFlow): FlowPoolInfo {
+  public getPoolInfo(sf: Job): FlowPoolInfo {
     return this.flowPoolInfos.find(fp => fp.flow.uid === sf.uid);
   }
 
-  public getAllRunCount(sf: SavedFlow): number {
+  public getAllRunCount(sf: Job): number {
     const ri = this.flowPoolInfos.find(fp => fp.flow.uid === sf.uid);
     if (!ri) return 0;
     return ri.runInfos.length;
   }
 
-  public getStateCount(sf: SavedFlow, st: FlowState): number {
+  public getStateCount(sf: Job, st: FlowState): number {
     const ri = this.flowPoolInfos.find(fp => fp.flow.uid === sf.uid);
     if (!ri) return 0;
     return ri.runInfos.filter(r => r.state === st).length;
@@ -124,9 +124,9 @@ export class JobsComponent implements OnInit,AfterViewInit {
     this.router.navigate(['model/design']);
   }
 
-  public getSavedFlow(grid:string):SavedFlow { return this.savedFlows.find(f=> f.uid === grid); }
+  public getSavedFlow(grid:string):Job { return this.savedFlows.find(f=> f.uid === grid); }
 
-  private genRow(sf: SavedFlow): Row {
+  private genRow(sf: Job): Row {
     const ans = new Row();
     ans.id = sf.uid;
     ans.name = sf.model.name;
