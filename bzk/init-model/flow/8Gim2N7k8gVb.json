@@ -1,0 +1,110 @@
+{
+    "clazz": "net.bzk.flow.model.Flow",
+    "uid": "8Gim2N7k8gVb",
+    "logEncryptKey": "1234567890123456",
+    "vars": {
+        "apiPath": "v2/auth/w/funding/offer/submit",
+        "apiBody": {
+            "symbol": "fUSD",
+            "amount": "100",
+            "period": 17,
+            "rate": "0.0003764347826086956",
+            "type": "LIMIT"
+        }
+    },
+    "varCfgNames": [
+        "bitfinex.json"
+    ],
+    "threadCfg": {
+        "corePoolSize": 10,
+        "maximumPoolSize": 50,
+        "keepAliveTime": 500,
+        "aliveUnit": "MINUTES"
+    },
+    "name": "BfxFundRow",
+    "boxs": [
+        {
+            "clazz": "net.bzk.flow.model.Box",
+            "uid": "VzPzT54lux1a8rsJ",
+            "name": "CheckCanFund",
+            "actions": [
+                {
+                    "clazz": "net.bzk.flow.model.Action$NodejsAction",
+                    "uid": "HCtlpdAmsq2w",
+                    "name": "SingnHeader",
+                    "tryErrorble": false,
+                    "code": "const BS = require('bitfinex-signature/BzkSignaturer');\nconsole.log($.get('apiBody'));\nconsole.log($.get('apiPath'));\nBS.insertSignatureToVar('bfxSignHeader','bfxRestUrl');\n",
+                    "installs": [
+                        "bitfinex-signature"
+                    ],
+                    "alwayCleanWorkDir": false,
+                    "dependencies": {},
+                    "devDependencies": {}
+                },
+                {
+                    "clazz": "net.bzk.flow.model.HttpAction",
+                    "uid": "Za7CyGvDT3n1",
+                    "name": "POSTFund",
+                    "tryErrorble": false,
+                    "url": "${bfxRestUrl}",
+                    "method": "\"POST\"",
+                    "uriVariables": {},
+                    "body": "${apiBody}",
+                    "headers": {},
+                    "headersFlat": "${bfxSignHeader}",
+                    "key": {
+                        "lv": "not_specify",
+                        "key": "ANS"
+                    }
+                },
+                {
+                    "clazz": "net.bzk.flow.model.HttpAction",
+                    "uid": "wqA2RX22Q23w",
+                    "name": "PostLog",
+                    "tryErrorble": false,
+                    "url": "\"https://a4b961070fdd1a7c70cbcf986af43462.m.pipedream.net\"",
+                    "method": "\"POST\"",
+                    "uriVariables": {},
+                    "body": "${apiBody}",
+                    "headers": {},
+                    "headersFlat": "${bfxSignHeader}",
+                    "key": {
+                        "lv": "not_specify",
+                        "key": "LogANS"
+                    }
+                }
+            ],
+            "links": [],
+            "vars": {},
+            "taskSort": [
+                "HCtlpdAmsq2w",
+                "wqA2RX22Q23w",
+                "Za7CyGvDT3n1"
+            ],
+            "transition": {
+                "toBox": "",
+                "endTag": "Signed",
+                "endResultKeys": [
+                    {
+                        "lv": "not_specify",
+                        "key": "bfxRestUrl"
+                    },
+                    {
+                        "lv": "not_specify",
+                        "key": "bfxSignHeader"
+                    }
+                ]
+            },
+            "whileJudgment": null
+        }
+    ],
+    "entry": {
+        "clazz": "net.bzk.flow.model.Entry$PluginEntry",
+        "requiredKeys": [
+            "apiPath",
+            "apiBody"
+        ],
+        "outputKeys": [],
+        "boxUid": "VzPzT54lux1a8rsJ"
+    }
+}

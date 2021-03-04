@@ -5,6 +5,7 @@
     "vars": {
         "balance": 219
     },
+    "varCfgNames": [],
     "threadCfg": {
         "corePoolSize": 10,
         "maximumPoolSize": 50,
