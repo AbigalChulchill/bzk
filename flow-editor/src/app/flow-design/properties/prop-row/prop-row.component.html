@@ -15,14 +15,16 @@
       <label class="input-group-text" for="inputGroupSelect01">{{prop.title}}</label>
     </div>
 
-    <input type="text" [(ngModel)]="prop.val" class="form-control" matInput [formControl]="myControl"
-      [matAutocomplete]="auto">
-    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-      <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-        {{option}}
-      </mat-option>
-    </mat-autocomplete>
-
+    <input type="text" [(ngModel)]="prop.val" class="form-control"  *ngIf="options.length===0; else autoTxt"    >
+    <ng-template #autoTxt>
+      <input type="text" [(ngModel)]="prop.val" class="form-control" matInput [formControl]="myControl"
+        [matAutocomplete]="auto">
+      <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+        <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+          {{option}}
+        </mat-option>
+      </mat-autocomplete>
+    </ng-template>
 
   </div>
 

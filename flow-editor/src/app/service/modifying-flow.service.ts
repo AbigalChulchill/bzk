@@ -91,7 +91,7 @@ export class ModifyingFlowService {
   public async updateRemote(): Promise<void> {
     const llm = this.getLastMark();
     if (!llm) { throw new Error('not find last save'); }
-    await this.jobClient.save(this.modelobs.getModel());
+    await this.jobClient.save(this.modelobs.getModel()).toPromise();
   }
 
   public async registerRemote(): Promise<void> {
