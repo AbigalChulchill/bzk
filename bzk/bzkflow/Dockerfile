@@ -7,7 +7,7 @@ WORKDIR /app
 #RUN java -version
 RUN mkdir -p /bzk/model/
 
-RUN mv -r ./init-model/ /bzk/model/
+RUN cp -r ./init-model/ /bzk/model/
 
 
 RUN gradle :bzkflow:bootJar --refresh-dependencies 
