@@ -1,5 +1,6 @@
 import { Link } from "../model/box";
 import { Flow } from "../model/flow";
+import { Transition } from "../model/transition";
 
 export class FlowPoolInfo {
 
@@ -14,7 +15,7 @@ export class RunInfo {
 
   public uid: string;
   public state = FlowState.Pedding;
-  public endLink: Link;
+  public transition: Transition;
   public startAt = '-';
   public endAt = '-';
 

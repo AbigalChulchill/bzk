@@ -32,15 +32,15 @@
 
   <!-- Heading -->
   <div class="sidebar-heading">
-    Interface
+    Model
   </div>
 
   <!-- Nav Item - Pages Collapse Menu -->
   <li class="nav-item">
-    <a class="nav-link collapsed" [class.active]="urlParam.eqPath('/config')" routerLink="/config"
+    <a class="nav-link collapsed" href="javascript:void(0)" (click)="modifyingFlow.goDesignPage(flowPoolInfo.flow)"
       >
-      <i class="fas fa-fw fa-cog"></i>
-      <span>Configs</span>
+      <i class="fas fa-edit"></i>
+      <span>Edit</span>
     </a>
 
   </li>

@@ -7,6 +7,7 @@ import { FlowPoolInfo, FlowState, RunInfo } from 'src/app/dto/flow-pool-info';
 import { FlowClientService } from 'src/app/service/flow-client.service';
 import { LoadingService } from 'src/app/service/loading.service';
 import { ActivatedRoute } from '@angular/router';
+import { ModifyingFlowService } from 'src/app/service/modifying-flow.service';
 
 @Component({
   selector: 'app-job',
@@ -27,7 +28,7 @@ export class JobComponent implements OnInit,AfterViewInit {
   constructor(
     private loading: LoadingService,
     private flowClient: FlowClientService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
 
 
   ) {
@@ -80,7 +81,10 @@ export class JobComponent implements OnInit,AfterViewInit {
     ans.state = ri.state;
     ans.startAt = ri.startAt;
     ans.endAt = ri.endAt;
-    if (ri.endLink && ri.endLink.transition) ans.endTag = ri.endLink.transition.endTag;
+    try{
+      ans.endTag = ri.transition.endTag;
+    }catch(ex){
+    }
     return ans;
   }
 

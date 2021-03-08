@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { FlowPoolInfo } from 'src/app/dto/flow-pool-info';
 import { FlowClientService } from 'src/app/service/flow-client.service';
 import { UrlParamsService } from 'src/app/service/url-params.service';
+import { ModifyingFlowService } from 'src/app/service/modifying-flow.service';
 
 @Component({
   selector: 'app-job-sidebar',
@@ -20,7 +21,8 @@ export class JobSidebarComponent implements OnInit {
     public urlParam: UrlParamsService,
     private route: ActivatedRoute,
     private flowClient: FlowClientService,
-    private loading: LoadingService
+    private loading: LoadingService,
+    public modifyingFlow: ModifyingFlowService,
   ) { }
 
   async ngOnInit(): Promise<void> {

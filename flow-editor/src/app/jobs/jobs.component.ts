@@ -40,7 +40,6 @@ export class JobsComponent implements OnInit,AfterViewInit {
     private flowClient: FlowClientService,
     private jobClient: JobClientService,
     private modifyingFlow: ModifyingFlowService,
-    private router: Router,
     private githubService: GithubService,
     private dialog: DialogService
   ) {
@@ -117,11 +116,13 @@ export class JobsComponent implements OnInit,AfterViewInit {
 
   public async onFileEdit(grid: string): Promise<void> {
     const gr = this.getSavedFlow(grid);
-    this.modifyingFlow.setTarget(gr.model, {
-      id: gr.uid,
-      source: LoadSource.terminal
-    });
-    this.router.navigate(['model/design']);
+    // this.modifyingFlow.setTarget(gr.model, {
+    //   id: gr.uid,
+    //   source: LoadSource.terminal
+    // });
+    // this.router.navigate(['model/design']);
+
+    this.modifyingFlow.goDesignPage(gr.model);
   }
 
   public getSavedFlow(grid:string):Job { return this.savedFlows.find(f=> f.uid === grid); }

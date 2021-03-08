@@ -15,6 +15,7 @@ import { plainToClass } from 'class-transformer';
 import { PropUtils } from '../utils/prop-utils';
 import { StringUtils } from '../utils/string-utils';
 import { Gist } from '../dto/gist';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +26,7 @@ export class ModifyingFlowService {
   public modelobs: ModelObserve = new ModelObserve();
 
   constructor(
-    private clientService: HttpClientService,
+    private router: Router,
     private flowClient:FlowClientService,
     private jobClient: JobClientService,
     private loading: LoadingService
@@ -77,6 +78,14 @@ export class ModifyingFlowService {
     } else {
       this.saveLast(llm);
     }
+  }
+
+  public  goDesignPage(f:Flow): void {
+    this.setTarget(f, {
+      id: f.uid,
+      source: LoadSource.terminal
+    });
+    this.router.navigate(['model/design']);
   }
 
 
