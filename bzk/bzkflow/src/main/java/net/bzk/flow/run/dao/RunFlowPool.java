@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import lombok.Getter;
+import net.bzk.flow.model.ArchiveRun;
 import net.bzk.flow.model.Flow;
 import net.bzk.flow.run.entry.Entryer;
 import net.bzk.flow.run.flow.FlowRuner;
@@ -34,6 +35,8 @@ public class RunFlowPool {
 	private ApplicationContext context;
 	@Getter
 	private ThreadPoolExecutor threadPool;
+	@Inject
+	private ArchiveRunDao archiveRunDao;
 
 	private Map<String, FlowRuner> map = new ConcurrentHashMap<>();
 	private Entryer entryer;
@@ -60,9 +63,19 @@ public class RunFlowPool {
 	}
 
 	public FlowRuner create() {
-		FlowRuner ans = runFlowDao.create(model);
+		FlowRuner ans = runFlowDao.create(model,r-> onEndFlowRuner(r));
 		map.put(ans.getInfo().getUid(), ans);
 		return ans;
+	}
+	
+	private void onEndFlowRuner(FlowRuner r) {
+		var info = r.getInfo();
+		ArchiveRun ar = new ArchiveRun();
+		ar.setFlowUid(r.getModel().getUid());
+		ar.setFlowRunUid(info.getUid());
+		ar.setInfo(info);
+		archiveRunDao.save(ar);
+		map.remove(r.getInfo().getUid());
 	}
 
 	public FlowRuner createAndStart() {
@@ -79,7 +92,10 @@ public class RunFlowPool {
 	}
 
 	public List<RunInfo> listRunInfos() {
-		return map.values().stream().map(FlowRuner::getInfo).collect(Collectors.toList());
+		List<RunInfo> ans= map.values().stream().map(FlowRuner::getInfo).collect(Collectors.toList());
+		var arList= archiveRunDao.findByFlowUid(model.getUid());
+		arList.forEach(e-> ans.add(e.getInfo()));
+		return ans;
 	}
 
 	public void forceCancelAll() {

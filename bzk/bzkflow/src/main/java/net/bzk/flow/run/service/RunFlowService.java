@@ -44,7 +44,7 @@ public class RunFlowService {
 		fs.forEach(f -> {
 			runPoolDao.create(f);
 		});
-		var fr = dao.create(ef);
+		var fr = dao.create(ef,r-> {});
 		fr.run();
 		fs.forEach(f -> {
 			runPoolDao.forceRemove(f.getUid());
@@ -76,7 +76,7 @@ public class RunFlowService {
 		data.getFlow().setUid(uid);
 		data.getFlow().setVars(data.getFlowVar());
 		ActionFindInfo afi = data.getFlow().getAction(data.getUid());
-		FlowRuner fr = dao.create(data.getFlow());
+		FlowRuner fr = dao.create(data.getFlow(),r-> {});
 		BoxRuner br = fr.createBoxByUid(afi.getBox().getUid());
 		br.setVars(data.getBoxVar());
 		br.runAction(data.getUid());

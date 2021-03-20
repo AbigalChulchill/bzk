@@ -2,6 +2,7 @@ package net.bzk.flow.run.dao;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -30,11 +31,14 @@ public class RunFlowDao implements VarsDao {
 
 	private Map<String, FlowRuner> runMap = new ConcurrentHashMap<>();
 
-	public FlowRuner create(Flow f) {
+	public FlowRuner create(Flow f,Consumer<FlowRuner> c) {
 		try {
 			String json = jsonMapper.writeValueAsString(f);
 			f = jsonMapper.readValue(json, Flow.class);
-			FlowRuner fr = flowRunerProvider.get().init(f, r -> remove(r.getInfo().getUid()));
+			FlowRuner fr = flowRunerProvider.get().init(f, r ->{
+				remove(r.getInfo().getUid());
+				c.accept(r);
+			} );
 			runMap.put(fr.getInfo().getUid(), fr);
 			return fr;
 		} catch (JsonProcessingException e) {
