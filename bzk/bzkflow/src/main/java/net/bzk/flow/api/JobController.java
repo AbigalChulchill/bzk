@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import net.bzk.flow.model.Flow;
 import net.bzk.flow.model.Job;
+import net.bzk.flow.model.demo.ModelBuilder;
 import net.bzk.flow.run.dao.JobsDao;
 import net.bzk.flow.run.service.JobsService;
 
@@ -28,7 +29,8 @@ import net.bzk.flow.run.service.JobsService;
 @Controller
 @RequestMapping(value = "job/")
 public class JobController {
-
+	@Inject
+	private ModelBuilder modelBuilder;
 	@Inject
 	private JobsDao dao;
 	@Inject
@@ -59,6 +61,14 @@ public class JobController {
 	@RequestMapping(value = "save", method = RequestMethod.POST)
 	public Job save(@RequestBody Flow f) {
 		return service.save(f);
+	}
+	
+	
+	@ResponseStatus(HttpStatus.OK)
+	@ResponseBody
+	@RequestMapping(value = "new", method = RequestMethod.POST)
+	public Job save() {
+		return service.save(modelBuilder.init().getModel());
 	}
 	
 	

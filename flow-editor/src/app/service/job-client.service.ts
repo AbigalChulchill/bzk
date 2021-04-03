@@ -45,4 +45,9 @@ export class JobClientService {
     const ans = await this.save(f).toPromise();
     return ans;
   }
+
+  public  createNewOne(): Observable<Job> {
+    return this.httpClient.post<Job>(environment.apiHost + JobClientService.URL_PREFIX + 'new',null);
+  }
+
 }

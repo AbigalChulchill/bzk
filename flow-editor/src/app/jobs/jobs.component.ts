@@ -116,12 +116,6 @@ export class JobsComponent implements OnInit,AfterViewInit {
 
   public async onFileEdit(grid: string): Promise<void> {
     const gr = this.getSavedFlow(grid);
-    // this.modifyingFlow.setTarget(gr.model, {
-    //   id: gr.uid,
-    //   source: LoadSource.terminal
-    // });
-    // this.router.navigate(['model/design']);
-
     this.modifyingFlow.goDesignPage(gr.model);
   }
 
