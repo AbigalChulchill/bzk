@@ -33,8 +33,6 @@ public class VarValSet {
 	public List<VarVal> list() {
 		return list;
 	}
-	
-	
 
 	@Override
 	public String toString() {
@@ -42,32 +40,34 @@ public class VarValSet {
 	}
 
 	public static VarValSet genSingle(String key, VarLv lv, Object val) {
+		VarValSet ans = new VarValSet();
+		if (StringUtils.isBlank(key))
+			return ans;
 		VarVal vv = new VarVal();
 		vv.setKey(key);
 		vv.setLv(lv);
 		vv.setVal(val);
-		VarValSet ans = new VarValSet();
 		ans.add(vv);
 		return ans;
 	}
-	
+
 	public static VarValSet genError(Action a, Exception val) {
-		return genSingle(a.getErrorVarKey(),VarLv.run_box,new ActionError(val));
+		return genSingle(a.getErrorVarKey(), VarLv.run_box, new ActionError(val));
 	}
-	
+
 	@Data
 	@NoArgsConstructor
-	public static class ActionError{
+	public static class ActionError {
 		private String clazz;
 		private Exception exception;
 		private String msg;
-		
-		ActionError(Exception e){
+
+		ActionError(Exception e) {
 			clazz = e.getClass().getCanonicalName();
 			exception = BzkFlowUtils.toJsonSafeExcetption(e);
 			msg = e.getMessage();
 		}
-		
+
 	}
 
 }
