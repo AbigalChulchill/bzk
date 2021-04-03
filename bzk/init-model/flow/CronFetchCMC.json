@@ -1,0 +1,104 @@
+{
+    "clazz": "net.bzk.flow.model.Flow",
+    "uid": "WD9C43w3dAL2",
+    "logEncryptKey": "1234567890123456",
+    "vars": {},
+    "varCfgNames": [
+        "Fin-Proxy"
+    ],
+    "threadCfg": {
+        "corePoolSize": 10,
+        "maximumPoolSize": 50,
+        "keepAliveTime": 500,
+        "aliveUnit": "MINUTES"
+    },
+    "name": "CronFetchCMC",
+    "boxs": [
+        {
+            "clazz": "net.bzk.flow.model.Box",
+            "uid": "ajyASBWbeZV6",
+            "name": "Box",
+            "actions": [
+                {
+                    "clazz": "net.bzk.flow.model.HttpAction",
+                    "uid": "Jj7CsxrbKdSm",
+                    "name": "RequestToFinProxy",
+                    "tryErrorble": false,
+                    "url": "${saveAllUrl}",
+                    "method": "\"POST\"",
+                    "uriVariables": {},
+                    "body": "{}",
+                    "headers": {},
+                    "headersFlat": "{}",
+                    "key": {
+                        "lv": "not_specify",
+                        "key": ""
+                    }
+                },
+                {
+                    "clazz": "net.bzk.flow.model.Action$VarModifyAction",
+                    "uid": "0w4Bf8jTXFGd",
+                    "name": "GenPostUrl",
+                    "tryErrorble": false,
+                    "polyglot": "js",
+                    "flatData": [
+                        {
+                            "key": "saveAllUrl",
+                            "val": "${finProxyUrl}+'/proxy/save/CMC/util_now'"
+                        }
+                    ]
+                }
+            ],
+            "links": [
+                {
+                    "clazz": "net.bzk.flow.model.Link",
+                    "uid": "irIpbFTGuteX",
+                    "name": "DONE_REQUEST",
+                    "transition": {
+                        "toBox": "",
+                        "endTag": "Fetched",
+                        "endResultKeys": []
+                    },
+                    "condition": null
+                },
+                {
+                    "clazz": "net.bzk.flow.model.Link",
+                    "uid": "iPF7MnNTo891",
+                    "name": "",
+                    "transition": {
+                        "toBox": "",
+                        "endTag": "END",
+                        "endResultKeys": []
+                    },
+                    "condition": {
+                        "clazz": "net.bzk.flow.model.Condition$ConditionNum",
+                        "kind": "NONE",
+                        "left": "0",
+                        "right": "0",
+                        "type": "equal"
+                    }
+                }
+            ],
+            "vars": {},
+            "taskSort": [
+                "0w4Bf8jTXFGd",
+                "Jj7CsxrbKdSm",
+                "irIpbFTGuteX",
+                "iPF7MnNTo891"
+            ],
+            "transition": {
+                "toBox": "",
+                "endTag": "TODO Why",
+                "endResultKeys": []
+            },
+            "whileJudgment": null
+        }
+    ],
+    "entry": {
+        "clazz": "net.bzk.flow.model.Entry$FixedRateEntry",
+        "period": 24,
+        "unit": "HOURS",
+        "initialDelay": 2,
+        "boxUid": "ajyASBWbeZV6"
+    }
+}

@@ -69,6 +69,7 @@ public class ModelBuilder {
 
 	private Link createLink() {
 		Link ans = new Link();
+		ans.setName("TODOLink");
 		ans.getTransition().setEndTag("TestEnd");
 		return ans;
 	}

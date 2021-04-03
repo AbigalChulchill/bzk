@@ -63,7 +63,7 @@ export class JobSidebarComponent implements OnInit {
 
   public async disableJob(): Promise<void> {
     await this.reflesh(async () => {
-      await this.flowClient.forceRemovePool(this.uid);
+      await this.flowClient.forceRemovePool(this.uid).toPromise();
     });
   }
 

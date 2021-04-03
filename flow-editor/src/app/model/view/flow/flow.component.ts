@@ -25,7 +25,7 @@ export class FlowComponent implements OnInit, ClazzExComponent, TextProvide {
   StringUtils = StringUtils;
   data: any;
   public entryTypes = new Array<OType>();
-  public varCfgs = new Array<IdxVarCfg>();
+  public varCfgs = null;
   constructor(
     private varCfgService:VarCfgService
   ) { }
