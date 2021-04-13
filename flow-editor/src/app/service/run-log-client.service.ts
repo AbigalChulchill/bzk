@@ -18,4 +18,8 @@ export class RunLogClientService {
     return this.httpClient.get<Array<RunLog>>(environment.apiHost + RunLogClientService.URL_PREFIX + uid+'?type=runflow' );
   }
 
+  public listByActionUid(uid:string): Observable<Array<RunLog>> {
+    return this.httpClient.get<Array<RunLog>>(environment.apiHost + RunLogClientService.URL_PREFIX + uid+'?type=action' );
+  }
+
 }

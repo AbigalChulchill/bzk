@@ -25,12 +25,19 @@ import net.bzk.flow.run.dao.RunLogDao;
 public class RunLogController {
 	@Inject
 	private RunLogDao dao;
-	
+
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
-	@RequestMapping(value = "{uid}", method = RequestMethod.GET,params = "type=runflow")
+	@RequestMapping(value = "{uid}", method = RequestMethod.GET, params = "type=runflow")
 	public List<RunLog> listByRunFlowUid(@PathVariable String uid) {
-		return dao.findByRunFlowUidOrderByCreateAtAsc(uid); 
+		return dao.findByRunFlowUidOrderByCreateAtAsc(uid);
+	}
+
+	@ResponseStatus(HttpStatus.OK)
+	@ResponseBody
+	@RequestMapping(value = "{uid}", method = RequestMethod.GET, params = "type=action")
+	public List<RunLog> listByActionUid(@PathVariable String uid) {
+		return dao.findByActionUidOrderByCreateAtAsc(uid);
 	}
 
 }

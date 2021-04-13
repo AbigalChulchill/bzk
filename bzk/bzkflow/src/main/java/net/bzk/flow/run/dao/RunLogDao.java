@@ -10,5 +10,7 @@ import net.bzk.flow.model.RunLog;
 public interface RunLogDao extends CrudRepository<RunLog, Long> {
 	
 	List<RunLog> findByRunFlowUidOrderByCreateAtAsc(String uid);
+	
+	List<RunLog> findByActionUidOrderByCreateAtAsc(String uid);
 
 }

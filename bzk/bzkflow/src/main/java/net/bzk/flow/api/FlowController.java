@@ -66,14 +66,7 @@ public class FlowController {
 		register(fs);
 	}
 	
-	@ResponseStatus(HttpStatus.OK)
-	@ResponseBody
-	@RequestMapping(value = "{uid}/test", method = RequestMethod.POST)
-	public RunInfo testFlow(@PathVariable String uid ) {
-		var sfs = jobsService.listDepends(uid);
-		List< Flow> fs = sfs.stream().map(sf-> sf.getModel()).collect(Collectors.toList());
-		return runFlowService.test(uid, fs);
-	}
+
 
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
@@ -101,6 +94,15 @@ public class FlowController {
 	@RequestMapping(value = "debug/action", method = RequestMethod.POST)
 	public void debugAction(@RequestBody ActionDebugData data, @RequestParam int delDelay) throws InterruptedException {
 		runFlowService.debugAction(data, delDelay);
+	}
+	
+	@ResponseStatus(HttpStatus.OK)
+	@ResponseBody
+	@RequestMapping(value = "{uid}/test", method = RequestMethod.POST)
+	public RunInfo testFlow(@PathVariable String uid ) {
+		var sfs = jobsService.listDepends(uid);
+		List< Flow> fs = sfs.stream().map(sf-> sf.getModel()).collect(Collectors.toList());
+		return runFlowService.test(uid, fs);
 	}
 
 }

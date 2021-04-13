@@ -1,3 +1,4 @@
+import { RunLogClientService } from './../../../service/run-log-client.service';
 import { FlowClientService } from './../../../service/flow-client.service';
 import { FlowDesignComponent } from './../../../flow-design/flow-design.component';
 import { HttpClientService } from './../../../service/http-client.service';
@@ -26,8 +27,8 @@ export class ActionComponent implements OnInit, ClazzExComponent {
   boxVarKey: string;
 
   constructor(
-    private modifyingFlow: ModifyingFlowService,
     private flowClient: FlowClientService,
+    private runLogClient:RunLogClientService, TODO debug
     private toast: ToastService
   ) { }
 
