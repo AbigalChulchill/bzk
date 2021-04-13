@@ -49,28 +49,15 @@
                     ]
                 }
             ],
-            "links": [
-                {
-                    "clazz": "net.bzk.flow.model.Link",
-                    "uid": "irIpbFTGuteX",
-                    "name": "DONE_REQUEST",
-                    "transition": {
-                        "toBox": "",
-                        "endTag": "Fetched",
-                        "endResultKeys": []
-                    },
-                    "condition": null
-                }
-            ],
+            "links": [],
             "vars": {},
             "taskSort": [
                 "0w4Bf8jTXFGd",
-                "Jj7CsxrbKdSm",
-                "irIpbFTGuteX"
+                "Jj7CsxrbKdSm"
             ],
             "transition": {
                 "toBox": "",
-                "endTag": "TODO Why",
+                "endTag": "DONE",
                 "endResultKeys": []
             },
             "whileJudgment": null
@@ -80,7 +67,7 @@
         "clazz": "net.bzk.flow.model.Entry$FixedRateEntry",
         "period": 24,
         "unit": "HOURS",
-        "initialDelay": 0.01,
+        "initialDelay": 0,
         "boxUid": "ajyASBWbeZV6"
     }
 }
