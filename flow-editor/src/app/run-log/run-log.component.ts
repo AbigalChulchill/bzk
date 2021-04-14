@@ -1,6 +1,6 @@
 import { StringUtils } from 'src/app/utils/string-utils';
 import { LoadingService } from 'src/app/service/loading.service';
-import { RunLogClientService } from './../service/run-log-client.service';
+import { ListLogType, RunLogClientService } from './../service/run-log-client.service';
 import { Component, OnInit } from '@angular/core';
 import { RunLog } from '../model/run-log';
 import { ActivatedRoute } from '@angular/router';
@@ -13,7 +13,8 @@ import { ActivatedRoute } from '@angular/router';
 export class RunLogComponent implements OnInit {
   StringUtils = StringUtils;
   public showType = ShowType.Vars;
-  public runFlowUid = '';
+  public listType = ListLogType.runflow;
+  public queryUid = '';
   public list = new Array<RunLog>();
 
   constructor(
@@ -23,7 +24,7 @@ export class RunLogComponent implements OnInit {
   ) { }
 
   async ngOnInit(): Promise<void> {
-    this.runFlowUid = this.route.snapshot.paramMap.get('runFlowUid');
+    this.queryUid = this.route.snapshot.paramMap.get('runFlowUid');
     this.reflesh();
   }
 
@@ -31,7 +32,7 @@ export class RunLogComponent implements OnInit {
     const t = this.loading.show();
     await a();
     try {
-      this.list = await this.runLogClient.listByRunFlowUid(this.runFlowUid).toPromise();
+      this.list = await this.runLogClient.list(this.queryUid, this.listType).toPromise();
     } catch (e) {
 
     }

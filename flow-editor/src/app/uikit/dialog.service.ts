@@ -1,8 +1,10 @@
+import { RunLogComponent } from './../run-log/run-log.component';
 import { CloudBackupListComponent } from './cloud-backup-list/cloud-backup-list.component';
 import { TextProvide } from './../infrastructure/meta';
 import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { CodeEditorComponent } from './code-editor/code-editor.component';
+import { ListLogType } from '../service/run-log-client.service';
 
 @Injectable({
   providedIn: 'root'
@@ -32,5 +34,14 @@ export class DialogService {
     const cbc:CloudBackupListComponent = df.componentInstance;
     cbc.onImportDoneAction = impCB;
   }
+
+  public openRunLoag(uid:string,type:ListLogType):void{
+    const df= this.dialog.open(RunLogComponent);
+    const cbc:RunLogComponent = df.componentInstance;
+    cbc.listType = type;
+    cbc.queryUid = uid;
+  }
+
+
 
 }

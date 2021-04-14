@@ -1,4 +1,5 @@
-import { RunLogClientService } from './../../../service/run-log-client.service';
+import { DialogService } from './../../../uikit/dialog.service';
+import { ListLogType, RunLogClientService } from './../../../service/run-log-client.service';
 import { FlowClientService } from './../../../service/flow-client.service';
 import { FlowDesignComponent } from './../../../flow-design/flow-design.component';
 import { HttpClientService } from './../../../service/http-client.service';
@@ -27,8 +28,8 @@ export class ActionComponent implements OnInit, ClazzExComponent {
   boxVarKey: string;
 
   constructor(
+    private dialogService: DialogService,
     private flowClient: FlowClientService,
-    private runLogClient:RunLogClientService, TODO debug
     private toast: ToastService
   ) { }
 
@@ -48,9 +49,9 @@ export class ActionComponent implements OnInit, ClazzExComponent {
     });
     const rb = new ActionDebugData();
     rb.boxVar = null; //TODO
-    if(!rb.boxVar) rb.boxVar = new BaseVar();
-    rb.flowVar =null; //TODO
-    if(!rb.flowVar) rb.flowVar = new BaseVar();
+    if (!rb.boxVar) rb.boxVar = new BaseVar();
+    rb.flowVar = null; //TODO
+    if (!rb.flowVar) rb.flowVar = new BaseVar();
     rb.flow = ModelUpdateAdapter.getInstance().getFlow();
     rb.uid = this.action.uid;
     await this.flowClient.debugAction(rb, -1).toPromise();
@@ -65,6 +66,10 @@ export class ActionComponent implements OnInit, ClazzExComponent {
       key: '',
       obj: null //TODO
     });
+  }
+
+  public onOpenLogDialog(): void {
+    this.dialogService.openRunLoag(this.action.uid, ListLogType.action);
   }
 
 
