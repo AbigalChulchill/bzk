@@ -12,7 +12,9 @@ export class VarCfgService {
 
   constructor(
     private varCfgClient: VarCfgClientService
-  ) { }
+  ) {
+    this.reflesh();
+  }
 
 
   public createEmpty(): void {
@@ -34,20 +36,21 @@ export class VarCfgService {
     await this.reflesh();
   }
 
-  public async removeToServer(uid:string): Promise<void> {
+  public async removeToServer(uid: string): Promise<void> {
     this.list = new Array<VarCfg>();
     this.state = FetchState.Loading;
     await this.varCfgClient.remove(uid).toPromise();
     await this.reflesh();
   }
 
-  public get(uid:string):VarCfg{
-    return this.list.find(c=> c.name === uid );
+  public get(uid: string): VarCfg {
+    return this.list.find(c => c.name === uid);
   }
+
 
 
 }
 
-export enum FetchState{
-  Idel = 'Idel' , Loading = 'Loading' , Fetched = 'Fetched'
+export enum FetchState {
+  Idel = 'Idel', Loading = 'Loading', Fetched = 'Fetched'
 }

@@ -1,3 +1,4 @@
+import { VarCfgService } from './../../../service/var-cfg.service';
 import { DialogService } from './../../../uikit/dialog.service';
 import { ListLogType, RunLogClientService } from './../../../service/run-log-client.service';
 import { FlowClientService } from './../../../service/flow-client.service';
@@ -30,7 +31,8 @@ export class ActionComponent implements OnInit, ClazzExComponent {
   constructor(
     private dialogService: DialogService,
     private flowClient: FlowClientService,
-    private toast: ToastService
+    private toast: ToastService,
+    private varCfg: VarCfgService
   ) { }
 
   init(d: any, mi: any): void {
@@ -48,9 +50,9 @@ export class ActionComponent implements OnInit, ClazzExComponent {
       title: ''
     });
     const rb = new ActionDebugData();
-    rb.boxVar = null; //TODO
+    rb.boxVar = this.varCfg.get(this.boxVarKey).content;
     if (!rb.boxVar) rb.boxVar = new BaseVar();
-    rb.flowVar = null; //TODO
+    rb.flowVar = this.varCfg.get(this.flowVarKey).content;
     if (!rb.flowVar) rb.flowVar = new BaseVar();
     rb.flow = ModelUpdateAdapter.getInstance().getFlow();
     rb.uid = this.action.uid;
@@ -58,7 +60,7 @@ export class ActionComponent implements OnInit, ClazzExComponent {
   }
 
   public listVarKeys(): Array<string> {
-    return null; //TODO
+    return this.varCfg.list.map(v => v.name);
   }
 
   public onInternalVars(): void {

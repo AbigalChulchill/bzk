@@ -24,7 +24,9 @@ export class RunLogComponent implements OnInit {
   ) { }
 
   async ngOnInit(): Promise<void> {
-    this.queryUid = this.route.snapshot.paramMap.get('runFlowUid');
+    if(StringUtils.isBlank(this.queryUid)){
+      this.queryUid = this.route.snapshot.paramMap.get('runFlowUid');
+    }
     this.reflesh();
   }
 
