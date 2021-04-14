@@ -127,6 +127,18 @@ public class Action extends BzkObj {
 		private long step;
 	}
 	
+	@Data
+	@EqualsAndHashCode(callSuper = false)
+	public static class MailAction extends Action {
+		private String smtpHost= "smtp.gmail.com";
+		private int smtpPort = 465;
+		private String username;
+		private String password;
+		private String toMail;
+		private String subject;
+		private String body;
+	}
+	
 	
 
 }
