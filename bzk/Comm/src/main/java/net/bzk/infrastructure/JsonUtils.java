@@ -122,7 +122,7 @@ public class JsonUtils {
 		System.out.println(a);
 		System.out.println(a.getClass());
 		String ints = "123";
-		a = loadByJson(ints, Object.class);
+		a = loadByJson(ints, Integer.class);
 		System.out.println(a);
 		System.out.println(a.getClass());
 		String bc = toJson("{ \"abc\": ");

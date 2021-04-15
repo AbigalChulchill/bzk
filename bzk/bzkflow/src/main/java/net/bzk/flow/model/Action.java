@@ -131,12 +131,48 @@ public class Action extends BzkObj {
 	@EqualsAndHashCode(callSuper = false)
 	public static class MailAction extends Action {
 		private String smtpHost= "smtp.gmail.com";
-		private int smtpPort = 465;
+		private String smtpPort = "465";
 		private String username;
 		private String password;
 		private String toMail;
 		private String subject;
 		private String body;
+		
+		@JsonIgnore
+		public String smtpHost() {
+			return JsonUtils.loadByJson(smtpHost, String.class);
+		}
+		
+		@JsonIgnore
+		public Integer smtpPort() {
+			return JsonUtils.loadByJson(smtpPort, Integer.class);
+		}
+		
+		@JsonIgnore
+		public String username() {
+			return JsonUtils.loadByJson(username, String.class);
+		}		
+		
+		@JsonIgnore
+		public String password() {
+			return JsonUtils.loadByJson(password, String.class);
+		}	
+		
+		@JsonIgnore
+		public String toMail() {
+			return JsonUtils.loadByJson(toMail, String.class);
+		}
+		
+		@JsonIgnore
+		public String subject() {
+			return JsonUtils.loadByJson(subject, String.class);
+		}
+		
+		@JsonIgnore
+		public String body() {
+			return JsonUtils.loadByJson(body, String.class);
+		}
+		
 	}
 	
 	

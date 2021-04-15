@@ -35,7 +35,7 @@ public class MailActionCall extends ActionCall<MailAction> {
 
 	@Override
 	public VarValSet call() throws Exception {
-		sendMail(getModel().getToMail(), getModel().getSubject(), getModel().getBody());
+		sendMail(getModel().getToMail(), getModel().subject(), getModel().body());
 		return new VarValSet();
 	}
 	
@@ -43,24 +43,24 @@ public class MailActionCall extends ActionCall<MailAction> {
 	public void sendMail(String tos, String sub, String text) {
 
 		Properties props = new Properties();
-		props.put("mail.smtp.host", getModel().getSmtpHost());
-		props.put("mail.smtp.socketFactory.port", getModel().getSmtpPort()+"");
+		props.put("mail.smtp.host", getModel().smtpHost());
+		props.put("mail.smtp.socketFactory.port", getModel().smtpPort()+"");
 		props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
 		props.put("mail.smtp.auth", "true");
-		props.put("mail.smtp.port", getModel().getSmtpPort()+"");
+		props.put("mail.smtp.port", getModel().smtpPort()+"");
 		props.put("mail.smtp.ssl.enable", "true");
 		props.put("mail.debug", "true");
 		props.put("mail.mime.charset", "UTF-8");
 
 		Session session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(getModel().getUsername(), getModel().getPassword());
+				return new PasswordAuthentication(getModel().username(), getModel().password());
 			}
 		});
 
 		try {
 			MimeMessage message = new MimeMessage(session);
-			message.setFrom(new InternetAddress(getModel().getUsername()));
+			message.setFrom(new InternetAddress(getModel().username()));
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(tos));
 			message.setSubject(sub, "UTF-8");
 			Multipart mp = new MimeMultipart();

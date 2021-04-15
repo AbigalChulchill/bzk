@@ -415,3 +415,85 @@ export class WaitAction extends Action {
   public step = 0;
 
 }
+
+
+@PropClazz({
+  title: 'MailAction',
+  exView: 'ActionComponent'
+})
+@OTypeClass({
+  clazz: 'net.bzk.flow.model.Action$MailAction'
+})
+export class MailAction extends Action {
+  @PropInfo({
+    title: 'url',
+    type: PropType.Text,
+    refInfo: {
+      clazz: String,
+      newObj: 'smtp.gmail.com'
+    }
+  })
+  public smtpHost = 'smtp.gmail.com';
+
+  @PropInfo({
+    title: 'smtpPort',
+    type: PropType.Number,
+    refInfo: {
+      clazz: Number,
+      newObj: 465
+    }
+  })
+  public smtpPort = '465';
+
+  @PropInfo({
+    title: 'username',
+    type: PropType.Text,
+    refInfo: {
+      clazz: String,
+      newObj: ''
+    }
+  })
+  public username = '';
+
+  @PropInfo({
+    title: 'password',
+    type: PropType.Text,
+    refInfo: {
+      clazz: String,
+      newObj: ''
+    }
+  })
+  public password = '';
+
+  @PropInfo({
+    title: 'toMail',
+    type: PropType.Text,
+    refInfo: {
+      clazz: String,
+      newObj: ''
+    }
+  })
+  public toMail = '';
+
+  @PropInfo({
+    title: 'subject',
+    type: PropType.Text,
+    refInfo: {
+      clazz: String,
+      newObj: ''
+    }
+  })
+  public subject = '';
+
+  @PropInfo({
+    title: 'body',
+    type: PropType.MultipleText,
+    refInfo: {
+      clazz: String,
+      newObj: ''
+    }
+  })
+  public body = '';
+
+}
+
