@@ -25,7 +25,7 @@ dependencies {
 	implementation 'org.mariuszgromada.math:MathParser.org-mXparser:4.4.2'
 	implementation 'com.jayway.jsonpath:json-path:2.5.0'
 	
-	
+	implementation 'javax.mail:mail:1.4'	
 	
 	compileOnly    'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
