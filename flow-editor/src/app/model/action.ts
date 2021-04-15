@@ -430,10 +430,10 @@ export class MailAction extends Action {
     type: PropType.Text,
     refInfo: {
       clazz: String,
-      newObj: 'smtp.gmail.com'
+      newObj: '"smtp.gmail.com"'
     }
   })
-  public smtpHost = 'smtp.gmail.com';
+  public smtpHost = '"smtp.gmail.com"';
 
   @PropInfo({
     title: 'smtpPort',

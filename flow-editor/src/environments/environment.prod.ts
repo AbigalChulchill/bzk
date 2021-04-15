@@ -1,11 +1,11 @@
 export const environment = {
   production: true,
-  apiHost: 'http://api.domiearth.com:9202/',
+  apiHost: 'http://52.187.48.147:9202/',
   githubHost: 'https://api.github.com/',
-  gistHost: 'http://p2ccloud.domiearth.com:9203/',
+  gistHost: 'http://52.187.48.147:9203/',
   console: {
-    host: 'http://api.domiearth.com:9202/',
-    hostws: 'ws://p2ccloud.domiearth.com:9202/'
+    host: 'http://52.187.48.147:9202/',
+    hostws: 'ws://52.187.48.147:9202/'
 
   }
 };
