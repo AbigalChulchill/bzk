@@ -25,6 +25,8 @@ dependencies {
 	implementation 'org.mariuszgromada.math:MathParser.org-mXparser:4.4.2'
 	implementation 'com.jayway.jsonpath:json-path:2.5.0'
 	
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb:2.4.5'
+	
 	implementation 'javax.mail:mail:1.4'	
 	
 	compileOnly    'org.projectlombok:lombok'

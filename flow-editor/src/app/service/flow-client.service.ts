@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { ActionDebugData } from '../dto/debug-dtos';
-import { FlowPoolInfo } from '../dto/flow-pool-info';
+import { FlowPoolInfo, RunInfo } from '../dto/flow-pool-info';
 import { Flow } from '../model/flow';
 import { BzkUtils } from '../utils/bzk-utils';
 
@@ -35,12 +35,12 @@ export class FlowClientService {
     return this.httpClient.post<void>(environment.apiHost + FlowClientService.URL_PREFIX + fuid+'/register',null);
   }
 
-  public runManual(fuid: string): Observable<void> {
-    return this.httpClient.post<void>(environment.apiHost + FlowClientService.URL_PREFIX + `${fuid}/run?type=manual`,null);
+  public runManual(fuid: string): Observable<RunInfo> {
+    return this.httpClient.post<RunInfo>(environment.apiHost + FlowClientService.URL_PREFIX + `${fuid}/run?type=manual`,null);
   }
 
-  public testFlow(eUid: string): Observable<void> {
-    return this.httpClient.post<void>(environment.apiHost + FlowClientService.URL_PREFIX + `${eUid}/test`,null);
+  public testFlow(eUid: string): Observable<RunInfo> {
+    return this.httpClient.post<RunInfo>(environment.apiHost + FlowClientService.URL_PREFIX + `${eUid}/test`,null);
   }
 
   public listFlowPoolInfo(): Observable<Array<FlowPoolInfo>> {

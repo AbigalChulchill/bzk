@@ -52,11 +52,7 @@ public class FlowController {
 		fs.forEach(runFlowService::register);
 	}
 	
-	@ResponseStatus(HttpStatus.OK)
-	@RequestMapping(value = "{uid}/run", method = RequestMethod.POST, params = "type=manual")
-	public void runManual(@PathVariable String uid ) {
-		runFlowService.runManual(uid);
-	}
+
 	
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(value = "{uid}/register", method = RequestMethod.POST)
@@ -103,6 +99,12 @@ public class FlowController {
 		var sfs = jobsService.listDepends(uid);
 		List< Flow> fs = sfs.stream().map(sf-> sf.getModel()).collect(Collectors.toList());
 		return runFlowService.test(uid, fs);
+	}
+	
+	@ResponseStatus(HttpStatus.OK)
+	@RequestMapping(value = "{uid}/run", method = RequestMethod.POST, params = "type=manual")
+	public RunInfo runManual(@PathVariable String uid ) {
+		return runFlowService.runManual(uid).getInfo();
 	}
 
 }

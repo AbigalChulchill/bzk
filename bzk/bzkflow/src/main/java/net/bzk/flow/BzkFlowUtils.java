@@ -1,16 +1,18 @@
 package net.bzk.flow;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.text.StringEscapeUtils;
+import org.bson.BsonDocument;
+import org.graalvm.polyglot.Value;
 import org.reflections.Reflections;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.databind.util.StdDateFormat;
 
 import net.bzk.flow.model.parse.OTypeDeserializer;
 import net.bzk.flow.run.service.FastVarQueryer;
@@ -65,6 +67,32 @@ public class BzkFlowUtils {
 		ans.registerModule(module);
 		CommUtils.pl("Init getFlowJsonMapper " + ans);
 		return ans;
+	}
+
+	public static Object fixPolyglotObj(Value function) {
+		Object ans = function.as(Object.class);
+		if (ans instanceof Map) {
+			if (((Map) ans).size() > 0) {
+				return toByBson(ans.toString());
+			}
+			if (function.getArraySize() > 0) {
+				List<?> inL = function.as(List.class);
+				String ss = inL.toString();
+				List<Object> outList =  inL.stream().map(e-> toByBson(e.toString())).collect(Collectors.toList());
+				return outList;
+			}
+		}
+		return JsonUtils.toByJson(ans, Object.class);
+	}
+	
+	
+	
+	
+
+	public static Object toByBson(String bs) {
+		BsonDocument expected = BsonDocument.parse(bs);
+		String json = expected.toJson();
+		return JsonUtils.loadByJson(json, Object.class);
 	}
 
 }

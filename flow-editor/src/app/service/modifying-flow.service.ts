@@ -16,6 +16,8 @@ import { PropUtils } from '../utils/prop-utils';
 import { StringUtils } from '../utils/string-utils';
 import { Gist } from '../dto/gist';
 import { Router } from '@angular/router';
+import { DialogService } from '../uikit/dialog.service';
+import { ListLogType } from './run-log-client.service';
 
 @Injectable({
   providedIn: 'root'
@@ -29,7 +31,8 @@ export class ModifyingFlowService {
     private router: Router,
     private flowClient:FlowClientService,
     private jobClient: JobClientService,
-    private loading: LoadingService
+    private loading: LoadingService,
+    private dialogService: DialogService
   ) {
 
   }
@@ -108,9 +111,11 @@ export class ModifyingFlowService {
     await this.flowClient.registerFlowByUid(this.modelobs.getModel().uid).toPromise();
   }
 
-  public async testRemote(): Promise<void> {
+  public async testFlow(): Promise<void> {
     if (!this.modelobs.getModel()) { throw new Error('null the model'); }
-    await this.flowClient.testFlow(this.modelobs.getModel().uid).toPromise();
+    await this.updateRemote()
+    const resp= await this.flowClient.testFlow(this.modelobs.getModel().uid).toPromise();
+    this.dialogService.openRunLoag(resp.uid, ListLogType.runflow);
   }
 
 

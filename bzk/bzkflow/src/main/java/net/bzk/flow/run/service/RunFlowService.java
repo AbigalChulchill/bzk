@@ -52,9 +52,9 @@ public class RunFlowService {
 		return fr.getInfo();
 	}
 	
-	public void runManual( String uid ) {
+	public FlowRuner runManual( String uid ) {
 		var p= runPoolDao.getPool(uid);
-		p.createAndStart();
+		return p.createAndStart();
 	}
 
 	public List<FlowPoolInfo> listFlowPoolInfo() {

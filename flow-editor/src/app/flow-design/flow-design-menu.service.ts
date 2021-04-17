@@ -54,7 +54,7 @@ export class FlowDesignMenuService {
   }
 
   public testRun():void{
-    this.modifyingFlow.testRemote();
+    this.modifyingFlow.testFlow();
     this.toast.twinkle({
       title: 'RUN!',
       msg: 'test submmited'

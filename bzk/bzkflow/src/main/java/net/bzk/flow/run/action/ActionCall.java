@@ -1,5 +1,6 @@
 package net.bzk.flow.run.action;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -7,9 +8,9 @@ import java.util.concurrent.Callable;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.bson.BsonDocument;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Value;
-import org.slf4j.Logger;
 
 import lombok.Data;
 import lombok.Getter;
@@ -75,14 +76,14 @@ public abstract class ActionCall<T extends Action> implements Callable<VarValSet
 		}
 	}
 
-	public Object parseByStringCode( String polyglot, String ifCode) {
-		logUtils.logActionCall( getUids(), ifCode);
+	public Object parseByStringCode(String polyglot, String ifCode) {
+		logUtils.logActionCall(getUids(), ifCode);
 		Object o = JsonUtils.stringToValue(ifCode);
-		logUtils.logActionCall( getUids(), o.getClass() + " " + o);
+		logUtils.logActionCall(getUids(), o.getClass() + " " + o);
 		if (o instanceof String) {
 			try {
 				Object ans = callPolyglot(varQueryer, polyglot, o.toString());
-				logUtils.logActionCall( getUids(), "callPolyglot " + ans.getClass() + " " + ans);
+				logUtils.logActionCall(getUids(), "callPolyglot " + ans.getClass() + " " + ans);
 				return ans;
 			} catch (Exception e) {
 				logUtils.logActionCallWarn(this, e.getMessage());
@@ -104,16 +105,14 @@ public abstract class ActionCall<T extends Action> implements Callable<VarValSet
 		return JsonUtils.toByJson(ans, Object.class);
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		try (Context context = Context.newBuilder().allowAllAccess(true).build()) {
 			Value function = context.eval("js", "const ans ={a:'b',c:[1,{a:'d'},3]}; ans;");
-			Object ans = function.as(Object.class);
-			System.out.println(ans.getClass() + " " + ans.toString());
-			String js = JsonUtils.toJson(ans);
-			System.out.println(js);
+			Object ov= BzkFlowUtils.fixPolyglotObj(function);
+			System.out.println(ov);
 			function = context.eval("js", "const g =[1,{a:'d',c:[1,2,3]},3]; g;");
-			List l = function.as(List.class);
-			System.out.println(l.getClass() + " " + l.toString());
+			Object ov2= BzkFlowUtils.fixPolyglotObj(function);
+			System.out.println(ov2);
 		}
 	}
 
