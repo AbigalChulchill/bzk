@@ -79,6 +79,13 @@ public class JsonUtils {
 		}
 
 	}
+	
+	public static String valueToString(Object o) {
+		if(o instanceof Number || o instanceof String || o instanceof Boolean ) {
+			return o+"";
+		}
+		return toJson(o);
+	}
 
 	public static Object stringToValue(String v) {
 		DataType d = checkDataType(v);

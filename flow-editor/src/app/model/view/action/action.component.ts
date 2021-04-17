@@ -13,6 +13,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ClazzExComponent } from 'src/app/utils/prop-utils';
 import { PropertiesComponent } from 'src/app/flow-design/properties/properties.component';
 import { BaseVar } from 'src/app/infrastructure/meta';
+import { JobClientService } from 'src/app/service/job-client.service';
 
 
 
@@ -32,7 +33,8 @@ export class ActionComponent implements OnInit, ClazzExComponent {
     private dialogService: DialogService,
     private flowClient: FlowClientService,
     private toast: ToastService,
-    private varCfg: VarCfgService
+    private varCfg: VarCfgService,
+    private jobClient: JobClientService,
   ) { }
 
   init(d: any, mi: any): void {
@@ -49,6 +51,7 @@ export class ActionComponent implements OnInit, ClazzExComponent {
       msg: '已送出',
       title: ''
     });
+    await this.jobClient.save(ModelUpdateAdapter.getInstance().getFlow()).toPromise();
     const rb = new ActionDebugData();
     rb.boxVar = this.varCfg.get(this.boxVarKey).content;
     if (!rb.boxVar) rb.boxVar = new BaseVar();

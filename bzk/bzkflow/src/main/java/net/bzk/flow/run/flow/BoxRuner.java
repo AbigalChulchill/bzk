@@ -141,7 +141,7 @@ public class BoxRuner {
 		if (vvs != null) {
 			runVarService.putVarVals(genUids(), vvs);
 
-			logUtils.log(genUids(), RunState.ActionResult, l -> l.setVarVals(VarValList.gen(vvs.list())));
+			
 
 		}
 
@@ -208,6 +208,7 @@ public class BoxRuner {
 			naer.initBase(genUids(), a);
 			Callable<VarValSet> cb = naer;
 			VarValSet ans = cb.call();
+			logUtils.log(naer.getUids(), RunState.ActionResult, l -> l.setVarVals(VarValList.gen(ans.list())));
 			return ans;
 		} catch (Exception e) {
 			logUtils.log(genUids(), RunState.ActionCallFail,l->{

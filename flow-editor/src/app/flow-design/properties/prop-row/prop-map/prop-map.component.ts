@@ -23,10 +23,10 @@ export class PropMapComponent implements OnInit {
 
   public createItem(): void {
     this.toCreate = false;
-    const os: object = CommUtils.clone( this.prop.val);
-    os[this.createingKey] = this.prop.info.child.newObj;
-    this.prop.val = os;
-    this.pmap = null;
+    // const os: object = ;
+    this.prop.val[this.createingKey] = CommUtils.clone(this.prop.info.child.newObj);
+    this.prop.val = this.prop.val
+    this.genMap();
   }
 
 
@@ -55,6 +55,9 @@ export class PropMapComponent implements OnInit {
     const ans = new Prop();
     ans.field = key;
     ans.object = obj;
+    ans.onChange = ()=>{
+      this.prop.val = this.prop.val
+    };
     const infoA: PropInfoArgs = this.prop.info.child;
     ans.info = CommUtils.clone( infoA);
     ans.info.title = key;
@@ -64,9 +67,8 @@ export class PropMapComponent implements OnInit {
 
   public removeItem(key: string): void {
     this.pmap = null;
-    const os: object = CommUtils.clone( this.prop.val);
-    delete os[key];
-    this.prop.val = os;
+    delete this.prop.val[key];
+    this.prop.val = this.prop.val;
   }
 
 

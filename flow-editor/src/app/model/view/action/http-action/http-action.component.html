@@ -1,5 +1,5 @@
 <div class="mt-2 mb-2">
-  <div class="btn-group pb-2" role="group" aria-label="Basic example">
+  <div class="btn-group pb-2" role="group" >
     <button type="button" (click)="changeHeaderType(HeaderSetType.headersFlat)"
      [ngClass]="{'btn-primary': curHeaderType===HeaderSetType.headersFlat, 'btn-secondary': curHeaderType!==HeaderSetType.headersFlat}" class="btn ">Header List</button>
     <button type="button" (click)="changeHeaderType(HeaderSetType.headRef)"
@@ -9,6 +9,8 @@
   <app-prop-row   [prop]="headerProp">  </app-prop-row>
 
 </div>
+
+<hr>fffff
 
 <div class="mt-2 mb-2">
   <mat-accordion>
@@ -41,7 +43,7 @@
           <button type="button" (click)="onInternalVars()" class="btn btn-secondary"><i
               class="mr-2 fas fa-spell-check"></i>Var</button>
           <button type="button" (click)="testMe()" class="btn btn-secondary"><i class="mr-2 fas fa-play"></i>Run</button>
-          <button type="button" class="btn btn-secondary"><i class="mr-2 fas fa-glasses"></i>Console</button>
+          <button type="button" class="btn btn-secondary"><i class="mr-2 fas fa-glasses"></i>Cocccnsole</button>
         </div>
 
       </div>

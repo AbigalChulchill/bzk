@@ -54,21 +54,27 @@ public class HttpActionCall extends ActionCall<HttpAction> {
 
 	@Override
 	public VarValSet call() throws Exception {
-		Object body = getModel().body();
-		Headers hs = getModel().getHeaders();
-		String url = getModel().url();
-		HttpMethod mt = getModel().method();
-		var logm = new HashMap<String,Object>();
-		logm.put("body", body);
-		logm.put("headers", hs);
-		logm.put("url", url);
-		logm.put("method", mt);
-		logUtils.logActionCall( getUids(), JsonUtils.toJson(logm));
-		HttpEntity<Object> requestEntity = new HttpEntity<Object>(body, hs);
-		ResponseEntity<String> o = restTemplate.exchange(url, mt, requestEntity,
-				String.class, getModel().getUriVariables());
-		Object rob =  JsonUtils.stringToValue(o.getBody());
-		return VarValSet.genSingle(getModel().getKey().getKey(), getModel().getKey().getLv(), rob);
+		try {
+			Object body = getModel().body();
+			Headers hs = getModel().getHeaders();
+			String url = getModel().url();
+			HttpMethod mt = getModel().method();
+			var logm = new HashMap<String,Object>();
+			logm.put("body", body);
+			logm.put("headers", hs);
+			logm.put("url", url);
+			logm.put("method", mt);
+			logUtils.logActionCall( getUids(), JsonUtils.toJson(logm));
+			HttpEntity<Object> requestEntity = new HttpEntity<Object>(body, hs);
+			ResponseEntity<String> o = restTemplate.exchange(url, mt, requestEntity,
+					String.class, getModel().getUriVariables());
+			Object rob =  JsonUtils.stringToValue(o.getBody());
+			return VarValSet.genSingle(getModel().getKey().getKey(), getModel().getKey().getLv(), rob);
+		}catch (Exception e) {
+			logUtils.logActionCallWarn(this, e.toString());
+			throw e;
+		}
+
 	}
 
 }

@@ -43,7 +43,7 @@ public class BzkFlowUtils {
 			Optional<Object> fo = varQueryer.f(k);
 //			if (!fo.isPresent())
 //				continue;
-			String jo = JsonUtils.toJson(fo.orElse(null));
+			String jo = JsonUtils.valueToString(fo.orElse(null));
 			sp.place(k, StringEscapeUtils.escapeJson(jo));
 		}
 		String rJson = sp.replace();

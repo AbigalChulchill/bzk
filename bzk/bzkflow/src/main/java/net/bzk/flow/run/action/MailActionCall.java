@@ -76,7 +76,9 @@ public class MailActionCall extends ActionCall<MailAction> {
 
 			logUtils.logActionCall(getUids(), "Send Mail subject:"+sub+" content:"+ text);
 		} catch (MessagingException e) {
+			logUtils.logActionCallWarn(this, e.getMessage());
 			throw new RuntimeException(e);
+			
 		}
 	}	
 

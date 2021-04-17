@@ -71,6 +71,7 @@ export class Prop {
   public field: any;
   public object: any;
   public refVal: PropRefVal;
+  public onChange = ()=>{};
 
 
   public get title(): string { return this.info.title; }
@@ -89,6 +90,7 @@ export class Prop {
   public set val(a: any) {
     const oldv = this.object[this.field];
     this.setToVal(a);
+    this.onChange();
     if (this.info.updatePredicate && !this.info.updatePredicate(this, oldv)) {
       this.setToVal(oldv);
     }
