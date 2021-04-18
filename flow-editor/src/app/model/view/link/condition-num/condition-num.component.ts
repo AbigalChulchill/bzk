@@ -47,11 +47,7 @@ export class ConditionNumComponent implements OnInit, ClazzExComponent {
     return {
       title: null,
       hide:true,
-      type: PropType.Number,
-      refInfo: {
-        clazz: Number,
-        newObj: 0
-      }
+      type: PropType.MultipleText,
     };
   }
 

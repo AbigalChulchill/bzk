@@ -1,4 +1,3 @@
-import { PropRefVal } from './prop-ref-val';
 import { CommUtils } from './comm-utils';
 import { StringUtils } from './string-utils';
 import { ClassType } from 'class-transformer/ClassTransformer';
@@ -66,7 +65,6 @@ export class Prop {
   public info: PropInfoArgs;
   public field: any;
   public object: any;
-  public refVal: PropRefVal;
   public onChange = ()=>{};
 
 
@@ -79,7 +77,6 @@ export class Prop {
   }
 
   public get val(): any {
-    if (this.refVal) return this.refVal.val;
     return this.object[this.field];
   }
 
@@ -93,10 +90,6 @@ export class Prop {
   }
 
   private setToVal(v: any): void {
-    if (this.refVal) {
-      this.refVal.val = v;
-      return;
-    }
     this.setOrgVal(v);
   }
 

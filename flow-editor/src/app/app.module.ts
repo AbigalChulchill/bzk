@@ -41,7 +41,6 @@ import { PropListComponent } from './flow-design/properties/prop-row/prop-list/p
 import { PropMapComponent } from './flow-design/properties/prop-row/prop-map/prop-map.component';
 import { HttpActionComponent } from './model/view/action/http-action/http-action.component';
 import { MatDialogModule } from '@angular/material/dialog';
-import { PropRefComponent } from './flow-design/properties/prop-row/prop-ref/prop-ref.component';
 import { RefTextComponent } from './uikit/ref-text/ref-text.component';
 import { PolyglotActionComponent } from './model/view/action/polyglot-action/polyglot-action.component';
 import { KVPairComponent } from './uikit/kvpair/kvpair.component';
@@ -95,7 +94,6 @@ export function createTranslateLoader(http: HttpClient): TranslateHttpLoader {
     PropListComponent,
     PropMapComponent,
     HttpActionComponent,
-    PropRefComponent,
     RefTextComponent,
     PolyglotActionComponent,
     KVPairComponent,

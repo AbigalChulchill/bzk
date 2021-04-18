@@ -47,11 +47,9 @@ export class ConditionTxtComponent implements OnInit, ClazzExComponent {
     return {
       title: t,
       hide:true,
-      type: PropType.Text,
-      refInfo: {
-        clazz: String,
-        newObj: ''
-      }
+      type: PropType.MultipleText,
+      // TODO condition scriptble
+
     };
   }
 
