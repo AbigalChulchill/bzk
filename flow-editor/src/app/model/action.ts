@@ -144,20 +144,14 @@ export class MXparserAction extends Action {
 export class HttpAction extends Action {
   @PropInfo({
     title: 'url',
-    type: PropType.Text,
-    refInfo: {
-      clazz: String,
-      newObj: ''
-    }
+    type: PropType.MultipleText,
   })
   public url = '';
   @PropInfo({
     title: 'method',
-    type: PropType.Enum,
-    refInfo: {
-      clazz: HttpMethod,
-      newObj: HttpMethod.GET
-    }
+    type : PropType.MultipleText
+    // TODO type: PropType.Enum,
+
   })
   @PropEnums(Object.keys(HttpMethod))
   public method = '"GET"';
@@ -171,13 +165,8 @@ export class HttpAction extends Action {
 
   @PropInfo({
     title: 'body',
-    type: PropType.Custom,
-    customView: 'JsonEditorComponent',
-    customViewFolded: true,
-    refInfo: {
-      clazz: Object,
-      newObj: {}
-    }
+    type: PropType.MultipleText,
+
   })
   public body = '{}';
 
@@ -194,16 +183,9 @@ export class HttpAction extends Action {
   public headers = {};
   @PropInfo({
     title: 'headersFlat',
-    type: PropType.Map,
-    refInfo: {
-      clazz: Object,
-      newObj: {}
-    },
-    child: {
-      title: 'head',
-      type: PropType.Text,
-      newObj: 'TODO'
-    }
+    type: PropType.MultipleText,
+    // TODO CAN Change TEXT
+
   })
   public headersFlat = '';
   @PropInfo({
@@ -427,71 +409,46 @@ export class WaitAction extends Action {
 export class MailAction extends Action {
   @PropInfo({
     title: 'url',
-    type: PropType.Text,
-    refInfo: {
-      clazz: String,
-      newObj: '"smtp.gmail.com"'
-    }
+    type: PropType.MultipleText,
+
   })
   public smtpHost = '"smtp.gmail.com"';
 
   @PropInfo({
     title: 'smtpPort',
-    type: PropType.Number,
-    refInfo: {
-      clazz: Number,
-      newObj: 465
-    }
+    type: PropType.MultipleText,
   })
   public smtpPort = '465';
 
   @PropInfo({
     title: 'username',
-    type: PropType.Text,
-    refInfo: {
-      clazz: String,
-      newObj: ''
-    }
+    type: PropType.MultipleText,
   })
   public username = '';
 
   @PropInfo({
     title: 'password',
-    type: PropType.Text,
-    refInfo: {
-      clazz: String,
-      newObj: ''
-    }
+    type: PropType.MultipleText,
   })
   public password = '';
 
   @PropInfo({
     title: 'toMail',
-    type: PropType.Text,
-    refInfo: {
-      clazz: String,
-      newObj: ''
-    }
+    type: PropType.MultipleText,
+
   })
   public toMail = '';
 
   @PropInfo({
     title: 'subject',
-    type: PropType.Text,
-    refInfo: {
-      clazz: String,
-      newObj: ''
-    }
+    type: PropType.MultipleText,
   })
   public subject = '';
 
   @PropInfo({
     title: 'body',
     type: PropType.MultipleText,
-    refInfo: {
-      clazz: String,
-      newObj: ''
-    }
+
   })
   public body = '';
 

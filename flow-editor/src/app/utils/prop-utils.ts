@@ -50,10 +50,6 @@ export type UpdatePredicate = (p: Prop, oldV: any) => boolean;
 export class PropInfoArgs {
   title?: string;
   type: PropType;
-  refInfo?: {
-    clazz?: any,
-    newObj: any
-  };
   hide?: boolean;
   child?: PropInfoArgs;
   newObj?: any;
@@ -207,9 +203,6 @@ export class PropUtils {
     ans.info = p;
     ans.field = key;
     ans.object = tar;
-    if (ans.info.refInfo) {
-      ans.refVal = new PropRefVal(ans, tar[key]);
-    }
     return ans;
   }
 

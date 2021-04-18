@@ -31,18 +31,18 @@ public class HttpAction extends Action {
 	
 	@JsonIgnore
 	public String url() {
-		return JsonUtils.loadByJson(url, String.class);
+		return (String) JsonUtils.stringToValue(url);
 	}
 	
 
 	@JsonIgnore
 	public Object body() {
-		return JsonUtils.loadByJson(body, Object.class);
+		return JsonUtils.stringToValue(body);
 	}
 	
 	@JsonIgnore
 	public HttpMethod method() {
-		return JsonUtils.loadByJson(method, HttpMethod.class);
+		return HttpMethod.valueOf( (String)JsonUtils.stringToValue(method));
 	}
 	
 	@JsonIgnore
