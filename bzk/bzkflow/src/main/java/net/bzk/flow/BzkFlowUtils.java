@@ -4,9 +4,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.commons.text.StringEscapeUtils;
+import org.bson.BsonArray;
 import org.bson.BsonDocument;
 import org.graalvm.polyglot.Value;
 import org.reflections.Reflections;
@@ -76,23 +78,29 @@ public class BzkFlowUtils {
 				return toByBson(ans.toString());
 			}
 			if (function.getArraySize() > 0) {
-				List<?> inL = function.as(List.class);
-				String ss = inL.toString();
-				List<Object> outList =  inL.stream().map(e-> toByBson(e.toString())).collect(Collectors.toList());
-				return outList;
+				String replaceSts = removeListPrefix(ans.toString(), function.getArraySize());
+				var m= toByBson(replaceSts);
+				return m.get("d");
 			}
 		}
 		return JsonUtils.toByJson(ans, Object.class);
 	}
-	
-	
-	
-	
 
-	public static Object toByBson(String bs) {
+	private static String removeListPrefix(String lstr, long arraySize) {
+		String startKs = "(" + arraySize + ")" ;
+		if (!lstr.startsWith(startKs))
+			throw new BzkRuntimeException("not startKs:" + startKs + " in "  + lstr);
+		startKs =Pattern.quote(startKs);
+		String rmeds = lstr.replaceFirst(startKs, "");
+		return String.format("{d:%s}", rmeds);
+	}
+
+	public static Map toByBson(String bs) {
 		BsonDocument expected = BsonDocument.parse(bs);
 		String json = expected.toJson();
-		return JsonUtils.loadByJson(json, Object.class);
+		return JsonUtils.loadByJson(json, Map.class);
 	}
+	
+
 
 }
