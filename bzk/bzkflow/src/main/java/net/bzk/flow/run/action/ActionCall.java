@@ -1,15 +1,11 @@
 package net.bzk.flow.run.action;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.bson.BsonDocument;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Value;
 
@@ -17,15 +13,14 @@ import lombok.Data;
 import lombok.Getter;
 import net.bzk.flow.BzkFlowUtils;
 import net.bzk.flow.Constant;
+import net.bzk.flow.PolyglotEngine;
 import net.bzk.flow.model.Action;
-import net.bzk.flow.model.Action.Polyglot;
 import net.bzk.flow.model.var.VarLv;
 import net.bzk.flow.model.var.VarMap;
 import net.bzk.flow.model.var.VarValSet;
 import net.bzk.flow.run.service.FastVarQueryer;
 import net.bzk.flow.run.service.RunLogService;
 import net.bzk.flow.run.service.RunVarService;
-import net.bzk.infrastructure.JsonUtils;
 import net.bzk.infrastructure.ex.BzkRuntimeException;
 
 public abstract class ActionCall<T extends Action> implements Callable<VarValSet> {
@@ -41,6 +36,8 @@ public abstract class ActionCall<T extends Action> implements Callable<VarValSet
 	protected RunVarService varService;
 	@Inject
 	protected FastVarQueryer varQueryer;
+	@Getter
+	private PolyglotEngine polyglotEngine;
 
 	public ActionCall(Class<T> c) {
 		modelClazz = c;
@@ -52,6 +49,7 @@ public abstract class ActionCall<T extends Action> implements Callable<VarValSet
 		uids.actionUid = a.getUid();
 		uids.runActionUid = RandomStringUtils.randomAlphanumeric(Constant.RUN_UID_SIZE);
 		varQueryer.init(_uids);
+		polyglotEngine = PolyglotEngine.builder().logUtils(logUtils).varQueryer(varQueryer).build();
 		model = replaceModel(a);
 		return this;
 	}
@@ -69,52 +67,13 @@ public abstract class ActionCall<T extends Action> implements Callable<VarValSet
 		return ro;
 	}
 
-	public static Object callPolyglot(FastVarQueryer varQueryer, String polyglot, String code) {
-		try (Context context = Context.newBuilder().allowAllAccess(true).build()) {
-			context.getBindings(polyglot).putMember("bzk", varQueryer);
-			Value function = context.eval(polyglot, code);
-			Object ans = function.as(Object.class);
-			return fixListObj(ans, function);
-		}
-	}
 
-	public <R> R parseScriptbleText(String plain) {
-		if (plain.startsWith(Constant.SCRIPT_PREFIX)) {
-			plain = plain.replaceFirst(Constant.SCRIPT_PREFIX, "");
-			return (R) parseByStringCode(Polyglot.js.toString(), plain);
-		}
-		return (R) JsonUtils.stringToValue(plain);
 
-	}
 
-	public Object parseByStringCode(String polyglot, String ifCode) {
-		logUtils.logActionCall(getUids(), ifCode);
-		Object o = JsonUtils.stringToValue(ifCode);
-		logUtils.logActionCall(getUids(), o.getClass() + " " + o);
-		if (o instanceof String) {
-			try {
-				Object ans = callPolyglot(varQueryer, polyglot, o.toString());
-				logUtils.logActionCall(getUids(), "callPolyglot " + ans.getClass() + " " + ans);
-				return ans;
-			} catch (Exception e) {
-				logUtils.logActionCallWarn(this, e.getMessage());
-			}
-		}
-		return o;
-	}
 
-	public static Object fixListObj(Object ans, Value function) {
-		if (ans instanceof Map) {
-			if (((Map) ans).size() > 0) {
-				return JsonUtils.toByJson(ans, Object.class);
-			}
-			if (function.getArraySize() > 0) {
-				ans = function.as(List.class);
-				return JsonUtils.toByJson(ans, Object.class);
-			}
-		}
-		return JsonUtils.toByJson(ans, Object.class);
-	}
+
+
+
 
 	public static void main(String[] args) throws IOException {
 		try (Context context = Context.newBuilder().allowAllAccess(true).build()) {

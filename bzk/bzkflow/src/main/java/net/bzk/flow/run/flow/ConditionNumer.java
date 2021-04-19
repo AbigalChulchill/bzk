@@ -17,8 +17,8 @@ public class ConditionNumer extends Conditioner<ConditionNum> {
 
 	@Override
 	public boolean checkSelf() {
-		double rd = getModel().right();
-		double ld = getModel().left();
+		double rd =  getPolyglotEngine().parseScriptbleText(getModel().getRight(),Double.class) ;
+		double ld = getPolyglotEngine().parseScriptbleText(getModel().getLeft(),Double.class) ;
 		switch (getModel().getType()) {
 		case equal:
 			return ld == rd;

@@ -23,7 +23,7 @@ public class ConvertActionCall extends ActionCall<ConvertAction> {
 	@Override
 	public VarValSet call() throws Exception {
 		String code = getModel().getCode();
-		Object o = parseByStringCode(getModel().getPolyglot().toString(),code);
+		Object o = getPolyglotEngine().parseByStringCode(getModel().getPolyglot().toString(),code);
 		logUtils.logActionCall( getUids(), o.getClass() +":"+ o);
 		Object oo = convert(o);
 		var logm = new HashMap<String,Object>();

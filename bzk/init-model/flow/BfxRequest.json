@@ -1,6 +1,6 @@
 {
     "clazz": "net.bzk.flow.model.Flow",
-    "uid": "8Gim2N7k8gVb",
+    "uid": "gBDvmpqUFgQD",
     "logEncryptKey": "1234567890123456",
     "vars": {
         "apiPath": "v2/auth/w/funding/offer/submit",
@@ -21,12 +21,12 @@
         "keepAliveTime": 500,
         "aliveUnit": "MINUTES"
     },
-    "name": "BfxFundRow",
+    "name": "BfxRequest",
     "boxs": [
         {
             "clazz": "net.bzk.flow.model.Box",
             "uid": "VzPzT54lux1a8rsJ",
-            "name": "CheckCanFund",
+            "name": "BfxRequest",
             "actions": [
                 {
                     "clazz": "net.bzk.flow.model.Action$NodejsAction",
@@ -44,26 +44,26 @@
                 {
                     "clazz": "net.bzk.flow.model.HttpAction",
                     "uid": "Za7CyGvDT3n1",
-                    "name": "POSTFund",
+                    "name": "HttpReqrest",
                     "tryErrorble": false,
                     "url": "${bfxRestUrl}",
-                    "method": "\"POST\"",
+                    "method": "${apiMethod}",
                     "uriVariables": {},
                     "body": "${apiBody}",
                     "headers": {},
                     "headersFlat": "${bfxSignHeader}",
                     "key": {
                         "lv": "not_specify",
-                        "key": "ANS"
+                        "key": "HttpResult"
                     }
                 },
                 {
                     "clazz": "net.bzk.flow.model.HttpAction",
                     "uid": "wqA2RX22Q23w",
-                    "name": "PostLog",
+                    "name": "Log",
                     "tryErrorble": false,
-                    "url": "\"https://a4b961070fdd1a7c70cbcf986af43462.m.pipedream.net\"",
-                    "method": "\"POST\"",
+                    "url": "https://a4b961070fdd1a7c70cbcf986af43462.m.pipedream.net",
+                    "method": "${apiMethod}",
                     "uriVariables": {},
                     "body": "${apiBody}",
                     "headers": {},
@@ -87,11 +87,7 @@
                 "endResultKeys": [
                     {
                         "lv": "not_specify",
-                        "key": "bfxRestUrl"
-                    },
-                    {
-                        "lv": "not_specify",
-                        "key": "bfxSignHeader"
+                        "key": "HttpResult"
                     }
                 ]
             },
@@ -102,9 +98,12 @@
         "clazz": "net.bzk.flow.model.Entry$PluginEntry",
         "requiredKeys": [
             "apiPath",
-            "apiBody"
+            "apiBody",
+            "apiMethod"
         ],
-        "outputKeys": [],
+        "outputKeys": [
+            "HttpResult"
+        ],
         "boxUid": "VzPzT54lux1a8rsJ"
     }
 }

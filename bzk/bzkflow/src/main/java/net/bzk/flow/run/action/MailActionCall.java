@@ -35,7 +35,9 @@ public class MailActionCall extends ActionCall<MailAction> {
 
 	@Override
 	public VarValSet call() throws Exception {
-		sendMail(getModel().getToMail(), getModel().subject(), getModel().body());
+		String subject = getPolyglotEngine().parseScriptbleText(getModel().getSubject(),String.class);
+		String body = getPolyglotEngine().parseScriptbleText(getModel().getBody(),String.class);
+		sendMail(getModel().getToMail(), subject, body);
 		return new VarValSet();
 	}
 	
@@ -43,24 +45,29 @@ public class MailActionCall extends ActionCall<MailAction> {
 	public void sendMail(String tos, String sub, String text) {
 
 		Properties props = new Properties();
-		props.put("mail.smtp.host", getModel().smtpHost());
-		props.put("mail.smtp.socketFactory.port", getModel().smtpPort()+"");
+		String host = getPolyglotEngine().parseScriptbleText(getModel().getSmtpHost(),String.class);
+		int port = getPolyglotEngine().parseScriptbleText(getModel().getSmtpPort(),Integer.class);
+		props.put("mail.smtp.host", host);
+		props.put("mail.smtp.socketFactory.port", port+"");
 		props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
 		props.put("mail.smtp.auth", "true");
-		props.put("mail.smtp.port", getModel().smtpPort()+"");
+		props.put("mail.smtp.port", port+"");
 		props.put("mail.smtp.ssl.enable", "true");
 		props.put("mail.debug", "true");
 		props.put("mail.mime.charset", "UTF-8");
+		
+		String username = getPolyglotEngine().parseScriptbleText(getModel().getUsername(),String.class);
+		String password = getPolyglotEngine().parseScriptbleText(getModel().getPassword(),String.class);
 
 		Session session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(getModel().username(), getModel().password());
+				return new PasswordAuthentication(username, password);
 			}
 		});
 
 		try {
 			MimeMessage message = new MimeMessage(session);
-			message.setFrom(new InternetAddress(getModel().username()));
+			message.setFrom(new InternetAddress(username));
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(tos));
 			message.setSubject(sub, "UTF-8");
 			Multipart mp = new MimeMultipart();
@@ -76,7 +83,7 @@ public class MailActionCall extends ActionCall<MailAction> {
 
 			logUtils.logActionCall(getUids(), "Send Mail subject:"+sub+" content:"+ text);
 		} catch (MessagingException e) {
-			logUtils.logActionCallWarn(this, e.getMessage());
+			logUtils.logActionCallWarn(getUids(), e.getMessage());
 			throw new RuntimeException(e);
 			
 		}

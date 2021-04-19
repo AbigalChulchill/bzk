@@ -36,15 +36,7 @@ public class Condition implements OType {
 		private String right;
 		private NumCheckType type;
 		
-		@JsonIgnore
-		public double left() {
-			return JsonUtils.loadByJson(left, Double.class);
-		}
-		
-		@JsonIgnore
-		public double right() {
-			return JsonUtils.loadByJson(right, Double.class);
-		}
+
 		
 		public static ConditionNum gen() {
 			ConditionNum ans = new ConditionNum();
@@ -67,15 +59,6 @@ public class Condition implements OType {
 		private String right;
 		private TxtCheckType type;
 		
-		@JsonIgnore
-		public String left() {
-			return JsonUtils.loadByJson(left, String.class);
-		}
-		
-		@JsonIgnore
-		public String right() {
-			return JsonUtils.loadByJson(right, String.class);
-		}
 		
 	}
 	

@@ -4,8 +4,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import net.bzk.flow.model.Condition.ConditionCode;
-import net.bzk.flow.model.Condition.ConditionNum;
-import net.bzk.flow.run.action.ActionCall;
 import net.bzk.infrastructure.ex.BzkRuntimeException;
 
 @Service("net.bzk.flow.model.Condition$ConditionCode")
@@ -18,7 +16,7 @@ public class ConditionCoder extends Conditioner<ConditionCode> {
 
 	@Override
 	public boolean checkSelf() {
-		Object o = ActionCall.callPolyglot(varQueryer, getModel().getPolyglot().toString(), getModel().getCode());
+		Object o = getPolyglotEngine().callPolyglot( getModel().getPolyglot().toString(), getModel().getCode());
 		if (o instanceof Boolean) {
 			Boolean b = (Boolean) o;
 			return b;

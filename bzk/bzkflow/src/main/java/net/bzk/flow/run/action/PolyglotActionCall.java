@@ -30,7 +30,7 @@ public class PolyglotActionCall extends ActionCall<PolyglotAction> {
 		VarValSet set = new VarValSet();
 		String code = getModel().getCode();
 		logUtils.logActionCall( getUids(), "code: " + code);
-		Object ans = callPolyglot(varQueryer, getModel().getPolyglot().toString(), code);
+		Object ans = getPolyglotEngine().callPolyglot( getModel().getPolyglot().toString(), code);
 		logUtils.logActionCall( getUids(), "get ans " + ans);
 		if (ans != null) {
 			VarVal vv = new VarVal();

@@ -44,7 +44,7 @@ public class HttpActionCall extends ActionCall<HttpAction> {
 		if(a.getHeaders() == null) {
 			a.setHeaders(new Headers());
 		}
-		Map<String, String> m = a.headersFlat();
+		Map<String, String> m = getPolyglotEngine().parseScriptbleText( a.getHeadersFlat(),Map.class);
 		for(String fk : m.keySet()) {
 			String fv = m.get(fk);
 			String[] vs = fv.split(",");
@@ -55,10 +55,10 @@ public class HttpActionCall extends ActionCall<HttpAction> {
 	@Override
 	public VarValSet call() throws Exception {
 		try {
-			Object body = getModel().body();
+			Object body = getPolyglotEngine().parseScriptbleText( getModel().getBody(),Object.class);
 			Headers hs = getModel().getHeaders();
-			String url = getModel().url();
-			HttpMethod mt = getModel().method();
+			String url =getPolyglotEngine().parseScriptbleText( getModel().getUrl(),String.class);
+			HttpMethod mt = getPolyglotEngine().parseScriptbleText(getModel().getMethod(),HttpMethod.class);
 			var logm = new HashMap<String,Object>();
 			logm.put("body", body);
 			logm.put("headers", hs);
@@ -71,7 +71,7 @@ public class HttpActionCall extends ActionCall<HttpAction> {
 			Object rob =  JsonUtils.stringToValue(o.getBody());
 			return VarValSet.genSingle(getModel().getKey().getKey(), getModel().getKey().getLv(), rob);
 		}catch (Exception e) {
-			logUtils.logActionCallWarn(this, e.toString());
+			logUtils.logActionCallWarn(getUids(), e.toString());
 			throw e;
 		}
 

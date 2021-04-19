@@ -99,7 +99,7 @@ public class NodejsActionCall extends ActionCall<NodejsAction> {
 			c.accept(cains);
 		}, cmd);
 		if (StringUtils.isNotBlank(ec.getErrorMsg())) {
-			logUtils.logActionCallWarn( this, ec.getErrorMsg());
+			logUtils.logActionCallWarn( getUids(), ec.getErrorMsg());
 		}
 		if (ec.getExit() != 0) {
 			throw new BzkRuntimeException(

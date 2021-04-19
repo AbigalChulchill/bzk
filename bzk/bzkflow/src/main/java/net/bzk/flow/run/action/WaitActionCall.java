@@ -23,7 +23,7 @@ public class WaitActionCall extends ActionCall<WaitAction> {
 		long ms= Duration.of(getModel().getStep(), getModel().getUnit()).toMillis();
 		logUtils.logActionCall( getUids(), "sleep:"+ ms);
 		Thread.sleep(ms);
-		return null;
+		return new VarValSet();
 	}
 
 

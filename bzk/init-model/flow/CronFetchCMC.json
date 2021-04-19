@@ -24,8 +24,8 @@
                     "uid": "Jj7CsxrbKdSm",
                     "name": "RequestToFinProxy",
                     "tryErrorble": false,
-                    "url": "${saveAllUrl}",
-                    "method": "\"POST\"",
+                    "url": "${finProxyUrl}/proxy/save/CMC/util_now",
+                    "method": "POST",
                     "uriVariables": {},
                     "body": "{}",
                     "headers": {},
@@ -34,25 +34,11 @@
                         "lv": "not_specify",
                         "key": ""
                     }
-                },
-                {
-                    "clazz": "net.bzk.flow.model.Action$VarModifyAction",
-                    "uid": "0w4Bf8jTXFGd",
-                    "name": "GenPostUrl",
-                    "tryErrorble": false,
-                    "polyglot": "js",
-                    "flatData": [
-                        {
-                            "key": "saveAllUrl",
-                            "val": "${finProxyUrl}+'/proxy/save/CMC/util_now'"
-                        }
-                    ]
                 }
             ],
             "links": [],
             "vars": {},
             "taskSort": [
-                "0w4Bf8jTXFGd",
                 "Jj7CsxrbKdSm"
             ],
             "transition": {

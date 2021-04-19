@@ -138,40 +138,7 @@ public class Action extends BzkObj {
 		private String subject;
 		private String body;
 		
-		@JsonIgnore
-		public String smtpHost() {
-			return JsonUtils.loadByJson(smtpHost, String.class);
-		}
-		
-		@JsonIgnore
-		public Integer smtpPort() {
-			return JsonUtils.loadByJson(smtpPort, Integer.class);
-		}
-		
-		@JsonIgnore
-		public String username() {
-			return JsonUtils.loadByJson(username, String.class);
-		}		
-		
-		@JsonIgnore
-		public String password() {
-			return JsonUtils.loadByJson(password, String.class);
-		}	
-		
-		@JsonIgnore
-		public String toMail() {
-			return JsonUtils.loadByJson(toMail, String.class);
-		}
-		
-		@JsonIgnore
-		public String subject() {
-			return JsonUtils.loadByJson(subject, String.class);
-		}
-		
-		@JsonIgnore
-		public String body() {
-			return JsonUtils.loadByJson(body, String.class);
-		}
+
 		
 	}
 	

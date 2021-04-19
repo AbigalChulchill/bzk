@@ -20,8 +20,8 @@ public class ConditionTxter extends Conditioner<ConditionTxt> {
 	@Override
 	public boolean checkSelf() {
 
-		String ls = getModel().left();
-		String rs = getModel().right();
+		String ls = getPolyglotEngine().parseScriptbleText(getModel().getLeft(), String.class) ;
+		String rs = getPolyglotEngine().parseScriptbleText(getModel().getRight(), String.class) ;
 		switch (getModel().getType()) {
 		case equal:
 			return StringUtils.equals(ls, rs);

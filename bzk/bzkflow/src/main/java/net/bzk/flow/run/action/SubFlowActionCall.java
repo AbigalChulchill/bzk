@@ -37,7 +37,7 @@ public class SubFlowActionCall extends ActionCall<SubFlowAction> {
 
 		List<KVPair> kvs = getModel().getInputData();
 		for (var kp : kvs) {
-			Object rv = parseByStringCode( getModel().getPolyglot().toString(), kp.getVal());
+			Object rv = getPolyglotEngine().parseByStringCode( getModel().getPolyglot().toString(), kp.getVal());
 			var kinfo = VarLv.checkLvByPrefix(kp.getKey());
 			fr.getVars().put(kinfo.getKey(), rv);
 		}

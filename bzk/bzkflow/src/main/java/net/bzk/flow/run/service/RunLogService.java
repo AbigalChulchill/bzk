@@ -42,8 +42,8 @@ public class RunLogService {
 		dao.save(brl);
 	}
 
-	public void logActionCallWarn(ActionCall ac, String wmsg) {
-		RunLog brl = genLog(ac.getUids());
+	public void logActionCallWarn(Uids u, String wmsg) {
+		RunLog brl = genLog(u);
 		brl.setState(RunState.ActionCallWarn);
 		brl.setMsg(wmsg);
 		brl.setFailed(true);

@@ -6,10 +6,12 @@ import org.springframework.context.ApplicationContext;
 
 import lombok.Getter;
 import net.bzk.flow.BzkFlowUtils;
+import net.bzk.flow.PolyglotEngine;
 import net.bzk.flow.model.Condition;
 import net.bzk.flow.model.Condition.ConKind;
 import net.bzk.flow.run.action.ActionCall.Uids;
 import net.bzk.flow.run.service.FastVarQueryer;
+import net.bzk.flow.run.service.RunLogService;
 import net.bzk.infrastructure.ex.BzkRuntimeException;
 
 public abstract class Conditioner<T extends Condition> {
@@ -21,8 +23,12 @@ public abstract class Conditioner<T extends Condition> {
 	protected ApplicationContext context;
 	@Getter
 	private Uids uids;
+	@Getter
+	private PolyglotEngine polyglotEngine;
 	@Inject
 	protected FastVarQueryer varQueryer;
+	@Inject
+	protected RunLogService logUtils;
 
 	public Conditioner(Class<T> c) {
 		modelClazz = c;
@@ -32,6 +38,7 @@ public abstract class Conditioner<T extends Condition> {
 		uids = u;
 		model = c;
 		varQueryer.init(uids);
+		polyglotEngine = PolyglotEngine.builder().logUtils(logUtils).varQueryer(varQueryer).build();
 		model = BzkFlowUtils.replaceModel(varQueryer, model, modelClazz);
 		return this;
 	}

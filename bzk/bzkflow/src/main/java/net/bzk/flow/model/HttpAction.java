@@ -29,27 +29,7 @@ public class HttpAction extends Action {
 
 	private VarKey key;
 	
-	@JsonIgnore
-	public String url() {
-		return (String) JsonUtils.stringToValue(url);
-	}
-	
 
-	@JsonIgnore
-	public Object body() {
-		return JsonUtils.stringToValue(body);
-	}
-	
-	@JsonIgnore
-	public HttpMethod method() {
-		return HttpMethod.valueOf( (String)JsonUtils.stringToValue(method));
-	}
-	
-	@JsonIgnore
-	@SuppressWarnings("unchecked")
-	public Map<String, String> headersFlat(){
-		return JsonUtils.loadByJson(headersFlat, Map.class);
-	}
 	
 	@SuppressWarnings("serial")
 	public static class Headers extends HashMap<String, List<String>>
