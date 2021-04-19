@@ -1,14 +1,13 @@
 import { StringUtils } from './../../../utils/string-utils';
 import { DialogService } from './../../../uikit/dialog.service';
 import { CommUtils } from 'src/app/utils/comm-utils';
-import { Prop, PropInfoArgs, PropType, PropUtils } from './../../../utils/prop-utils';
+import { Prop,  PropType, PropUtils } from './../../../utils/prop-utils';
 import { Component, ComponentFactoryResolver, EventEmitter, Input, OnInit, Output, ViewChild, ViewContainerRef } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { CustomDirective } from '../custom.directive';
 import { AfterViewInit } from '@angular/core';
-import { RefSetType } from 'src/app/utils/prop-ref-val';
 import { ObjTextProvide } from 'src/app/infrastructure/meta';
 
 @Component({
@@ -63,7 +62,6 @@ export class PropRowComponent implements OnInit, AfterViewInit {
 
   public isCurType(pt: PropType): boolean {
      if (this.prop.val === null) return false;
-    if (this.prop.info.refInfo && this.prop.refVal.getType() === RefSetType.ByRef) return false;
     return this.prop.type === pt;
   }
 
@@ -72,14 +70,12 @@ export class PropRowComponent implements OnInit, AfterViewInit {
   }
 
 
-
   public onUnfold(key: string, obj: object): void {
     this.messageEvent.emit({
       key,
       obj
     });
   }
-
 
   private setCustumView(): void {
 
