@@ -5,6 +5,7 @@ export class Constant {
   public static LOG_RUN_KEY = 'net.bzk.flow.run.flow.BoxRuner';
   public static TODO_VAR_KEY = 'TODO'
   public static TIME_ZONE_KEY = 'TimeZoneId'
+  public static CODE_PREFIX = '!javascript==='
 
 
 }

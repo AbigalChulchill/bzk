@@ -8,6 +8,7 @@ import java.util.concurrent.Callable;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.bson.BsonDocument;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Value;
@@ -17,6 +18,7 @@ import lombok.Getter;
 import net.bzk.flow.BzkFlowUtils;
 import net.bzk.flow.Constant;
 import net.bzk.flow.model.Action;
+import net.bzk.flow.model.Action.Polyglot;
 import net.bzk.flow.model.var.VarLv;
 import net.bzk.flow.model.var.VarMap;
 import net.bzk.flow.model.var.VarValSet;
@@ -76,6 +78,15 @@ public abstract class ActionCall<T extends Action> implements Callable<VarValSet
 		}
 	}
 
+	public <R> R parseScriptbleText(String plain) {
+		if (plain.startsWith(Constant.SCRIPT_PREFIX)) {
+			plain = plain.replaceFirst(Constant.SCRIPT_PREFIX, "");
+			return (R) parseByStringCode(Polyglot.js.toString(), plain);
+		}
+		return (R) JsonUtils.stringToValue(plain);
+
+	}
+
 	public Object parseByStringCode(String polyglot, String ifCode) {
 		logUtils.logActionCall(getUids(), ifCode);
 		Object o = JsonUtils.stringToValue(ifCode);
@@ -108,10 +119,10 @@ public abstract class ActionCall<T extends Action> implements Callable<VarValSet
 	public static void main(String[] args) throws IOException {
 		try (Context context = Context.newBuilder().allowAllAccess(true).build()) {
 			Value function = context.eval("js", "const ans ={a:'b',c:[1,{a:'d'},3]}; ans;");
-			Object ov= BzkFlowUtils.fixPolyglotObj(function);
+			Object ov = BzkFlowUtils.fixPolyglotObj(function);
 			System.out.println(ov);
 			function = context.eval("js", "const g =[1,{a:'d',c:[1,2,3]},3]; g;");
-			Object ov2= BzkFlowUtils.fixPolyglotObj(function);
+			Object ov2 = BzkFlowUtils.fixPolyglotObj(function);
 			System.out.println(ov2);
 		}
 	}

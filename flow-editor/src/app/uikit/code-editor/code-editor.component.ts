@@ -1,3 +1,4 @@
+import { Constant } from 'src/app/infrastructure/constant';
 import { CommUtils } from './../../utils/comm-utils';
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { TextProvide } from 'src/app/infrastructure/meta';
@@ -37,6 +38,11 @@ export class CodeEditorComponent implements OnInit {
 
   public set code(s: string) {
     this.data.setStr(s);
+  }
+
+  public onScriptbleClick(){
+    const t = Constant.CODE_PREFIX+'\n'+this.code;
+    this.code = t;
   }
 
   public onValChange(event: Event): void {

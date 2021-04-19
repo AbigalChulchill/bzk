@@ -1,9 +1,24 @@
-<mat-form-field appearance="fill">
-  <mat-label>Languages</mat-label>
-  <mat-select [(ngModel)]="editorOptions.language" (selectionChange)="onValChange($event)"  >
-    <mat-option *ngFor="let lg of languages" [value]="lg">
-      {{lg}}
-    </mat-option>
-  </mat-select>
-</mat-form-field>
+
+
+<div class="container">
+  <div class="row">
+    <div class="col-sm">
+      <mat-form-field appearance="fill">
+        <mat-label>Languages</mat-label>
+        <mat-select [(ngModel)]="editorOptions.language" (selectionChange)="onValChange($event)"  >
+          <mat-option *ngFor="let lg of languages" [value]="lg">
+            {{lg}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="col-sm">
+      <p>
+    </div>
+    <div class="col-sm">
+      <button type="button" (click)="onScriptbleClick()" class="btn btn-primary">Scriptble</button>
+    </div>
+  </div>
+</div>
+
 <ngx-monaco-editor  class="fullWidth" [options]="editorOptions" [(ngModel)]="code"></ngx-monaco-editor>
