@@ -2,9 +2,11 @@ package net.bzk.flow.run.action;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
 
 import javax.inject.Inject;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,10 @@ import net.bzk.flow.run.dao.RunFlowPoolDao;
 public class SubFlowActionCall extends ActionCall<SubFlowAction> {
 
 	@Inject
+	@Qualifier("threadPoolTaskExecutor")
+	private ExecutorService executorService;
+
+	@Inject
 	private RunFlowPoolDao flowPoolDao;
 
 	public SubFlowActionCall() {
@@ -37,9 +43,13 @@ public class SubFlowActionCall extends ActionCall<SubFlowAction> {
 
 		List<KVPair> kvs = getModel().getInputData();
 		for (var kp : kvs) {
-			Object rv = getPolyglotEngine().parseByStringCode( getModel().getPolyglot().toString(), kp.getVal());
+			Object rv = getPolyglotEngine().parseByStringCode(getModel().getPolyglot().toString(), kp.getVal());
 			var kinfo = VarLv.checkLvByPrefix(kp.getKey());
 			fr.getVars().put(kinfo.getKey(), rv);
+		}
+		if (getModel().isAsynced()) {
+			executorService.execute(fr::run);
+			return new VarValSet();
 		}
 
 		fr.run();
@@ -48,7 +58,8 @@ public class SubFlowActionCall extends ActionCall<SubFlowAction> {
 		List<VarKeyReflect> omap = getModel().getOutputReflects();
 		for (VarVal vv : ers) {
 			Optional<VarKeyReflect> vkro = VarKeyReflect.findBySrcKey(omap, vv.getKey());
-			if(vkro.isEmpty()) continue;
+			if (vkro.isEmpty())
+				continue;
 			VarKeyReflect vkr = vkro.get();
 			VarVal nvv = new VarVal();
 			nvv.setKey(vkr.getToKey().getKey());

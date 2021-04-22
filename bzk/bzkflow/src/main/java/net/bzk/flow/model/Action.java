@@ -103,6 +103,7 @@ public class Action extends BzkObj {
 	public static class SubFlowAction extends Action {
 		private Polyglot polyglot = Polyglot.js;
 		private String flowUid;
+		private boolean asynced;
 		private List<KVPair> inputData;
 		private List<VarKeyReflect> outputReflects;
 	}

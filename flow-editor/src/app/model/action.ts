@@ -298,6 +298,11 @@ export class SubFlowAction extends Action {
   @PropEnums(Object.keys(Polyglot))
   public polyglot = Polyglot.js;
   @PropInfo({
+    title: 'asynced',
+    type: PropType.Boolean
+  })
+  public asynced = false;
+  @PropInfo({
     title: 'inputData',
     type: PropType.List,
     child: {
