@@ -15,6 +15,7 @@ public class Transition {
 	
 	private String toBox ="";
 	private String endTag ="TODO Why";
+	private boolean failEnd = false;
 	private List<VarKey> endResultKeys = new ArrayList<>();
 	
     @JsonIgnore

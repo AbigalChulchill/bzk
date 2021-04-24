@@ -104,6 +104,7 @@
                     "name": "OverTheTime",
                     "transition": {
                         "toBox": "",
+                        "failEnd": true,
                         "endTag": "TheTimeOver",
                         "endResultKeys": []
                     },
@@ -129,6 +130,7 @@
             ],
             "transition": {
                 "toBox": "",
+                "failEnd": false,
                 "endTag": "DONE",
                 "endResultKeys": [
                     {

@@ -111,7 +111,7 @@ public class FlowRuner implements Runnable {
 	}
 
 	public void onEnd(Transition l, List<VarVal> re) {
-		info.state = State.Done;
+		info.state = l.isFailEnd() ? State.Fail : State.Done;
 		info.transition = l;
 		info.endResult = re;
 		info.endAt = CommUtils.nowUtc0();

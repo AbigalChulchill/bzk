@@ -70,6 +70,7 @@
             ],
             "transition": {
                 "toBox": "",
+                "failEnd": false,
                 "endTag": "DONE_ANS",
                 "endResultKeys": [
                     {

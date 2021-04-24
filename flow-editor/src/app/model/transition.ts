@@ -8,6 +8,11 @@ import { VarKey } from "./var-key";
 })
 export class Transition {
   public toBox='';
+  @PropInfo({
+    title: 'failEnd',
+    type: PropType.Boolean
+  })
+  public failEnd = false;
   public endTag='END';
   @PropInfo({
     title: 'Return Keys',

@@ -89,6 +89,7 @@
             ],
             "transition": {
                 "toBox": "",
+                "failEnd": false,
                 "endTag": "Done",
                 "endResultKeys": []
             },
@@ -237,6 +238,7 @@
                     "name": "ToFund",
                     "transition": {
                         "toBox": "",
+                        "failEnd": false,
                         "endTag": "NOMoney",
                         "endResultKeys": [
                             {
@@ -267,6 +269,7 @@
             ],
             "transition": {
                 "toBox": "os5alTWuo8sG",
+                "failEnd": false,
                 "endTag": null,
                 "endResultKeys": [
                     {

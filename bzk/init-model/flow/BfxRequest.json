@@ -83,6 +83,7 @@
             ],
             "transition": {
                 "toBox": "",
+                "failEnd": false,
                 "endTag": "Signed",
                 "endResultKeys": [
                     {

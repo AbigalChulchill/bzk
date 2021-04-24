@@ -43,6 +43,7 @@
             ],
             "transition": {
                 "toBox": "",
+                "failEnd": false,
                 "endTag": "DONE",
                 "endResultKeys": []
             },

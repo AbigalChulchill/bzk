@@ -88,6 +88,7 @@
             ],
             "transition": {
                 "toBox": "",
+                "failEnd": false,
                 "endTag": "TODO Why",
                 "endResultKeys": []
             },
