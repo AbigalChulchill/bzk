@@ -39,7 +39,7 @@ public class VarModifyActionCall extends ActionCall<VarModifyAction> {
 		ans.setKey(kinfo.getKey());
 		ans.setLv(kinfo.getLv());
 		String code = e.getVal();
-		Object o = getPolyglotEngine().parseByStringCode(getModel().getPolyglot().toString(),code);
+		Object o = getPolyglotEngine().parseCode(getModel().getPolyglot().toString(),code);
 		logUtils.logActionCall( getUids(), o.getClass() +":"+ o);
 		ans.setVal(o);
 		varService.putVarVal(getUids(), ans);

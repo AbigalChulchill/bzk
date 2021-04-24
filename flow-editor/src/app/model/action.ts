@@ -154,7 +154,7 @@ export class HttpAction extends Action {
 
   })
   @PropEnums(Object.keys(HttpMethod))
-  public method = '"GET"';
+  public method = 'GET';
   @PropInfo({
     title: 'uriVariables',
     type: PropType.Custom,

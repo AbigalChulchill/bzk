@@ -9,7 +9,6 @@ import org.springframework.http.HttpMethod;
 
 import lombok.Builder;
 import net.bzk.flow.model.Action.Polyglot;
-import net.bzk.flow.run.action.ActionCall.Uids;
 import net.bzk.flow.run.service.FastVarQueryer;
 import net.bzk.flow.run.service.RunLogService;
 import net.bzk.infrastructure.JsonUtils;
@@ -24,14 +23,14 @@ public class PolyglotEngine {
 		Object o = null;
 		if (plain.startsWith(Constant.SCRIPT_PREFIX)) {
 			plain = plain.replaceFirst(Constant.SCRIPT_PREFIX, "");
-			o = parseByStringCode(Polyglot.js.toString(), plain);
+			o = parseCode(Polyglot.js.toString(), plain);
 		} else {
 			o = JsonUtils.stringToValue(plain);
 		}
 		return JsonUtils.toByJson(o, clz);
 	}
 
-	public Object parseByStringCode(String polyglot, String ifCode) {
+	public Object parseCode(String polyglot, String ifCode) {
 		logUtils.logActionCall(varQueryer.getUids(), ifCode);
 		Object o = JsonUtils.stringToValue(ifCode);
 		logUtils.logActionCall(varQueryer.getUids(), o.getClass() + " " + o);

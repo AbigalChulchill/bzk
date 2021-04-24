@@ -1,3 +1,4 @@
+import { VarCfgService } from './var-cfg.service';
 import { CommUtils } from 'src/app/utils/comm-utils';
 import { StringUtils } from './../utils/string-utils';
 import { Injectable } from '@angular/core';
@@ -13,7 +14,7 @@ export class VarService {
   private static instance: VarService;
 
   constructor(
-    private modifyingFlow: ModifyingFlowService
+    private varCfgService: VarCfgService
   ) {
     VarService.instance = this;
   }
@@ -21,8 +22,11 @@ export class VarService {
 
   public listAllKeys(): Array<string> {
     const list = VarUtils.listVarKeyByFlow(ModelUpdateAdapter.getInstance().getFlow());
-    // TODO  const kvs = this.modifyingFlow.varsStore.listAllFlatKV();
     const ans = new Array<string>();
+    const includeKeys = this.varCfgService.listKeys(ModelUpdateAdapter.getInstance().getFlow());
+    for(const k of includeKeys){
+      CommUtils.pushUnique(ans, k);
+    }
     list.forEach(s => {
       if (!StringUtils.isBlank(s)) CommUtils.pushUnique(ans, s);
     });

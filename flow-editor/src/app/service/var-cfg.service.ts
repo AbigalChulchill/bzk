@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Flow } from '../model/flow';
 import { VarCfg } from '../model/var-cfg';
 import { VarCfgClientService } from './var-cfg-client.service';
 
@@ -45,6 +46,15 @@ export class VarCfgService {
 
   public get(uid: string): VarCfg {
     return this.list.find(c => c.name === uid);
+  }
+
+  public listKeys(flow:Flow):Array<string>{
+    const ans = new Array<string>();
+    for(const cname of flow.varCfgNames){
+      const vc = this.get(cname);
+      vc.content.listFlatKV().forEach(kv=> ans.push(kv.key));
+    }
+    return ans;
   }
 
 
