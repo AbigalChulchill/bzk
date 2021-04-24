@@ -15,7 +15,7 @@
         {
             "clazz": "net.bzk.flow.model.Box",
             "uid": "QZn0EUAhrCDe",
-            "name": "Box",
+            "name": "OverTurnCheck",
             "actions": [
                 {
                     "clazz": "net.bzk.flow.model.Action$SubFlowAction",
@@ -41,13 +41,35 @@
                     "flowUid": "9RLQvpmbGa35"
                 }
             ],
-            "links": [],
+            "links": [
+                {
+                    "clazz": "net.bzk.flow.model.Link",
+                    "uid": "TKJKsN1Na6Qx",
+                    "name": "CheckOverturn",
+                    "transition": {
+                        "toBox": "",
+                        "failEnd": false,
+                        "endTag": "NotOverturn",
+                        "endResultKeys": []
+                    },
+                    "condition": {
+                        "clazz": "net.bzk.flow.model.Condition$ConditionNum",
+                        "kind": "NONE",
+                        "left": "${tsdbQueryResult.val}",
+                        "right": "-0.5",
+                        "type": "greater_equal",
+                        "next": null
+                    }
+                }
+            ],
             "vars": {},
             "taskSort": [
-                "hIJcf5WTi2mq"
+                "hIJcf5WTi2mq",
+                "TKJKsN1Na6Qx"
             ],
             "transition": {
                 "toBox": "",
+                "failEnd": false,
                 "endTag": "TODO Why",
                 "endResultKeys": []
             },

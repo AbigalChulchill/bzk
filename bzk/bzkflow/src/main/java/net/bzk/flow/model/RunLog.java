@@ -33,7 +33,7 @@ public class RunLog implements Serializable, CreateUpdateDate {
 	
 	public static enum RunState {
 		BoxStart, BoxLoop, BoxLoopDone, EndFlow, LinkTo, StartAction, EndAction, ActionCall, ActionCallFail,
-		ActionCallWarn, ActionResult, WhileLoopBottom,
+		ActionCallWarn, ActionResult, WhileLoopBottom, ConditionFail,
 
 	}
 	
