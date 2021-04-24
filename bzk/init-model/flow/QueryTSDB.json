@@ -1,0 +1,109 @@
+{
+    "clazz": "net.bzk.flow.model.Flow",
+    "uid": "9RLQvpmbGa35",
+    "logEncryptKey": "1234567890123456",
+    "vars": {},
+    "varCfgNames": [
+        "fin-proxy.json"
+    ],
+    "threadCfg": {
+        "corePoolSize": 10,
+        "maximumPoolSize": 50,
+        "keepAliveTime": 500,
+        "aliveUnit": "MINUTES"
+    },
+    "name": "QueryTSDB",
+    "boxs": [
+        {
+            "clazz": "net.bzk.flow.model.Box",
+            "uid": "xRzWKAi4XvVg",
+            "name": "Box",
+            "actions": [
+                {
+                    "clazz": "net.bzk.flow.model.Action$VarModifyAction",
+                    "uid": "HIiIMXpt9MDo",
+                    "name": "GenQueryBody",
+                    "tryErrorble": false,
+                    "flatData": [
+                        {
+                            "key": "queryBody.query",
+                            "val": "import \"date\"\nimport \"math\"\n\ntrAvgCount30= from(bucket: \"quote\")\n  |> range(start: -30d)\n  |> filter(fn: (r) =>\n    r._measurement == \"daily\" and\n    (r.valmean == \"volume\"  or\n    r.valmean == \"open\") and\n    r.name == \"bitcoin\"\n  )\n  |> map(fn: (r) => ({ r with _time: date.truncate(t: r._time, unit: 1d)    }))\n  |> pivot(rowKey:[\"_time\"], columnKey: [\"valmean\"], valueColumn: \"_value\")\n  |> map(fn: (r) => ({ r with _value: r.volume / r.open }))\n  |>mean()\n  |> findColumn(\n    fn: (key) => true,\n    column: \"_value\"\n  )\n\n  priceAvg30 = from(bucket: \"quote\")\n  |> range(start: -30d)\n  |> filter(fn: (r) =>\n    r._measurement == \"daily\" and\n    r.valmean == \"open\" and\n    r.name == \"bitcoin\"\n  )\n  |> mean()\n  |> findColumn(\n    fn: (key) => true,\n    column: \"_value\"\n  )\n\n\nt1= from(bucket: \"quote\")\n  |> range(start: -5h)\n  |> filter(fn: (r) =>\n    r._measurement == \"realtime\" and\n    r.symbol == \"BTC\"\n  )\n  |> map(fn: (r) => ({ r with _time: date.truncate(t: r._time, unit: 1s) }))\n  |> pivot(rowKey:[\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")\n  |> map(fn: (r) => ({ r with count24: r.volume_24h / r.price  }))\n  |> map(fn: (r) => ({ r with countRate24: (r.count24-trAvgCount30[0]) / trAvgCount30[0]  }))\n  |> map(fn: (r) => ({ r with priceRate: (r.price-priceAvg30[0])/priceAvg30[0]  }))\n  |> map(fn: (r) => ({ r with _value: (r.countRate24 * r.priceRate) *10.00  }))\n\n  t1"
+                        }
+                    ]
+                },
+                {
+                    "clazz": "net.bzk.flow.model.HttpAction",
+                    "uid": "dvmT4XVIVB5Z",
+                    "name": "Request",
+                    "tryErrorble": false,
+                    "url": "${finProxyUrl}/proxy/tsdb",
+                    "method": "POST",
+                    "uriVariables": {},
+                    "body": "${queryBody}",
+                    "headers": {},
+                    "headersFlat": "",
+                    "key": {
+                        "lv": "not_specify",
+                        "key": "restResult"
+                    }
+                },
+                {
+                    "clazz": "net.bzk.flow.model.Action$JSONPathAction",
+                    "uid": "mwO7JgHLkhCE",
+                    "name": "trim",
+                    "tryErrorble": false,
+                    "syntax": "$..values",
+                    "source": {
+                        "lv": "not_specify",
+                        "key": "restResult"
+                    },
+                    "target": {
+                        "lv": "not_specify",
+                        "key": "listValues"
+                    }
+                },
+                {
+                    "clazz": "net.bzk.flow.model.Action$VarModifyAction",
+                    "uid": "Py7WIVmpPe2H",
+                    "name": "outputOnw",
+                    "tryErrorble": false,
+                    "flatData": [
+                        {
+                            "key": "tsdbQueryResult",
+                            "val": "!javascript===\n${listValues}[0]"
+                        }
+                    ]
+                }
+            ],
+            "links": [],
+            "vars": {},
+            "taskSort": [
+                "HIiIMXpt9MDo",
+                "dvmT4XVIVB5Z",
+                "mwO7JgHLkhCE",
+                "Py7WIVmpPe2H"
+            ],
+            "transition": {
+                "toBox": "",
+                "endTag": "DONE",
+                "endResultKeys": [
+                    {
+                        "lv": "not_specify",
+                        "key": "tsdbQueryResult"
+                    }
+                ]
+            },
+            "whileJudgment": null
+        }
+    ],
+    "entry": {
+        "clazz": "net.bzk.flow.model.Entry$PluginEntry",
+        "requiredKeys": [
+            "tsdbQuery"
+        ],
+        "outputKeys": [
+            "tsdbQueryResult"
+        ],
+        "boxUid": "xRzWKAi4XvVg"
+    }
+}
