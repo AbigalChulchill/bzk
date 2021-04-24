@@ -22,19 +22,18 @@
                     "uid": "f7V2cufsehiv",
                     "name": "GetCMD",
                     "tryErrorble": false,
-                    "polyglot": "js",
                     "flatData": [
                         {
                             "key": "cmd",
-                            "val": "const i = ${curI};\r\nconst list = ${bfx.fund.strategy};\r\nconst ans = list[i];\r\nans;"
+                            "val": "!javascript===\r\n const i = ${curI};\r\nconst list = ${bfx.fund.strategy};\r\nconst ans = list[i];\r\nans;"
                         },
                         {
                             "key": "curI",
-                            "val": "${curI}+1;"
+                            "val": "!javascript===\r\n ${curI}+1;"
                         },
                         {
                             "key": "bfxSignHeader",
-                            "val": "null"
+                            "val": "!javascript===\r\n null"
                         }
                     ]
                 },
@@ -127,15 +126,14 @@
                     "uid": "0sXIo2uBG96v",
                     "name": "PruneUSDWallet",
                     "tryErrorble": false,
-                    "polyglot": "js",
                     "flatData": [
                         {
                             "key": "bfx.fund",
-                            "val": "const orgUsdW = ${bfxWallet};\nconst ans = {\n    balance : orgUsdW[4],\n    sum : orgUsdW[2],\n};\nans;\n"
+                            "val": "!javascript===\r\n const orgUsdW = ${bfxWallet};\nconst ans = {\n    balance : orgUsdW[4],\n    sum : orgUsdW[2],\n};\nans;\n"
                         },
                         {
                             "key": "bfxWallet",
-                            "val": "null"
+                            "val": "!javascript===\r\n null"
                         }
                     ]
                 },

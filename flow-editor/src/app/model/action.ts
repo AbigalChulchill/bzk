@@ -219,12 +219,7 @@ export class KVPair {
 })
 export class VarModifyAction extends Action {
 
-  @PropInfo({
-    title: 'polyglot',
-    type: PropType.Enum
-  })
-  @PropEnums(Object.keys(Polyglot))
-  public polyglot = Polyglot.js;
+
 
   @PropInfo({
     title: 'flatData',

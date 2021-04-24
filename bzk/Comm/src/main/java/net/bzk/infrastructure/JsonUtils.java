@@ -20,7 +20,7 @@ import net.bzk.infrastructure.obj.JsonMap;
 public class JsonUtils {
 
 	public static enum DataType {
-		string, number, Boolean, NULL, object, array, NotSupport,
+		string, number, Boolean, NULL, object,JSONVal, array, NotSupport,
 	}
 
 	private static final ObjectMapper JSON_MAPPER = new ObjectMapper();
@@ -63,6 +63,8 @@ public class JsonUtils {
 			return DataType.object;
 		if (isJsonArray(v))
 			return DataType.array;
+		if (isJsonVal(v))
+			return DataType.JSONVal;		
 		if (StringUtils.isNotBlank(v))
 			return DataType.string;
 
@@ -70,6 +72,16 @@ public class JsonUtils {
 
 	}
 
+	public static boolean isJsonVal(String v) {
+		try {
+			loadByJson(v, Object.class);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+
+	}
+	
 	public static boolean isJsonObject(String v) {
 		try {
 			JSONObject jo = new JSONObject(v);
@@ -102,6 +114,8 @@ public class JsonUtils {
 			return Double.parseDouble(v);
 		case object:
 			return JsonMap.gen(JsonUtils.loadByJson(v, Object.class));
+		case JSONVal:
+			return JsonUtils.loadByJson(v, Object.class);
 		case string:
 			return v;
 		}
@@ -125,6 +139,11 @@ public class JsonUtils {
 	}
 
 	public static void main(String[] args) {
+		
+		String itest = "\"123\"";
+		Object o = stringToValue(itest);
+		System.out.println(o.getClass()+" "+o);
+		
 		Object a = toJson(123);
 		System.out.println(a);
 		System.out.println(a.getClass());

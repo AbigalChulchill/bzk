@@ -5,14 +5,13 @@ import java.util.List;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
-import org.apache.commons.text.StringEscapeUtils;
+
 import lombok.extern.slf4j.Slf4j;
 import net.bzk.flow.model.Action.KVPair;
 import net.bzk.flow.model.Action.VarModifyAction;
 import net.bzk.flow.model.var.VarLv;
 import net.bzk.flow.model.var.VarVal;
 import net.bzk.flow.model.var.VarValSet;
-import net.bzk.infrastructure.JsonUtils;
 
 @Service("net.bzk.flow.model.Action$VarModifyAction")
 @Scope("prototype")
@@ -39,7 +38,8 @@ public class VarModifyActionCall extends ActionCall<VarModifyAction> {
 		ans.setKey(kinfo.getKey());
 		ans.setLv(kinfo.getLv());
 		String code = e.getVal();
-		Object o = getPolyglotEngine().parseCode(getModel().getPolyglot().toString(),code);
+		Object o = getPolyglotEngine().parseScriptbleText(code, Object.class);
+//		Object o = getPolyglotEngine().parseCode(getModel().getPolyglot().toString(),code);
 		logUtils.logActionCall( getUids(), o.getClass() +":"+ o);
 		ans.setVal(o);
 		varService.putVarVal(getUids(), ans);

@@ -77,7 +77,7 @@ public class Action extends BzkObj {
 	@Data
 	@EqualsAndHashCode(callSuper = false)
 	public static class VarModifyAction extends Action {
-		private Polyglot polyglot = Polyglot.js;
+//		private Polyglot polyglot = Polyglot.js;
 		private List<KVPair> flatData;
 	}
 

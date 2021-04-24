@@ -23,7 +23,6 @@ import org.springframework.http.HttpMethod;
 @Slf4j
 public class HttpActionCall extends ActionCall<HttpAction> {
 
-
 	public HttpActionCall() {
 		super(HttpAction.class);
 	}
@@ -37,40 +36,40 @@ public class HttpActionCall extends ActionCall<HttpAction> {
 		return ans;
 	}
 
-
-	
 	private void combindToHeader() {
 		HttpAction a = getModel();
-		if(a.getHeaders() == null) {
+		if (a.getHeaders() == null) {
 			a.setHeaders(new Headers());
 		}
-		Map<String, String> m = getPolyglotEngine().parseScriptbleText( a.getHeadersFlat(),Map.class);
-		for(String fk : m.keySet()) {
+		Map<String, String> m = getPolyglotEngine().parseScriptbleText(a.getHeadersFlat(), Map.class);
+		if (m == null)
+			return;
+		for (String fk : m.keySet()) {
 			String fv = m.get(fk);
 			String[] vs = fv.split(",");
-			Arrays.stream(vs).forEach(v-> a.getHeaders().add(fk,v) );
+			Arrays.stream(vs).forEach(v -> a.getHeaders().add(fk, v));
 		}
 	}
 
 	@Override
 	public VarValSet call() throws Exception {
 		try {
-			Object body = getPolyglotEngine().parseScriptbleText( getModel().getBody(),Object.class);
+			Object body = getPolyglotEngine().parseScriptbleText(getModel().getBody(), Object.class);
 			Headers hs = getModel().getHeaders();
-			String url =getPolyglotEngine().parseScriptbleText( getModel().getUrl(),String.class);
-			HttpMethod mt = getPolyglotEngine().parseScriptbleText(getModel().getMethod(),HttpMethod.class);
-			var logm = new HashMap<String,Object>();
+			String url = getPolyglotEngine().parseScriptbleText(getModel().getUrl(), String.class);
+			HttpMethod mt = getPolyglotEngine().parseScriptbleText(getModel().getMethod(), HttpMethod.class);
+			var logm = new HashMap<String, Object>();
 			logm.put("body", body);
 			logm.put("headers", hs);
 			logm.put("url", url);
 			logm.put("method", mt);
-			logUtils.logActionCall( getUids(), JsonUtils.toJson(logm));
+			logUtils.logActionCall(getUids(), JsonUtils.toJson(logm));
 			HttpEntity<Object> requestEntity = new HttpEntity<Object>(body, hs);
-			ResponseEntity<String> o = restTemplate.exchange(url, mt, requestEntity,
-					String.class, getModel().getUriVariables());
-			Object rob =  JsonUtils.stringToValue(o.getBody());
+			ResponseEntity<String> o = restTemplate.exchange(url, mt, requestEntity, String.class,
+					getModel().getUriVariables());
+			Object rob = JsonUtils.stringToValue(o.getBody());
 			return VarValSet.genSingle(getModel().getKey().getKey(), getModel().getKey().getLv(), rob);
-		}catch (Exception e) {
+		} catch (Exception e) {
 			logUtils.logActionCallWarn(getUids(), e.toString());
 			throw e;
 		}
