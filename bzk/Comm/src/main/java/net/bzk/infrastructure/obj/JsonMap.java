@@ -116,11 +116,12 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
 
 	@SuppressWarnings("unchecked")
 	public void putByPath(String path, Object o) {
-		if (path.contains("bfxSignHeader")) {
-			System.out.println("DEBUG");
-		}
 		findByPath(path, true, (jm, k) -> {
 			try {
+				if(o == null) {
+					jm.remove(k);
+					return null;
+				}
 				jm.put(k, o);
 			} catch (Exception e) {
 				throw new BzkRuntimeException(e);

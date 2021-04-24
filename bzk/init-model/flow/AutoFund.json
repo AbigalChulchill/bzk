@@ -42,19 +42,18 @@
                     "uid": "WUaNxD2C8X5H",
                     "name": "PostOathFundRest",
                     "tryErrorble": false,
-                    "polyglot": "js",
                     "inputData": [
                         {
                             "key": "apiPath",
-                            "val": "\"v2/auth/w/funding/offer/submit\""
+                            "val": "!javascript===\r\n \"v2/auth/w/funding/offer/submit\""
                         },
                         {
                             "key": "apiBody",
-                            "val": "${bfxRestBody}"
+                            "val": "!javascript===\r\n ${bfxRestBody}"
                         },
                         {
                             "key": "apiMethod",
-                            "val": "\"POST\""
+                            "val": "!javascript===\r\n \"POST\""
                         }
                     ],
                     "outputReflects": [
@@ -142,19 +141,18 @@
                     "uid": "7OWwv0TlT5Vm",
                     "name": "FtechFundWallet",
                     "tryErrorble": false,
-                    "polyglot": "js",
                     "inputData": [
                         {
                             "key": "apiPath",
-                            "val": "\"v2/auth/r/wallets\""
+                            "val": "!javascript===\r\n \"v2/auth/r/wallets\""
                         },
                         {
                             "key": "apiBody",
-                            "val": "{}"
+                            "val": "!javascript===\r\n {}"
                         },
                         {
                             "key": "apiMethod",
-                            "val": "\"POST\""
+                            "val": "!javascript===\r\n \"POST\""
                         }
                     ],
                     "outputReflects": [
@@ -174,11 +172,10 @@
                     "uid": "zE4r6lyacXUR",
                     "name": "GetFundStrategy",
                     "tryErrorble": false,
-                    "polyglot": "js",
                     "inputData": [
                         {
                             "key": "balance",
-                            "val": "${bfx.fund.balance}"
+                            "val": "!javascript===\r\n ${bfx.fund.balance}"
                         }
                     ],
                     "outputReflects": [
@@ -198,19 +195,18 @@
                     "uid": "9Jgy9lXtAD4N",
                     "name": "CancelAllFund",
                     "tryErrorble": false,
-                    "polyglot": "js",
                     "inputData": [
                         {
                             "key": "apiPath",
-                            "val": "\"v2/auth/w/funding/offer/cancel/all\""
+                            "val": "!javascript===\r\n \"v2/auth/w/funding/offer/cancel/all\""
                         },
                         {
                             "key": "apiBody",
-                            "val": "{\n \t\t\"currency\": \"USD\"\n}"
+                            "val": "!javascript===\r\n {\n \t\t\"currency\": \"USD\"\n}"
                         },
                         {
                             "key": "apiMethod",
-                            "val": "\"POST\""
+                            "val": "!javascript===\r\n \"POST\""
                         }
                     ],
                     "outputReflects": [

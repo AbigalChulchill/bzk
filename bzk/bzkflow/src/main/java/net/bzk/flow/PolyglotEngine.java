@@ -27,12 +27,15 @@ public class PolyglotEngine {
 		} else {
 			o = JsonUtils.stringToValue(plain);
 		}
+		if(o==null) return null;
 		return JsonUtils.toByJson(o, clz);
 	}
 
 	public Object parseCode(String polyglot, String ifCode) {
 		logUtils.logActionCall(varQueryer.getUids(), ifCode);
 		Object o = JsonUtils.stringToValue(ifCode);
+		if (o == null)
+			return null;
 		logUtils.logActionCall(varQueryer.getUids(), o.getClass() + " " + o);
 		if (o instanceof String) {
 			try {

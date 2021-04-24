@@ -34,13 +34,15 @@ public class VarModifyActionCall extends ActionCall<VarModifyAction> {
 
 	private VarVal genVarVal(KVPair e) {
 		var kinfo = VarLv.checkLvByPrefix(e.getKey());
+		if(e.getKey().contains("closeVal")) {
+			System.out.println("debug~~");
+		}
 		VarVal ans = new VarVal();
 		ans.setKey(kinfo.getKey());
 		ans.setLv(kinfo.getLv());
 		String code = e.getVal();
 		Object o = getPolyglotEngine().parseScriptbleText(code, Object.class);
-//		Object o = getPolyglotEngine().parseCode(getModel().getPolyglot().toString(),code);
-		logUtils.logActionCall( getUids(), o.getClass() +":"+ o);
+		logUtils.logActionCall( getUids(), "o:"+ o);
 		ans.setVal(o);
 		varService.putVarVal(getUids(), ans);
 		return ans;

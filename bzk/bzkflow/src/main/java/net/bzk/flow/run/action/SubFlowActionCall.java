@@ -18,6 +18,8 @@ import net.bzk.flow.model.var.VarLv;
 import net.bzk.flow.model.var.VarVal;
 import net.bzk.flow.model.var.VarValSet;
 import net.bzk.flow.run.dao.RunFlowPoolDao;
+import net.bzk.flow.run.flow.FlowRuner.State;
+import net.bzk.infrastructure.ex.BzkRuntimeException;
 
 @Service("net.bzk.flow.model.Action$SubFlowAction")
 @Scope("prototype")
@@ -43,7 +45,7 @@ public class SubFlowActionCall extends ActionCall<SubFlowAction> {
 
 		List<KVPair> kvs = getModel().getInputData();
 		for (var kp : kvs) {
-			Object rv = getPolyglotEngine().parseCode(getModel().getPolyglot().toString(), kp.getVal());
+			Object rv = getPolyglotEngine().parseScriptbleText(kp.getVal(), Object.class);
 			var kinfo = VarLv.checkLvByPrefix(kp.getKey());
 			fr.getVars().put(kinfo.getKey(), rv);
 		}
@@ -53,6 +55,10 @@ public class SubFlowActionCall extends ActionCall<SubFlowAction> {
 		}
 
 		fr.run();
+		if(fr.getInfo().getState() == State.Fail) {
+			logUtils.logActionCall(getUids(), "getState is Fail");
+			throw new BzkRuntimeException(fr.getInfo().getTransition().getEndTag());
+		}
 		List<VarVal> ers = fr.getInfo().getEndResult();
 		VarValSet ans = new VarValSet();
 		List<VarKeyReflect> omap = getModel().getOutputReflects();

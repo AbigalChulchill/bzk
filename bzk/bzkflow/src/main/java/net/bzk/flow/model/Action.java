@@ -101,7 +101,6 @@ public class Action extends BzkObj {
 	@Data
 	@EqualsAndHashCode(callSuper = false)
 	public static class SubFlowAction extends Action {
-		private Polyglot polyglot = Polyglot.js;
 		private String flowUid;
 		private boolean asynced;
 		private List<KVPair> inputData;

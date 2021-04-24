@@ -1,0 +1,64 @@
+{
+    "clazz": "net.bzk.flow.model.Flow",
+    "uid": "I5pVYoW4XaZf",
+    "logEncryptKey": "1234567890123456",
+    "vars": {},
+    "varCfgNames": [],
+    "threadCfg": {
+        "corePoolSize": 10,
+        "maximumPoolSize": 50,
+        "keepAliveTime": 500,
+        "aliveUnit": "MINUTES"
+    },
+    "name": "AutoBuyBTC",
+    "boxs": [
+        {
+            "clazz": "net.bzk.flow.model.Box",
+            "uid": "QZn0EUAhrCDe",
+            "name": "Box",
+            "actions": [
+                {
+                    "clazz": "net.bzk.flow.model.Action$SubFlowAction",
+                    "uid": "hIJcf5WTi2mq",
+                    "name": "GetOverturnRate",
+                    "tryErrorble": false,
+                    "asynced": false,
+                    "inputData": [
+                        {
+                            "key": "tsdbQuery",
+                            "val": "import \"date\"\nimport \"math\"\n\ntrAvgCount30= from(bucket: \"quote\")\n  |> range(start: -30d)\n  |> filter(fn: (r) =>\n    r._measurement == \"daily\" and\n    (r.valmean == \"volume\"  or\n    r.valmean == \"open\") and\n    r.name == \"bitcoin\"\n  )\n  |> map(fn: (r) => ({ r with _time: date.truncate(t: r._time, unit: 1d)    }))\n  |> pivot(rowKey:[\"_time\"], columnKey: [\"valmean\"], valueColumn: \"_value\")\n  |> map(fn: (r) => ({ r with _value: r.volume / r.open }))\n  |>mean()\n  |> findColumn(\n    fn: (key) => true,\n    column: \"_value\"\n  )\n\n  priceAvg30 = from(bucket: \"quote\")\n  |> range(start: -30d)\n  |> filter(fn: (r) =>\n    r._measurement == \"daily\" and\n    r.valmean == \"open\" and\n    r.name == \"bitcoin\"\n  )\n  |> mean()\n  |> findColumn(\n    fn: (key) => true,\n    column: \"_value\"\n  )\n\n\nt1= from(bucket: \"quote\")\n  |> range(start: -5h)\n  |> filter(fn: (r) =>\n    r._measurement == \"realtime\" and\n    r.symbol == \"BTC\"\n  )\n  |> map(fn: (r) => ({ r with _time: date.truncate(t: r._time, unit: 1s) }))\n  |> pivot(rowKey:[\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")\n  |> map(fn: (r) => ({ r with count24: r.volume_24h / r.price  }))\n  |> map(fn: (r) => ({ r with countRate24: (r.count24-trAvgCount30[0]) / trAvgCount30[0]  }))\n  |> map(fn: (r) => ({ r with priceRate: (r.price-priceAvg30[0])/priceAvg30[0]  }))\n  |> map(fn: (r) => ({ r with _value: (r.countRate24 * r.priceRate) *10.00  }))\n\n  t1"
+                        }
+                    ],
+                    "outputReflects": [
+                        {
+                            "srcKey": "nearVal",
+                            "toKey": {
+                                "lv": "not_specify",
+                                "key": "tsdbQueryResult"
+                            }
+                        }
+                    ],
+                    "flowUid": "9RLQvpmbGa35"
+                }
+            ],
+            "links": [],
+            "vars": {},
+            "taskSort": [
+                "hIJcf5WTi2mq"
+            ],
+            "transition": {
+                "toBox": "",
+                "endTag": "TODO Why",
+                "endResultKeys": []
+            },
+            "whileJudgment": null
+        }
+    ],
+    "entry": {
+        "clazz": "net.bzk.flow.model.Entry$FixedRateEntry",
+        "period": -1,
+        "unit": "SECONDS",
+        "initialDelay": 2,
+        "boxUid": "QZn0EUAhrCDe"
+    }
+}
