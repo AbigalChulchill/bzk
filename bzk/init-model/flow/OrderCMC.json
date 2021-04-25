@@ -1,0 +1,110 @@
+{
+    "clazz": "net.bzk.flow.model.Flow",
+    "uid": "02eQyaMwyojZ",
+    "logEncryptKey": "1234567890123456",
+    "vars": {
+        "investedRate": 0.1,
+        "guardRange": 0.05,
+        "quote": 100.01,
+        "symbol": "ETC",
+        "selled": true
+    },
+    "varCfgNames": [
+        "binance.json",
+        "mail.json",
+        "fin-proxy.json"
+    ],
+    "threadCfg": {
+        "corePoolSize": 10,
+        "maximumPoolSize": 50,
+        "keepAliveTime": 500,
+        "aliveUnit": "MINUTES"
+    },
+    "name": "OrderCMC",
+    "boxs": [
+        {
+            "clazz": "net.bzk.flow.model.Box",
+            "uid": "htivUO7YKtyD",
+            "name": "Box",
+            "actions": [
+                {
+                    "clazz": "net.bzk.flow.model.HttpAction",
+                    "uid": "OcPQySOCy0Gn",
+                    "name": "PostOrder",
+                    "tryErrorble": false,
+                    "url": "${binance.proxyHost}proxy",
+                    "method": "POST",
+                    "uriVariables": {},
+                    "body": "{\r\n    \"name\":\"post_order\",\r\n    \"apiKey\":\"${binance.key}\",\r\n    \"secret\":\"${binance.secret}\",\r\n    \"investedRate\":${investedRate},\r\n    \"guardRange\":${guardRange},\r\n    \"quote\":${quote},\r\n    \"symbol\":\"${symbol}\",\r\n    \"selled\":${selled}\r\n}",
+                    "headers": {},
+                    "headersFlat": "",
+                    "key": {
+                        "lv": "not_specify",
+                        "key": "postResult"
+                    }
+                },
+                {
+                    "clazz": "net.bzk.flow.model.Action$MailAction",
+                    "uid": "fzgczwZFFaF2",
+                    "name": "NotifyMail",
+                    "tryErrorble": false,
+                    "smtpHost": "\"smtp.gmail.com\"",
+                    "smtpPort": "465",
+                    "username": "${gmail.username}",
+                    "password": "${gmail.password}",
+                    "toMail": "a29243004@gmail.com",
+                    "subject": "Order CMC",
+                    "body": "    name=\"post_order\" \\n\\r\n    investedRate=${investedRate} \\n\\r\n    guardRange=${guardRange} \\n\\r\n    quote=${postResult.quantity} \\n\\r\n    symbol=\"${symbol}\" \\n\\r\n    selled=${selled} \\n\\r"
+                },
+                {
+                    "clazz": "net.bzk.flow.model.HttpAction",
+                    "uid": "v76HZ4OF7xag",
+                    "name": "PostRecord",
+                    "tryErrorble": false,
+                    "url": "${finProxyUrl}/proxy/tsdb/insert/multiple",
+                    "method": "POST",
+                    "uriVariables": {},
+                    "body": "${packPayload}",
+                    "headers": {},
+                    "headersFlat": "",
+                    "key": {
+                        "lv": "not_specify",
+                        "key": ""
+                    }
+                },
+                {
+                    "clazz": "net.bzk.flow.model.Action$PolyglotAction",
+                    "uid": "OsO92tVBABAB",
+                    "name": "GenRecordDto",
+                    "tryErrorble": false,
+                    "code": "const ans = [];\r\nconst dat = new Date();\r\nans.push(genPointDto('price',${postResult.price}));\r\nans.push(genPointDto('quantity',${postResult.quantity}));\r\n\r\nfunction genPointDto(fd,v,at){\r\n  const row = {\r\n      measurement : 'ordermanage',\r\n      tags:{\r\n        symbol : \"${symbol}\",\r\n        category:'cryptocurrency',\r\n        source:'cmc-linear-futures'\r\n      },\r\n      field: fd,\r\n      val:v,\r\n      time :dat\r\n  };\r\n  return row;\r\n}\r\n\r\nans;",
+                    "polyglot": "js",
+                    "resultLv": "not_specify",
+                    "resultKey": "packPayload"
+                }
+            ],
+            "links": [],
+            "vars": {},
+            "taskSort": [
+                "OcPQySOCy0Gn",
+                "OsO92tVBABAB",
+                "v76HZ4OF7xag",
+                "fzgczwZFFaF2"
+            ],
+            "transition": {
+                "toBox": "",
+                "failEnd": false,
+                "endTag": "TODO Why",
+                "endResultKeys": []
+            },
+            "whileJudgment": null
+        }
+    ],
+    "entry": {
+        "clazz": "net.bzk.flow.model.Entry$FixedRateEntry",
+        "period": -1,
+        "unit": "SECONDS",
+        "initialDelay": 2,
+        "boxUid": "htivUO7YKtyD"
+    }
+}
