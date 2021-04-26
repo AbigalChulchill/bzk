@@ -57,6 +57,7 @@ public class Condition implements OType {
 	public static class ConditionTxt extends Condition{
 		private String left;
 		private String right;
+		private boolean not;
 		private TxtCheckType type;
 		
 		

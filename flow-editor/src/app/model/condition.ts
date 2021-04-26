@@ -69,6 +69,11 @@ export class ConditionTxt extends Condition {
   public left = '';
   public right = '';
   public type= TxtCheckType.contains;
+  @PropInfo({
+    title: 'not',
+    type: PropType.Boolean
+  })
+  public  not = false;
 
   public static gen(): ConditionTxt {
     const na = new ConditionTxt();

@@ -1,5 +1,6 @@
 package net.bzk.flow.api;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -59,16 +60,16 @@ public class JobController {
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	@RequestMapping(value = "save", method = RequestMethod.POST)
-	public Job save(@RequestBody Flow f) {
-		return service.save(f);
+	public Job save(@RequestBody Flow f) throws IOException {
+		return service.save(f,true);
 	}
 	
 	
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	@RequestMapping(value = "new", method = RequestMethod.POST)
-	public Job save() {
-		return service.save(modelBuilder.init().getModel());
+	public Job save() throws IOException {
+		return service.save(modelBuilder.init().getModel(),true);
 	}
 	
 	

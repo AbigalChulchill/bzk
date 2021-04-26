@@ -1,5 +1,6 @@
 package net.bzk.flow.api;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -43,8 +44,8 @@ public class VarCfgController {
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	@RequestMapping(value = "save", method = RequestMethod.POST)
-	public VarCfg save(@RequestBody VarCfg v) {
-		return service.save(v);
+	public VarCfg save(@RequestBody VarCfg v) throws IOException {
+		return service.save(v,true);
 	}
 
 

@@ -11,17 +11,23 @@ import net.bzk.infrastructure.ex.BzkRuntimeException;
 @Scope("prototype")
 public class ConditionTxter extends Conditioner<ConditionTxt> {
 
-
-
 	public ConditionTxter() {
 		super(ConditionTxt.class);
 	}
 
 	@Override
 	public boolean checkSelf() {
+		if (getModel().isNot()) {
+			return !check();
+		} else {
+			return check();
+		}
 
-		String ls = getPolyglotEngine().parseScriptbleText(getModel().getLeft(), String.class) ;
-		String rs = getPolyglotEngine().parseScriptbleText(getModel().getRight(), String.class) ;
+	}
+
+	private boolean check() {
+		String ls = getPolyglotEngine().parseScriptbleText(getModel().getLeft(), String.class);
+		String rs = getPolyglotEngine().parseScriptbleText(getModel().getRight(), String.class);
 		switch (getModel().getType()) {
 		case equal:
 			return StringUtils.equals(ls, rs);

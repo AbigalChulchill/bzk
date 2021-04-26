@@ -2,10 +2,9 @@ package net.bzk.flow.run.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -14,7 +13,9 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,7 +32,10 @@ import net.bzk.infrastructure.ex.BzkRuntimeException;
 @Service
 public class JobsService {
 
-	public static final String initDataPath = "/bzk/model/flow/";
+	@Value("${init.data.path}")
+	private String initDataPath;
+	@Value("${init.data.saveback}")
+	private boolean saveBackInited = false;
 
 	@Inject
 	private JobsDao dao;
@@ -53,7 +57,7 @@ public class JobsService {
 	private void importByFile(File f) {
 		try {
 			Flow flow = BzkFlowUtils.getFlowJsonMapper().readValue(f, Flow.class);
-			save(flow);
+			save(flow,false);
 		} catch (IOException e) {
 			throw new BzkRuntimeException(e);
 		}
@@ -81,10 +85,13 @@ public class JobsService {
 	}
 
 	@Transactional
-	public Job save(Flow f) {
+	public Job save(Flow f,boolean saveFile) throws IOException {
 		var sfo = dao.findById(f.getUid());
 		Job sf = sfo.orElse(Job.gen(f));
 		sf.setModel(f);
+		if(saveBackInited && saveFile ) {
+			FileUtils.write(new File(initDataPath + f.getName() + ".json"), JsonUtils.toJson(f), Charset.forName("UTF-8"));
+		}
 		return dao.save(sf);
 	}
 
