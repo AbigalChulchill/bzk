@@ -39,6 +39,7 @@ public class PolyglotEngine {
 		logUtils.logActionCall(varQueryer.getUids(), o.getClass() + " " + o);
 		if (o instanceof String) {
 			try {
+				logUtils.logActionCall(varQueryer.getUids(), o.toString());
 				Object ans = callPolyglot(polyglot, o.toString());
 				logUtils.logActionCall(varQueryer.getUids(), "callPolyglot " + ans.getClass() + " " + ans);
 				return ans;
@@ -76,6 +77,8 @@ public class PolyglotEngine {
 		Object d = JsonUtils.stringToValue(ii);
 		HttpMethod ss = JsonUtils.toByJson(d, HttpMethod.class);
 		System.out.println("d=" + ss);
+		
+		
 
 	}
 

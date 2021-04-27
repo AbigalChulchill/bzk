@@ -71,7 +71,7 @@ public class RunFlowService {
 		runPoolDao.forceRemove(fuid);
 	}
 
-	public void debugAction(ActionDebugData data, long delDelay) throws InterruptedException {
+	public void testAction(ActionDebugData data, long delDelay) throws InterruptedException {
 		String uid = RandomStringUtils.randomAlphanumeric(64);
 		data.getFlow().setUid(uid);
 		data.getFlow().setVars(data.getFlowVar());

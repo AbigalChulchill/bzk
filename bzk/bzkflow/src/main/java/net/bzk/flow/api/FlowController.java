@@ -88,8 +88,8 @@ public class FlowController {
 
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(value = "debug/action", method = RequestMethod.POST)
-	public void debugAction(@RequestBody ActionDebugData data, @RequestParam int delDelay) throws InterruptedException {
-		runFlowService.debugAction(data, delDelay);
+	public void testAction(@RequestBody ActionDebugData data, @RequestParam int delDelay) throws InterruptedException {
+		runFlowService.testAction(data, delDelay);
 	}
 	
 	@ResponseStatus(HttpStatus.OK)

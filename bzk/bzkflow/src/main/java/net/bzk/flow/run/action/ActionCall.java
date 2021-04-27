@@ -77,7 +77,7 @@ public abstract class ActionCall<T extends Action> implements Callable<VarValSet
 
 	public static void main(String[] args) throws IOException {
 		try (Context context = Context.newBuilder().allowAllAccess(true).build()) {
-			Value function = context.eval("js", "const ans ={a:'b',c:[1,{a:'d'},3]}; ans;");
+			Value function = context.eval("js", "Math.cbrt(0.2)");
 			Object ov = BzkFlowUtils.fixPolyglotObj(function);
 			System.out.println(ov);
 			function = context.eval("js", "const g =[1,{a:'d',c:[1,2,3]},3]; g;");
