@@ -97,7 +97,7 @@
     ],
     "entry": {
         "clazz": "net.bzk.flow.model.Entry$FixedRateEntry",
-        "period": 6,
+        "period": 5,
         "unit": "MINUTES",
         "initialDelay": 0,
         "boxUid": "0wakszWfpHcG"

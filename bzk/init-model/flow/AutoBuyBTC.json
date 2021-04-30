@@ -16,63 +16,6 @@
     "boxs": [
         {
             "clazz": "net.bzk.flow.model.Box",
-            "uid": "y6wIhOLoo4Q7",
-            "name": "RecentOrderCheck",
-            "actions": [
-                {
-                    "clazz": "net.bzk.flow.model.HttpAction",
-                    "uid": "RkarJVfhCtq4",
-                    "name": "ListRecentOrder",
-                    "tryErrorble": false,
-                    "url": "${finProxyUrl}/proxy/tsdb",
-                    "method": "POST",
-                    "uriVariables": {},
-                    "body": "!javascript===\nconst q =  `\nfrom(bucket: \"quote\")\n  |> range(start: -15m)\n  |> filter(fn: (r) =>\n    r._measurement == \"ordermanage\" and\n    r._field == \"price\" and\n    r.symbol == \"BTC\"\n  )\n`;\n\nans= {\n    \"query\":q\n};\n\nans",
-                    "headers": {},
-                    "headersFlat": "",
-                    "key": {
-                        "lv": "not_specify",
-                        "key": "recentList"
-                    }
-                }
-            ],
-            "links": [
-                {
-                    "clazz": "net.bzk.flow.model.Link",
-                    "uid": "37LwtDg7U7j7",
-                    "name": "existRecntOrder",
-                    "transition": {
-                        "toBox": "",
-                        "failEnd": false,
-                        "endTag": "RecentOrder",
-                        "endResultKeys": []
-                    },
-                    "condition": {
-                        "clazz": "net.bzk.flow.model.Condition$ConditionTxt",
-                        "kind": "NONE",
-                        "left": "${recentList}",
-                        "right": "[]",
-                        "type": "equal",
-                        "not": true,
-                        "next": null
-                    }
-                }
-            ],
-            "vars": {},
-            "taskSort": [
-                "RkarJVfhCtq4",
-                "37LwtDg7U7j7"
-            ],
-            "transition": {
-                "toBox": "L3ntSbK55wM6",
-                "failEnd": false,
-                "endTag": null,
-                "endResultKeys": []
-            },
-            "whileJudgment": null
-        },
-        {
-            "clazz": "net.bzk.flow.model.Box",
             "uid": "L3ntSbK55wM6",
             "name": "PriceBiasCheck",
             "actions": [
@@ -131,7 +74,7 @@
                     "inputData": [
                         {
                             "key": "investedRate",
-                            "val": "0.05"
+                            "val": "0.168"
                         },
                         {
                             "key": "guardRange",
@@ -186,6 +129,63 @@
                 "toBox": "",
                 "failEnd": false,
                 "endTag": "DONE ORDER",
+                "endResultKeys": []
+            },
+            "whileJudgment": null
+        },
+        {
+            "clazz": "net.bzk.flow.model.Box",
+            "uid": "y6wIhOLoo4Q7",
+            "name": "RecentOrderCheck",
+            "actions": [
+                {
+                    "clazz": "net.bzk.flow.model.HttpAction",
+                    "uid": "RkarJVfhCtq4",
+                    "name": "ListRecentOrder",
+                    "tryErrorble": false,
+                    "url": "${finProxyUrl}/proxy/tsdb",
+                    "method": "POST",
+                    "uriVariables": {},
+                    "body": "!javascript===\nconst q =  `\nfrom(bucket: \"quote\")\n  |> range(start: -15m)\n  |> filter(fn: (r) =>\n    r._measurement == \"ordermanage\" and\n    r._field == \"price\" and\n    r.symbol == \"BTC\"\n  )\n`;\n\nans= {\n    \"query\":q\n};\n\nans",
+                    "headers": {},
+                    "headersFlat": "",
+                    "key": {
+                        "lv": "not_specify",
+                        "key": "recentList"
+                    }
+                }
+            ],
+            "links": [
+                {
+                    "clazz": "net.bzk.flow.model.Link",
+                    "uid": "37LwtDg7U7j7",
+                    "name": "existRecntOrder",
+                    "transition": {
+                        "toBox": "",
+                        "failEnd": false,
+                        "endTag": "RecentOrder",
+                        "endResultKeys": []
+                    },
+                    "condition": {
+                        "clazz": "net.bzk.flow.model.Condition$ConditionTxt",
+                        "kind": "NONE",
+                        "left": "${recentList}",
+                        "right": "[]",
+                        "type": "equal",
+                        "not": true,
+                        "next": null
+                    }
+                }
+            ],
+            "vars": {},
+            "taskSort": [
+                "RkarJVfhCtq4",
+                "37LwtDg7U7j7"
+            ],
+            "transition": {
+                "toBox": "L3ntSbK55wM6",
+                "failEnd": false,
+                "endTag": null,
                 "endResultKeys": []
             },
             "whileJudgment": null
