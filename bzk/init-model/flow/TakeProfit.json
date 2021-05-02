@@ -1,0 +1,60 @@
+{
+    "clazz": "net.bzk.flow.model.Flow",
+    "uid": "nEz73RShrgYl",
+    "logEncryptKey": "1234567890123456",
+    "vars": {},
+    "varCfgNames": [
+        "binance.json"
+    ],
+    "threadCfg": {
+        "corePoolSize": 10,
+        "maximumPoolSize": 50,
+        "keepAliveTime": 500,
+        "aliveUnit": "MINUTES"
+    },
+    "name": "TakeProfit",
+    "boxs": [
+        {
+            "clazz": "net.bzk.flow.model.Box",
+            "uid": "Bcb74l8xn8Vp",
+            "name": "Box",
+            "actions": [
+                {
+                    "clazz": "net.bzk.flow.model.HttpAction",
+                    "uid": "SeLyuTfm6Sj5",
+                    "name": "PostAPI",
+                    "tryErrorble": false,
+                    "url": "${binance.proxyHost}proxy",
+                    "method": "POST",
+                    "uriVariables": {},
+                    "body": "{\n    \"name\":\"takeprofit\",\n    \"apiKey\":\"${binance.key}\",\n    \"secret\":\"${binance.secret}\",\n    \"profitRate\":0.5,\n    \"topRate\":0.7,\n    \"cutCount\":4\n}",
+                    "headers": {},
+                    "headersFlat": "",
+                    "key": {
+                        "lv": "not_specify",
+                        "key": ""
+                    }
+                }
+            ],
+            "links": [],
+            "vars": {},
+            "taskSort": [
+                "SeLyuTfm6Sj5"
+            ],
+            "transition": {
+                "toBox": "",
+                "failEnd": false,
+                "endTag": "DONE",
+                "endResultKeys": []
+            },
+            "whileJudgment": null
+        }
+    ],
+    "entry": {
+        "clazz": "net.bzk.flow.model.Entry$FixedRateEntry",
+        "period": 10,
+        "unit": "MINUTES",
+        "initialDelay": 0,
+        "boxUid": "Bcb74l8xn8Vp"
+    }
+}
