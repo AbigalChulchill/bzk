@@ -1,264 +1,246 @@
 {
-    "clazz": "net.bzk.flow.model.Flow",
-    "uid": "I5pVYoW4XaZf",
-    "logEncryptKey": "1234567890123456",
-    "vars": {},
-    "varCfgNames": [
-        "fin-proxy.json"
-    ],
-    "threadCfg": {
-        "corePoolSize": 10,
-        "maximumPoolSize": 50,
-        "keepAliveTime": 500,
-        "aliveUnit": "MINUTES"
-    },
-    "name": "AutoBuyBTC",
-    "boxs": [
+  "clazz": "net.bzk.flow.model.Flow",
+  "uid": "I5pVYoW4XaZf",
+  "logEncryptKey": "1234567890123456",
+  "vars": {},
+  "varCfgNames": [
+    "fin-proxy.json"
+  ],
+  "threadCfg": {
+    "corePoolSize": 10,
+    "maximumPoolSize": 50,
+    "keepAliveTime": 500,
+    "aliveUnit": "MINUTES"
+  },
+  "name": "AutoBuyBTC",
+  "boxs": [
+    {
+      "clazz": "net.bzk.flow.model.Box",
+      "uid": "L3ntSbK55wM6",
+      "name": "PriceBiasCheck",
+      "actions": [
         {
-            "clazz": "net.bzk.flow.model.Box",
-            "uid": "L3ntSbK55wM6",
-            "name": "PriceBiasCheck",
-            "actions": [
-                {
-                    "clazz": "net.bzk.flow.model.Action$SubFlowAction",
-                    "uid": "gAnX9MVBEQH4",
-                    "name": "GetBiasRate",
-                    "tryErrorble": false,
-                    "asynced": false,
-                    "inputData": [
-                        {
-                            "key": "tsdbQuery",
-                            "val": "avg30 = from(bucket: \"quote\")\r\n  |> range(start: -30d)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"daily\" and\r\n    r.valmean == \"open\" and\r\n    r.name == \"bitcoin\"\r\n  )\r\n  |> mean()\r\n  |> findColumn(\r\n    fn: (key) => true,\r\n    column: \"_value\"\r\n  )  \r\n\r\n\r\nt1 = from(bucket: \"quote\")\r\n  |> range(start: -5h)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"realtime\" and\r\n    r._field == \"price\" and\r\n    r.symbol == \"BTC\" \r\n  )\r\n  |> map(fn: (r) => ({ r with _value: (r._value-avg30[0]) / avg30[0]  }))\r\n\r\nt1"
-                        }
-                    ],
-                    "outputReflects": [
-                        {
-                            "srcKey": "nearVal",
-                            "toKey": {
-                                "lv": "not_specify",
-                                "key": "biasRate"
-                            }
-                        }
-                    ],
-                    "flowUid": "9RLQvpmbGa35"
-                },
-                {
-                    "clazz": "net.bzk.flow.model.Action$SubFlowAction",
-                    "uid": "R9qOclgIfzlB",
-                    "name": "GetLastPrice",
-                    "tryErrorble": false,
-                    "asynced": false,
-                    "inputData": [
-                        {
-                            "key": "tsdbQuery",
-                            "val": "from(bucket: \"quote\")\r\n  |> range(start: -3h)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"realtime\" and\r\n    r._field == \"price\" and\r\n    r.symbol == \"BTC\" \r\n  )"
-                        }
-                    ],
-                    "outputReflects": [
-                        {
-                            "srcKey": "nearVal",
-                            "toKey": {
-                                "lv": "not_specify",
-                                "key": "nowPrice"
-                            }
-                        }
-                    ],
-                    "flowUid": "9RLQvpmbGa35"
-                },
-                {
-                    "clazz": "net.bzk.flow.model.Action$SubFlowAction",
-                    "uid": "Z9v4593EeiEJ",
-                    "name": "Ordered",
-                    "tryErrorble": false,
-                    "asynced": false,
-                    "inputData": [
-                        {
-                            "key": "investedRate",
-                            "val": "0.168"
-                        },
-                        {
-                            "key": "guardRange",
-                            "val": "!javascript===\nvar np = ${biasRate.val};\nvar ans =  Math.pow(np,1/4);\nans=  (1+ans)/5;\nans;"
-                        },
-                        {
-                            "key": "quote",
-                            "val": "${nowPrice.val}"
-                        },
-                        {
-                            "key": "symbol",
-                            "val": "BTC"
-                        },
-                        {
-                            "key": "selled",
-                            "val": "true"
-                        }
-                    ],
-                    "outputReflects": [],
-                    "flowUid": "02eQyaMwyojZ"
-                }
-            ],
-            "links": [
-                {
-                    "clazz": "net.bzk.flow.model.Link",
-                    "uid": "5Tpm9sipTU7u",
-                    "name": "PriceBiasFilter",
-                    "transition": {
-                        "toBox": "",
-                        "failEnd": false,
-                        "endTag": "noenoughPriceBias",
-                        "endResultKeys": []
-                    },
-                    "condition": {
-                        "clazz": "net.bzk.flow.model.Condition$ConditionNum",
-                        "kind": "NONE",
-                        "left": "${biasRate.val}",
-                        "right": "-0.086",
-                        "type": "greater",
-                        "next": null
-                    }
-                }
-            ],
-            "vars": {},
-            "taskSort": [
-                "gAnX9MVBEQH4",
-                "5Tpm9sipTU7u",
-                "R9qOclgIfzlB",
-                "Z9v4593EeiEJ"
-            ],
-            "transition": {
-                "toBox": "",
-                "failEnd": false,
-                "endTag": "DONE ORDER",
-                "endResultKeys": []
-            },
-            "whileJudgment": null
+          "clazz": "net.bzk.flow.model.Action$SubFlowAction",
+          "uid": "gAnX9MVBEQH4",
+          "name": "GetBiasRate",
+          "tryErrorble": false,
+          "asynced": false,
+          "inputData": [
+            {
+              "key": "tsdbQuery",
+              "val": "avg30 = from(bucket: \"quote\")\r\n  |> range(start: -30d)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"daily\" and\r\n    r.valmean == \"open\" and\r\n    r.name == \"bitcoin\"\r\n  )\r\n  |> mean()\r\n  |> findColumn(\r\n    fn: (key) => true,\r\n    column: \"_value\"\r\n  )  \r\n\r\n\r\nt1 = from(bucket: \"quote\")\r\n  |> range(start: -5h)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"realtime\" and\r\n    r._field == \"price\" and\r\n    r.symbol == \"BTC\" \r\n  )\r\n  |> map(fn: (r) => ({ r with _value: (r._value-avg30[0]) / avg30[0]  }))\r\n\r\nt1"
+            }
+          ],
+          "outputReflects": [
+            {
+              "srcKey": "nearVal",
+              "toKey": {
+                "lv": "not_specify",
+                "key": "biasRate"
+              }
+            }
+          ],
+          "flowUid": "9RLQvpmbGa35"
         },
         {
-            "clazz": "net.bzk.flow.model.Box",
-            "uid": "y6wIhOLoo4Q7",
-            "name": "RecentOrderCheck",
-            "actions": [
-                {
-                    "clazz": "net.bzk.flow.model.HttpAction",
-                    "uid": "RkarJVfhCtq4",
-                    "name": "ListRecentOrder",
-                    "tryErrorble": false,
-                    "url": "${finProxyUrl}/proxy/tsdb",
-                    "method": "POST",
-                    "uriVariables": {},
-                    "body": "!javascript===\nconst q =  `\nfrom(bucket: \"quote\")\n  |> range(start: -15m)\n  |> filter(fn: (r) =>\n    r._measurement == \"ordermanage\" and\n    r._field == \"price\" and\n    r.symbol == \"BTC\"\n  )\n`;\n\nans= {\n    \"query\":q\n};\n\nans",
-                    "headers": {},
-                    "headersFlat": "",
-                    "key": {
-                        "lv": "not_specify",
-                        "key": "recentList"
-                    }
-                }
-            ],
-            "links": [
-                {
-                    "clazz": "net.bzk.flow.model.Link",
-                    "uid": "37LwtDg7U7j7",
-                    "name": "existRecntOrder",
-                    "transition": {
-                        "toBox": "",
-                        "failEnd": false,
-                        "endTag": "RecentOrder",
-                        "endResultKeys": []
-                    },
-                    "condition": {
-                        "clazz": "net.bzk.flow.model.Condition$ConditionTxt",
-                        "kind": "NONE",
-                        "left": "${recentList}",
-                        "right": "[]",
-                        "type": "equal",
-                        "not": true,
-                        "next": null
-                    }
-                }
-            ],
-            "vars": {},
-            "taskSort": [
-                "RkarJVfhCtq4",
-                "37LwtDg7U7j7"
-            ],
-            "transition": {
-                "toBox": "L3ntSbK55wM6",
-                "failEnd": false,
-                "endTag": null,
-                "endResultKeys": []
+          "clazz": "net.bzk.flow.model.Action$SubFlowAction",
+          "uid": "Z9v4593EeiEJ",
+          "name": "Ordered",
+          "tryErrorble": false,
+          "asynced": false,
+          "inputData": [
+            {
+              "key": "investedRate",
+              "val": "0.168"
             },
-            "whileJudgment": null
-        },
-        {
-            "clazz": "net.bzk.flow.model.Box",
-            "uid": "QZn0EUAhrCDe",
-            "name": "OverTurnCheck",
-            "actions": [
-                {
-                    "clazz": "net.bzk.flow.model.Action$SubFlowAction",
-                    "uid": "hIJcf5WTi2mq",
-                    "name": "GetOverturnRate",
-                    "tryErrorble": false,
-                    "asynced": false,
-                    "inputData": [
-                        {
-                            "key": "tsdbQuery",
-                            "val": "import \"date\"\nimport \"math\"\n\ntrAvgCount30= from(bucket: \"quote\")\n  |> range(start: -30d)\n  |> filter(fn: (r) =>\n    r._measurement == \"daily\" and\n    (r.valmean == \"volume\"  or\n    r.valmean == \"open\") and\n    r.name == \"bitcoin\"\n  )\n  |> map(fn: (r) => ({ r with _time: date.truncate(t: r._time, unit: 1d)    }))\n  |> pivot(rowKey:[\"_time\"], columnKey: [\"valmean\"], valueColumn: \"_value\")\n  |> map(fn: (r) => ({ r with _value: r.volume / r.open }))\n  |>mean()\n  |> findColumn(\n    fn: (key) => true,\n    column: \"_value\"\n  )\n\n  priceAvg30 = from(bucket: \"quote\")\n  |> range(start: -30d)\n  |> filter(fn: (r) =>\n    r._measurement == \"daily\" and\n    r.valmean == \"open\" and\n    r.name == \"bitcoin\"\n  )\n  |> mean()\n  |> findColumn(\n    fn: (key) => true,\n    column: \"_value\"\n  )\n\n\nt1= from(bucket: \"quote\")\n  |> range(start: -5h)\n  |> filter(fn: (r) =>\n    r._measurement == \"realtime\" and\n    r.symbol == \"BTC\"\n  )\n  |> map(fn: (r) => ({ r with _time: date.truncate(t: r._time, unit: 1s) }))\n  |> pivot(rowKey:[\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")\n  |> map(fn: (r) => ({ r with count24: r.volume_24h / r.price  }))\n  |> map(fn: (r) => ({ r with countRate24: (r.count24-trAvgCount30[0]) / trAvgCount30[0]  }))\n  |> map(fn: (r) => ({ r with priceRate: (r.price-priceAvg30[0])/priceAvg30[0]  }))\n  |> map(fn: (r) => ({ r with _value: (r.countRate24 * r.priceRate) *10.00  }))\n\n  t1"
-                        }
-                    ],
-                    "outputReflects": [
-                        {
-                            "srcKey": "nearVal",
-                            "toKey": {
-                                "lv": "not_specify",
-                                "key": "tsdbQueryResult"
-                            }
-                        }
-                    ],
-                    "flowUid": "9RLQvpmbGa35"
-                }
-            ],
-            "links": [
-                {
-                    "clazz": "net.bzk.flow.model.Link",
-                    "uid": "TKJKsN1Na6Qx",
-                    "name": "OverturnFilter",
-                    "transition": {
-                        "toBox": "",
-                        "failEnd": false,
-                        "endTag": "noenoughOverturn",
-                        "endResultKeys": []
-                    },
-                    "condition": {
-                        "clazz": "net.bzk.flow.model.Condition$ConditionNum",
-                        "kind": "NONE",
-                        "left": "${tsdbQueryResult.val}",
-                        "right": "-0.5",
-                        "type": "greater_equal",
-                        "next": null
-                    }
-                }
-            ],
-            "vars": {},
-            "taskSort": [
-                "hIJcf5WTi2mq",
-                "TKJKsN1Na6Qx"
-            ],
-            "transition": {
-                "toBox": "y6wIhOLoo4Q7",
-                "failEnd": false,
-                "endTag": null,
-                "endResultKeys": []
+            {
+              "key": "guardRange",
+              "val": "!javascript===\nvar np = ${biasRate.val};\nvar ans =  Math.pow(np,1/4);\nans=  (1+ans)/5;\nans;"
             },
-            "whileJudgment": null
+            {
+              "key": "currentMove",
+              "val": 0.0068
+            },
+            {
+              "key": "symbol",
+              "val": "BTC"
+            },
+            {
+              "key": "selled",
+              "val": "false"
+            },
+            {
+              "key": "tags",
+              "val": [
+                "fellBuy"
+              ]
+            }
+          ],
+          "outputReflects": [],
+          "flowUid": "02eQyaMwyojZ"
         }
-    ],
-    "entry": {
-        "clazz": "net.bzk.flow.model.Entry$FixedRateEntry",
-        "period": 15,
-        "unit": "MINUTES",
-        "initialDelay": 0,
-        "boxUid": "QZn0EUAhrCDe"
+      ],
+      "links": [
+        {
+          "clazz": "net.bzk.flow.model.Link",
+          "uid": "5Tpm9sipTU7u",
+          "name": "PriceBiasFilter",
+          "transition": {
+            "toBox": "",
+            "failEnd": false,
+            "endTag": "noenoughPriceBias",
+            "endResultKeys": []
+          },
+          "condition": {
+            "clazz": "net.bzk.flow.model.Condition$ConditionNum",
+            "kind": "NONE",
+            "left": "${biasRate.val}",
+            "right": "-0.086",
+            "type": "greater",
+            "next": null
+          }
+        }
+      ],
+      "vars": {},
+      "taskSort": [
+        "gAnX9MVBEQH4",
+        "5Tpm9sipTU7u",
+        "Z9v4593EeiEJ"
+      ],
+      "transition": {
+        "toBox": "",
+        "failEnd": false,
+        "endTag": "DONE ORDER",
+        "endResultKeys": []
+      },
+      "whileJudgment": null
+    },
+    {
+      "clazz": "net.bzk.flow.model.Box",
+      "uid": "y6wIhOLoo4Q7",
+      "name": "RecentOrderCheck",
+      "actions": [
+        {
+          "clazz": "net.bzk.flow.model.HttpAction",
+          "uid": "RkarJVfhCtq4",
+          "name": "ListRecentOrder",
+          "tryErrorble": false,
+          "url": "${finProxyUrl}/proxy/tsdb",
+          "method": "POST",
+          "uriVariables": {},
+          "body": "!javascript===\nconst q =  `\nfrom(bucket: \"quote\")\n  |> range(start: -15m)\n  |> filter(fn: (r) =>\n    r._measurement == \"ordermanage\" and\n    r._field == \"price\" and\n    r.symbol == \"BTC\"\n  )\n`;\n\nans= {\n    \"query\":q\n};\n\nans",
+          "headers": {},
+          "headersFlat": "",
+          "key": {
+            "lv": "not_specify",
+            "key": "recentList"
+          }
+        }
+      ],
+      "links": [
+        {
+          "clazz": "net.bzk.flow.model.Link",
+          "uid": "37LwtDg7U7j7",
+          "name": "existRecntOrder",
+          "transition": {
+            "toBox": "",
+            "failEnd": false,
+            "endTag": "RecentOrder",
+            "endResultKeys": []
+          },
+          "condition": {
+            "clazz": "net.bzk.flow.model.Condition$ConditionTxt",
+            "kind": "NONE",
+            "left": "${recentList}",
+            "right": "[]",
+            "type": "equal",
+            "not": true,
+            "next": null
+          }
+        }
+      ],
+      "vars": {},
+      "taskSort": [
+        "RkarJVfhCtq4",
+        "37LwtDg7U7j7"
+      ],
+      "transition": {
+        "toBox": "L3ntSbK55wM6",
+        "failEnd": false,
+        "endTag": null,
+        "endResultKeys": []
+      },
+      "whileJudgment": null
+    },
+    {
+      "clazz": "net.bzk.flow.model.Box",
+      "uid": "QZn0EUAhrCDe",
+      "name": "OverTurnCheck",
+      "actions": [
+        {
+          "clazz": "net.bzk.flow.model.Action$SubFlowAction",
+          "uid": "hIJcf5WTi2mq",
+          "name": "GetOverturnRate",
+          "tryErrorble": false,
+          "asynced": false,
+          "inputData": [
+            {
+              "key": "tsdbQuery",
+              "val": "import \"date\"\nimport \"math\"\n\ntrAvgCount30= from(bucket: \"quote\")\n  |> range(start: -30d)\n  |> filter(fn: (r) =>\n    r._measurement == \"daily\" and\n    (r.valmean == \"volume\"  or\n    r.valmean == \"open\") and\n    r.name == \"bitcoin\"\n  )\n  |> map(fn: (r) => ({ r with _time: date.truncate(t: r._time, unit: 1d)    }))\n  |> pivot(rowKey:[\"_time\"], columnKey: [\"valmean\"], valueColumn: \"_value\")\n  |> map(fn: (r) => ({ r with _value: r.volume / r.open }))\n  |>mean()\n  |> findColumn(\n    fn: (key) => true,\n    column: \"_value\"\n  )\n\n  priceAvg30 = from(bucket: \"quote\")\n  |> range(start: -30d)\n  |> filter(fn: (r) =>\n    r._measurement == \"daily\" and\n    r.valmean == \"open\" and\n    r.name == \"bitcoin\"\n  )\n  |> mean()\n  |> findColumn(\n    fn: (key) => true,\n    column: \"_value\"\n  )\n\n\nt1= from(bucket: \"quote\")\n  |> range(start: -5h)\n  |> filter(fn: (r) =>\n    r._measurement == \"realtime\" and\n    r.symbol == \"BTC\"\n  )\n  |> map(fn: (r) => ({ r with _time: date.truncate(t: r._time, unit: 1s) }))\n  |> pivot(rowKey:[\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")\n  |> map(fn: (r) => ({ r with count24: r.volume_24h / r.price  }))\n  |> map(fn: (r) => ({ r with countRate24: (r.count24-trAvgCount30[0]) / trAvgCount30[0]  }))\n  |> map(fn: (r) => ({ r with priceRate: (r.price-priceAvg30[0])/priceAvg30[0]  }))\n  |> map(fn: (r) => ({ r with _value: (r.countRate24 * r.priceRate) *10.00  }))\n\n  t1"
+            }
+          ],
+          "outputReflects": [
+            {
+              "srcKey": "nearVal",
+              "toKey": {
+                "lv": "not_specify",
+                "key": "tsdbQueryResult"
+              }
+            }
+          ],
+          "flowUid": "9RLQvpmbGa35"
+        }
+      ],
+      "links": [
+        {
+          "clazz": "net.bzk.flow.model.Link",
+          "uid": "TKJKsN1Na6Qx",
+          "name": "OverturnFilter",
+          "transition": {
+            "toBox": "",
+            "failEnd": false,
+            "endTag": "noenoughOverturn",
+            "endResultKeys": []
+          },
+          "condition": {
+            "clazz": "net.bzk.flow.model.Condition$ConditionNum",
+            "kind": "NONE",
+            "left": "${tsdbQueryResult.val}",
+            "right": "-0.5",
+            "type": "greater_equal",
+            "next": null
+          }
+        }
+      ],
+      "vars": {},
+      "taskSort": [
+        "hIJcf5WTi2mq",
+        "TKJKsN1Na6Qx"
+      ],
+      "transition": {
+        "toBox": "y6wIhOLoo4Q7",
+        "failEnd": false,
+        "endTag": null,
+        "endResultKeys": []
+      },
+      "whileJudgment": null
     }
+  ],
+  "entry": {
+    "clazz": "net.bzk.flow.model.Entry$FixedRateEntry",
+    "boxUid": "QZn0EUAhrCDe",
+    "period": 15,
+    "unit": "MINUTES",
+    "initialDelay": 0
+  }
 }
