@@ -106,7 +106,7 @@
           "clazz": "net.bzk.flow.model.HttpAction",
           "uid": "OcPQy555y0Gn",
           "name": "PostOrder",
-          "tryErrorble": false,
+          "tryErrorble": true,
           "url": "${binance.proxyHost}proxy",
           "uriVariables": {},
           "body": "{\n    \"name\":\"cancel_by_filter\",\n    \"apiKey\":\"${binance.key}\",\n    \"secret\":\"${binance.secret}\",\n    \"symbol\":\"BTC\",\n    \"tags\":[\"shortTermBuy\"]\n}",
