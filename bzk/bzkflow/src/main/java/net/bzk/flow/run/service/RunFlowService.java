@@ -34,8 +34,8 @@ public class RunFlowService {
 	public void register(Flow f) {
 		boolean b = runPoolDao.create(f);
 		runPoolDao.launch(f.getUid());
-		if (!b)
-			throw new BzkRuntimeException("exist :" + f);
+//		if (!b)
+//			throw new BzkRuntimeException("exist :" + f);
 	}
 
 	public RunInfo test(String entryUid, List<Flow> fs) {
