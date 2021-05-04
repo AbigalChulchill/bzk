@@ -71,9 +71,7 @@
             },
             {
               "key": "tags",
-              "val": [
-                "fellBuy"
-              ]
+              "val": "[\"fellBuy\"]"
             }
           ],
           "outputReflects": [],
