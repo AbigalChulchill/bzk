@@ -103,6 +103,22 @@
       "name": "CountBais",
       "actions": [
         {
+          "clazz": "net.bzk.flow.model.HttpAction",
+          "uid": "OcPQy555y0Gn",
+          "name": "PostOrder",
+          "tryErrorble": false,
+          "url": "${binance.proxyHost}proxy",
+          "uriVariables": {},
+          "body": "{\n    \"name\":\"cancel_by_filter\",\n    \"apiKey\":\"${binance.key}\",\n    \"secret\":\"${binance.secret}\",\n    \"symbol\":\"BTC\",\n    \"tags\":[\"shortTermBuy\"]\n}",
+          "method": "POST",
+          "headers": {},
+          "headersFlat": "",
+          "key": {
+            "lv": "not_specify",
+            "key": "postResult"
+          }
+        },
+        {
           "clazz": "net.bzk.flow.model.Action$SubFlowAction",
           "uid": "wrEwqFhUGfj7",
           "name": "GetCountBais",
@@ -149,6 +165,7 @@
       ],
       "vars": {},
       "taskSort": [
+        "OcPQy555y0Gn",
         "wrEwqFhUGfj7",
         "DTHpTZgdmYYc"
       ],
