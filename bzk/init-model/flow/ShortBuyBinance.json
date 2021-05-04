@@ -211,9 +211,7 @@
             },
             {
               "key": "tags",
-              "val": [
-                "shortTermBuy"
-              ]
+              "val": "[\"shortTermBuy\"]"
             }
           ],
           "outputReflects": [],
