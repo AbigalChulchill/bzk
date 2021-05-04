@@ -27,7 +27,7 @@
           "url": "${binance.proxyHost}proxy",
           "method": "POST",
           "uriVariables": {},
-          "body": "{\n  \"name\": \"takeprofit\",\n  \"apiKey\": \"${binance.key}\",\n  \"secret\": \"${binance.secret}\",\n  \"profitRate\": 0.5,\n  \"topRate\": 0.7,\n  \"cutCount\": 4,\n  \"tags\": [\n    \"fellBuy\",\n    \"shortTermBuy\"\n  ]\n}",
+          "body": "{\n  \"name\": \"takeprofit\",\n  \"apiKey\": \"${binance.key}\",\n  \"secret\": \"${binance.secret}\",\n  \"profitRate\": 0.5,\n  \"topRate\": 0.7,\n  \"cutCount\": 4,\n  \"tags\": [\n    \"TakeProfit\"\n  ]\n}",
           "headers": {},
           "headersFlat": "",
           "key": {
