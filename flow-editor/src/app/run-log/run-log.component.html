@@ -44,7 +44,7 @@
                   class="badge badge-secondary">BOX</span></span>
               <span class="btn btn-info mr-2">{{ line.state }}<span class="badge badge-secondary">STATE</span></span>
               <span *ngIf=" !StringUtils.isBlank( line.msg)" class="btn btn-light mr-2">{{ line.msg | slice:0:120
-                }}<span class="badge badge-secondary">Message</span></span>
+                }}</span>
             </div>
 
           </mat-panel-title>
