@@ -5,5 +5,15 @@
     <button type="button" class="btn btn-secondary" (click)="setMode('code')">Json</button>
     <button type="button" class="btn btn-secondary" (click)="setMode('tree')">Tree</button>
     <button type="button" class="btn btn-secondary" [cdkCopyToClipboard]="copyJson">Copy</button>
+
+    <div class="input-group-append">
+      <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Import</button>
+      <div class="dropdown-menu">
+        <a class="dropdown-item" *ngFor="let k of listVarKeys()" (click)="importData(k)" href="javascript:void(0)">{{k}}</a>
+
+      </div>
+    </div>
+
   </div>
-</div>
+
+

@@ -2,6 +2,7 @@ import { TextProvide } from './../../infrastructure/meta';
 import { ClazzExComponent } from './../../utils/prop-utils';
 import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import { CommUtils } from 'src/app/utils/comm-utils';
+import { VarCfgService } from 'src/app/service/var-cfg.service';
 declare var jquery: any;
 declare let $: any;
 declare let JSONEditor: any;
@@ -20,7 +21,9 @@ export class JsonEditorComponent implements OnInit, ClazzExComponent, AfterViewI
   public fullWidth = false;
   private exOrgObj: any;
 
-  constructor() { }
+  constructor(
+    private varCfg: VarCfgService,
+  ) { }
 
   async ngAfterViewInit(): Promise<void> {
     await CommUtils.delay(10);
@@ -68,6 +71,19 @@ export class JsonEditorComponent implements OnInit, ClazzExComponent, AfterViewI
   public setMode(m: string): void {
     this.mode = m;
     this.setupJsonEditor();
+  }
+
+  public listVarKeys(): Array<string> {
+    return this.varCfg.list.map(v => v.name);
+  }
+
+  public importData(cfgk: string): void {
+    const cfg = this.varCfg.get(cfgk);
+    const orgj = JSON.parse(this.data.getStr())
+    let merged = { ...orgj, ...cfg.content };
+    this.data.setStr(JSON.stringify(merged));
+    this.setupJsonEditor();
+
   }
 
   public setData(dp: TextProvide): void {
