@@ -13,6 +13,19 @@
 
         </li>
 
+        <li class="dropdown nav-item">
+          <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
+            <i class="fas fa-play"></i>
+            <span class="d-lg-none"></span>
+            <span>{{runState ? runState : 'Choose' }}</span>
+          </a>
+          <ul class="dropdown-menu">
+            <a class="dropdown-item" href="javascript:void(0)" (click)="setRunState(rs)"
+              *ngFor="let rs of listRunState()">{{  rs ? rs : 'all' }}</a>
+
+          </ul>
+        </li>
+
 
       </ul>
 
@@ -20,28 +33,25 @@
     </div>
   </div>
 </nav>
-<div class="content ">
+<div class="content list-dev">
   <div class="listline" #listlineDom>
     <mat-accordion>
-      <mat-expansion-panel hideToggle *ngFor="let line of list">
+      <mat-expansion-panel hideToggle *ngFor="let line of listLogs()">
         <mat-expansion-panel-header>
           <mat-panel-title>
-            <div >
-              <span class="btn-danger"
-                class="btn btn-primary mr-2">{{ line.boxName }}<span
+            <div>
+              <span class="btn-danger" class="btn btn-primary mr-2">{{ line.boxName }}<span
                   class="badge badge-secondary">BOX</span></span>
-              <span class="btn btn-info mr-2">{{ line.state }}<span
-                  class="badge badge-secondary">STATE</span></span>
-              <span *ngIf=" !StringUtils.isBlank( line.msg)"
-                class="btn btn-light mr-2">{{  line.msg | slice:0:120 }}<span
-                  class="badge badge-secondary">Message</span></span>
+              <span class="btn btn-info mr-2">{{ line.state }}<span class="badge badge-secondary">STATE</span></span>
+              <span *ngIf=" !StringUtils.isBlank( line.msg)" class="btn btn-light mr-2">{{ line.msg | slice:0:120
+                }}<span class="badge badge-secondary">Message</span></span>
             </div>
 
           </mat-panel-title>
 
         </mat-expansion-panel-header>
 
-        <app-log-row  [log]="line">
+        <app-log-row [log]="line">
         </app-log-row>
 
 

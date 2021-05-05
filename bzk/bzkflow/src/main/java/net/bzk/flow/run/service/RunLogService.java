@@ -41,6 +41,13 @@ public class RunLogService {
 		brl.setMsg(msg);
 		dao.save(brl);
 	}
+	
+	public void logWithMsg(Uids u,RunState rs, String msg) {
+		RunLog brl = genLog(u);
+		brl.setState(rs);
+		brl.setMsg(msg);
+		dao.save(brl);
+	}
 
 	public void logActionCallWarn(Uids u, String wmsg) {
 		RunLog brl = genLog(u);

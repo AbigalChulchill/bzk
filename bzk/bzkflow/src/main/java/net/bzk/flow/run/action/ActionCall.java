@@ -11,16 +11,19 @@ import org.graalvm.polyglot.Value;
 
 import lombok.Data;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import net.bzk.flow.BzkFlowUtils;
 import net.bzk.flow.Constant;
 import net.bzk.flow.PolyglotEngine;
 import net.bzk.flow.model.Action;
+import net.bzk.flow.model.RunLog.RunState;
 import net.bzk.flow.model.var.VarLv;
 import net.bzk.flow.model.var.VarMap;
 import net.bzk.flow.model.var.VarValSet;
 import net.bzk.flow.run.service.FastVarQueryer;
 import net.bzk.flow.run.service.RunLogService;
 import net.bzk.flow.run.service.RunVarService;
+import net.bzk.infrastructure.JsonUtils;
 import net.bzk.infrastructure.ex.BzkRuntimeException;
 
 public abstract class ActionCall<T extends Action> implements Callable<VarValSet> {
@@ -51,6 +54,9 @@ public abstract class ActionCall<T extends Action> implements Callable<VarValSet
 		varQueryer.init(_uids);
 		polyglotEngine = PolyglotEngine.builder().logUtils(logUtils).varQueryer(varQueryer).build();
 		model = replaceModel(a);
+		logUtils.log(uids, RunState.ModelReplaced, l -> {
+			l.setMsg(JsonUtils.toJson(model));
+		});
 		return this;
 	}
 

@@ -1,3 +1,4 @@
+import { RunState } from './../model/pojo/enums';
 import { StringUtils } from 'src/app/utils/string-utils';
 import { LoadingService } from 'src/app/service/loading.service';
 import { ListLogType, RunLogClientService } from './../service/run-log-client.service';
@@ -16,6 +17,7 @@ export class RunLogComponent implements OnInit {
   public listType = ListLogType.runflow;
   public queryUid = '';
   public list = new Array<RunLog>();
+  public runState: RunState = null;
 
   constructor(
     private runLogClient: RunLogClientService,
@@ -24,7 +26,7 @@ export class RunLogComponent implements OnInit {
   ) { }
 
   async ngOnInit(): Promise<void> {
-    if(StringUtils.isBlank(this.queryUid)){
+    if (StringUtils.isBlank(this.queryUid)) {
       this.queryUid = this.route.snapshot.paramMap.get('runFlowUid');
     }
     this.reflesh();
@@ -39,6 +41,22 @@ export class RunLogComponent implements OnInit {
 
     }
     this.loading.dismiss(t);
+  }
+
+  public listLogs(): Array<RunLog> {
+    if(!this.runState)
+      return this.list;
+    return this.list.filter(rl => rl.state == this.runState);
+  }
+
+  public listRunState(): Array<RunState> {
+    const ans= Object.values(RunState);
+    ans.push(null);
+    return ans;
+  }
+
+  public setRunState(rs: RunState): void {
+    this.runState = rs;
   }
 
 }

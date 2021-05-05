@@ -52,7 +52,7 @@ export enum RunState {
   BoxStart = 'BoxStart', BoxLoop = 'BoxLoop', BoxLoopDone = 'BoxLoopDone', EndFlow = 'EndFlow', LinkTo = 'LinkTo',
   StartAction = 'StartAction', EndAction = 'EndAction', ActionCall = 'ActionCall',
   ActionCallFail = 'ActionCallFail', ActionCallWarn = 'ActionCallWarn', ActionResult = 'ActionResult', WhileLoopBottom = 'WhileLoopBottom',
-  ConditionFail = 'ConditionFail'
+  ConditionFail = 'ConditionFail',ModelReplaced='ModelReplaced',PolyglotExecute='PolyglotExecute'
 
 }
 
