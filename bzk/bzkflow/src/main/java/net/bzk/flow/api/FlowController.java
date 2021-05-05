@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import net.bzk.flow.api.dto.ActionDebugData;
 import net.bzk.flow.api.dto.FlowPoolInfo;
 import net.bzk.flow.model.Flow;
 import net.bzk.flow.model.demo.ModelBuilder;
@@ -87,9 +86,9 @@ public class FlowController {
 	
 
 	@ResponseStatus(HttpStatus.OK)
-	@RequestMapping(value = "debug/action", method = RequestMethod.POST)
-	public void testAction(@RequestBody ActionDebugData data, @RequestParam int delDelay) throws InterruptedException {
-		runFlowService.testAction(data, delDelay);
+	@RequestMapping(value = "{fuid}/debug/action/{auid}", method = RequestMethod.POST)
+	public void testAction(@PathVariable String fuid,@PathVariable String auid, @RequestParam int delDelay) throws InterruptedException {
+		runFlowService.testAction(fuid,auid, delDelay);
 	}
 	
 	@ResponseStatus(HttpStatus.OK)

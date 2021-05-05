@@ -8,22 +8,6 @@
 
       </mat-expansion-panel-header>
       <div class="container-fluid alert alert-primary">
-        <mat-form-field appearance="fill" class=" m-2">
-          <mat-label>Flow Vars</mat-label>
-          <mat-select [(value)]="flowVarKey">
-            <mat-option *ngFor="let k of listVarKeys()" [value]="k">
-              {{k}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field appearance="fill" class=" m-2">
-          <mat-label>Box Vars</mat-label>
-          <mat-select [(value)]="boxVarKey">
-            <mat-option *ngFor="let k of listVarKeys()" [value]="k">
-              {{k}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
 
         <div class="btn-group pb-2" role="group" aria-label="Basic example">
           <button type="button" (click)="onInternalVars()" class="btn btn-secondary"><i

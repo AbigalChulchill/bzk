@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { ActionDebugData } from '../dto/debug-dtos';
 import { FlowPoolInfo, RunInfo } from '../dto/flow-pool-info';
 import { Flow } from '../model/flow';
 import { BzkUtils } from '../utils/bzk-utils';
@@ -23,8 +22,8 @@ export class FlowClientService {
     return BzkUtils.fitClzz(Flow, ans);
   }
 
-  public debugAction(d: ActionDebugData, delDelay: number): Observable<void> {
-    return this.httpClient.post<void>(environment.apiHost + FlowClientService.URL_PREFIX + 'debug/action?delDelay=' + delDelay, d);
+  public debugAction(fuid: string, auid: string, delDelay: number): Observable<void> {
+    return this.httpClient.post<void>(environment.apiHost + FlowClientService.URL_PREFIX + `${fuid}/debug/action/${auid}?delDelay=${delDelay}`, null);
   }
 
   public registerFlow(f: Flow[]): Observable<void> {
@@ -32,15 +31,15 @@ export class FlowClientService {
   }
 
   public registerFlowByUid(fuid: string): Observable<void> {
-    return this.httpClient.post<void>(environment.apiHost + FlowClientService.URL_PREFIX + fuid+'/register',null);
+    return this.httpClient.post<void>(environment.apiHost + FlowClientService.URL_PREFIX + fuid + '/register', null);
   }
 
   public runManual(fuid: string): Observable<RunInfo> {
-    return this.httpClient.post<RunInfo>(environment.apiHost + FlowClientService.URL_PREFIX + `${fuid}/run?type=manual`,null);
+    return this.httpClient.post<RunInfo>(environment.apiHost + FlowClientService.URL_PREFIX + `${fuid}/run?type=manual`, null);
   }
 
   public testFlow(eUid: string): Observable<RunInfo> {
-    return this.httpClient.post<RunInfo>(environment.apiHost + FlowClientService.URL_PREFIX + `${eUid}/test`,null);
+    return this.httpClient.post<RunInfo>(environment.apiHost + FlowClientService.URL_PREFIX + `${eUid}/test`, null);
   }
 
   public listFlowPoolInfo(): Observable<Array<FlowPoolInfo>> {
@@ -48,7 +47,7 @@ export class FlowClientService {
   }
 
   public getFlowPoolInfo(uid: string): Observable<FlowPoolInfo> {
-    return this.httpClient.get<FlowPoolInfo>(environment.apiHost + FlowClientService.URL_PREFIX+uid);
+    return this.httpClient.get<FlowPoolInfo>(environment.apiHost + FlowClientService.URL_PREFIX + uid);
   }
 
   public forceRemovePool(uid: string): Observable<void> {

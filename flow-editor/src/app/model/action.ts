@@ -26,6 +26,22 @@ export class Action extends BzkObj {
   })
   public tryErrorble = false;
 
+  @PropInfo({
+    title: 'devBoxVars',
+    type: PropType.Custom,
+    customView: 'JsonEditorComponent',
+    customViewFolded: true
+  })
+  public devBoxVars = {};
+
+  @PropInfo({
+    title: 'devFlowVars',
+    type: PropType.Custom,
+    customView: 'JsonEditorComponent',
+    customViewFolded: true
+  })
+  public devFlowVars = {};
+
   public listVarKey(): Array<string> {
     const ans = new Array<string>();
     const json = JSON.stringify(this);

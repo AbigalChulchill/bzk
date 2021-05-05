@@ -15,6 +15,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import net.bzk.flow.api.dto.VarKeyReflect;
 import net.bzk.flow.model.var.VarLv;
+import net.bzk.flow.model.var.VarMap;
 import net.bzk.flow.model.var.VarLv.VarKey;
 import net.bzk.infrastructure.CommUtils;
 import net.bzk.infrastructure.JsonUtils;
@@ -25,6 +26,9 @@ public class Action extends BzkObj {
 
 	private String name = "Action";
 	private boolean tryErrorble;
+	
+	private VarMap devBoxVars = new VarMap();
+	private VarMap devFlowVars = new VarMap();
 
 	@JsonIgnore
 	public String getErrorVarKey() {

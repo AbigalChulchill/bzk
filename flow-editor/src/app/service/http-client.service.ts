@@ -1,6 +1,5 @@
 import { FlowPoolInfo } from './../dto/flow-pool-info';
 import { InPlain, SecretResult } from './../dto/secret-dtos';
-import { ActionDebugData } from './../dto/debug-dtos';
 import { ReadingInfo } from './../dto/console-dtos';
 import { BzkUtils } from './../utils/bzk-utils';
 import { async } from '@angular/core/testing';

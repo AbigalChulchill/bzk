@@ -9,17 +9,16 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
-import net.bzk.flow.api.dto.ActionDebugData;
 import net.bzk.flow.api.dto.FlowPoolInfo;
 import net.bzk.flow.model.Flow;
 import net.bzk.flow.model.Flow.ActionFindInfo;
+import net.bzk.flow.run.dao.JobsDao;
 import net.bzk.flow.run.dao.RunBoxDao;
 import net.bzk.flow.run.dao.RunFlowDao;
 import net.bzk.flow.run.dao.RunFlowPoolDao;
 import net.bzk.flow.run.flow.BoxRuner;
 import net.bzk.flow.run.flow.FlowRuner;
 import net.bzk.flow.run.flow.FlowRuner.RunInfo;
-import net.bzk.infrastructure.ex.BzkRuntimeException;
 
 @Service
 public class RunFlowService {
@@ -30,6 +29,8 @@ public class RunFlowService {
 	private RunFlowDao dao;
 	@Inject
 	private RunBoxDao boxDao;
+	@Inject
+	private JobsDao jobsDao;
 
 	public void register(Flow f) {
 		boolean b = runPoolDao.create(f);
@@ -71,15 +72,16 @@ public class RunFlowService {
 		runPoolDao.forceRemove(fuid);
 	}
 
-	public void testAction(ActionDebugData data, long delDelay) throws InterruptedException {
+	public void testAction(String flowUid, String actionUid ,long delDelay) throws InterruptedException {
+		Flow flow = jobsDao.findById(flowUid).get().getModel();
 		String uid = RandomStringUtils.randomAlphanumeric(64);
-		data.getFlow().setUid(uid);
-		data.getFlow().setVars(data.getFlowVar());
-		ActionFindInfo afi = data.getFlow().getAction(data.getUid());
-		FlowRuner fr = dao.create(data.getFlow(),r-> {});
+		ActionFindInfo afi = flow.getAction(actionUid);
+		flow.setUid(uid);
+		flow.setVars(afi.getAction().getDevFlowVars());
+		FlowRuner fr = dao.create(flow,r-> {});
 		BoxRuner br = fr.createBoxByUid(afi.getBox().getUid());
-		br.setVars(data.getBoxVar());
-		br.runAction(data.getUid());
+		br.setVars(afi.getAction().getDevBoxVars());
+		br.runAction(actionUid);
 		if (delDelay > 0) {
 			Thread.sleep(delDelay);
 		}

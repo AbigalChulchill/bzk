@@ -6,7 +6,6 @@ import { Gist, GistFile } from 'src/app/dto/gist';
 import { GithubService } from 'src/app/service/github.service';
 import { HttpClientService } from 'src/app/service/http-client.service';
 import { LoadingService } from 'src/app/service/loading.service';
-import { LoadSource, ModifyingFlowService } from 'src/app/service/modifying-flow.service';
 import { BzkUtils } from 'src/app/utils/bzk-utils';
 
 @Component({
@@ -25,7 +24,6 @@ export class CloudBackupListComponent implements OnInit {
     public githubService: GithubService,
     private httpClient: HttpClientService,
     private router: Router,
-    private modifyingFlow: ModifyingFlowService,
     private loading: LoadingService,
     private jobClient: JobClientService
   ) { }

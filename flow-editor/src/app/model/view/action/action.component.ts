@@ -4,7 +4,6 @@ import { ListLogType, RunLogClientService } from './../../../service/run-log-cli
 import { FlowClientService } from './../../../service/flow-client.service';
 import { FlowDesignComponent } from './../../../flow-design/flow-design.component';
 import { HttpClientService } from './../../../service/http-client.service';
-import { ActionDebugData } from './../../../dto/debug-dtos';
 import { ModifyingFlowService } from './../../../service/modifying-flow.service';
 import { ToastService } from './../../../service/toast.service';
 import { ModelUpdateAdapter } from './../../service/model-update-adapter';
@@ -52,14 +51,7 @@ export class ActionComponent implements OnInit, ClazzExComponent {
       title: ''
     });
     await this.jobClient.save(ModelUpdateAdapter.getInstance().getFlow()).toPromise();
-    const rb = new ActionDebugData();
-    rb.boxVar = this.varCfg.get(this.boxVarKey).content;
-    if (!rb.boxVar) rb.boxVar = new BaseVar();
-    rb.flowVar = this.varCfg.get(this.flowVarKey).content;
-    if (!rb.flowVar) rb.flowVar = new BaseVar();
-    rb.flow = ModelUpdateAdapter.getInstance().getFlow();
-    rb.uid = this.action.uid;
-    await this.flowClient.debugAction(rb, -1).toPromise();
+    await this.flowClient.debugAction(ModelUpdateAdapter.getInstance().getFlow().uid,this.action.uid, -1).toPromise();
   }
 
   public listVarKeys(): Array<string> {

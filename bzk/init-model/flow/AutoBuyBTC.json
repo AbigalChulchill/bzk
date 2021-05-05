@@ -214,7 +214,7 @@
             "clazz": "net.bzk.flow.model.Condition$ConditionNum",
             "kind": "NONE",
             "left": "${tsdbQueryResult.val}",
-            "right": "-0.5",
+            "right": "-0.3268",
             "type": "greater_equal",
             "next": null
           }
