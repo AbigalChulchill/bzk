@@ -60,13 +60,27 @@ public class Condition implements OType {
 		private boolean not;
 		private TxtCheckType type;
 		
-		
 	}
 	
 	public static enum TxtCheckType{
 		equal,startsWith,endsWith,contains
 	}
 
+	@Data
+	@EqualsAndHashCode(callSuper = false)
+	public static class ConditionTime extends Condition{
+		private String left;
+		private String right;
+		private boolean not;
+		private TimeCheckType type;
+		
+	}
+	
+	public static enum TimeCheckType{
+		After, Before, Equal
+		
+	}
+	
 	@Data
 	@EqualsAndHashCode(callSuper = false)
 	public static class ConditionInclude extends Condition {

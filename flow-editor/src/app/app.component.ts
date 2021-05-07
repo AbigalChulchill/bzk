@@ -31,6 +31,7 @@ import { TransitionComponent } from './model/view/transition/transition.componen
 import { ConditionEnumeratorComponent } from './model/view/link/condition-enumerator/condition-enumerator.component';
 import { ConditionComponent } from './model/view/link/condition/condition.component';
 import { VarKeyReflectComponent } from './uikit/var-key-reflect/var-key-reflect.component';
+import { ConditionTimeComponent } from './model/view/link/condition-time/condition-time.component';
 
 @Component({
   selector: 'app-root',
@@ -77,6 +78,7 @@ export class AppComponent implements OnInit {
     PropUtils.getInstance().bindExView('LinkComponent', LinkComponent);
     PropUtils.getInstance().bindExView('ConditionNumComponent', ConditionNumComponent);
     PropUtils.getInstance().bindExView('ConditionTxtComponent', ConditionTxtComponent);
+    PropUtils.getInstance().bindExView('ConditionTimeComponent', ConditionTimeComponent);
     PropUtils.getInstance().bindExView('ConditionIncludeComponent', ConditionIncludeComponent);
     PropUtils.getInstance().bindExView('JsonEditorComponent', JsonEditorComponent);
     PropUtils.getInstance().bindExView('HttpActionComponent', HttpActionComponent);

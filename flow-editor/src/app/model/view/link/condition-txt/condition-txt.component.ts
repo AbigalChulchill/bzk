@@ -2,6 +2,7 @@ import { Prop, PropInfoArgs, PropType, PropUtils } from './../../../../utils/pro
 import { Component, OnInit } from '@angular/core';
 import { ConditionTxt, TxtCheckType } from 'src/app/model/condition';
 import { ClazzExComponent } from 'src/app/utils/prop-utils';
+import { ConditionUtils } from 'src/app/utils/condition-utils';
 
 @Component({
   selector: 'app-condition-txt',
@@ -19,8 +20,9 @@ export class ConditionTxtComponent implements OnInit, ClazzExComponent {
 
   init(d: any, mi: any): void {
     this.data = d;
-    this.leftProp = this.getLeftProp();
-    this.rightProp = this.getRightProp();
+
+    this.leftProp = ConditionUtils.getProp('left',this.condition);
+    this.rightProp = ConditionUtils.getProp('right',this.condition);
   }
 
 
@@ -30,29 +32,6 @@ export class ConditionTxtComponent implements OnInit, ClazzExComponent {
   public listJudgment(): Array<string> {
     return Object.keys(TxtCheckType);
   }
-
-  private getLeftProp(): Prop {
-    const ans= PropUtils.getInstance().genHasInfo('left', this.condition,this.genPropInfo('left'));
-    ans.info.hide = false;
-    return ans;
-  }
-
-  private getRightProp(): Prop {
-    const ans= PropUtils.getInstance().genHasInfo('right', this.condition,this.genPropInfo('right'));
-    ans.info.hide = false;
-    return ans;
-  }
-
-  private genPropInfo(t:string):PropInfoArgs{
-    return {
-      title: t,
-      hide:true,
-      type: PropType.MultipleText,
-      // TODO condition scriptble
-
-    };
-  }
-
 
 
 }

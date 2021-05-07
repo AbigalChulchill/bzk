@@ -1,3 +1,4 @@
+import { ConditionUtils } from './../../../../utils/condition-utils';
 import { ConditionNum, NumCheckType } from './../../../condition';
 import { Component, OnInit } from '@angular/core';
 import { ClazzExComponent, Prop, PropInfoArgs, PropType, PropUtils } from 'src/app/utils/prop-utils';
@@ -19,8 +20,8 @@ export class ConditionNumComponent implements OnInit, ClazzExComponent {
 
   init(d: any, mi: any): void {
     this.data = d;
-    this.leftProp = this.getLeftProp();
-    this.rightProp = this.getRightProp();
+    this.leftProp = ConditionUtils.getProp('left',this.condition);
+    this.rightProp = ConditionUtils.getProp('right',this.condition);
   }
 
 
@@ -29,26 +30,6 @@ export class ConditionNumComponent implements OnInit, ClazzExComponent {
 
   public listJudgment(): Array<string> {
     return Object.keys(NumCheckType);
-  }
-
-  private getLeftProp(): Prop {
-    const ans= PropUtils.getInstance().genHasInfo('left', this.condition,this.genPropInfo('left'));
-    ans.info.hide = false;
-    return ans;
-  }
-
-  private getRightProp(): Prop {
-    const ans= PropUtils.getInstance().genHasInfo('right', this.condition,this.genPropInfo('right'));
-    ans.info.hide = false;
-    return ans;
-  }
-
-  private genPropInfo(t:string):PropInfoArgs{
-    return {
-      title: null,
-      hide:true,
-      type: PropType.MultipleText,
-    };
   }
 
 

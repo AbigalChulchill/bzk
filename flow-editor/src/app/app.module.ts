@@ -63,6 +63,7 @@ import { RunLogComponent } from './run-log/run-log.component';
 import { LogRowComponent } from './run-log/log-row/log-row.component';
 import { VarCfgComponent } from './var-cfg/var-cfg.component';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
+import { ConditionTimeComponent } from './model/view/link/condition-time/condition-time.component';
 
 export function createTranslateLoader(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -111,6 +112,7 @@ export function createTranslateLoader(http: HttpClient): TranslateHttpLoader {
     RunLogComponent,
     LogRowComponent,
     VarCfgComponent,
+    ConditionTimeComponent,
 
   ],
   imports: [

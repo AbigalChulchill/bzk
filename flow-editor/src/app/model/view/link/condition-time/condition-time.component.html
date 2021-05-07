@@ -1,0 +1,13 @@
+<div class="row">
+  <div class="col-4">
+    <app-prop-row *ngIf="leftProp"  [prop]="leftProp" ></app-prop-row>
+  </div>
+
+  <select class="col-4 kind-select mb-2 mt-2" [(ngModel)]="data.type" >
+    <option *ngFor="let j of listJudgment()" [value]="j">{{j}}</option>
+  </select>
+
+  <div class="col-4">
+    <app-prop-row *ngIf="rightProp" [prop]="rightProp" ></app-prop-row>
+  </div>
+</div>

@@ -40,6 +40,10 @@ export enum TxtCheckType {
   equal = 'equal', startsWith = 'startsWith', endsWith = 'endsWith', contains = 'contains'
 }
 
+export enum TimeCheckType {
+  After='After', Before='Before', Equal='Equal'
+}
+
 @PropClazz({
   exView: 'ConditionIncludeComponent'
 })
@@ -82,6 +86,32 @@ export class ConditionTxt extends Condition {
   }
 
 }
+
+
+@PropClazz({
+  exView: 'ConditionTimeComponent'
+})
+@OTypeClass({
+  clazz: 'net.bzk.flow.model.Condition$ConditionTime'
+})
+export class ConditionTime extends Condition {
+  public left = '';
+  public right = '';
+  public type= TimeCheckType.After;
+  @PropInfo({
+    title: 'not',
+    type: PropType.Boolean
+  })
+  public  not = false;
+
+  public static gen(): ConditionTime {
+    const na = new ConditionTime();
+    na.clazz = BzkUtils.getOTypeInfo(na.constructor).clazz;
+    return na;
+  }
+
+}
+
 
 @PropClazz({
   exView: 'ConditionNumComponent'
