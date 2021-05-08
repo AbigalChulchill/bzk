@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import net.bzk.flow.model.Condition.ConditionTime;
+import net.bzk.flow.model.Condition.TimeCheckType;
+import net.bzk.flow.model.RunLog.RunState;
 import net.bzk.infrastructure.ex.BzkRuntimeException;
 
 @Service("net.bzk.flow.model.Condition$ConditionTime")
@@ -32,6 +34,13 @@ public class ConditionTimer extends Conditioner<ConditionTime> {
 		ZonedDateTime lat = parse(ls);
 		ZonedDateTime rat = parse(rs);
 
+		var ans = checkTime(lat, rat);
+		logUtils.logWithMsg(getUids(), RunState.ConditionResult,
+				lat + " is" + getModel().getType() + "( " + rat + " ) : " + ans);
+		return ans;
+	}
+
+	private boolean checkTime(ZonedDateTime lat, ZonedDateTime rat) {
 		switch (getModel().getType()) {
 		case After:
 			return lat.isAfter(rat);

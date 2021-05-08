@@ -30,18 +30,20 @@ import net.bzk.flow.run.action.ActionCall.Uids;
 @EntityListeners(CommService.class)
 @Table
 public class RunLog implements Serializable, CreateUpdateDate {
-	
+
 	public static enum RunState {
-		BoxStart, BoxLoop, BoxLoopDone, EndFlow, LinkTo, StartAction, EndAction, ActionCall, ActionCallFail,
-		ActionCallWarn, ActionResult, WhileLoopBottom, ConditionFail, ModelReplaced, PolyglotExecute,
+		BoxStart, BoxLoop, BoxLoopDone, EndFlow, LinkTo,
+		StartAction, EndAction, ActionCall, ActionCallFail,
+		ActionCallWarn, ActionResult, WhileLoopBottom,
+		ConditionFail, ModelReplaced, PolyglotExecute, ConditionResult,
 
 	}
-	
-	@Id 
+
+	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(nullable = false)
 	private long id;
-	
+
 	private String flowUid;
 	private String runFlowUid;
 	private String boxUid;
@@ -71,8 +73,5 @@ public class RunLog implements Serializable, CreateUpdateDate {
 
 	private Date updateAt;
 	private Date createAt;
-
-
-
 
 }
