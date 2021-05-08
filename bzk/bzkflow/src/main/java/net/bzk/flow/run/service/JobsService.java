@@ -58,12 +58,20 @@ public class JobsService {
 		CommUtils.pl("mapper:" + mapper);
 		applicationEventPublisher.publishEvent(new InitFlowEvent(this,fls));
 	}
+	
+	private void fixOldEntryMode(Flow f) throws IOException  {
+		var oe= f.getEntry();
+		f.getEntrys().add(oe);
+		f.setEntry(null);
+		save(f, true);
+	}
 
 	@Transactional
 	private Flow importByFile(File f) {
 		try {
 			Flow flow = BzkFlowUtils.getFlowJsonMapper().readValue(f, Flow.class);
-			save(flow, false);
+			fixOldEntryMode(flow);
+//			save(flow, false);
 			return flow;
 		} catch (IOException e) {
 			throw new BzkRuntimeException(e);

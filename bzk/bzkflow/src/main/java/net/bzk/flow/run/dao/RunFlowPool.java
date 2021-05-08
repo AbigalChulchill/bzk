@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import lombok.Getter;
 import net.bzk.flow.model.ArchiveRun;
+import net.bzk.flow.model.Entry;
 import net.bzk.flow.model.Flow;
 import net.bzk.flow.run.entry.Entryer;
 import net.bzk.flow.run.flow.FlowRuner;
@@ -48,7 +49,7 @@ public class RunFlowPool {
 	}
 
 	public void launch() {
-		schedule();
+		scheduleAll();
 	}
 
 	private void configThreadPool() {
@@ -84,10 +85,16 @@ public class RunFlowPool {
 		return ans;
 	}
 
-	private void schedule() {
-		String beanName = getModel().getEntry().getClazz();
+	private void scheduleAll() {
+		for (var e : getModel().getEntrys()) {
+			schedule(e);
+		}
+	}
+	
+	private void schedule(Entry e ) {
+		String beanName = e.getClazz();
 		entryer = context.getBean(beanName, Entryer.class);
-		entryer.init(getModel().getEntry());
+		entryer.init(e);
 		entryer.schedule(() -> createAndStart());
 	}
 

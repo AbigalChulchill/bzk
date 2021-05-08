@@ -1,6 +1,7 @@
 package net.bzk.flow.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -27,7 +28,9 @@ public class Flow extends BzkObj {
 	private Set<Box> boxs = new ConcurrentSkipListSet<>();
 	private List<String> varCfgNames = new CopyOnWriteArrayList<>();
 	private VarMap vars = new VarMap();
+	@Deprecated
 	private Entry entry = new Entry();
+	private Set<Entry> entrys = new HashSet<>();
 	private String logEncryptKey = "1234567890123456";
 	private ThreadCfg threadCfg = new ThreadCfg();
 
