@@ -7,6 +7,12 @@ import { OType } from './bzk-obj';
 
 export class Entry extends OType {
   public boxUid: string;
+
+  @PropInfo({
+    title: 'auto Register',
+    type: PropType.Boolean,
+  })
+  public autoRegister = false;
 }
 
 @OTypeClass({

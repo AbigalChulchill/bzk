@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -16,10 +17,13 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEvent;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.Getter;
 import net.bzk.flow.BzkFlowUtils;
 import net.bzk.flow.model.Action.SubFlowAction;
 import net.bzk.flow.model.Flow;
@@ -36,7 +40,8 @@ public class JobsService {
 	private String initDataPath;
 	@Value("${init.data.saveback}")
 	private boolean saveBackInited = false;
-
+	@Inject
+	private ApplicationEventPublisher applicationEventPublisher;
 	@Inject
 	private JobsDao dao;
 	@Inject
@@ -49,48 +54,32 @@ public class JobsService {
 			dir.mkdirs();
 		}
 		var ffs = FileUtils.listFiles(dir, new String[] { "json" }, false);
-		ffs.forEach(this::importByFile);
+		List<Flow> fls= ffs.stream().map(this::importByFile).collect(Collectors.toList());
 		CommUtils.pl("mapper:" + mapper);
+		applicationEventPublisher.publishEvent(new InitFlowEvent(this,fls));
 	}
 
 	@Transactional
-	private void importByFile(File f) {
+	private Flow importByFile(File f) {
 		try {
 			Flow flow = BzkFlowUtils.getFlowJsonMapper().readValue(f, Flow.class);
-			save(flow,false);
+			save(flow, false);
+			return flow;
 		} catch (IOException e) {
 			throw new BzkRuntimeException(e);
 		}
 	}
 
-	public Collection<Job> listDepends(String uid) {
-		Set<Job> ans = new HashSet<>();
-		var tar = dao.findById(uid).get();
-		recListDepends(ans, tar);
-		return ans;
-	}
 
-	private void recListDepends(Set<Job> ans, Job sf) {
-		if (ans.stream().anyMatch(_f -> StringUtils.equals(_f.getUid(), sf.getUid()))) {
-			return;
-		}
-		ans.add(sf);
-		Set<SubFlowAction> sas = sf.getModel().listAllActions().stream().filter(a -> a instanceof SubFlowAction)
-				.map(a -> (SubFlowAction) a).collect(Collectors.toSet());
-		Set<Job> csf = sas.stream().map(a -> dao.findById(a.getFlowUid()).get()).collect(Collectors.toSet());
-		for (Job sfchild : csf) {
-			recListDepends(ans, sfchild);
-		}
-
-	}
 
 	@Transactional
-	public Job save(Flow f,boolean saveFile) throws IOException {
+	public Job save(Flow f, boolean saveFile) throws IOException {
 		var sfo = dao.findById(f.getUid());
 		Job sf = sfo.orElse(Job.gen(f));
 		sf.setModel(f);
-		if(saveBackInited && saveFile ) {
-			FileUtils.write(new File(initDataPath + f.getName() + ".json"), JsonUtils.toJson(f), Charset.forName("UTF-8"));
+		if (saveBackInited && saveFile) {
+			FileUtils.write(new File(initDataPath + f.getName() + ".json"), JsonUtils.toJson(f),
+					Charset.forName("UTF-8"));
 		}
 		return dao.save(sf);
 	}
@@ -99,6 +88,18 @@ public class JobsService {
 	public void remove(String uid) {
 		var e = dao.findById(uid).get();
 		dao.delete(e);
+	}
+
+	public class InitFlowEvent extends ApplicationEvent {
+		
+		@Getter
+		private List<Flow>flows;
+
+		public InitFlowEvent(Object source,List<Flow> fs) {
+			super(source);
+			flows = fs;
+		}
+
 	}
 
 }

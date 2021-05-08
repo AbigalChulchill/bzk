@@ -12,6 +12,7 @@ public class Entry implements OType {
 
 	private String clazz;
 	private String boxUid;
+	private boolean autoRegister;
 
 
 	public Entry() {

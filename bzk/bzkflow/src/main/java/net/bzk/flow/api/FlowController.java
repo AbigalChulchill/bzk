@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import net.bzk.flow.api.dto.FlowPoolInfo;
 import net.bzk.flow.model.Flow;
 import net.bzk.flow.model.demo.ModelBuilder;
+import net.bzk.flow.run.dao.JobsDao;
 import net.bzk.flow.run.flow.FlowRuner.RunInfo;
 import net.bzk.flow.run.service.JobsService;
 import net.bzk.flow.run.service.RunFlowService;
@@ -36,7 +37,7 @@ public class FlowController {
 	@Inject
 	private RunFlowService runFlowService;
 	@Inject
-	private JobsService jobsService;
+	private JobsDao jobsDao;
 
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
@@ -47,21 +48,15 @@ public class FlowController {
 
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(value = "register", method = RequestMethod.POST)
-	public void register(@RequestBody List< Flow> fs) {
+	public void register(@RequestBody List<Flow> fs) {
 		fs.forEach(runFlowService::register);
 	}
-	
 
-	
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(value = "{uid}/register", method = RequestMethod.POST)
 	public void register(@PathVariable String uid) {
-		var sfs = jobsService.listDepends(uid);
-		List< Flow> fs = sfs.stream().map(sf-> sf.getModel()).collect(Collectors.toList());
-		register(fs);
+		runFlowService.registerDepends(uid);
 	}
-	
-
 
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
@@ -69,11 +64,11 @@ public class FlowController {
 	public List<FlowPoolInfo> listFlowPoolInfo() {
 		return runFlowService.listFlowPoolInfo();
 	}
-	
+
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	@RequestMapping(value = "{uid}", method = RequestMethod.GET)
-	public FlowPoolInfo getPoolInfo(@PathVariable String uid ) {
+	public FlowPoolInfo getPoolInfo(@PathVariable String uid) {
 		return runFlowService.getFlowPoolInfo(uid);
 	}
 
@@ -83,26 +78,26 @@ public class FlowController {
 	public void forceRemovePool(@PathVariable String fuid) {
 		runFlowService.forceRemove(fuid);
 	}
-	
 
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(value = "{fuid}/debug/action/{auid}", method = RequestMethod.POST)
-	public void testAction(@PathVariable String fuid,@PathVariable String auid, @RequestParam int delDelay) throws InterruptedException {
-		runFlowService.testAction(fuid,auid, delDelay);
+	public void testAction(@PathVariable String fuid, @PathVariable String auid, @RequestParam int delDelay)
+			throws InterruptedException {
+		runFlowService.testAction(fuid, auid, delDelay);
 	}
-	
+
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	@RequestMapping(value = "{uid}/test", method = RequestMethod.POST)
-	public RunInfo testFlow(@PathVariable String uid ) {
-		var sfs = jobsService.listDepends(uid);
-		List< Flow> fs = sfs.stream().map(sf-> sf.getModel()).collect(Collectors.toList());
+	public RunInfo testFlow(@PathVariable String uid) {
+		var sfs = jobsDao.listDepends(uid);
+		List<Flow> fs = sfs.stream().map(sf -> sf.getModel()).collect(Collectors.toList());
 		return runFlowService.test(uid, fs);
 	}
-	
+
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(value = "{uid}/run", method = RequestMethod.POST, params = "type=manual")
-	public RunInfo runManual(@PathVariable String uid ) {
+	public RunInfo runManual(@PathVariable String uid) {
 		return runFlowService.runManual(uid).getInfo();
 	}
 
