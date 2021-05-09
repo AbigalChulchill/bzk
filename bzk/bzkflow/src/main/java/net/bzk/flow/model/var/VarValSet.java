@@ -7,11 +7,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.bzk.flow.BzkFlowUtils;
 import net.bzk.flow.model.Action;
 import net.bzk.infrastructure.JsonUtils;
 import net.bzk.infrastructure.obj.JsonMap;
@@ -69,8 +66,8 @@ public class VarValSet {
 			exception = ExceptionUtils.getStackTrace(e);
 			msg = e.getMessage();
 		}
-		
-		JsonMap toMap(){
+
+		JsonMap toMap() {
 			return JsonMap.gen(this);
 		}
 
