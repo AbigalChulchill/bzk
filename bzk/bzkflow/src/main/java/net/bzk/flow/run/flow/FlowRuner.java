@@ -83,6 +83,7 @@ public class FlowRuner implements Runnable {
 			currentBoxRuner = runBoxDao.create(genBoxBundle(), ob);
 			currentBoxRuner.run();
 		} catch (Exception e) {
+			e.printStackTrace();
 			info.state = State.Fail;
 		}
 

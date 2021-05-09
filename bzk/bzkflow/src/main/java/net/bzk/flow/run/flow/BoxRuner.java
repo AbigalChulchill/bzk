@@ -108,9 +108,9 @@ public class BoxRuner {
 	private boolean rundownAndLog() {
 		logUtils.log(genUids(), RunState.BoxLoop);
 		boolean b = rundown();
-		logUtils.log(genUids(), RunState.BoxLoopDone, l -> {
-			l.setMsg("break:" + b);
-		});
+//		logUtils.log(genUids(), RunState.BoxLoopDone, l -> {
+//			l.setMsg("break:" + b);
+//		});
 
 		return b;
 	}
