@@ -28,7 +28,7 @@ public class ModelBuilder {
 	
 	public ModelBuilder init() {
 		model.setBoxs(createBoxs());
-		model.setEntry(createEntry());
+		model.getEntrys().add(createEntry());
 		return this;
 	}
 

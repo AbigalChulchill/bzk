@@ -109,7 +109,7 @@ public class RunFlowService implements ApplicationListener<InitFlowEvent> {
 			return;
 		System.out.println("InitFlowEvent :" + event);
 		var fs = event.getFlows();
-		fs.stream().filter(f -> f.getEntry().isAutoRegister()).forEach(af -> registerDepends(af.getUid()));
+		fs.stream().filter(f -> f.isAutoRegister()).forEach(af -> registerDepends(af.getUid()));
 
 	}
 }

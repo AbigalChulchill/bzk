@@ -44,7 +44,7 @@ public class RunFlowPoolTest {
 		boxs.add(box);
 		ans.setBoxs(boxs);
 		Entry entry=genEntry(box.getUid());
-		ans.setEntry(entry);
+		ans.getEntrys().add(entry);
 		return ans;
 	}
 

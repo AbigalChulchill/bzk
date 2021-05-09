@@ -57,8 +57,8 @@ export class SubFlowActionComponent implements AfterViewInit, OnInit, ClazzExCom
     if (this.data.inputData.length > 0) return;
     const f = await FlowLoadService.getInstance().find(this.data.flowUid);
     if (!f) return;
-    if (!(f.getModel().entry instanceof PluginEntry)) return;
-    const pe: PluginEntry = f.getModel().entry as PluginEntry;
+    const pe: PluginEntry = f.getModel().getEntry(PluginEntry);
+    if (!pe) return;
     for (const k of pe.requiredKeys) {
       const kp = new KVPair();
       kp.key = k;
@@ -100,11 +100,11 @@ export class SubFlowActionComponent implements AfterViewInit, OnInit, ClazzExCom
 
   private genInitinputDataKV(r: FlowRaw): Array<KVPair> {
     const ans = new Array<KVPair>();
-    const ets: PluginEntry = r.getModel().entry as PluginEntry;
-    for(const rk of ets.requiredKeys){
+    const ets: PluginEntry = r.getModel().getEntry(PluginEntry);
+    for (const rk of ets.requiredKeys) {
       ans.push({
-        key:rk,
-        val:'TODO'
+        key: rk,
+        val: 'TODO'
       });
     }
     return ans;
@@ -112,8 +112,8 @@ export class SubFlowActionComponent implements AfterViewInit, OnInit, ClazzExCom
 
   private genInitOutputReflects(r: FlowRaw): Array<VarKeyReflect> {
     const ans = new Array<VarKeyReflect>();
-    const ets: PluginEntry = r.getModel().entry as PluginEntry;
-    for(const rk of ets.outputKeys){
+    const ets: PluginEntry = r.getModel().getEntry(PluginEntry);
+    for (const rk of ets.outputKeys) {
       const vkr = new VarKeyReflect();
       vkr.srcKey = rk;
       ans.push(vkr);

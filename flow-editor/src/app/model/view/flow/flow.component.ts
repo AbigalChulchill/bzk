@@ -62,16 +62,16 @@ export class FlowComponent implements OnInit, ClazzExComponent, TextProvide {
 
   }
 
-  public onEntryTypeChange(e): void {
-    console.log(e);
-    const ot = BzkUtils.getTypeByClazz(e);
-    const ne = new ot();
-    const orgEbUid = this.flow.entry.boxUid;
-    this.flow.entry = ne;
-    this.flow.entry.boxUid = orgEbUid;
-    this.flow.entry.clazz = BzkUtils.getOTypeInfo(ot).clazz;
+  // public onEntryTypeChange(e): void {
+  //   console.log(e);
+  //   const ot = BzkUtils.getTypeByClazz(e);
+  //   const ne = new ot();
+  //   const orgEbUid = this.flow.entry.boxUid;
+  //   this.flow.entry = ne;
+  //   this.flow.entry.boxUid = orgEbUid;
+  //   this.flow.entry.clazz = BzkUtils.getOTypeInfo(ot).clazz;
 
-  }
+  // }
 
   public getVarCfgTitle(vn:string):string{
     if(StringUtils.isBlank(vn)) return 'TODO select';

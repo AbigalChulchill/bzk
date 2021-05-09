@@ -79,7 +79,7 @@ export class ModelChart implements ModelObservable {
   }
 
   private genNode(b: Box): Node {
-    const entryed = b.uid === this.model.entry.boxUid;
+    const entryed = b.uid === this.model.getEntryBox().uid
     let node: Node = null;
     const tks = b.listTask();
     for (let i = 0; i < tks.length; i++) {

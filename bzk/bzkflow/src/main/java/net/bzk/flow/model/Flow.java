@@ -28,8 +28,6 @@ public class Flow extends BzkObj {
 	private Set<Box> boxs = new ConcurrentSkipListSet<>();
 	private List<String> varCfgNames = new CopyOnWriteArrayList<>();
 	private VarMap vars = new VarMap();
-	@Deprecated
-	private Entry entry = new Entry();
 	private Set<Entry> entrys = new HashSet<>();
 	private String logEncryptKey = "1234567890123456";
 	private ThreadCfg threadCfg = new ThreadCfg();
@@ -42,8 +40,15 @@ public class Flow extends BzkObj {
 		private TimeUnit aliveUnit = TimeUnit.MINUTES;
 	}
 
+	@JsonIgnore
 	public Box findEntryBox() {
-		return boxs.stream().filter(b -> StringUtils.equals(entry.getBoxUid(), b.getUid())).findFirst().get();
+		var bee = entrys.stream().filter(e -> StringUtils.isNoneBlank(e.getBoxUid())).findFirst().get();
+		return boxs.stream().filter(b -> StringUtils.equals(bee.getBoxUid(), b.getUid())).findFirst().get();
+	}
+	
+	@JsonIgnore
+	public boolean isAutoRegister() {
+		return entrys.stream().anyMatch(e-> e.isAutoRegister());
 	}
 
 	@JsonIgnore
