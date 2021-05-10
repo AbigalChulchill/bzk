@@ -1,1 +1,267 @@
-{"clazz":"net.bzk.flow.model.Flow","uid":"hMVIvtI9umAB","name":"ShortBuyBinance","boxs":[{"clazz":"net.bzk.flow.model.Box","uid":"m7IzQZV5oOJ5","name":"6hMinCheck","actions":[{"clazz":"net.bzk.flow.model.Action$SubFlowAction","uid":"K3NAnx4H5Fdu","name":"Get6hMinAvg","tryErrorble":false,"devBoxVars":{},"devFlowVars":{},"flowUid":"9RLQvpmbGa35","asynced":false,"inputData":[{"key":"tsdbQuery","val":"t1 = from(bucket: \"quote\")\n  |> range(start: -12h)\n  |> filter(fn: (r) =>\n    r._measurement == \"realtime\" and\n    r._field == \"price\" and\n    r.symbol == \"${symbol}\" \n  )\n  |> map(fn: (r) => ({ r with cp: r._value   }))\n  |>movingAverage(n: 36)\n  |> map(fn: (r) => ({ r with _value: (r.cp-r._value)/r._value   }))\n  |> map(fn: (r) => ({ r with _value:if r._value >0.00 then 0.00 else r._value   }))\n  |> window(every: 3h)\n  |> min()   \n  |> window(every: inf)\n  |>movingAverage(n: 6)\n\nt1"},{"key":"vaildMins","val":"!javascript===\n(6*60)+5"}],"outputReflects":[{"srcKey":"nearVal","toKey":{"lv":"not_specify","key":"thline"}}]}],"links":[{"clazz":"net.bzk.flow.model.Link","uid":"YL0vuWiE5hZt","name":"6hMinTest","condition":{"clazz":"net.bzk.flow.model.Condition$ConditionNum","kind":"NONE","next":null,"left":"${priceBais.val}","right":"${thline.val}","type":"greater_equal"},"transition":{"toBox":"","endTag":"6hMinNotPass","failEnd":false,"endResultKeys":[]}}],"vars":{},"taskSort":["K3NAnx4H5Fdu","YL0vuWiE5hZt"],"whileJudgment":null,"transition":{"toBox":"8CVBFRAIwESi","endTag":null,"failEnd":false,"endResultKeys":[]}},{"clazz":"net.bzk.flow.model.Box","uid":"8CVBFRAIwESi","name":"OrderBuy","actions":[{"clazz":"net.bzk.flow.model.Action$SubFlowAction","uid":"MNAAARnHaCb3","name":"OrderPost","tryErrorble":false,"devBoxVars":{},"devFlowVars":{},"flowUid":"02eQyaMwyojZ","asynced":false,"inputData":[{"key":"investedRate","val":"0.01"},{"key":"guardRange","val":"0.00568"},{"key":"symbol","val":"${symbol}"},{"key":"selled","val":"false"},{"key":"currentMove","val":"0.001068"},{"key":"tags","val":"[\"shortTermBuy\"]"}],"outputReflects":[]}],"links":[],"vars":{},"taskSort":["MNAAARnHaCb3"],"whileJudgment":null,"transition":{"toBox":"","endTag":"END","failEnd":false,"endResultKeys":[]}},{"clazz":"net.bzk.flow.model.Box","uid":"1HMjdDMRjAJ0","name":"1HPriceBais","actions":[{"clazz":"net.bzk.flow.model.HttpAction","uid":"OcPQy555y0Gn","name":"cancel_by_filter","tryErrorble":false,"devBoxVars":{},"devFlowVars":{},"url":"${binance.proxyHost}proxy","uriVariables":{},"body":"{\n    \"name\":\"cancel_by_filter\",\n    \"apiKey\":\"${binance.key}\",\n    \"secret\":\"${binance.secret}\",\n    \"symbol\":\"${symbol}\",\n    \"tags\":[\"shortTermBuy\"]\n}","method":"POST","headers":{},"headersFlat":"","key":{"lv":"not_specify","key":"postResult"}},{"clazz":"net.bzk.flow.model.Action$SubFlowAction","uid":"SiPyHUcTzl1K","name":"Get1HPriceBais","tryErrorble":false,"devBoxVars":{},"devFlowVars":{},"flowUid":"9RLQvpmbGa35","asynced":false,"inputData":[{"key":"tsdbQuery","val":"t1 = from(bucket: \"quote\")\r\n  |> range(start: -60h)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"realtime\" and\r\n    r._field == \"price\" and\r\n    r.symbol == \"${symbol}\" \r\n  )\r\n  |> map(fn: (r) => ({ r with cp: r._value   }))\r\n  |>movingAverage(n: 12)\r\n  |> map(fn: (r) => ({ r with _value: (r.cp-r._value)/r._value   }))\r\n\r\nt1"},{"key":"vaildMins","val":"25"}],"outputReflects":[{"srcKey":"nearVal","toKey":{"lv":"not_specify","key":"priceBais"}}]}],"links":[{"clazz":"net.bzk.flow.model.Link","uid":"LpO1DEwUtkpW","name":"Check1HPriceBais","condition":{"clazz":"net.bzk.flow.model.Condition$ConditionNum","kind":"NONE","next":null,"left":"${priceBais.val}","right":"-0.000268","type":"greater_equal"},"transition":{"toBox":"","endTag":"PriceBaisToSmail","failEnd":false,"endResultKeys":[]}},{"clazz":"net.bzk.flow.model.Link","uid":"scCTwzCl5w9O","name":"ToBig","condition":{"clazz":"net.bzk.flow.model.Condition$ConditionNum","kind":"NONE","next":null,"left":"${priceBais.val}","right":"-0.0586","type":"lessthan_equal"},"transition":{"toBox":"","endTag":"ToBig","failEnd":false,"endResultKeys":[]}}],"vars":{},"taskSort":["OcPQy555y0Gn","SiPyHUcTzl1K","LpO1DEwUtkpW","scCTwzCl5w9O"],"whileJudgment":null,"transition":{"toBox":"m7IzQZV5oOJ5","endTag":null,"failEnd":false,"endResultKeys":[{"lv":"not_specify","key":"priceBais"}]}}],"varCfgNames":["binance.json"],"vars":{"symbol":"BTC"},"entry":{"clazz":"net.bzk.flow.model.Entry$PluginEntry","boxUid":"1HMjdDMRjAJ0","autoRegister":false,"requiredKeys":["symbol"],"outputKeys":[]},"logEncryptKey":"1234567890123456","threadCfg":{"corePoolSize":10,"maximumPoolSize":50,"keepAliveTime":500,"aliveUnit":"MINUTES"}}
+{
+  "clazz": "net.bzk.flow.model.Flow",
+  "uid": "hMVIvtI9umAB",
+  "logEncryptKey": "1234567890123456",
+  "vars": {
+    "symbol": "BTC"
+  },
+  "varCfgNames": [
+    "binance.json"
+  ],
+  "threadCfg": {
+    "corePoolSize": 10,
+    "maximumPoolSize": 50,
+    "keepAliveTime": 500,
+    "aliveUnit": "MINUTES"
+  },
+  "name": "ShortBuyBinance",
+  "boxs": [
+    {
+      "clazz": "net.bzk.flow.model.Box",
+      "uid": "m7IzQZV5oOJ5",
+      "name": "6hMinCheck",
+      "actions": [
+        {
+          "clazz": "net.bzk.flow.model.Action$SubFlowAction",
+          "uid": "K3NAnx4H5Fdu",
+          "name": "Get6hMinAvg",
+          "tryErrorble": false,
+          "devBoxVars": {},
+          "devFlowVars": {},
+          "flowUid": "9RLQvpmbGa35",
+          "asynced": false,
+          "inputData": [
+            {
+              "key": "tsdbQuery",
+              "val": "t1 = from(bucket: \"quote\")\n  |> range(start: -12h)\n  |> filter(fn: (r) =>\n    r._measurement == \"realtime\" and\n    r._field == \"price\" and\n    r.symbol == \"${symbol}\" \n  )\n  |> map(fn: (r) => ({ r with cp: r._value   }))\n  |>movingAverage(n: 36)\n  |> map(fn: (r) => ({ r with _value: (r.cp-r._value)/r._value   }))\n  |> map(fn: (r) => ({ r with _value:if r._value >0.00 then 0.00 else r._value   }))\n  |> window(every: 3h)\n  |> min()   \n  |> window(every: inf)\n  |>movingAverage(n: 6)\n\nt1"
+            },
+            {
+              "key": "vaildMins",
+              "val": "!javascript===\n(6*60)+5"
+            }
+          ],
+          "outputReflects": [
+            {
+              "srcKey": "nearVal",
+              "toKey": {
+                "lv": "not_specify",
+                "key": "thline"
+              }
+            }
+          ]
+        }
+      ],
+      "links": [
+        {
+          "clazz": "net.bzk.flow.model.Link",
+          "uid": "YL0vuWiE5hZt",
+          "name": "6hMinTest",
+          "condition": {
+            "clazz": "net.bzk.flow.model.Condition$ConditionNum",
+            "kind": "NONE",
+            "next": null,
+            "left": "${priceBais.val}",
+            "right": "${thline.val}",
+            "type": "greater_equal"
+          },
+          "transition": {
+            "toBox": "",
+            "endTag": "6hMinNotPass",
+            "failEnd": false,
+            "endResultKeys": []
+          }
+        }
+      ],
+      "vars": {},
+      "taskSort": [
+        "K3NAnx4H5Fdu",
+        "YL0vuWiE5hZt"
+      ],
+      "transition": {
+        "toBox": "8CVBFRAIwESi",
+        "failEnd": false,
+        "endTag": null,
+        "endResultKeys": []
+      },
+      "whileJudgment": null
+    },
+    {
+      "clazz": "net.bzk.flow.model.Box",
+      "uid": "8CVBFRAIwESi",
+      "name": "OrderBuy",
+      "actions": [
+        {
+          "clazz": "net.bzk.flow.model.Action$SubFlowAction",
+          "uid": "MNAAARnHaCb3",
+          "name": "OrderPost",
+          "tryErrorble": false,
+          "devBoxVars": {},
+          "devFlowVars": {},
+          "flowUid": "02eQyaMwyojZ",
+          "asynced": false,
+          "inputData": [
+            {
+              "key": "investedRate",
+              "val": "0.01"
+            },
+            {
+              "key": "guardRange",
+              "val": "0.00568"
+            },
+            {
+              "key": "symbol",
+              "val": "${symbol}"
+            },
+            {
+              "key": "selled",
+              "val": "false"
+            },
+            {
+              "key": "currentMove",
+              "val": "0.001068"
+            },
+            {
+              "key": "tags",
+              "val": "[\"shortTermBuy\"]"
+            }
+          ],
+          "outputReflects": []
+        }
+      ],
+      "links": [],
+      "vars": {},
+      "taskSort": [
+        "MNAAARnHaCb3"
+      ],
+      "whileJudgment": null,
+      "transition": {
+        "toBox": "",
+        "endTag": "END",
+        "failEnd": false,
+        "endResultKeys": []
+      }
+    },
+    {
+      "clazz": "net.bzk.flow.model.Box",
+      "uid": "1HMjdDMRjAJ0",
+      "name": "1HPriceBais",
+      "actions": [
+        {
+          "clazz": "net.bzk.flow.model.HttpAction",
+          "uid": "OcPQy555y0Gn",
+          "name": "cancel_by_filter",
+          "tryErrorble": false,
+          "devBoxVars": {},
+          "devFlowVars": {},
+          "url": "${binance.proxyHost}proxy",
+          "uriVariables": {},
+          "body": "{\r\n  \"name\": \"cancel_by_filter\",\r\n  \"apiKey\": \"${binance.key}\",\r\n  \"secret\": \"${binance.secret}\",\r\n  \"symbol\": \"${symbol}\",\r\n  \"notOrderType\": \"STOP_MARKET\"\r\n}",
+          "method": "POST",
+          "headers": {},
+          "headersFlat": "",
+          "key": {
+            "lv": "not_specify",
+            "key": "postResult"
+          }
+        },
+        {
+          "clazz": "net.bzk.flow.model.Action$SubFlowAction",
+          "uid": "SiPyHUcTzl1K",
+          "name": "Get1HPriceBais",
+          "tryErrorble": false,
+          "devBoxVars": {},
+          "devFlowVars": {},
+          "flowUid": "9RLQvpmbGa35",
+          "asynced": false,
+          "inputData": [
+            {
+              "key": "tsdbQuery",
+              "val": "t1 = from(bucket: \"quote\")\r\n  |> range(start: -60h)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"realtime\" and\r\n    r._field == \"price\" and\r\n    r.symbol == \"${symbol}\" \r\n  )\r\n  |> map(fn: (r) => ({ r with cp: r._value   }))\r\n  |>movingAverage(n: 12)\r\n  |> map(fn: (r) => ({ r with _value: (r.cp-r._value)/r._value   }))\r\n\r\nt1"
+            },
+            {
+              "key": "vaildMins",
+              "val": "25"
+            }
+          ],
+          "outputReflects": [
+            {
+              "srcKey": "nearVal",
+              "toKey": {
+                "lv": "not_specify",
+                "key": "priceBais"
+              }
+            }
+          ]
+        }
+      ],
+      "links": [
+        {
+          "clazz": "net.bzk.flow.model.Link",
+          "uid": "LpO1DEwUtkpW",
+          "name": "Check1HPriceBais",
+          "condition": {
+            "clazz": "net.bzk.flow.model.Condition$ConditionNum",
+            "kind": "NONE",
+            "next": null,
+            "left": "${priceBais.val}",
+            "right": "-0.000268",
+            "type": "greater_equal"
+          },
+          "transition": {
+            "toBox": "",
+            "endTag": "PriceBaisToSmail",
+            "failEnd": false,
+            "endResultKeys": []
+          }
+        },
+        {
+          "clazz": "net.bzk.flow.model.Link",
+          "uid": "scCTwzCl5w9O",
+          "name": "ToBig",
+          "condition": {
+            "clazz": "net.bzk.flow.model.Condition$ConditionNum",
+            "kind": "NONE",
+            "next": null,
+            "left": "${priceBais.val}",
+            "right": "-0.0586",
+            "type": "lessthan_equal"
+          },
+          "transition": {
+            "toBox": "",
+            "endTag": "ToBig",
+            "failEnd": false,
+            "endResultKeys": []
+          }
+        }
+      ],
+      "vars": {},
+      "taskSort": [
+        "OcPQy555y0Gn",
+        "SiPyHUcTzl1K",
+        "LpO1DEwUtkpW",
+        "scCTwzCl5w9O"
+      ],
+      "whileJudgment": null,
+      "transition": {
+        "toBox": "m7IzQZV5oOJ5",
+        "endTag": null,
+        "failEnd": false,
+        "endResultKeys": [
+          {
+            "lv": "not_specify",
+            "key": "priceBais"
+          }
+        ]
+      }
+    }
+  ],
+  "entry": {
+    "clazz": "net.bzk.flow.model.Entry$PluginEntry",
+    "boxUid": "1HMjdDMRjAJ0",
+    "autoRegister": false,
+    "requiredKeys": [
+      "symbol"
+    ],
+    "outputKeys": []
+  }
+}
