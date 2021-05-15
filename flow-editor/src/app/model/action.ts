@@ -464,3 +464,19 @@ export class MailAction extends Action {
 
 }
 
+@OTypeClass({
+  clazz: 'net.bzk.flow.model.Action$SysAction'
+})
+export class SysAction extends Action {
+  @PropInfo({
+    title: 'func',
+    type: PropType.MultipleText,
+
+  })
+  public func = '';
+  @PropInfo({
+    title: 'data',
+    type: PropType.MultipleText,
+  })
+  public data ='{}';
+}

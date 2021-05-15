@@ -141,9 +141,13 @@ public class Action extends BzkObj {
 		private String toMail;
 		private String subject;
 		private String body;
-		
-
-		
+	}
+	
+	@Data
+	@EqualsAndHashCode(callSuper = false)
+	public static class SysAction extends Action {
+		private String func;
+		private String data;
 	}
 	
 	

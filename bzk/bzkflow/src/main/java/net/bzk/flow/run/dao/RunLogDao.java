@@ -1,5 +1,6 @@
 package net.bzk.flow.run.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
@@ -13,4 +14,6 @@ public interface RunLogDao extends CrudRepository<RunLog, Long> {
 	
 	List<RunLog> findByActionUidOrderByCreateAtAsc(String uid);
 
+	List<RunLog> deleteByCreateAtBefore(Date date);
+	
 }
