@@ -57,7 +57,7 @@ public class VarCfgService {
 	public VarCfg save(VarCfg c,boolean saveFile) throws IOException {
 		c = replaceHex(c);
 		if (saveBackInited && saveFile ) {
-			FileUtils.write(new File(initDataPath + c.getName() + ".json"), JsonUtils.toJson(c.getContent()),
+			FileUtils.write(new File(initDataPath + c.getName() + ".json"), JsonUtils.toPrettyJson(c.getContent()),
 					Charset.forName("UTF-8"));
 		}
 		return dao.save(c);

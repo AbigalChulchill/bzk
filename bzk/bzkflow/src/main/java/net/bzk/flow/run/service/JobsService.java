@@ -78,7 +78,7 @@ public class JobsService {
 		Job sf = sfo.orElse(Job.gen(f));
 		sf.setModel(f);
 		if (saveBackInited && saveFile) {
-			FileUtils.write(new File(initDataPath + f.getName() + ".json"), JsonUtils.toJson(f),
+			FileUtils.write(new File(initDataPath + f.getName() + ".json"), JsonUtils.toPrettyJson(f),
 					Charset.forName("UTF-8"));
 		}
 		return dao.save(sf);

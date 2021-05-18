@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 
@@ -38,6 +39,14 @@ public class JsonUtils {
 		try {
 			return JSON_MAPPER.writeValueAsString(o);
 		} catch (Exception e) {
+			throw new BzkRuntimeException("toJson O:" + o, e);
+		}
+	}
+	
+	public static String toPrettyJson(Object o) {
+		try {
+			return JSON_MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(o);
+		} catch (JsonProcessingException e) {
 			throw new BzkRuntimeException("toJson O:" + o, e);
 		}
 	}
