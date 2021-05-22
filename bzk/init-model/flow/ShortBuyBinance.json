@@ -4,76 +4,6 @@
   "name" : "ShortBuyBinance",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
-    "uid" : "8CVBFRAIwESi",
-    "name" : "OrderBuy",
-    "actions" : [ {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "MNAAARnHaCb3",
-      "name" : "OrderPost",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "flowUid" : "02eQyaMwyojZ",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "investedRate",
-        "val" : "0.05"
-      }, {
-        "key" : "guardRange",
-        "val" : "0.00588"
-      }, {
-        "key" : "symbol",
-        "val" : "${symbol}"
-      }, {
-        "key" : "selled",
-        "val" : "false"
-      }, {
-        "key" : "currentMove",
-        "val" : "0.000168"
-      }, {
-        "key" : "tags",
-        "val" : "[\"shortTermBuy\"]"
-      }, {
-        "key" : "triggerAmt",
-        "val" : "!javascript===\nconst m = ${priceBais.val} * -5;\nconst ans=${amt.val}*6*(1+m);\nans;"
-      } ],
-      "outputReflects" : [ ]
-    }, {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "6JNwUdoujkcj",
-      "name" : "GetBinance1MinAmt",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "flowUid" : "9RLQvpmbGa35",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "tsdbQuery",
-        "val" : "import \"date\"\r\nt1 = from(bucket: \"quote\")\r\n  |> range(start: -8h)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"realtime\" and\r\n    r.symbol == \"${symbol}\" and\r\n    r.trade == \"60s\" and\r\n    r._field == \"totalAmount\"\r\n  )\r\n  |> map(fn: (r) => ({ r with _time: date.truncate(t: r._time, unit: 10s)    }))\r\n  |> pivot(rowKey:[\"_time\"], columnKey: [\"side\"], valueColumn: \"_value\")\r\n  |> map(fn: (r) => ({ r with _value: r.sell + r.buy }))    \r\n  |> movingAverage(n: 10 )\r\nt1   "
-      }, {
-        "key" : "vaildMins",
-        "val" : "31"
-      } ],
-      "outputReflects" : [ {
-        "srcKey" : "nearVal",
-        "toKey" : {
-          "lv" : "not_specify",
-          "key" : "amt"
-        }
-      } ]
-    } ],
-    "links" : [ ],
-    "vars" : { },
-    "taskSort" : [ "6JNwUdoujkcj", "MNAAARnHaCb3" ],
-    "whileJudgment" : null,
-    "transition" : {
-      "toBox" : "",
-      "endTag" : "END",
-      "failEnd" : false,
-      "endResultKeys" : [ ]
-    }
-  }, {
-    "clazz" : "net.bzk.flow.model.Box",
     "uid" : "1HMjdDMRjAJ0",
     "name" : "1HPriceBais",
     "actions" : [ {
@@ -182,6 +112,76 @@
         "lv" : "not_specify",
         "key" : "priceBais"
       } ]
+    }
+  }, {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "8CVBFRAIwESi",
+    "name" : "OrderBuy",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "MNAAARnHaCb3",
+      "name" : "OrderPost",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flowUid" : "02eQyaMwyojZ",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "investedRate",
+        "val" : "0.05"
+      }, {
+        "key" : "guardRange",
+        "val" : "0.00588"
+      }, {
+        "key" : "symbol",
+        "val" : "${symbol}"
+      }, {
+        "key" : "selled",
+        "val" : "false"
+      }, {
+        "key" : "currentMove",
+        "val" : "0.000168"
+      }, {
+        "key" : "tags",
+        "val" : "[\"shortTermBuy\"]"
+      }, {
+        "key" : "triggerAmt",
+        "val" : "!javascript===\nconst m = ${priceBais.val} * -5;\nconst ans=${amt.val}*6*(1+m)*1.0886;\nans;"
+      } ],
+      "outputReflects" : [ ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "6JNwUdoujkcj",
+      "name" : "GetBinance1MinAmt",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flowUid" : "9RLQvpmbGa35",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "tsdbQuery",
+        "val" : "import \"date\"\r\nt1 = from(bucket: \"quote\")\r\n  |> range(start: -8h)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"realtime\" and\r\n    r.symbol == \"${symbol}\" and\r\n    r.trade == \"60s\" and\r\n    r._field == \"totalAmount\"\r\n  )\r\n  |> map(fn: (r) => ({ r with _time: date.truncate(t: r._time, unit: 10s)    }))\r\n  |> pivot(rowKey:[\"_time\"], columnKey: [\"side\"], valueColumn: \"_value\")\r\n  |> map(fn: (r) => ({ r with _value: r.sell + r.buy }))    \r\n  |> movingAverage(n: 10 )\r\nt1   "
+      }, {
+        "key" : "vaildMins",
+        "val" : "31"
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "nearVal",
+        "toKey" : {
+          "lv" : "not_specify",
+          "key" : "amt"
+        }
+      } ]
+    } ],
+    "links" : [ ],
+    "vars" : { },
+    "taskSort" : [ "6JNwUdoujkcj", "MNAAARnHaCb3" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "END",
+      "failEnd" : false,
+      "endResultKeys" : [ ]
     }
   }, {
     "clazz" : "net.bzk.flow.model.Box",
