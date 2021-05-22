@@ -60,7 +60,7 @@
       "endResultKeys" : [ ]
     }
   } ],
-  "varCfgNames" : [ ],
+  "varCfgNames" : [ "binance.json" ],
   "vars" : {
     "symbols" : [ {
       "symbol" : "BTC",
