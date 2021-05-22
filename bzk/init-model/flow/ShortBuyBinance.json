@@ -17,7 +17,7 @@
       "asynced" : false,
       "inputData" : [ {
         "key" : "investedRate",
-        "val" : "0.01"
+        "val" : "0.05"
       }, {
         "key" : "guardRange",
         "val" : "0.00588"
@@ -35,7 +35,7 @@
         "val" : "[\"shortTermBuy\"]"
       }, {
         "key" : "triggerAmt",
-        "val" : "!javascript===\nconst m = ${priceBais.val} * -5;\nconst ans=${amt.val}*6*(1+m)*1.1;\nans;"
+        "val" : "!javascript===\nconst m = ${priceBais.val} * -5;\nconst ans=${amt.val}*6*(1+m);\nans;"
       } ],
       "outputReflects" : [ ]
     }, {
@@ -69,62 +69,6 @@
     "transition" : {
       "toBox" : "",
       "endTag" : "END",
-      "failEnd" : false,
-      "endResultKeys" : [ ]
-    }
-  }, {
-    "clazz" : "net.bzk.flow.model.Box",
-    "uid" : "m7IzQZV5oOJ5",
-    "name" : "6hMinCheck",
-    "actions" : [ {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "K3NAnx4H5Fdu",
-      "name" : "Get6hMinAvg",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "flowUid" : "9RLQvpmbGa35",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "tsdbQuery",
-        "val" : "t1 = from(bucket: \"quote\")\n  |> range(start: -12h)\n  |> filter(fn: (r) =>\n    r._measurement == \"realtime\" and\n    r._field == \"price\" and\n    r.symbol == \"${symbol}\" \n  )\n  |> map(fn: (r) => ({ r with cp: r._value   }))\n  |>movingAverage(n: 36)\n  |> map(fn: (r) => ({ r with _value: (r.cp-r._value)/r._value   }))\n  |> map(fn: (r) => ({ r with _value:if r._value >0.00 then 0.00 else r._value   }))\n  |> window(every: 3h)\n  |> min()   \n  |> window(every: inf)\n  |>movingAverage(n: 6)\n\nt1"
-      }, {
-        "key" : "vaildMins",
-        "val" : "!javascript===\n(6*60)+5"
-      } ],
-      "outputReflects" : [ {
-        "srcKey" : "nearVal",
-        "toKey" : {
-          "lv" : "not_specify",
-          "key" : "thline"
-        }
-      } ]
-    } ],
-    "links" : [ {
-      "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "YL0vuWiE5hZt",
-      "name" : "6hMinTest",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
-        "kind" : "NONE",
-        "next" : null,
-        "left" : "${priceBais.val}",
-        "right" : "!javascript===\n${thline.val}*1.0668;",
-        "type" : "greater_equal"
-      },
-      "transition" : {
-        "toBox" : "",
-        "endTag" : "6hMinNotPass",
-        "failEnd" : false,
-        "endResultKeys" : [ ]
-      }
-    } ],
-    "vars" : { },
-    "taskSort" : [ "K3NAnx4H5Fdu", "YL0vuWiE5hZt" ],
-    "whileJudgment" : null,
-    "transition" : {
-      "toBox" : "8CVBFRAIwESi",
-      "endTag" : null,
       "failEnd" : false,
       "endResultKeys" : [ ]
     }
@@ -238,6 +182,62 @@
         "lv" : "not_specify",
         "key" : "priceBais"
       } ]
+    }
+  }, {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "m7IzQZV5oOJ5",
+    "name" : "6hMinCheck",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "K3NAnx4H5Fdu",
+      "name" : "Get6hMinAvg",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flowUid" : "9RLQvpmbGa35",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "tsdbQuery",
+        "val" : "t1 = from(bucket: \"quote\")\n  |> range(start: -12h)\n  |> filter(fn: (r) =>\n    r._measurement == \"realtime\" and\n    r._field == \"price\" and\n    r.symbol == \"${symbol}\" \n  )\n  |> map(fn: (r) => ({ r with cp: r._value   }))\n  |>movingAverage(n: 36)\n  |> map(fn: (r) => ({ r with _value: (r.cp-r._value)/r._value   }))\n  |> map(fn: (r) => ({ r with _value:if r._value >0.00 then 0.00 else r._value   }))\n  |> window(every: 3h)\n  |> min()   \n  |> window(every: inf)\n  |>movingAverage(n: 6)\n\nt1"
+      }, {
+        "key" : "vaildMins",
+        "val" : "!javascript===\n(6*60)+5"
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "nearVal",
+        "toKey" : {
+          "lv" : "not_specify",
+          "key" : "thline"
+        }
+      } ]
+    } ],
+    "links" : [ {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "YL0vuWiE5hZt",
+      "name" : "6hMinTest",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
+        "kind" : "NONE",
+        "next" : null,
+        "left" : "${priceBais.val}",
+        "right" : "!javascript===\n${thline.val}*1.0668;",
+        "type" : "greater_equal"
+      },
+      "transition" : {
+        "toBox" : "",
+        "endTag" : "6hMinNotPass",
+        "failEnd" : false,
+        "endResultKeys" : [ ]
+      }
+    } ],
+    "vars" : { },
+    "taskSort" : [ "K3NAnx4H5Fdu", "YL0vuWiE5hZt" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "8CVBFRAIwESi",
+      "endTag" : null,
+      "failEnd" : false,
+      "endResultKeys" : [ ]
     }
   } ],
   "varCfgNames" : [ "binance.json" ],

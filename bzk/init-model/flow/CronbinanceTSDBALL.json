@@ -1,1 +1,106 @@
-{"clazz":"net.bzk.flow.model.Flow","uid":"wkuYEvoByZui","name":"CronbinanceTSDBALL","boxs":[{"clazz":"net.bzk.flow.model.Box","uid":"eiF1Vh3xNWwG","name":"Box","actions":[{"clazz":"net.bzk.flow.model.Action$SubFlowAction","uid":"6FwCwnmrpjVz","name":"CallSub","tryErrorble":false,"devBoxVars":{},"devFlowVars":{},"flowUid":"0OETbdjvKZwR","asynced":true,"inputData":[{"key":"symbol","val":"${curSBL.symbol}"},{"key":"finName","val":"${curSBL.finName}"}],"outputReflects":[]},{"clazz":"net.bzk.flow.model.Action$VarModifyAction","uid":"kYki4FcF3kZq","name":"LoopIdx","tryErrorble":false,"devBoxVars":{"symbolIdx":0},"devFlowVars":{},"flatData":[{"key":"curSBL","val":"!javascript===\nconst sbs = ${symbols};\nconst idx = ${symbolIdx};\nconst sb = sbs[idx];\nsb"},{"key":"symbolIdx","val":"!javascript===\n${symbolIdx}+1"}]}],"links":[],"vars":{"symbolIdx":0},"taskSort":["kYki4FcF3kZq","6FwCwnmrpjVz"],"whileJudgment":{"clazz":"net.bzk.flow.model.Condition$ConditionNum","kind":"NONE","next":null,"left":"${symbolIdx}","right":"!javascript===\nconst sbs = ${symbols};\nconst len= sbs.length\nlen","type":"lessthan"},"transition":{"toBox":"","endTag":"TODO Why","failEnd":false,"endResultKeys":[]}}],"varCfgNames":[],"vars":{"symbols":[{"symbol":"BTC","finName":"bitcoin"},{"symbol":"BCH","finName":"Bitcoin Cash"},{"symbol":"ETH","finName":"ethereum"},{"symbol":"ETC","finName":"Ethereum Classic"},{"symbol":"LTC","finName":"Litecoin"},{"symbol":"XRP","finName":"XRP"},{"symbol":"EOS","finName":"EOS"},{"symbol":"BNB","finName":"Binance Coin"}]},"entry":{"clazz":"net.bzk.flow.model.Entry$FixedRateEntry","boxUid":"eiF1Vh3xNWwG","autoRegister":true,"period":30,"unit":"MINUTES","initialDelay":0},"logEncryptKey":"1234567890123456","threadCfg":{"corePoolSize":10,"maximumPoolSize":50,"keepAliveTime":500,"aliveUnit":"MINUTES"}}
+{
+  "clazz" : "net.bzk.flow.model.Flow",
+  "uid" : "wkuYEvoByZui",
+  "name" : "CronbinanceTSDBALL",
+  "boxs" : [ {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "eiF1Vh3xNWwG",
+    "name" : "Box",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
+      "uid" : "kYki4FcF3kZq",
+      "name" : "LoopIdx",
+      "tryErrorble" : false,
+      "devBoxVars" : {
+        "symbolIdx" : 0
+      },
+      "devFlowVars" : { },
+      "flatData" : [ {
+        "key" : "curSBL",
+        "val" : "!javascript===\nconst sbs = ${symbols};\nconst idx = ${symbolIdx};\nconst sb = sbs[idx];\nsb"
+      }, {
+        "key" : "symbolIdx",
+        "val" : "!javascript===\n${symbolIdx}+1"
+      } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "MZfKzKxdnKaS",
+      "name" : "PostBaProxy",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "url" : "${binance.proxyHost}proxy",
+      "uriVariables" : { },
+      "body" : "{\n    \"name\":\"subscribeaggregatetrade\",\n    \"apiKey\":\"${binance.key}\",\n    \"secret\":\"${binance.secret}\",\n    \"symbol\":\"${curSBL.symbol}\",\n    \"timeout\":60,\n    \"asynced\":true\n}",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : ""
+      }
+    } ],
+    "links" : [ ],
+    "vars" : {
+      "symbolIdx" : 0
+    },
+    "taskSort" : [ "kYki4FcF3kZq", "MZfKzKxdnKaS" ],
+    "whileJudgment" : {
+      "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
+      "kind" : "NONE",
+      "next" : null,
+      "left" : "${symbolIdx}",
+      "right" : "!javascript===\nconst sbs = ${symbols};\nconst len= sbs.length\nlen",
+      "type" : "lessthan"
+    },
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "TODO Why",
+      "failEnd" : false,
+      "endResultKeys" : [ ]
+    }
+  } ],
+  "varCfgNames" : [ ],
+  "vars" : {
+    "symbols" : [ {
+      "symbol" : "BTC",
+      "finName" : "bitcoin"
+    }, {
+      "symbol" : "BCH",
+      "finName" : "Bitcoin Cash"
+    }, {
+      "symbol" : "ETH",
+      "finName" : "ethereum"
+    }, {
+      "symbol" : "ETC",
+      "finName" : "Ethereum Classic"
+    }, {
+      "symbol" : "LTC",
+      "finName" : "Litecoin"
+    }, {
+      "symbol" : "XRP",
+      "finName" : "XRP"
+    }, {
+      "symbol" : "EOS",
+      "finName" : "EOS"
+    }, {
+      "symbol" : "BNB",
+      "finName" : "Binance Coin"
+    } ]
+  },
+  "entry" : {
+    "clazz" : "net.bzk.flow.model.Entry$FixedRateEntry",
+    "boxUid" : "eiF1Vh3xNWwG",
+    "autoRegister" : true,
+    "period" : 30,
+    "unit" : "MINUTES",
+    "initialDelay" : 0
+  },
+  "logEncryptKey" : "1234567890123456",
+  "threadCfg" : {
+    "corePoolSize" : 10,
+    "maximumPoolSize" : 50,
+    "keepAliveTime" : 500,
+    "aliveUnit" : "MINUTES"
+  }
+}
