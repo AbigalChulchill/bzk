@@ -1,0 +1,175 @@
+{
+  "clazz" : "net.bzk.flow.model.Flow",
+  "uid" : "etjtnki5V4WJ",
+  "name" : "PeakBuyer",
+  "boxs" : [ {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "JLHJy1PFFHMe",
+    "name" : "BOX",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "NVztZ0ze3RMD",
+      "name" : "GetCurrentPrice",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "url" : "${binance.proxyHost}proxy",
+      "uriVariables" : { },
+      "body" : "{\n    \"name\":\"get_recent_trades_list\",\n    \"apiKey\":\"${binance.key}\",\n    \"secret\":\"${binance.secret}\",\n    \"symbol\": \"${symbol}\",\n    \"limit\":50\n}",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : "curPrice"
+      }
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "omQM2kfxc2Cf",
+      "name" : "GetMA_1H",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flowUid" : "9RLQvpmbGa35",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "tsdbQuery",
+        "val" : "from(bucket: \"quote\")\r\n  |> range(start: -3h)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"realtime\" and\r\n    r.symbol == \"${symbol}\" and\r\n    r._field == \"price\"\r\n  )\r\n  |> timedMovingAverage(every: 5m, period: 1h)"
+      }, {
+        "key" : "vaildMins",
+        "val" : "10"
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "nearVal",
+        "toKey" : {
+          "lv" : "not_specify",
+          "key" : "ma1h"
+        }
+      } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "A9DLlmqdqWXw",
+      "name" : "Get_diff_6h",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flowUid" : "9RLQvpmbGa35",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "tsdbQuery",
+        "val" : "from(bucket: \"quote\")\r\n  |> range(start: -12h)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"realtime\" and\r\n    r.symbol == \"${symbol}\" and\r\n    r._field == \"price\"\r\n  )\r\n  |>map(fn: (r) => ({ r with cur: r._value }))   \r\n  |>movingAverage(n: 12)\r\n  |>map(fn: (r) => ({ r with _value: r.cur- r._value }))   \r\n  |> filter(fn: (r) =>\r\n    r._value < 0\r\n  )\r\n  |>movingAverage(n: 72)"
+      }, {
+        "key" : "vaildMins",
+        "val" : "60"
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "nearVal",
+        "toKey" : {
+          "lv" : "not_specify",
+          "key" : "dp"
+        }
+      } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "yVZY941QKdCf",
+      "name" : "OrderPost",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flowUid" : "02eQyaMwyojZ",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "investedRate",
+        "val" : "0.05"
+      }, {
+        "key" : "guardRange",
+        "val" : "0.00588"
+      }, {
+        "key" : "symbol",
+        "val" : "${symbol}"
+      }, {
+        "key" : "selled",
+        "val" : "false"
+      }, {
+        "key" : "currentMove",
+        "val" : "0.000168"
+      }, {
+        "key" : "triggerAmt",
+        "val" : "!javascript===\nconst ans=${amt.val}*6*1.0886;\nans;"
+      }, {
+        "key" : "tags",
+        "val" : "[\"shortTermBuy\"]"
+      } ],
+      "outputReflects" : [ ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "jWvxY8lUN4Vw",
+      "name" : "GetBinance1MinAmt",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flowUid" : "9RLQvpmbGa35",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "tsdbQuery",
+        "val" : "import \"date\"\nt1 = from(bucket: \"quote\")\n  |> range(start: -8h)\n  |> filter(fn: (r) =>\n    r._measurement == \"realtime\" and\n    r.symbol == \"${symbol}\" and\n    r.trade == \"60s\" and\n    r._field == \"totalAmount\"\n  )\n  |> map(fn: (r) => ({ r with _time: date.truncate(t: r._time, unit: 10s)    }))\n  |> pivot(rowKey:[\"_time\"], columnKey: [\"side\"], valueColumn: \"_value\")\n  |> map(fn: (r) => ({ r with _value: r.sell + r.buy }))    \n  |> movingAverage(n: 10 )\nt1   "
+      }, {
+        "key" : "vaildMins",
+        "val" : "31"
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "nearVal",
+        "toKey" : {
+          "lv" : "not_specify",
+          "key" : "amt"
+        }
+      } ]
+    } ],
+    "links" : [ {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "WJzQ9czYjYNY",
+      "name" : "ChekPrice",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
+        "kind" : "NONE",
+        "next" : null,
+        "left" : "${curPrice.buy.avgPrice}",
+        "right" : "!javascript===\nconst ma1h = ${ma1h.val};\nconst dv = ${dp.val};\n\nconst ans =  ma1h + dv;\nans",
+        "type" : "greater_equal"
+      },
+      "transition" : {
+        "toBox" : "",
+        "endTag" : "PriceToHigh",
+        "failEnd" : false,
+        "endResultKeys" : [ ]
+      }
+    } ],
+    "vars" : { },
+    "taskSort" : [ "NVztZ0ze3RMD", "omQM2kfxc2Cf", "A9DLlmqdqWXw", "WJzQ9czYjYNY", "jWvxY8lUN4Vw", "yVZY941QKdCf" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "TODO Why",
+      "failEnd" : false,
+      "endResultKeys" : [ ]
+    }
+  } ],
+  "varCfgNames" : [ "binance.json", "fin-proxy.json" ],
+  "vars" : {
+    "symbol" : "BTC"
+  },
+  "entry" : {
+    "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
+    "boxUid" : "JLHJy1PFFHMe",
+    "autoRegister" : false,
+    "requiredKeys" : [ "symbol" ],
+    "outputKeys" : [ ]
+  },
+  "logEncryptKey" : "1234567890123456",
+  "threadCfg" : {
+    "corePoolSize" : 10,
+    "maximumPoolSize" : 50,
+    "keepAliveTime" : 500,
+    "aliveUnit" : "MINUTES"
+  }
+}

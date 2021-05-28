@@ -22,7 +22,7 @@ public class ConditionNumer extends Conditioner<ConditionNum> {
 		double ld = getPolyglotEngine().parseScriptbleText(getModel().getLeft(),Double.class) ;
 		boolean ans = checkNum(rd, ld);
 		logUtils.logWithMsg(getUids(), RunState.ConditionResult,
-				rd + " " + getModel().getType() + " " + ld + "  : " + ans);
+				ld + " " + getModel().getType() + " " + rd + "  : " + ans);
 		return ans;
 	}
 	
