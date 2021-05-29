@@ -80,10 +80,10 @@
       "asynced" : false,
       "inputData" : [ {
         "key" : "investedRate",
-        "val" : "0.1"
+        "val" : "0.268"
       }, {
         "key" : "guardRange",
-        "val" : "0.00868"
+        "val" : "0.0186"
       }, {
         "key" : "symbol",
         "val" : "${symbol}"
@@ -95,7 +95,7 @@
         "val" : "0.000168"
       }, {
         "key" : "triggerAmt",
-        "val" : "!javascript===\nconst ans=${amt.val}*6*1.0886;\nans;"
+        "val" : "!javascript===\nconst ans=${amt.val}*3*1.0686;\nans;"
       }, {
         "key" : "tags",
         "val" : "[\"shortTermBuy\"]"
