@@ -28,7 +28,7 @@
       "devBoxVars" : { },
       "devFlowVars" : { },
       "flowUid" : "etjtnki5V4WJ",
-      "asynced" : true,
+      "asynced" : false,
       "inputData" : [ {
         "key" : "symbol",
         "val" : "${curSymbol}"
