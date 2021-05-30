@@ -129,7 +129,7 @@
         "val" : "0.0001868"
       }, {
         "key" : "triggerAmt",
-        "val" : "!javascript===\nconst ans=${amt.val}*3*1.0686;\nans;"
+        "val" : "!javascript===\nconst ans=${amt.val}*3*1.0866;\nans;"
       }, {
         "key" : "tags",
         "val" : "[\"shortTermBuy\"]"
