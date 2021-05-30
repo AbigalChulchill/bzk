@@ -8,6 +8,40 @@
     "name" : "BOX",
     "actions" : [ {
       "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "3upPLAHw95l6",
+      "name" : "GetPostionInfo",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "url" : "${binance.proxyHost}proxy",
+      "uriVariables" : { },
+      "body" : "{\r\n    \"name\":\"get_position\",\r\n    \"apiKey\": \"${binance.key}\",\r\n    \"secret\": \"${binance.secret}\",\r\n    \"symbol\": \"${symbol}\",\r\n    \"positionSide\":\"LONG\"\r\n}",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : "posInfo"
+      }
+    }, {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "OcPQy555y0Gn",
+      "name" : "cancel_by_filter",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "url" : "${binance.proxyHost}proxy",
+      "uriVariables" : { },
+      "body" : "!javascript===\r\nconst payload= {\r\n  \"name\": \"cancel_by_filter\",\r\n  \"apiKey\": \"${binance.key}\",\r\n  \"secret\": \"${binance.secret}\",\r\n  \"symbol\": \"${symbol}\"\r\n};\r\n\r\nconst pinfolist = ${posInfo};\r\nconst amt = pinfolist[0].positionAmt;\r\nif(amt>0){\r\n    payload['notOrderType']='STOP_MARKET';\r\n}\r\n\r\npayload;",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : "postResult"
+      }
+    }, {
+      "clazz" : "net.bzk.flow.model.HttpAction",
       "uid" : "NVztZ0ze3RMD",
       "name" : "GetCurrentPrice",
       "tryErrorble" : false,
@@ -80,10 +114,10 @@
       "asynced" : false,
       "inputData" : [ {
         "key" : "investedRate",
-        "val" : "0.268"
+        "val" : "0.168"
       }, {
         "key" : "guardRange",
-        "val" : "0.0186"
+        "val" : "0.01"
       }, {
         "key" : "symbol",
         "val" : "${symbol}"
@@ -92,7 +126,7 @@
         "val" : "false"
       }, {
         "key" : "currentMove",
-        "val" : "0.000168"
+        "val" : "0.0001868"
       }, {
         "key" : "triggerAmt",
         "val" : "!javascript===\nconst ans=${amt.val}*3*1.0686;\nans;"
@@ -145,7 +179,7 @@
       }
     } ],
     "vars" : { },
-    "taskSort" : [ "NVztZ0ze3RMD", "omQM2kfxc2Cf", "A9DLlmqdqWXw", "WJzQ9czYjYNY", "jWvxY8lUN4Vw", "yVZY941QKdCf" ],
+    "taskSort" : [ "NVztZ0ze3RMD", "omQM2kfxc2Cf", "A9DLlmqdqWXw", "WJzQ9czYjYNY", "jWvxY8lUN4Vw", "yVZY941QKdCf", "3upPLAHw95l6", "OcPQy555y0Gn" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
