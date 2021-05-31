@@ -8,6 +8,23 @@
     "name" : "Box",
     "actions" : [ {
       "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "3upPLAHw95l6",
+      "name" : "GetPostionInfo",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "url" : "${binance.proxyHost}proxy",
+      "uriVariables" : { },
+      "body" : "{\r\n    \"name\":\"get_position\",\r\n    \"apiKey\": \"${binance.key}\",\r\n    \"secret\": \"${binance.secret}\",\r\n    \"symbol\": \"${symbol}\",\r\n    \"positionSide\":\"LONG\"\r\n}",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : "posInfo"
+      }
+    }, {
+      "clazz" : "net.bzk.flow.model.HttpAction",
       "uid" : "OcPQy555y0Gn",
       "name" : "cancel_by_filter",
       "tryErrorble" : false,
@@ -57,7 +74,7 @@
     } ],
     "links" : [ ],
     "vars" : { },
-    "taskSort" : [ "OcPQySOCy0Gn", "fzgczwZFFaF2", "OcPQy555y0Gn" ],
+    "taskSort" : [ "OcPQySOCy0Gn", "fzgczwZFFaF2", "3upPLAHw95l6", "OcPQy555y0Gn" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
