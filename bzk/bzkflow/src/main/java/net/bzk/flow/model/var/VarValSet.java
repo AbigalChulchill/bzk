@@ -2,6 +2,7 @@ package net.bzk.flow.model.var;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.commons.lang3.StringUtils;
@@ -67,8 +68,8 @@ public class VarValSet {
 			msg = e.getMessage();
 		}
 
-		JsonMap toMap() {
-			return JsonMap.gen(this);
+		Map toMap() {
+			return JsonUtils.toByJson(this, Map.class);
 		}
 
 	}
