@@ -1,7 +1,7 @@
 {
   "clazz" : "net.bzk.flow.model.Flow",
   "uid" : "4QoVx2Wbhdxz",
-  "name" : "ShorttermBinanceBuyAll",
+  "name" : "ShorttermBinanceBuySellAll",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
     "uid" : "SlINz2lOTApz",
@@ -23,11 +23,25 @@
     }, {
       "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
       "uid" : "0YJkWwwXf0dK",
-      "name" : "Run",
+      "name" : "RunBuy",
       "tryErrorble" : true,
       "devBoxVars" : { },
       "devFlowVars" : { },
       "flowUid" : "etjtnki5V4WJ",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "symbol",
+        "val" : "${curSymbol}"
+      } ],
+      "outputReflects" : [ ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "RIpHzP77tzrr",
+      "name" : "RunSell",
+      "tryErrorble" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flowUid" : "PeakSellerWJ",
       "asynced" : false,
       "inputData" : [ {
         "key" : "symbol",
@@ -39,7 +53,7 @@
     "vars" : {
       "symbolIdx" : 0
     },
-    "taskSort" : [ "VBcwBUuoBz8z", "0YJkWwwXf0dK" ],
+    "taskSort" : [ "VBcwBUuoBz8z", "0YJkWwwXf0dK", "RIpHzP77tzrr" ],
     "whileJudgment" : {
       "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
       "kind" : "NONE",
@@ -63,8 +77,8 @@
     "clazz" : "net.bzk.flow.model.Entry$FixedRateEntry",
     "boxUid" : "SlINz2lOTApz",
     "autoRegister" : false,
-    "period" : 270,
-    "unit" : "SECONDS",
+    "period" : 5,
+    "unit" : "MINUTES",
     "initialDelay" : 0
   },
   "logEncryptKey" : "1234567890123456",

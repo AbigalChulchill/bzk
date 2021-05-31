@@ -1,7 +1,7 @@
 {
   "clazz" : "net.bzk.flow.model.Flow",
-  "uid" : "etjtnki5V4WJ",
-  "name" : "PeakBuyer",
+  "uid" : "PeakSellerWJ",
+  "name" : "PeakSeller",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
     "uid" : "JLHJy1PFFHMe",
@@ -60,7 +60,7 @@
     }, {
       "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
       "uid" : "omQM2kfxc2Cf",
-      "name" : "GetMA_1H",
+      "name" : "GetMA_30m",
       "tryErrorble" : false,
       "devBoxVars" : { },
       "devFlowVars" : { },
@@ -68,7 +68,7 @@
       "asynced" : false,
       "inputData" : [ {
         "key" : "tsdbQuery",
-        "val" : "from(bucket: \"quote\")\r\n  |> range(start: -3h)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"realtime\" and\r\n    r.symbol == \"${symbol}\" and\r\n    r._field == \"price\"\r\n  )\r\n  |> timedMovingAverage(every: 5m, period: 1h)"
+        "val" : "from(bucket: \"quote\")\r\n  |> range(start: -5h)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"realtime\" and\r\n    r.symbol == \"${symbol}\" and\r\n    r._field == \"price\"\r\n  )\r\n  |> timedMovingAverage(every: 5m, period: 30m)"
       }, {
         "key" : "vaildMins",
         "val" : "10"
@@ -77,13 +77,13 @@
         "srcKey" : "nearVal",
         "toKey" : {
           "lv" : "not_specify",
-          "key" : "ma1h"
+          "key" : "ma30m"
         }
       } ]
     }, {
       "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
       "uid" : "A9DLlmqdqWXw",
-      "name" : "Get_BuyLine",
+      "name" : "Get_SellLine",
       "tryErrorble" : false,
       "devBoxVars" : { },
       "devFlowVars" : { },
@@ -91,7 +91,7 @@
       "asynced" : false,
       "inputData" : [ {
         "key" : "tsdbQuery",
-        "val" : "import \"date\"\r\ncur=from(bucket: \"quote\")\r\n  |> range(start: -20h)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"realtime\" and\r\n    r.symbol == \"${symbol}\" and\r\n    r._field == \"price\"\r\n  )\r\n  |> map(fn: (r) => ({ r with _time: date.truncate(t: r._time, unit: 5m)    }))\r\n\r\navg1h = from(bucket: \"quote\")\r\n  |> range(start: -20h)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"realtime\" and\r\n    r.symbol == \"${symbol}\" and\r\n    r._field == \"price\"\r\n  )\r\n  |> timedMovingAverage(every: 5m, period: 1h)\r\n  |> map(fn: (r) => ({ r with _time: date.truncate(t: r._time, unit: 5m)    }))\r\n\r\n\r\n\r\njoin(tables: {cur: cur, avg1h: avg1h}, on: [\"_time\"])\r\n  |> map(fn: (r) => ({ r with _value: r._value_cur - r._value_avg1h     }))\r\n  |> filter(fn: (r) =>\r\n    r._value < 0\r\n  )     \r\n  |> fill(usePrevious: true)\r\n  |> movingAverage(n: 108)\r\n"
+        "val" : "import \"date\"\r\ncur=from(bucket: \"quote\")\r\n  |> range(start: -24h)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"realtime\" and\r\n    r.symbol == \"${symbol}\" and\r\n    r._field == \"price\"\r\n  )\r\n  |> map(fn: (r) => ({ r with _time: date.truncate(t: r._time, unit: 5m)    }))\r\n\r\navg1h = from(bucket: \"quote\")\r\n  |> range(start: -24h)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"realtime\" and\r\n    r.symbol == \"${symbol}\" and\r\n    r._field == \"price\"\r\n  )\r\n  |> timedMovingAverage(every: 5m, period: 1h)\r\n  |> map(fn: (r) => ({ r with _time: date.truncate(t: r._time, unit: 5m)    }))\r\n\r\n\r\n\r\njoin(tables: {cur: cur, avg1h: avg1h}, on: [\"_time\"])\r\n  |> map(fn: (r) => ({ r with _value: r._value_cur - r._value_avg1h   }))\r\n  |> filter(fn: (r) =>\r\n    r._value > 0\r\n  )  \r\n  |> map(fn: (r) => ({ r with _value: r._value * 1.68   }))   \r\n  |> fill(usePrevious: true)\r\n  |> movingAverage(n: 108)"
       }, {
         "key" : "vaildMins",
         "val" : "60"
@@ -100,7 +100,7 @@
         "srcKey" : "nearVal",
         "toKey" : {
           "lv" : "not_specify",
-          "key" : "buyLine"
+          "key" : "sellLine"
         }
       } ]
     }, {
@@ -123,7 +123,7 @@
         "val" : "${symbol}"
       }, {
         "key" : "selled",
-        "val" : "false"
+        "val" : "true"
       }, {
         "key" : "currentMove",
         "val" : "0.0001868"
@@ -167,9 +167,9 @@
         "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
         "kind" : "NONE",
         "next" : null,
-        "left" : "!javascript===\nconst ans= ${curPrice.buy.avgPrice} - ${ma1h.val};\nans;",
-        "right" : "${buyLine.val}",
-        "type" : "greater_equal"
+        "left" : "!javascript===\nconst ans= ${curPrice.sell.avgPrice} - ${ma30m.val};\nans;",
+        "right" : "${sellLine.val}",
+        "type" : "lessthan_equal"
       },
       "transition" : {
         "toBox" : "",
