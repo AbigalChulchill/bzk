@@ -122,8 +122,8 @@
         "key" : "symbol",
         "val" : "${symbol}"
       }, {
-        "key" : "selled",
-        "val" : "false"
+        "key" : "side",
+        "val" : "BUY"
       }, {
         "key" : "currentMove",
         "val" : "0.0001868"

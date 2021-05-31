@@ -8,6 +8,23 @@
     "name" : "Box",
     "actions" : [ {
       "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "OcPQy555y0Gn",
+      "name" : "cancel_by_filter",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "url" : "${binance.proxyHost}proxy",
+      "uriVariables" : { },
+      "body" : "!javascript===\r\nconst payload= {\r\n  \"name\": \"cancel_by_filter\",\r\n  \"apiKey\": \"${binance.key}\",\r\n  \"secret\": \"${binance.secret}\",\r\n  \"symbol\": \"${symbol}\"\r\n};\r\n\r\nconst pinfolist = ${posInfo};\r\nconst amt = pinfolist[0].positionAmt;\r\nif(amt>0){\r\n    payload['notOrderType']='STOP_MARKET';\r\n}\r\n\r\npayload;",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : "postResult"
+      }
+    }, {
+      "clazz" : "net.bzk.flow.model.HttpAction",
       "uid" : "OcPQySOCy0Gn",
       "name" : "PostOrder",
       "tryErrorble" : false,
@@ -15,7 +32,7 @@
       "devFlowVars" : { },
       "url" : "${binance.proxyHost}proxy",
       "uriVariables" : { },
-      "body" : "{\n  \"name\": \"trade_pick/pick\",\n  \"apiKey\":\"${binance.key}\",\n  \"secret\":\"${binance.secret}\",\n  \"timeGrpSize\": 5,\n  \"timeGrpRange\":12,\n  \"timeout\": 180,\n  \"triggerAmt\": ${triggerAmt},\n  \"symbol\": \"${symbol}\",\n  \"side\": \"BUY\",\n  \"rsi\":0.2,\n  \"investedRate\": ${investedRate},\n  \"guardRange\": ${guardRange},\n  \"currentMove\":${currentMove},\n  \"tags\": ${tags}\n}",
+      "body" : "{\n  \"name\": \"trade_pick/pick\",\n  \"apiKey\":\"${binance.key}\",\n  \"secret\":\"${binance.secret}\",\n  \"timeGrpSize\": 5,\n  \"timeGrpRange\":12,\n  \"timeout\": 180,\n  \"triggerAmt\": ${triggerAmt},\n  \"symbol\": \"${symbol}\",\n  \"side\": \"${side}\",\n  \"rsi\":0.2,\n  \"investedRate\": ${investedRate},\n  \"guardRange\": ${guardRange},\n  \"currentMove\":${currentMove},\n  \"tags\": ${tags}\n}",
       "method" : "POST",
       "headers" : { },
       "headersFlat" : "",
@@ -40,7 +57,7 @@
     } ],
     "links" : [ ],
     "vars" : { },
-    "taskSort" : [ "OcPQySOCy0Gn", "fzgczwZFFaF2" ],
+    "taskSort" : [ "OcPQySOCy0Gn", "fzgczwZFFaF2", "OcPQy555y0Gn" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
@@ -61,7 +78,7 @@
     "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
     "boxUid" : "htivUO7YKtyD",
     "autoRegister" : false,
-    "requiredKeys" : [ "investedRate", "guardRange", "symbol", "selled", "currentMove", "tags", "triggerAmt" ],
+    "requiredKeys" : [ "investedRate", "guardRange", "symbol", "side", "currentMove", "tags", "triggerAmt" ],
     "outputKeys" : [ ]
   },
   "logEncryptKey" : "1234567890123456",
