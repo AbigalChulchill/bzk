@@ -57,7 +57,7 @@
       "asynced" : false,
       "inputData" : [ {
         "key" : "tsdbQuery",
-        "val" : "import \"date\"\r\ncur=from(bucket: \"quote\")\r\n  |> range(start: -24h)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"realtime\" and\r\n    r.symbol == \"${symbol}\" and\r\n    r._field == \"price\"\r\n  )\r\n  |> map(fn: (r) => ({ r with _time: date.truncate(t: r._time, unit: 5m)    }))\r\n\r\navgv = from(bucket: \"quote\")\r\n  |> range(start: -24h)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"realtime\" and\r\n    r.symbol == \"${symbol}\" and\r\n    r._field == \"price\"\r\n  )\r\n  |> timedMovingAverage(every: 5m, period: 1h)\r\n  |> map(fn: (r) => ({ r with _time: date.truncate(t: r._time, unit: 5m)    }))\r\n\r\n\r\n\r\njoin(tables: {cur: cur, avgv: avgv}, on: [\"_time\"])\r\n  |> map(fn: (r) => ({ r with _value: r._value_cur - r._value_avgv   }))\r\n  |> filter(fn: (r) =>\r\n    r._value > 0\r\n  )  \r\n  |> fill(usePrevious: true)\r\n  |> movingAverage(n: 48)"
+        "val" : "import \"date\"\r\ncur=from(bucket: \"quote\")\r\n  |> range(start: -24h)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"realtime\" and\r\n    r.symbol == \"${symbol}\" and\r\n    r._field == \"price\"\r\n  )\r\n  |> map(fn: (r) => ({ r with _time: date.truncate(t: r._time, unit: 5m)    }))\r\n\r\navgv = from(bucket: \"quote\")\r\n  |> range(start: -24h)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"realtime\" and\r\n    r.symbol == \"${symbol}\" and\r\n    r._field == \"price\"\r\n  )\r\n  |> timedMovingAverage(every: 5m, period: ${avgPeriod})\r\n  |> map(fn: (r) => ({ r with _time: date.truncate(t: r._time, unit: 5m)    }))\r\n\r\n\r\n\r\njoin(tables: {cur: cur, avgv: avgv}, on: [\"_time\"])\r\n  |> map(fn: (r) => ({ r with _value: r._value_cur - r._value_avgv   }))\r\n  |> filter(fn: (r) =>\r\n    r._value > 0\r\n  )  \r\n  |> movingAverage(n: 48)"
       }, {
         "key" : "vaildMins",
         "val" : "60"
@@ -80,10 +80,10 @@
       "asynced" : false,
       "inputData" : [ {
         "key" : "investedRate",
-        "val" : "0.168"
+        "val" : "0.0888"
       }, {
         "key" : "guardRange",
-        "val" : "0.01"
+        "val" : "0.026"
       }, {
         "key" : "symbol",
         "val" : "${symbol}"
@@ -95,7 +95,7 @@
         "val" : "0.0001868"
       }, {
         "key" : "triggerAmt",
-        "val" : "!javascript===\nconst ans=${amt.val}*3*1.0866;\nans;"
+        "val" : "!javascript===\nconst ans=${amt.val}*3;\nans;"
       }, {
         "key" : "tags",
         "val" : "[\"shortTermSell\"]"
@@ -127,6 +127,40 @@
           "key" : "amt"
         }
       } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "rD3ZTfhFpbNY",
+      "name" : "5DLine",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flowUid" : "9RLQvpmbGa35",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "tsdbQuery",
+        "val" : "from(bucket: \"quote\")\n  |> range(start: -30d)\n  |> filter(fn: (r) =>\n    r._measurement == \"daily\" and\n    r.valmean == \"high\" and\n    r.symbol == \"${symbol}\"\n  )\n  |>movingAverage(n: 5)"
+      }, {
+        "key" : "vaildMins",
+        "val" : "4320"
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "nearVal",
+        "toKey" : {
+          "lv" : "not_specify",
+          "key" : "d5line"
+        }
+      } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
+      "uid" : "fzrYPx0DwDFr",
+      "name" : "GenParms",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flatData" : [ {
+        "key" : "avgPeriod",
+        "val" : "!javascript===\r\nlet ans= '';\r\n\r\nif( ${d5line.val} > ${curPrice.buy.avgPrice} ){\r\n    ans = '1h';\r\n}else{\r\n    ans = '30m';\r\n}\r\nans;"
+      } ]
     } ],
     "links" : [ {
       "clazz" : "net.bzk.flow.model.Link",
@@ -148,7 +182,7 @@
       }
     } ],
     "vars" : { },
-    "taskSort" : [ "NVztZ0ze3RMD", "omQM2kfxc2Cf", "A9DLlmqdqWXw", "WJzQ9czYjYNY", "jWvxY8lUN4Vw", "yVZY941QKdCf" ],
+    "taskSort" : [ "NVztZ0ze3RMD", "omQM2kfxc2Cf", "rD3ZTfhFpbNY", "fzrYPx0DwDFr", "A9DLlmqdqWXw", "WJzQ9czYjYNY", "jWvxY8lUN4Vw", "yVZY941QKdCf" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
