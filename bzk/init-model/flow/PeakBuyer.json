@@ -8,40 +8,6 @@
     "name" : "BOX",
     "actions" : [ {
       "clazz" : "net.bzk.flow.model.HttpAction",
-      "uid" : "3upPLAHw95l6",
-      "name" : "GetPostionInfo",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "url" : "${binance.proxyHost}proxy",
-      "uriVariables" : { },
-      "body" : "{\r\n    \"name\":\"get_position\",\r\n    \"apiKey\": \"${binance.key}\",\r\n    \"secret\": \"${binance.secret}\",\r\n    \"symbol\": \"${symbol}\",\r\n    \"positionSide\":\"LONG\"\r\n}",
-      "method" : "POST",
-      "headers" : { },
-      "headersFlat" : "",
-      "key" : {
-        "lv" : "not_specify",
-        "key" : "posInfo"
-      }
-    }, {
-      "clazz" : "net.bzk.flow.model.HttpAction",
-      "uid" : "OcPQy555y0Gn",
-      "name" : "cancel_by_filter",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "url" : "${binance.proxyHost}proxy",
-      "uriVariables" : { },
-      "body" : "!javascript===\r\nconst payload= {\r\n  \"name\": \"cancel_by_filter\",\r\n  \"apiKey\": \"${binance.key}\",\r\n  \"secret\": \"${binance.secret}\",\r\n  \"symbol\": \"${symbol}\"\r\n};\r\n\r\nconst pinfolist = ${posInfo};\r\nconst amt = pinfolist[0].positionAmt;\r\nif(amt>0){\r\n    payload['notOrderType']='STOP_MARKET';\r\n}\r\n\r\npayload;",
-      "method" : "POST",
-      "headers" : { },
-      "headersFlat" : "",
-      "key" : {
-        "lv" : "not_specify",
-        "key" : "postResult"
-      }
-    }, {
-      "clazz" : "net.bzk.flow.model.HttpAction",
       "uid" : "NVztZ0ze3RMD",
       "name" : "GetCurrentPrice",
       "tryErrorble" : false,
@@ -91,7 +57,7 @@
       "asynced" : false,
       "inputData" : [ {
         "key" : "tsdbQuery",
-        "val" : "import \"date\"\r\ncur=from(bucket: \"quote\")\r\n  |> range(start: -20h)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"realtime\" and\r\n    r.symbol == \"${symbol}\" and\r\n    r._field == \"price\"\r\n  )\r\n  |> map(fn: (r) => ({ r with _time: date.truncate(t: r._time, unit: 5m)    }))\r\n\r\navg1h = from(bucket: \"quote\")\r\n  |> range(start: -20h)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"realtime\" and\r\n    r.symbol == \"${symbol}\" and\r\n    r._field == \"price\"\r\n  )\r\n  |> timedMovingAverage(every: 5m, period: 1h)\r\n  |> map(fn: (r) => ({ r with _time: date.truncate(t: r._time, unit: 5m)    }))\r\n\r\n\r\n\r\njoin(tables: {cur: cur, avg1h: avg1h}, on: [\"_time\"])\r\n  |> map(fn: (r) => ({ r with _value: r._value_cur - r._value_avg1h     }))\r\n  |> filter(fn: (r) =>\r\n    r._value < 0\r\n  )     \r\n  |> fill(usePrevious: true)\r\n  |> movingAverage(n: 108)\r\n"
+        "val" : "import \"date\"\r\ncur=from(bucket: \"quote\")\r\n  |> range(start: -20h)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"realtime\" and\r\n    r.symbol == \"${symbol}\" and\r\n    r._field == \"price\"\r\n  )\r\n  |> map(fn: (r) => ({ r with _time: date.truncate(t: r._time, unit: 5m)    }))\r\n\r\navg1h = from(bucket: \"quote\")\r\n  |> range(start: -20h)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"realtime\" and\r\n    r.symbol == \"${symbol}\" and\r\n    r._field == \"price\"\r\n  )\r\n  |> timedMovingAverage(every: 5m, period: 1h)\r\n  |> map(fn: (r) => ({ r with _time: date.truncate(t: r._time, unit: 5m)    }))\r\n\r\n\r\n\r\njoin(tables: {cur: cur, avg1h: avg1h}, on: [\"_time\"])\r\n  |> map(fn: (r) => ({ r with _value: r._value_cur - r._value_avg1h     }))\r\n  |> filter(fn: (r) =>\r\n    r._value < 0\r\n  )     \r\n  |> fill(usePrevious: true)\r\n  |> movingAverage(n: 48)\r\n"
       }, {
         "key" : "vaildMins",
         "val" : "60"
@@ -129,10 +95,13 @@
         "val" : "0.0001868"
       }, {
         "key" : "triggerAmt",
-        "val" : "!javascript===\nconst ans=${amt.val}*3*1.0866;\nans;"
+        "val" : "!javascript===\nconst ans=${amt.val}*3*1.01066;\nans;"
       }, {
         "key" : "tags",
         "val" : "[\"shortTermBuy\"]"
+      }, {
+        "key" : "rsi",
+        "val" : "0.2886"
       } ],
       "outputReflects" : [ ]
     }, {
@@ -179,7 +148,7 @@
       }
     } ],
     "vars" : { },
-    "taskSort" : [ "NVztZ0ze3RMD", "omQM2kfxc2Cf", "A9DLlmqdqWXw", "WJzQ9czYjYNY", "jWvxY8lUN4Vw", "yVZY941QKdCf", "3upPLAHw95l6", "OcPQy555y0Gn" ],
+    "taskSort" : [ "NVztZ0ze3RMD", "omQM2kfxc2Cf", "A9DLlmqdqWXw", "WJzQ9czYjYNY", "jWvxY8lUN4Vw", "yVZY941QKdCf" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
