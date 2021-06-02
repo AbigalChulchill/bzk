@@ -26,7 +26,7 @@
     }, {
       "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
       "uid" : "omQM2kfxc2Cf",
-      "name" : "GetMA_1H",
+      "name" : "GetMA_15",
       "tryErrorble" : false,
       "devBoxVars" : { },
       "devFlowVars" : { },
@@ -34,7 +34,7 @@
       "asynced" : false,
       "inputData" : [ {
         "key" : "tsdbQuery",
-        "val" : "from(bucket: \"quote\")\r\n  |> range(start: -3h)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"realtime\" and\r\n    r.symbol == \"${symbol}\" and\r\n    r._field == \"price\"\r\n  )\r\n  |> timedMovingAverage(every: 5m, period: 1h)"
+        "val" : "from(bucket: \"quote\")\r\n  |> range(start: -2h)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"realtime\" and\r\n    r.symbol == \"${symbol}\" and\r\n    r._field == \"price\"\r\n  )\r\n  |> timedMovingAverage(every: 5m, period: 15m)"
       }, {
         "key" : "vaildMins",
         "val" : "10"
@@ -43,7 +43,7 @@
         "srcKey" : "nearVal",
         "toKey" : {
           "lv" : "not_specify",
-          "key" : "ma1h"
+          "key" : "ma15m"
         }
       } ]
     }, {
@@ -60,7 +60,7 @@
         "val" : "import \"date\"\r\ncur=from(bucket: \"quote\")\r\n  |> range(start: -20h)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"realtime\" and\r\n    r.symbol == \"${symbol}\" and\r\n    r._field == \"price\"\r\n  )\r\n  |> map(fn: (r) => ({ r with _time: date.truncate(t: r._time, unit: 5m)    }))\r\n\r\navgv = from(bucket: \"quote\")\r\n  |> range(start: -20h)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"realtime\" and\r\n    r.symbol == \"${symbol}\" and\r\n    r._field == \"price\"\r\n  )\r\n  |> timedMovingAverage(every: 5m, period: ${avgPeriod})\r\n  |> map(fn: (r) => ({ r with _time: date.truncate(t: r._time, unit: 5m)    }))\r\n\r\n\r\n\r\njoin(tables: {cur: cur, avgv: avgv}, on: [\"_time\"])\r\n  |> map(fn: (r) => ({ r with _value: r._value_cur - r._value_avgv     }))\r\n  |> filter(fn: (r) =>\r\n    r._value < 0\r\n  )     \r\n  |> movingAverage(n: 48)\r\n"
       }, {
         "key" : "vaildMins",
-        "val" : "60"
+        "val" : "180"
       } ],
       "outputReflects" : [ {
         "srcKey" : "nearVal",
@@ -80,7 +80,7 @@
       "asynced" : false,
       "inputData" : [ {
         "key" : "investedRate",
-        "val" : "0.1"
+        "val" : "0.0388"
       }, {
         "key" : "guardRange",
         "val" : "0.0268"
@@ -95,13 +95,16 @@
         "val" : "0.0001868"
       }, {
         "key" : "triggerAmt",
-        "val" : "!javascript===\nconst ans=${amt.val}*3;\nans;"
+        "val" : "!javascript===\nconst ans=${amt.val};\nans;"
       }, {
         "key" : "tags",
         "val" : "[\"shortTermBuy\"]"
       }, {
         "key" : "rsi",
-        "val" : "0.3168"
+        "val" : "0.3268"
+      }, {
+        "key" : "threshold",
+        "val" : "${ma15m.val}"
       } ],
       "outputReflects" : [ ]
     }, {
@@ -129,8 +132,8 @@
       } ]
     }, {
       "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "VE5tduDwxxw5",
-      "name" : "5DLine",
+      "uid" : "1Y75Sb5LKTAT",
+      "name" : "GetPeriodAvg",
       "tryErrorble" : false,
       "devBoxVars" : { },
       "devFlowVars" : { },
@@ -138,28 +141,17 @@
       "asynced" : false,
       "inputData" : [ {
         "key" : "tsdbQuery",
-        "val" : "from(bucket: \"quote\")\r\n  |> range(start: -30d)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"daily\" and\r\n    r.valmean == \"high\" and\r\n    r.symbol == \"${symbol}\"\r\n  )\r\n  |>movingAverage(n: 5)"
+        "val" : "from(bucket: \"quote\")\r\n  |> range(start: -10h)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"realtime\" and\r\n    r.symbol == \"${symbol}\" and\r\n    r._field == \"price\"\r\n  )\r\n  |> timedMovingAverage(every: 5m, period: ${avgPeriod})"
       }, {
         "key" : "vaildMins",
-        "val" : "4320"
+        "val" : "20"
       } ],
       "outputReflects" : [ {
         "srcKey" : "nearVal",
         "toKey" : {
           "lv" : "not_specify",
-          "key" : "d5line"
+          "key" : "avgv"
         }
-      } ]
-    }, {
-      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
-      "uid" : "mIINaRyOaKW7",
-      "name" : "GenParms",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "flatData" : [ {
-        "key" : "avgPeriod",
-        "val" : "!javascript===\nlet ans= '';\n\nif( ${d5line.val} > ${curPrice.buy.avgPrice} ){\n    ans = '30m';\n}else{\n    ans = '1h';\n}\nans;"
       } ]
     } ],
     "links" : [ {
@@ -170,7 +162,7 @@
         "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
         "kind" : "NONE",
         "next" : null,
-        "left" : "!javascript===\nconst ans= ${curPrice.buy.avgPrice} - ${ma1h.val};\nans;",
+        "left" : "!javascript===\nconst ans=  ${curPrice.buy.avgPrice} - ${avgv.val} ;\nans;",
         "right" : "${buyLine.val}",
         "type" : "greater_equal"
       },
@@ -181,8 +173,10 @@
         "endResultKeys" : [ ]
       }
     } ],
-    "vars" : { },
-    "taskSort" : [ "NVztZ0ze3RMD", "omQM2kfxc2Cf", "VE5tduDwxxw5", "mIINaRyOaKW7", "A9DLlmqdqWXw", "WJzQ9czYjYNY", "jWvxY8lUN4Vw", "yVZY941QKdCf" ],
+    "vars" : {
+      "avgPeriod" : "4h"
+    },
+    "taskSort" : [ "NVztZ0ze3RMD", "1Y75Sb5LKTAT", "A9DLlmqdqWXw", "WJzQ9czYjYNY", "omQM2kfxc2Cf", "jWvxY8lUN4Vw", "yVZY941QKdCf" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
