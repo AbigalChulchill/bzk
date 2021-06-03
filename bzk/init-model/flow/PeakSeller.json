@@ -44,6 +44,9 @@
       }, {
         "key" : "vaildMins",
         "val" : "180"
+      }, {
+        "key" : "skipCount",
+        "val" : "1"
       } ],
       "outputReflects" : [ {
         "srcKey" : "nearVal",
@@ -128,6 +131,9 @@
       }, {
         "key" : "vaildMins",
         "val" : "20"
+      }, {
+        "key" : "skipCount",
+        "val" : "1"
       } ],
       "outputReflects" : [ {
         "srcKey" : "nearVal",
@@ -139,7 +145,7 @@
     }, {
       "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
       "uid" : "9r7LUAO3eEYU",
-      "name" : "",
+      "name" : "GetCurrentPrice",
       "tryErrorble" : false,
       "devBoxVars" : { },
       "devFlowVars" : { },
