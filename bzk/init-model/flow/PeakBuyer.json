@@ -66,10 +66,10 @@
       "asynced" : false,
       "inputData" : [ {
         "key" : "investedRate",
-        "val" : "0.0388"
+        "val" : "!javascript===\r\nconst ans= 0.01 * ${dpWeight};\r\nans;"
       }, {
         "key" : "guardRange",
-        "val" : "0.0268"
+        "val" : "!javascript===\r\nconst ans = 0.01 / ${dpWeight};\r\nreturn ans;"
       }, {
         "key" : "symbol",
         "val" : "${symbol}"
@@ -165,6 +165,20 @@
           "key" : "curPrice"
         }
       } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
+      "uid" : "BrJHKkIuSgEO",
+      "name" : "CalcParams",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flatData" : [ {
+        "key" : "avgd",
+        "val" : "!javascript===\r\nconst ans= ${curPrice.val} - ${avgv.val} ;\r\nans;"
+      }, {
+        "key" : "dpWeight",
+        "val" : "!javascript===\n\nfunction calc(){\n    const abgd= ${curPrice.val} - ${avgv.val} ;\n    if(abgd>=0) return 1;\n    if(${sellLine.val}>=0) return 1;\n\n    return abgd / ${sellLine.val};\n}\n\ncalc();\n\n\n"
+      } ]
     } ],
     "links" : [ {
       "clazz" : "net.bzk.flow.model.Link",
@@ -174,7 +188,7 @@
         "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
         "kind" : "NONE",
         "next" : null,
-        "left" : "!javascript===\nconst ans=  ${curPrice.val} - ${avgv.val} ;\nans;",
+        "left" : "${avgd}",
         "right" : "${buyLine.val}",
         "type" : "greater_equal"
       },
@@ -188,7 +202,7 @@
     "vars" : {
       "avgPeriod" : "4h"
     },
-    "taskSort" : [ "WKcEThpsep7Z", "1Y75Sb5LKTAT", "A9DLlmqdqWXw", "WJzQ9czYjYNY", "omQM2kfxc2Cf", "jWvxY8lUN4Vw", "yVZY941QKdCf" ],
+    "taskSort" : [ "WKcEThpsep7Z", "1Y75Sb5LKTAT", "A9DLlmqdqWXw", "BrJHKkIuSgEO", "WJzQ9czYjYNY", "omQM2kfxc2Cf", "jWvxY8lUN4Vw", "yVZY941QKdCf" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
