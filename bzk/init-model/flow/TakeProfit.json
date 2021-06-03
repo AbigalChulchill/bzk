@@ -15,7 +15,7 @@
       "devFlowVars" : { },
       "url" : "${binance.proxyHost}proxy",
       "uriVariables" : { },
-      "body" : "{\n    \"name\": \"profit/cut\",\n    \"apiKey\":\"${binance.key}\",\n    \"secret\":\"${binance.secret}\",\n    \"profitRate\": 0.1286,\n    \"topRate\": 0.866,\n    \"bottomRate\":-0.00268,\n    \"minStepRate\":0.00288,\n    \"cutCount\": 4,\n    \"symbol\":\"${curSBL.symbol}\",\n    \"positionSide\":\"LONG\"\n}",
+      "body" : "{\n    \"name\": \"profit/cut\",\n    \"apiKey\":\"${binance.key}\",\n    \"secret\":\"${binance.secret}\",\n    \"profitRate\": 0.1286,\n    \"topRate\": 0.866,\n    \"bottomRate\":-0.00168,\n    \"minStepRate\":0.00108,\n    \"cutCount\": 4,\n    \"symbol\":\"${curSBL.symbol}\",\n    \"positionSide\":\"LONG\"\n}",
       "method" : "POST",
       "headers" : { },
       "headersFlat" : "",

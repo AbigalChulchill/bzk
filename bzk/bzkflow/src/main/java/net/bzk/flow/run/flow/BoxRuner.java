@@ -33,6 +33,7 @@ import net.bzk.flow.model.var.VarVal;
 import net.bzk.flow.model.var.VarValSet;
 import net.bzk.flow.run.action.ActionCall;
 import net.bzk.flow.run.action.ActionCall.Uids;
+import net.bzk.flow.run.service.FastVarQueryer;
 import net.bzk.flow.run.service.RunLogService;
 import net.bzk.flow.run.service.RunVarService;
 import net.bzk.infrastructure.ex.BzkRuntimeException;
@@ -46,6 +47,8 @@ public class BoxRuner {
 	private ApplicationContext context;
 	@Inject
 	private RunVarService runVarService;
+	@Inject
+	protected FastVarQueryer varQueryer;
 	@Inject
 	private RunLogService logUtils;
 	@Getter
@@ -71,6 +74,7 @@ public class BoxRuner {
 		bundle = b;
 		uid = RandomStringUtils.randomAlphanumeric(Constant.RUN_UID_SIZE);
 		vars = m.getVars();
+		varQueryer.init(genUids());
 		return this;
 	}
 
@@ -108,10 +112,6 @@ public class BoxRuner {
 	private boolean rundownAndLog() {
 		logUtils.log(genUids(), RunState.BoxLoop);
 		boolean b = rundown();
-//		logUtils.log(genUids(), RunState.BoxLoopDone, l -> {
-//			l.setMsg("break:" + b);
-//		});
-
 		return b;
 	}
 
@@ -140,20 +140,16 @@ public class BoxRuner {
 		VarValSet vvs = callAction(a);
 		if (vvs != null) {
 			runVarService.putVarVals(genUids(), vvs);
-
-			
-
 		}
 
 		logUtils.log(genUids(), RunState.EndAction);
-
 		return true;
 	}
 
 	private boolean endFlow(Transition t) {
 		if (!t.isEnd())
 			return false;
-		logUtils.log(genUids(), RunState.EndFlow, l -> l.setMsg(t.getEndTag()));
+		logUtils.log(genUids(), RunState.EndFlow, l -> l.setMsg(t.setupEndTag(varQueryer)));
 		bundle.flowRuner.onEnd(t, listEndResult(t));
 		return true;
 	}

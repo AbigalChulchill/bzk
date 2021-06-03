@@ -7,8 +7,8 @@ import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
-import org.bson.BsonArray;
 import org.bson.BsonDocument;
 import org.graalvm.polyglot.Value;
 import org.reflections.Reflections;
@@ -38,21 +38,29 @@ public class BzkFlowUtils {
 
 	public static <T> T replaceModel(FastVarQueryer varQueryer, T _m, Class<T> modelClazz) {
 		String aJson = JsonUtils.toJson(_m);
+		T ans = replaceModel(varQueryer, aJson, modelClazz);
+		return ans == null ? _m : ans;
+	}
+
+	public static <T> T replaceModel(FastVarQueryer varQueryer, String aJson, Class<T> modelClazz) {
+		String rJson = replaceText(varQueryer, aJson);
+		if (StringUtils.isBlank(rJson))
+			return null;
+		return JsonUtils.loadByJson(rJson, modelClazz);
+	}
+
+	public static String replaceText(FastVarQueryer varQueryer, String aJson) {
 		List<String> keys = PlaceholderUtils.listStringSubstitutorKeys(aJson);
 		if (keys.size() == 0)
-			return _m;
-
+			return null;
 		StrPlacer sp = PlaceholderUtils.build(aJson);
 		for (String k : keys) {
 			Optional<Object> fo = varQueryer.f(k);
-//			if (!fo.isPresent())
-//				continue;
 			String jo = JsonUtils.valueToString(fo.orElse(null));
 			sp.place(k, StringEscapeUtils.escapeJson(jo));
 		}
 		String rJson = sp.replace();
-		return JsonUtils.loadByJson(rJson, modelClazz);
-
+		return rJson;
 	}
 
 	public static ObjectMapper getFlowJsonMapper() {
@@ -79,7 +87,7 @@ public class BzkFlowUtils {
 			}
 			if (function.getArraySize() > 0) {
 				String replaceSts = removeListPrefix(ans.toString(), function.getArraySize());
-				var m= toByBson(replaceSts);
+				var m = toByBson(replaceSts);
 				return m.get("d");
 			}
 		}
@@ -87,10 +95,10 @@ public class BzkFlowUtils {
 	}
 
 	private static String removeListPrefix(String lstr, long arraySize) {
-		String startKs = "(" + arraySize + ")" ;
+		String startKs = "(" + arraySize + ")";
 		if (!lstr.startsWith(startKs))
-			throw new BzkRuntimeException("not startKs:" + startKs + " in "  + lstr);
-		startKs =Pattern.quote(startKs);
+			throw new BzkRuntimeException("not startKs:" + startKs + " in " + lstr);
+		startKs = Pattern.quote(startKs);
 		String rmeds = lstr.replaceFirst(startKs, "");
 		return String.format("{d:%s}", rmeds);
 	}
@@ -100,7 +108,5 @@ public class BzkFlowUtils {
 		String json = expected.toJson();
 		return JsonUtils.loadByJson(json, Map.class);
 	}
-	
-
 
 }

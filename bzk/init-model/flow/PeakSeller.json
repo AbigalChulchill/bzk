@@ -7,23 +7,6 @@
     "uid" : "JLHJy1PFFHMe",
     "name" : "BOX",
     "actions" : [ {
-      "clazz" : "net.bzk.flow.model.HttpAction",
-      "uid" : "NVztZ0ze3RMD",
-      "name" : "GetCurrentPrice",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "url" : "${binance.proxyHost}proxy",
-      "uriVariables" : { },
-      "body" : "{\n    \"name\":\"get_recent_trades_list\",\n    \"apiKey\":\"${binance.key}\",\n    \"secret\":\"${binance.secret}\",\n    \"symbol\": \"${symbol}\",\n    \"limit\":50\n}",
-      "method" : "POST",
-      "headers" : { },
-      "headersFlat" : "",
-      "key" : {
-        "lv" : "not_specify",
-        "key" : "curPrice"
-      }
-    }, {
       "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
       "uid" : "omQM2kfxc2Cf",
       "name" : "GetMA_15",
@@ -153,6 +136,29 @@
           "key" : "avgv"
         }
       } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "9r7LUAO3eEYU",
+      "name" : "",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flowUid" : "9RLQvpmbGa35",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "tsdbQuery",
+        "val" : "from(bucket: \"quote\")\n  |> range(start: -20m)\n  |> filter(fn: (r) =>\n    r._measurement == \"realtime\" and\n    r._field == \"price\" and\n    r.symbol == \"${symbol}\" \n  )"
+      }, {
+        "key" : "vaildMins",
+        "val" : "15"
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "nearVal",
+        "toKey" : {
+          "lv" : "not_specify",
+          "key" : "curPrice"
+        }
+      } ]
     } ],
     "links" : [ {
       "clazz" : "net.bzk.flow.model.Link",
@@ -162,13 +168,13 @@
         "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
         "kind" : "NONE",
         "next" : null,
-        "left" : "!javascript===\nconst ans= ${curPrice.buy.avgPrice} - ${avgv.val} ;\nans;",
+        "left" : "!javascript===\nconst ans= ${curPrice.val} - ${avgv.val} ;\nans;",
         "right" : "${sellLine.val}",
         "type" : "lessthan_equal"
       },
       "transition" : {
         "toBox" : "",
-        "endTag" : "PriceToHigh",
+        "endTag" : "PriceToHigh-${symbol}",
         "failEnd" : false,
         "endResultKeys" : [ ]
       }
@@ -176,11 +182,11 @@
     "vars" : {
       "avgPeriod" : "4h"
     },
-    "taskSort" : [ "NVztZ0ze3RMD", "rvAYFrVWpbxC", "A9DLlmqdqWXw", "WJzQ9czYjYNY", "omQM2kfxc2Cf", "jWvxY8lUN4Vw", "yVZY941QKdCf" ],
+    "taskSort" : [ "9r7LUAO3eEYU", "rvAYFrVWpbxC", "A9DLlmqdqWXw", "WJzQ9czYjYNY", "omQM2kfxc2Cf", "jWvxY8lUN4Vw", "yVZY941QKdCf" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
-      "endTag" : "TODO Why",
+      "endTag" : "Ordered--${symbol}",
       "failEnd" : false,
       "endResultKeys" : [ ]
     }
