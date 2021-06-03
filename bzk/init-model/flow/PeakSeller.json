@@ -69,7 +69,7 @@
         "val" : "!javascript===\nconst ans= 0.01 * ${dpWeight};\nans;"
       }, {
         "key" : "guardRange",
-        "val" : "!javascript===\nconst ans = 0.01 / ${dpWeight};\nreturn ans;"
+        "val" : "!javascript===\n\nconst ans = 0.01 * Math.pow(${dpWeight},-1);\nreturn ans;"
       }, {
         "key" : "symbol",
         "val" : "${symbol}"
