@@ -33,7 +33,7 @@
       "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
       "uid" : "A9DLlmqdqWXw",
       "name" : "Get_SellLine",
-      "tryErrorble" : false,
+      "tryErrorble" : true,
       "devBoxVars" : { },
       "devFlowVars" : { },
       "flowUid" : "9RLQvpmbGa35",
@@ -52,7 +52,7 @@
         "srcKey" : "nearVal",
         "toKey" : {
           "lv" : "not_specify",
-          "key" : "sellLine"
+          "key" : "thLine"
         }
       } ]
     }, {
@@ -177,7 +177,10 @@
         "val" : "!javascript===\nconst ans= ${curPrice.val} - ${avgv.val} ;\nans;"
       }, {
         "key" : "dpWeight",
-        "val" : "!javascript===\n\nfunction calc(){\n    const abgd= ${curPrice.val} - ${avgv.val} ;\n    if(abgd<=0) return 1;\n    if(${sellLine.val}<=0) return 1;\n\n    return abgd / ${sellLine.val};\n}\n\ncalc();\n\n\n"
+        "val" : "!javascript===\n\nfunction calc(){\n    const abgd= ${curPrice.val} - ${avgv.val} ;\n    if(abgd<=0) return 1;\n    if(${thLine.val}<=0) return 1;\n\n    return abgd / ${thLine.val};\n}\n\ncalc();\n\n\n"
+      }, {
+        "key" : "sellLine.val",
+        "val" : "!javascript===\nfunction check(){\n    var sellLine = ${sellLine};\n    if(sellLine == null){\n        return 0;\n    }\n    return sellLine.val;\n}\ncheck();\n\n"
       } ]
     } ],
     "links" : [ {
@@ -189,7 +192,7 @@
         "kind" : "NONE",
         "next" : null,
         "left" : "${avgd}",
-        "right" : "${sellLine.val}",
+        "right" : "${thLine.val}",
         "type" : "lessthan_equal"
       },
       "transition" : {
@@ -200,7 +203,7 @@
       }
     } ],
     "vars" : {
-      "avgPeriod" : "4h"
+      "avgPeriod" : "30m"
     },
     "taskSort" : [ "9r7LUAO3eEYU", "rvAYFrVWpbxC", "A9DLlmqdqWXw", "Z0MsoVl87Uro", "WJzQ9czYjYNY", "omQM2kfxc2Cf", "jWvxY8lUN4Vw", "yVZY941QKdCf" ],
     "whileJudgment" : null,
