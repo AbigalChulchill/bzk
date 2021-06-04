@@ -91,7 +91,7 @@
       "devFlowVars" : { },
       "url" : "${binance.proxyHost}proxy",
       "uriVariables" : { },
-      "body" : "{\n  \"name\": \"trade_pick/pick\",\n  \"apiKey\":\"${binance.key}\",\n  \"secret\":\"${binance.secret}\",\n  \"timeGrpSize\": 5,\n  \"timeGrpRange\":12,\n  \"timeout\": 180,\n  \"triggerAmt\": ${triggerAmt},\n  \"symbol\": \"${symbol}\",\n  \"side\": \"${side}\",\n  \"rsi\":${rsi},\n  \"investedRate\": ${investedRate},\n  \"guardRange\": ${guardRange},\n  \"currentMove\":${currentMove},\n  \"tags\": ${tags},\n  \"threshold\":${threshold}\n}",
+      "body" : "{\n  \"name\": \"trade_pick/pick\",\n  \"apiKey\":\"${binance.key}\",\n  \"secret\":\"${binance.secret}\",\n  \"timeGrpSize\": 8,\n  \"timeGrpRange\":12,\n  \"timeout\": 300,\n  \"triggerAmt\": ${triggerAmt},\n  \"symbol\": \"${symbol}\",\n  \"side\": \"${side}\",\n  \"rsi\":${rsi},\n  \"investedRate\": ${investedRate},\n  \"guardRange\": ${guardRange},\n  \"currentMove\":${currentMove},\n  \"tags\": ${tags},\n  \"threshold\":${threshold}\n}",
       "method" : "POST",
       "headers" : { },
       "headersFlat" : "",

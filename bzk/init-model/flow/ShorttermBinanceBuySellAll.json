@@ -77,7 +77,7 @@
     "clazz" : "net.bzk.flow.model.Entry$FixedRateEntry",
     "boxUid" : "SlINz2lOTApz",
     "autoRegister" : false,
-    "period" : 5,
+    "period" : 8,
     "unit" : "MINUTES",
     "initialDelay" : 0
   },
