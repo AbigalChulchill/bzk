@@ -31,9 +31,9 @@ public class BzkflowApplication {
 	 @Bean(name = "threadPoolTaskExecutor")
 	 public ExecutorService  threadPoolTaskExecutor() {
 	      ThreadPoolExecutor threadpool = new ThreadPoolExecutor(
-	                10,
-	                20,
-	                50,
+	                64,
+	                128,
+	                3,
 	                TimeUnit.DAYS,
 	                new ArrayBlockingQueue<Runnable>(100),
 	                new ThreadPoolExecutor.CallerRunsPolicy());
