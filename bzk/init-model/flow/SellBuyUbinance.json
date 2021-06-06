@@ -21,6 +21,9 @@
       }, {
         "key" : "peakMaxWaitSeconds",
         "val" : "7200"
+      }, {
+        "key" : "symbol",
+        "val" : "${symbol}"
       } ],
       "outputReflects" : [ {
         "srcKey" : "nearVal",
