@@ -1,7 +1,7 @@
 {
   "clazz" : "net.bzk.flow.model.Flow",
   "uid" : "4QoVx2Wbhdxz",
-  "name" : "ShorttermBinanceBuySellAll",
+  "name" : "BinanceBuySellAll_Loop",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
     "uid" : "SlINz2lOTApz",
@@ -22,26 +22,12 @@
       } ]
     }, {
       "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "0YJkWwwXf0dK",
-      "name" : "RunBuy",
-      "tryErrorble" : true,
+      "uid" : "uCYOwWdhTX61",
+      "name" : "DoBuyOrSell",
+      "tryErrorble" : false,
       "devBoxVars" : { },
       "devFlowVars" : { },
-      "flowUid" : "etjtnki5V4WJ",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "symbol",
-        "val" : "${curSymbol}"
-      } ],
-      "outputReflects" : [ ]
-    }, {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "RIpHzP77tzrr",
-      "name" : "RunSell",
-      "tryErrorble" : true,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "flowUid" : "PeakSellerWJ",
+      "flowUid" : "LlXZCvcaZsK8",
       "asynced" : false,
       "inputData" : [ {
         "key" : "symbol",
@@ -53,7 +39,7 @@
     "vars" : {
       "symbolIdx" : 0
     },
-    "taskSort" : [ "VBcwBUuoBz8z", "0YJkWwwXf0dK", "RIpHzP77tzrr" ],
+    "taskSort" : [ "VBcwBUuoBz8z", "uCYOwWdhTX61" ],
     "whileJudgment" : {
       "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
       "kind" : "NONE",

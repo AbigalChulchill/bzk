@@ -1,0 +1,179 @@
+{
+  "clazz" : "net.bzk.flow.model.Flow",
+  "uid" : "PeakFinder5",
+  "name" : "TSDBPeakFinder",
+  "boxs" : [ {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "PeakFinderBox",
+    "name" : "Box",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "dvmT4XVIVBPF",
+      "name" : "Request",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "url" : "${finProxyUrl}/proxy/tsdb",
+      "uriVariables" : { },
+      "body" : "${queryBody}",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : "restResult"
+      }
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$JSONPathAction",
+      "uid" : "mwO7JgHLkhPF",
+      "name" : "trim",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "syntax" : "$..values",
+      "source" : {
+        "lv" : "not_specify",
+        "key" : "restResult"
+      },
+      "target" : {
+        "lv" : "not_specify",
+        "key" : "listValues"
+      }
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
+      "uid" : "Py7WIVmpPePF",
+      "name" : "trimValues",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flatData" : [ {
+        "key" : "trimValues",
+        "val" : "!javascript===\nconst list= ${listValues};\nlist[0];"
+      } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
+      "uid" : "g41uJocNlHPF",
+      "name" : "clacResult",
+      "tryErrorble" : false,
+      "devBoxVars" : {
+        "trimValues" : {
+          "2021-06-05T08:46:00.510661+00:00" : 0.0014137650601227453,
+          "2021-06-05T08:51:01.125996+00:00" : 0.0015829254260875693,
+          "2021-06-05T08:56:00.484598+00:00" : 0.0027095956844935543,
+          "2021-06-05T09:01:01.025682+00:00" : 0.0023905513162509064,
+          "2021-06-05T09:06:01.480334+00:00" : 0.0019710883721466292,
+          "2021-06-05T09:11:00.882492+00:00" : 0.002287831192873481,
+          "2021-06-05T09:16:01.083901+00:00" : 0.0013831554387293962,
+          "2021-06-05T09:21:00.787980+00:00" : -0.0014175637891899748,
+          "2021-06-05T09:26:00.472467+00:00" : -0.002503625192757371,
+          "2021-06-05T09:31:01.068408+00:00" : -0.0025957011640641227,
+          "2021-06-05T09:36:01.215251+00:00" : -0.0025134976758233985,
+          "2021-06-05T09:41:00.358730+00:00" : -0.0033820101238346747,
+          "2021-06-05T09:46:00.417492+00:00" : -0.0027306564173502426,
+          "2021-06-05T09:51:01.165645+00:00" : -0.0026768280645774584,
+          "2021-06-05T09:56:01.222479+00:00" : -0.006202915751797812,
+          "2021-06-05T10:01:00.484301+00:00" : -0.005032013116400423,
+          "2021-06-05T10:06:00.381779+00:00" : -0.005194808535350279,
+          "2021-06-05T10:11:00.358968+00:00" : -0.0057965411047344,
+          "2021-06-05T10:16:01.955298+00:00" : -0.005736777238047677,
+          "2021-06-05T10:21:00.423912+00:00" : -0.0039808183577572515,
+          "2021-06-05T10:26:01.213373+00:00" : -0.0033697929498121624,
+          "2021-06-05T10:31:00.382362+00:00" : -0.0036301759778564775,
+          "2021-06-05T10:36:00.333640+00:00" : -0.0034905466067164845,
+          "2021-06-05T10:41:01.510703+00:00" : -0.0031238506803634124,
+          "2021-06-05T10:46:00.452964+00:00" : -0.004081561283537064,
+          "2021-06-05T10:51:00.448505+00:00" : -0.005350492541578475,
+          "2021-06-05T10:56:01.206377+00:00" : -0.005710118577489579,
+          "2021-06-05T11:01:01.033939+00:00" : -0.005210637442100907,
+          "2021-06-05T11:06:01.001425+00:00" : -0.005739961421018614,
+          "2021-06-05T11:11:00.351306+00:00" : -0.005802171130792444,
+          "2021-06-05T11:16:02.089095+00:00" : -0.00511875654121332,
+          "2021-06-05T11:21:00.572330+00:00" : -0.0060973872383977305,
+          "2021-06-05T11:26:00.353875+00:00" : -0.003682006793524429,
+          "2021-06-05T11:31:01.549069+00:00" : -0.0017701349278497996,
+          "2021-06-05T11:36:00.404049+00:00" : -0.0010076611234263778,
+          "2021-06-05T11:41:00.536564+00:00" : -0.0025998593501261125,
+          "2021-06-05T11:46:01.572951+00:00" : -0.0037477871911371394,
+          "2021-06-05T11:51:00.414335+00:00" : -0.004469230786035237,
+          "2021-06-05T11:56:00.478785+00:00" : -0.005484130608803237,
+          "2021-06-05T12:01:00.545957+00:00" : -0.007156664305942546,
+          "2021-06-05T12:06:00.706955+00:00" : -0.007187441658356079,
+          "2021-06-05T12:11:00.990778+00:00" : -0.006792547013742955,
+          "2021-06-05T12:16:00.585099+00:00" : -0.005381241252465811,
+          "2021-06-05T12:21:00.483258+00:00" : -0.004869689629666653,
+          "2021-06-05T12:26:00.672939+00:00" : -0.007508803537622877,
+          "2021-06-05T12:31:00.370332+00:00" : -0.010907550788967067,
+          "2021-06-05T12:36:01.114774+00:00" : -0.011948565707028885,
+          "2021-06-05T12:41:00.928246+00:00" : -0.01145394261089098,
+          "2021-06-05T12:46:01.219702+00:00" : -0.011444407074297938,
+          "2021-06-05T12:51:00.438318+00:00" : -0.014200889101730316,
+          "2021-06-05T12:56:00.490926+00:00" : -0.013887938970403864,
+          "2021-06-05T13:01:00.382675+00:00" : -0.01451097443832326,
+          "2021-06-05T13:06:00.439845+00:00" : -0.012971646125032883,
+          "2021-06-05T13:11:00.757194+00:00" : -0.012364381911308505,
+          "2021-06-05T13:16:01.161763+00:00" : -0.012419113706409864,
+          "2021-06-05T13:21:00.900648+00:00" : -0.011869522449816601,
+          "2021-06-05T13:26:01.115223+00:00" : -0.011360614205068013,
+          "2021-06-05T13:31:00.399662+00:00" : -0.011471738171753423,
+          "2021-06-05T13:36:01.194275+00:00" : -0.01060624772064812,
+          "2021-06-05T13:41:00.375501+00:00" : -0.011146040350197823,
+          "2021-06-05T13:46:00.356856+00:00" : -0.01185828225703995,
+          "2021-06-05T13:51:00.379489+00:00" : -0.010896415362578382,
+          "2021-06-05T13:56:00.608180+00:00" : -0.01232794865994232,
+          "2021-06-05T14:01:00.385929+00:00" : -0.012867234610865044,
+          "2021-06-05T14:06:01.071341+00:00" : -0.012669087459672547,
+          "2021-06-05T14:11:00.564480+00:00" : -0.012607067995992843,
+          "2021-06-05T14:16:00.707785+00:00" : -0.01299889655996475
+        }
+      },
+      "devFlowVars" : { },
+      "flatData" : [ {
+        "key" : "nearVal",
+        "val" : "!javascript===\nconst rMap = ${trimValues};\n\nconst peakMaxWaitSeconds = ${peakMaxWaitSeconds};\n\nconst MINED = 99;\nconst MAXED = 66;\nconst NONE = 22;\n\nlet keys = Object.keys(rMap);\n\nkeys = keys.reverse();\n\n\n\n\nfunction listMinMax() {\n    let ans = {\n        min: [],\n        max: []\n    };\n    for (let i = 1; i < keys.length; i++) {\n        mmr = findMinOrMax(i);\n        if (mmr == MINED) {\n            ans.min.push(genMinMax(i));\n        } else if (mmr == MAXED) {\n            ans.max.push(genMinMax(i));\n        }\n    }\n    return ans;\n}\n\nfunction getNearInfo(list) {\n    let fkey = keys[0];\n    let nt = Number.MAX_SAFE_INTEGER;\n    let ans = null;\n    for (const e of list) {\n        let key = e.key;\n        let tr = subtractKey(fkey, key);\n        if (tr < nt) {\n            nt = tr;\n            ans = e;\n        }\n    }\n    return ans;\n\n}\n\nfunction genMinMax(i) {\n    return {\n        idx: i,\n        key: keys[i],\n        val: rMap[keys[i]]\n    };\n}\n\n\nfunction findMinOrMax(idx) {\n    if (idx == 0) throw new Error('not put first idx');\n    const curIdx = idx;\n    const curKey = keys[idx];\n    const curv = rMap[curKey];\n    let maxed = true, mined = true;\n    let forward = true;\n    while (maxed || mined) {\n        if (forward) idx--; else idx++;\n        let nk = keys[idx];\n        let nv = rMap[nk];\n        let timeSize = Math.abs(subtractKey(curKey, nk));\n        if (timeSize > peakMaxWaitSeconds || idx < 0 || idx >= keys.length) {\n            if (forward) {\n                idx = curIdx;\n                forward = false;\n                continue;\n            }\n            break;\n        }\n        if (maxed) {\n            if (nv > curv) maxed = false\n        }\n        if (mined) {\n            if (nv < curv) mined = false\n        }\n    }\n    if (maxed && mined) throw new Error('its imposible maxed and mined curv=' + curv + ' key:' + key);\n    if (maxed) return MAXED;\n    if (mined) return MINED;\n    return NONE;\n}\n\nfunction subtractKey(k1, k2) {\n    let k1t = new Date(k1);\n    let k2t = new Date(k2);\n    return (k1t - k2t) / 1000;\n}\n\n\n\nconst firstKey = keys[0];\nconst minMaxInfo = listMinMax();\nconst nearMax = getNearInfo(minMaxInfo.max);\nconst nearMin = getNearInfo(minMaxInfo.min);\nconsole.log(nearMax);\nconsole.log(nearMin);\n\nconst maxNearTime = subtractKey(firstKey, nearMax.key);\nconst minNearTime = subtractKey(firstKey, nearMin.key);\n\nconst STATE_RISE = 'RISE';\nconst STATE_FALL = 'FALL';\n\nfunction calcState() {\n    if (maxNearTime < minNearTime) {\n        return maxNearTime > peakMaxWaitSeconds ? STATE_FALL : STATE_RISE;\n    } else {\n        return minNearTime > peakMaxWaitSeconds ? STATE_RISE : STATE_FALL;\n    }\n}\n\nconst state = calcState();\n\nconsole.log(state);\n\nconst ans= {\n    state : state,\n    maxNearTime:maxNearTime,\n    minNearTime:minNearTime,\n    nearMax:nearMax,\n    nearMin:nearMin\n}\n\nans;"
+      } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
+      "uid" : "wZpivuVWQvPF",
+      "name" : "GenQueryBody",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flatData" : [ {
+        "key" : "queryBody.query",
+        "val" : "${tsdbQuery}"
+      } ]
+    } ],
+    "links" : [ ],
+    "vars" : { },
+    "taskSort" : [ "wZpivuVWQvPF", "dvmT4XVIVBPF", "mwO7JgHLkhPF", "Py7WIVmpPePF", "g41uJocNlHPF" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "DONE",
+      "failEnd" : false,
+      "endResultKeys" : [ {
+        "lv" : "not_specify",
+        "key" : "nearVal"
+      } ]
+    }
+  } ],
+  "varCfgNames" : [ "fin-proxy.json" ],
+  "vars" : {
+    "tsdbQuery" : "from(bucket: \"quote\")\r\n  |> range(start: -30h)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"realtime\" and\r\n    r.symbol == \"ETH\" and\r\n    r._field == \"price\"\r\n  )\r\n  |> difference()\r\n  |> movingAverage(n: 144 )\r\n  |> difference()\r\n  |> movingAverage(n: 144 )\r\n  |>map(fn: (r) => ({ r with alias: \"h12\" }))  ",
+    "peakMaxWaitSeconds" : 7200
+  },
+  "entry" : {
+    "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
+    "boxUid" : "PeakFinderBox",
+    "autoRegister" : false,
+    "requiredKeys" : [ "tsdbQuery", "peakMaxWaitSeconds" ],
+    "outputKeys" : [ "nearVal" ]
+  },
+  "logEncryptKey" : "1234567890123456",
+  "threadCfg" : {
+    "corePoolSize" : 10,
+    "maximumPoolSize" : 50,
+    "keepAliveTime" : 500,
+    "aliveUnit" : "MINUTES"
+  }
+}

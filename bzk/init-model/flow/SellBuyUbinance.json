@@ -1,0 +1,122 @@
+{
+  "clazz" : "net.bzk.flow.model.Flow",
+  "uid" : "LlXZCvcaZsK8",
+  "name" : "SellBuyUbinance",
+  "boxs" : [ {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "vKSau3Y0hT1i",
+    "name" : "Box",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "tDr8UTOVkNiO",
+      "name" : "GetRiseOrFall",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flowUid" : "PeakFinder5",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "tsdbQuery",
+        "val" : "from(bucket: \"quote\")\n  |> range(start: -30h)\n  |> filter(fn: (r) =>\n    r._measurement == \"realtime\" and\n    r.symbol == \"${symbol}\" and\n    r._field == \"price\"\n  )\n  |> difference()\n  |> movingAverage(n: 144 )\n  |> difference()\n  |> movingAverage(n: 144 )"
+      }, {
+        "key" : "peakMaxWaitSeconds",
+        "val" : "7200"
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "nearVal",
+        "toKey" : {
+          "lv" : "not_specify",
+          "key" : "direction"
+        }
+      } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "n1T8yLzD16hl",
+      "name" : "BuyOrder",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flowUid" : "etjtnki5V4WJ",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "symbol",
+        "val" : "${symbol}"
+      } ],
+      "outputReflects" : [ ]
+    } ],
+    "links" : [ {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "BXX48Illzys2",
+      "name" : "FallOrRise",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionTxt",
+        "kind" : "NONE",
+        "next" : null,
+        "left" : "${direction.state}",
+        "right" : "FALL",
+        "not" : false,
+        "type" : "equal"
+      },
+      "transition" : {
+        "toBox" : "Hoh5CNTFiFDi",
+        "endTag" : null,
+        "failEnd" : false,
+        "endResultKeys" : [ ]
+      }
+    } ],
+    "vars" : { },
+    "taskSort" : [ "tDr8UTOVkNiO", "BXX48Illzys2", "n1T8yLzD16hl" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "TODO Why",
+      "failEnd" : false,
+      "endResultKeys" : [ ]
+    }
+  }, {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "Hoh5CNTFiFDi",
+    "name" : "SELL",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "2icxYcg47Cor",
+      "name" : "SellOrder",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flowUid" : "PeakSellerWJ",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "symbol",
+        "val" : "${symbol}"
+      } ],
+      "outputReflects" : [ ]
+    } ],
+    "links" : [ ],
+    "vars" : { },
+    "taskSort" : [ "2icxYcg47Cor" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "END",
+      "failEnd" : false,
+      "endResultKeys" : [ ]
+    }
+  } ],
+  "varCfgNames" : [ ],
+  "vars" : { },
+  "entry" : {
+    "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
+    "boxUid" : "vKSau3Y0hT1i",
+    "autoRegister" : false,
+    "requiredKeys" : [ "symbol" ],
+    "outputKeys" : [ ]
+  },
+  "logEncryptKey" : "1234567890123456",
+  "threadCfg" : {
+    "corePoolSize" : 10,
+    "maximumPoolSize" : 50,
+    "keepAliveTime" : 500,
+    "aliveUnit" : "MINUTES"
+  }
+}
