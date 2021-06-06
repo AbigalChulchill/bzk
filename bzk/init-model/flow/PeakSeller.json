@@ -4,11 +4,34 @@
   "name" : "PeakSeller",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
-    "uid" : "JLHJy1PFFHMe",
+    "uid" : "JLHJy1PFFHPS",
     "name" : "BOX",
     "actions" : [ {
       "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "A9DLlmqdqWXw",
+      "uid" : "PSQGetMA15",
+      "name" : "GetMA_15",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flowUid" : "9RLQvpmbGa35",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "tsdbQuery",
+        "val" : "from(bucket: \"quote\")\r\n  |> range(start: -2h)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"realtime\" and\r\n    r.symbol == \"${symbol}\" and\r\n    r._field == \"price\"\r\n  )\r\n  |> timedMovingAverage(every: 5m, period: 15m)"
+      }, {
+        "key" : "vaildMins",
+        "val" : "10"
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "nearVal",
+        "toKey" : {
+          "lv" : "not_specify",
+          "key" : "ma15m"
+        }
+      } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "PSDLlmqdqWXw",
       "name" : "Get_SellLine",
       "tryErrorble" : true,
       "devBoxVars" : { },
@@ -34,7 +57,7 @@
       } ]
     }, {
       "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "yVZY941QKdCf",
+      "uid" : "PSZY941QKdCf",
       "name" : "OrderPost",
       "tryErrorble" : false,
       "devBoxVars" : { },
@@ -67,12 +90,12 @@
         "val" : "0.32688"
       }, {
         "key" : "threshold",
-        "val" : "${avgv.val}"
+        "val" : "${ma15m.val}"
       } ],
       "outputReflects" : [ ]
     }, {
       "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "jWvxY8lUN4Vw",
+      "uid" : "PSvxY8lUN4Vw",
       "name" : "GetBinance1MinAmt",
       "tryErrorble" : false,
       "devBoxVars" : { },
@@ -95,7 +118,7 @@
       } ]
     }, {
       "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "rvAYFrVWpbxC",
+      "uid" : "PSAYFrVWpbxC",
       "name" : "GetPeriodAvg",
       "tryErrorble" : false,
       "devBoxVars" : { },
@@ -121,7 +144,7 @@
       } ]
     }, {
       "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "9r7LUAO3eEYU",
+      "uid" : "PS7LUAO3eEYU",
       "name" : "GetCurrentPrice",
       "tryErrorble" : false,
       "devBoxVars" : { },
@@ -144,7 +167,7 @@
       } ]
     }, {
       "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
-      "uid" : "Z0MsoVl87Uro",
+      "uid" : "PSMsoVl87Uro",
       "name" : "CalcParams",
       "tryErrorble" : false,
       "devBoxVars" : { },
@@ -162,7 +185,7 @@
     } ],
     "links" : [ {
       "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "WJzQ9czYjYNY",
+      "uid" : "PSzQ9czYjYNY",
       "name" : "ChekPrice",
       "condition" : {
         "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
@@ -182,7 +205,7 @@
     "vars" : {
       "avgPeriod" : "30m"
     },
-    "taskSort" : [ "9r7LUAO3eEYU", "rvAYFrVWpbxC", "A9DLlmqdqWXw", "Z0MsoVl87Uro", "WJzQ9czYjYNY", "jWvxY8lUN4Vw", "yVZY941QKdCf" ],
+    "taskSort" : [ "PS7LUAO3eEYU", "PSAYFrVWpbxC", "PSDLlmqdqWXw", "PSMsoVl87Uro", "PSzQ9czYjYNY", "PSvxY8lUN4Vw", "PSQGetMA15", "PSZY941QKdCf" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
@@ -197,7 +220,7 @@
   },
   "entry" : {
     "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
-    "boxUid" : "JLHJy1PFFHMe",
+    "boxUid" : "JLHJy1PFFHPS",
     "autoRegister" : false,
     "requiredKeys" : [ "symbol" ],
     "outputKeys" : [ ]
