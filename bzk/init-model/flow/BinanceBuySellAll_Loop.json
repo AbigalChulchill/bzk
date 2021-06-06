@@ -24,7 +24,7 @@
       "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
       "uid" : "uCYOwWdhTX61",
       "name" : "DoBuyOrSell",
-      "tryErrorble" : false,
+      "tryErrorble" : true,
       "devBoxVars" : { },
       "devFlowVars" : { },
       "flowUid" : "LlXZCvcaZsK8",

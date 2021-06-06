@@ -8,29 +8,6 @@
     "name" : "BOX",
     "actions" : [ {
       "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "omQM2kfxc2Cf",
-      "name" : "GetMA_15",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "flowUid" : "9RLQvpmbGa35",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "tsdbQuery",
-        "val" : "from(bucket: \"quote\")\r\n  |> range(start: -2h)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"realtime\" and\r\n    r.symbol == \"${symbol}\" and\r\n    r._field == \"price\"\r\n  )\r\n  |> timedMovingAverage(every: 5m, period: 15m)"
-      }, {
-        "key" : "vaildMins",
-        "val" : "10"
-      } ],
-      "outputReflects" : [ {
-        "srcKey" : "nearVal",
-        "toKey" : {
-          "lv" : "not_specify",
-          "key" : "ma15m"
-        }
-      } ]
-    }, {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
       "uid" : "A9DLlmqdqWXw",
       "name" : "Get_BuyLine",
       "tryErrorble" : true,
@@ -90,7 +67,7 @@
         "val" : "0.3268"
       }, {
         "key" : "threshold",
-        "val" : "${ma15m.val}"
+        "val" : "${avgv.val} "
       } ],
       "outputReflects" : [ ]
     }, {
@@ -205,7 +182,7 @@
     "vars" : {
       "avgPeriod" : "30m"
     },
-    "taskSort" : [ "WKcEThpsep7Z", "1Y75Sb5LKTAT", "A9DLlmqdqWXw", "BrJHKkIuSgEO", "WJzQ9czYjYNY", "omQM2kfxc2Cf", "jWvxY8lUN4Vw", "yVZY941QKdCf" ],
+    "taskSort" : [ "WKcEThpsep7Z", "1Y75Sb5LKTAT", "A9DLlmqdqWXw", "BrJHKkIuSgEO", "WJzQ9czYjYNY", "jWvxY8lUN4Vw", "yVZY941QKdCf" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
