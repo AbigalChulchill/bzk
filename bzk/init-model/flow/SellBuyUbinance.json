@@ -4,6 +4,35 @@
   "name" : "SellBuyUbinance",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "Hoh5CNTFiFDi",
+    "name" : "SELL",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "2icxYcg47Cor",
+      "name" : "SellOrder",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flowUid" : "PeakSellerWJ",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "symbol",
+        "val" : "${symbol}"
+      } ],
+      "outputReflects" : [ ]
+    } ],
+    "links" : [ ],
+    "vars" : { },
+    "taskSort" : [ "2icxYcg47Cor" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "END",
+      "failEnd" : false,
+      "endResultKeys" : [ ]
+    }
+  }, {
+    "clazz" : "net.bzk.flow.model.Box",
     "uid" : "vKSau3Y0hT1i",
     "name" : "Box",
     "actions" : [ {
@@ -20,7 +49,7 @@
         "val" : "from(bucket: \"quote\")\n  |> range(start: -30h)\n  |> filter(fn: (r) =>\n    r._measurement == \"realtime\" and\n    r.symbol == \"${symbol}\" and\n    r._field == \"price\"\n  )\n  |> difference()\n  |> movingAverage(n: 144 )\n  |> difference()\n  |> movingAverage(n: 144 )"
       }, {
         "key" : "peakMaxWaitSeconds",
-        "val" : "7200"
+        "val" : "3600"
       }, {
         "key" : "symbol",
         "val" : "${symbol}"
@@ -73,35 +102,6 @@
     "transition" : {
       "toBox" : "",
       "endTag" : "TODO Why",
-      "failEnd" : false,
-      "endResultKeys" : [ ]
-    }
-  }, {
-    "clazz" : "net.bzk.flow.model.Box",
-    "uid" : "Hoh5CNTFiFDi",
-    "name" : "SELL",
-    "actions" : [ {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "2icxYcg47Cor",
-      "name" : "SellOrder",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "flowUid" : "PeakSellerWJ",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "symbol",
-        "val" : "${symbol}"
-      } ],
-      "outputReflects" : [ ]
-    } ],
-    "links" : [ ],
-    "vars" : { },
-    "taskSort" : [ "2icxYcg47Cor" ],
-    "whileJudgment" : null,
-    "transition" : {
-      "toBox" : "",
-      "endTag" : "END",
       "failEnd" : false,
       "endResultKeys" : [ ]
     }
