@@ -27,7 +27,7 @@
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
-      "endTag" : "END",
+      "endTag" : "${LV}_${side}",
       "failEnd" : false,
       "endResultKeys" : [ ]
     }
@@ -46,10 +46,10 @@
       "asynced" : false,
       "inputData" : [ {
         "key" : "tsdbQuery",
-        "val" : "from(bucket: \"quote\")\n  |> range(start: -30h)\n  |> filter(fn: (r) =>\n    r._measurement == \"realtime\" and\n    r.symbol == \"${symbol}\" and\n    r._field == \"price\"\n  )\n  |> difference()\n  |> movingAverage(n: 144 )\n  |> difference()\n  |> movingAverage(n: 144 )"
+        "val" : "from(bucket: \"quote\")\n  |> range(start: -40h)\n  |> filter(fn: (r) =>\n    r._measurement == \"realtime\" and\n    r.symbol == \"${symbol}\" and\n    r._field == \"price\"\n  )\n  |> difference()\n  |> movingAverage(n: 144 )\n  |> difference()\n  |> movingAverage(n: 144 )"
       }, {
         "key" : "peakMaxWaitSeconds",
-        "val" : "3600"
+        "val" : "5400"
       }, {
         "key" : "symbol",
         "val" : "${symbol}"
@@ -75,17 +75,56 @@
         "val" : "${symbol}"
       } ],
       "outputReflects" : [ ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
+      "uid" : "LtgQk1mGlHfR",
+      "name" : "GenTarget",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flatData" : [ {
+        "key" : "SHMh",
+        "val" : "!javascript===\nconst macro = ${direction.macro};\n\nfunction calc(){\n    if (macro.state == 'FALL'){\n        if(! macro.nearMax  ) return -1;\n        return  macro.nearMax.val;\n    }else {\n        if(! macro.nearMin  ) return -1;\n        return Math.abs( macro.nearMin.val);\n    }\n}\n\ncalc();"
+      }, {
+        "key" : "LV",
+        "val" : "!javascript===\nconst shmh = bzk.g('SHMh');\nconst macro = ${direction.macro};\nconst state = macro.state;\nconst lastv = ${direction.last.val};\nconst shmhHalf = shmh/2;\n\nfunction calc(){\n    return state == 'FALL' ?calcFall():calcRise();\n}\n\nfunction calcFall(){\n    if(shmh<0){\n        return lastv > 0 ? 'A' : 'D';\n    }\n    if (lastv > shmhHalf) return 'A';\n    if (lastv > 0 && last < shmhHalf) return 'B';\n    if (lastv<0 && lastv > -shmhHalf) return 'C';\n    if (lastv<0 && lastv < -shmhHalf) return 'D';\n    throw new Error('lastv:'+lastv+' shmhHalf:'+shmhHalf);\n}\n\nfunction calcRise(){\n\n    if(shmh<0){\n        return lastv > 0 ? 'D' : 'A';\n    }\n    if (lastv > shmhHalf) return 'D';\n    if (lastv > 0 && last < shmhHalf) return 'C';\n    if (lastv<0 && lastv > -shmhHalf) return 'B';\n    if (lastv<0 && lastv < -shmhHalf) return 'A';\n    throw new Error('lastv:'+lastv+' shmhHalf:'+shmhHalf);\n\n}\n\ncalc();"
+      }, {
+        "key" : "side",
+        "val" : "!javascript===\nconst lv = bzk.g('LV');\nconst d = ${direction};\nconst microState = d.micro.state;\nconst macroState = d.macro.state;\nfunction calc(){\n    if(lv == 'A'|| lv == 'D'){\n        if(microState != macroState) return 'BOTH';\n    }\n    return macroState == 'FALL' ? 'SELL' : 'BUY';\n}\ncalc();"
+      } ]
     } ],
     "links" : [ {
       "clazz" : "net.bzk.flow.model.Link",
       "uid" : "BXX48Illzys2",
-      "name" : "FallOrRise",
+      "name" : "SELLCheck",
       "condition" : {
         "clazz" : "net.bzk.flow.model.Condition$ConditionTxt",
         "kind" : "NONE",
         "next" : null,
-        "left" : "${direction.state}",
-        "right" : "FALL",
+        "left" : "${side}",
+        "right" : "SELL",
+        "not" : false,
+        "type" : "equal"
+      },
+      "transition" : {
+        "toBox" : "Hoh5CNTFiFDi",
+        "endTag" : null,
+        "failEnd" : false,
+        "endResultKeys" : [ {
+          "lv" : "not_specify",
+          "key" : "LV"
+        } ]
+      }
+    }, {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "zvwDlvuJefqQ",
+      "name" : "BOTHCheck",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionTxt",
+        "kind" : "NONE",
+        "next" : null,
+        "left" : "${side}",
+        "right" : "BOTH",
         "not" : false,
         "type" : "equal"
       },
@@ -97,17 +136,19 @@
       }
     } ],
     "vars" : { },
-    "taskSort" : [ "tDr8UTOVkNiO", "BXX48Illzys2", "n1T8yLzD16hl" ],
+    "taskSort" : [ "tDr8UTOVkNiO", "LtgQk1mGlHfR", "BXX48Illzys2", "n1T8yLzD16hl", "zvwDlvuJefqQ" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
-      "endTag" : "TODO Why",
+      "endTag" : "${LV}_${side}",
       "failEnd" : false,
       "endResultKeys" : [ ]
     }
   } ],
   "varCfgNames" : [ ],
-  "vars" : { },
+  "vars" : {
+    "symbol" : "BTC"
+  },
   "entry" : {
     "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
     "boxUid" : "vKSau3Y0hT1i",
