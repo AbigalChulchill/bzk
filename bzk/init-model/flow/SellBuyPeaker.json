@@ -93,7 +93,7 @@
       "devFlowVars" : { },
       "flatData" : [ {
         "key" : "thLineCondition",
-        "val" : "!javascript===\n\nconst side = ${side};\n\nfunction calc(){\n    return side == 'BUY' ? 'r._value < 0' : 'r._value > 0';\n}\n\ncalc();"
+        "val" : "!javascript===\n\nconst side = '${side}';\n\nfunction calc(){\n    return side == 'BUY' ? 'r._value < 0' : 'r._value > 0';\n}\n\ncalc();"
       } ]
     }, {
       "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
@@ -107,7 +107,7 @@
         "val" : "!javascript===\nconst ans= ${curPrice.val} - ${avgv.val} ;\nans;"
       }, {
         "key" : "dpWeight",
-        "val" : "!javascript===\n\nconst side = ${side};\n\nfunction calc(){\n    const abgd= ${curPrice.val} - ${avgv.val} ;\n\n    if(side == 'BUY'){\n        if(abgd>=0) return 1;\n        if(${thLine.val}>=0) return 1;\n    }else{\n        if(abgd<=0) return 1;\n        if(${thLine.val}<=0) return 1;\n    }\n\n\n\n    return abgd / ${thLine.val};\n}\n\ncalc();\n\n\n"
+        "val" : "!javascript===\n\nconst side = '${side}';\n\nfunction calc(){\n    const abgd= ${curPrice.val} - ${avgv.val} ;\n\n    if(side == 'BUY'){\n        if(abgd>=0) return 1;\n        if(${thLine.val}>=0) return 1;\n    }else{\n        if(abgd<=0) return 1;\n        if(${thLine.val}<=0) return 1;\n    }\n\n\n\n    return abgd / ${thLine.val};\n}\n\ncalc();\n\n\n"
       }, {
         "key" : "thLine.val",
         "val" : "!javascript===\nfunction check(){\n    var line = ${thLine};\n    if(line == null){\n        return 0;\n    }\n    return line.val;\n}\ncheck();\n\n"
@@ -206,59 +206,25 @@
     "links" : [ {
       "clazz" : "net.bzk.flow.model.Link",
       "uid" : "7SJXjrUlyRji",
-      "name" : "CheckBuy",
+      "name" : "CheckBuySell",
       "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionTxt",
+        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
         "kind" : "NONE",
-        "next" : {
-          "clazz" : "net.bzk.flow.model.Condition$ConditionTxt",
-          "kind" : "NONE",
-          "next" : null,
-          "left" : "0",
-          "right" : "0",
-          "not" : false,
-          "type" : "equal"
-        },
-        "left" : "${side}",
-        "right" : "BUY",
-        "not" : false,
-        "type" : "equal"
+        "next" : null,
+        "polyglot" : "js",
+        "code" : "const side = '${side}';\r\nconst thval = ${$thLine.val};\r\nconst avgd= ${avgd};\r\n\r\nfunction check(){\r\n    if(side == 'BUY'){\r\n        return avgd>thval;\r\n    }\r\n    if(side == 'SELL'){\r\n        return avgd<thval;\r\n    }\r\n    throw new Error('it`s posible '+side);\r\n}\r\ncheck();"
       },
       "transition" : {
         "toBox" : "",
-        "endTag" : "SBye--${symbol}-${side}",
-        "failEnd" : false,
-        "endResultKeys" : [ ]
-      }
-    }, {
-      "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "wvoXyiIHepUN",
-      "name" : "CheckSell",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionTxt",
-        "kind" : "NONE",
-        "next" : {
-          "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
-          "kind" : "NONE",
-          "next" : null,
-          "left" : "${avgd}",
-          "right" : "${thLine.val}",
-          "type" : "lessthan_equal"
-        },
-        "left" : "${side}",
-        "right" : "SELL",
-        "not" : false,
-        "type" : "equal"
-      },
-      "transition" : {
-        "toBox" : "",
-        "endTag" : "BBye--${symbol}-${side}",
+        "endTag" : "Bye--${symbol}-${side}:   ${$thLine.val}>${avgd}",
         "failEnd" : false,
         "endResultKeys" : [ ]
       }
     } ],
-    "vars" : { },
-    "taskSort" : [ "myTOlctOo6Go", "3HWWjqTzCaWp", "9GfPw52JOxuK", "smBt41EJmJ5i", "wqASBCKleyKx", "7SJXjrUlyRji", "wvoXyiIHepUN", "yNt02qu0X5B9", "r8p9km417dpW", "VKgNyxHcz1m9" ],
+    "vars" : {
+      "avgPeriod" : "30m"
+    },
+    "taskSort" : [ "myTOlctOo6Go", "3HWWjqTzCaWp", "9GfPw52JOxuK", "smBt41EJmJ5i", "wqASBCKleyKx", "7SJXjrUlyRji", "yNt02qu0X5B9", "r8p9km417dpW", "VKgNyxHcz1m9" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
@@ -272,12 +238,11 @@
     "side" : "BUY"
   },
   "entry" : {
-    "clazz" : "net.bzk.flow.model.Entry$FixedRateEntry",
+    "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
     "boxUid" : "X9XRPTTIQJIQ",
     "autoRegister" : false,
-    "period" : -1,
-    "unit" : "SECONDS",
-    "initialDelay" : 2
+    "requiredKeys" : [ "symbol", "side" ],
+    "outputKeys" : [ ]
   },
   "logEncryptKey" : "1234567890123456",
   "threadCfg" : {

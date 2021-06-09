@@ -120,7 +120,7 @@
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
-      "endTag" : "TODO Why",
+      "endTag" : "${symbol} ${side}",
       "failEnd" : false,
       "endResultKeys" : [ ]
     }
