@@ -175,10 +175,10 @@
       "asynced" : false,
       "inputData" : [ {
         "key" : "investedRate",
-        "val" : "!javascript===\nconst ans= 0.01 * ${dpWeight};\nans;"
+        "val" : "!javascript===\nconst ans= 0.0168 * ${dpWeight};\nans;"
       }, {
         "key" : "guardRange",
-        "val" : "!javascript===\nconst ans = 0.01 * Math.pow(${dpWeight},-1);\nans;"
+        "val" : "!javascript===\n\nconst dpw = ${dpWeight};\nconst gr= ${guardRate};\nconst grw = 3.68 * gr;\n\nconst ans = 0.0268 * Math.pow(dpw*(grw+1),-1);\nans;"
       }, {
         "key" : "symbol",
         "val" : "${symbol}"
@@ -228,7 +228,7 @@
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
-      "endTag" : "TODO Why",
+      "endTag" : "OK ${symbol}-${side}:  ${guardRate}",
       "failEnd" : false,
       "endResultKeys" : [ ]
     }
@@ -241,7 +241,7 @@
     "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
     "boxUid" : "X9XRPTTIQJIQ",
     "autoRegister" : false,
-    "requiredKeys" : [ "symbol", "side" ],
+    "requiredKeys" : [ "symbol", "side", "guardRate" ],
     "outputKeys" : [ ]
   },
   "logEncryptKey" : "1234567890123456",
