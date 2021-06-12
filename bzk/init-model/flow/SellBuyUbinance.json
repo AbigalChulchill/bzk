@@ -4,6 +4,41 @@
   "name" : "SellBuyUbinance",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "Hoh5CNTFiFDi",
+    "name" : "SELL",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "gsxIHdLoOV2I",
+      "name" : "SellOrder",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flowUid" : "kCmTvvaxfIBr",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "symbol",
+        "val" : "${symbol}"
+      }, {
+        "key" : "side",
+        "val" : "SELL"
+      }, {
+        "key" : "guardRate",
+        "val" : "0"
+      } ],
+      "outputReflects" : [ ]
+    } ],
+    "links" : [ ],
+    "vars" : { },
+    "taskSort" : [ "gsxIHdLoOV2I" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "SELL_${acceleration.val}_${direction.last.val}_${direction.macro.state}",
+      "failEnd" : false,
+      "endResultKeys" : [ ]
+    }
+  }, {
+    "clazz" : "net.bzk.flow.model.Box",
     "uid" : "vKSau3Y0hT1i",
     "name" : "Box",
     "actions" : [ {
@@ -17,10 +52,10 @@
       "asynced" : false,
       "inputData" : [ {
         "key" : "tsdbQuery",
-        "val" : "from(bucket: \"quote\")\n  |> range(start: -40h)\n  |> filter(fn: (r) =>\n    r._measurement == \"realtime\" and\n    r.symbol == \"${symbol}\" and\n    r._field == \"price\"\n  )\n  |> difference()\n  |> movingAverage(n: 144 )\n  |> difference()\n  |> movingAverage(n: 144 )"
+        "val" : "  from(bucket: \"quote\")\n  |> range(start: -60h)\n  |> filter(fn: (r) =>\n    r._measurement == \"realtime\" and\n    r.symbol == \"${symbol}\" and\n    r._field == \"price\"\n  )\n  |> difference()\n  |> movingAverage(n: 144  )\n  |> movingAverage(n: 12  )\n\n"
       }, {
         "key" : "peakMaxWaitSeconds",
-        "val" : "5400"
+        "val" : "3600"
       }, {
         "key" : "symbol",
         "val" : "${symbol}"
@@ -40,14 +75,11 @@
       "devBoxVars" : { },
       "devFlowVars" : { },
       "flatData" : [ {
-        "key" : "~SHMh",
-        "val" : "!javascript===\nconst macro = ${direction.macro};\n\nfunction calc(){\n    if (macro.state == 'FALL'){\n        if(! macro.nearMax  ) return -1;\n        return  macro.nearMax.val;\n    }else {\n        if(! macro.nearMin  ) return -1;\n        return Math.abs( macro.nearMin.val);\n    }\n}\n\ncalc();"
+        "key" : "~rapidReboundRate",
+        "val" : "!javascript===\n\nconst th = ${velocityTH.val};\nconst a = ${acceleration.val};\nconst ans = a/th;\nans;"
       }, {
-        "key" : "~LV",
-        "val" : "!javascript===\nconst shmh = bzk.g('SHMh');\nconst macro = ${direction.macro};\nconst state = macro.state;\nconst lastv = ${direction.last.val};\nconst shmhHalf = shmh/2;\n\nfunction calc(){\n    return state == 'FALL' ?calcFall():calcRise();\n}\n\nfunction calcFall(){\n    if(shmh<0){\n        return lastv > 0 ? 'A' : 'D';\n    }\n    if (lastv > shmhHalf) return 'A';\n    if (lastv > 0 && lastv < shmhHalf) return 'B';\n    if (lastv<0 && lastv > -shmhHalf) return 'C';\n    if (lastv<0 && lastv < -shmhHalf) return 'D';\n    throw new Error('lastv:'+lastv+' shmhHalf:'+shmhHalf);\n}\n\nfunction calcRise(){\n\n    if(shmh<0){\n        return lastv > 0 ? 'D' : 'A';\n    }\n    if (lastv > shmhHalf) return 'D';\n    if (lastv > 0 && lastv < shmhHalf) return 'C';\n    if (lastv<0 && lastv > -shmhHalf) return 'B';\n    if (lastv<0 && lastv < -shmhHalf) return 'A';\n    throw new Error('lastv:'+lastv+' shmhHalf:'+shmhHalf);\n\n}\n\ncalc();"
-      }, {
-        "key" : "~side",
-        "val" : "!javascript===\nconst lv = bzk.g('LV');\nconst d = ${direction};\nconst microState = d.micro.state;\nconst macroState = d.macro.state;\nfunction calc(){\n    if(lv == 'A'|| lv == 'D'){\n        if(microState != macroState) return 'BOTH';\n    }\n    return macroState == 'FALL' ? 'SELL' : 'BUY';\n}\ncalc();"
+        "key" : "side",
+        "val" : "!javascript===\nconst rrr = bzk.g('rapidReboundRate');\nconst th = ${velocityTH.val};\nconst lastv =  ${direction.last.val};\nconst macroState = '${direction.macro.state}';\nconst microState = '${direction.micro.state}';\n\n\nfunction clac(){\n    if(Math.abs( rrr)>=2) return rrr>0 ? 'BUY' : 'SELL';    \n    if(macroState!=microState) return 'NONE';\n    if(macroState == 'FALL' && lastv > th ) return 'SELL';\n    if(macroState == 'RISE' && lastv < -th ) return 'BUY';\n    return 'NONE';\n}\n\nclac();"
       } ]
     }, {
       "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
@@ -66,19 +98,60 @@
         "val" : "BUY"
       }, {
         "key" : "guardRate",
-        "val" : "${guardRate}"
+        "val" : "0"
       } ],
       "outputReflects" : [ ]
     }, {
-      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
-      "uid" : "iy87wOFrKi8w",
-      "name" : "InitOrderVars",
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "KpH4PimCRDSe",
+      "name" : "velocity_th",
       "tryErrorble" : false,
       "devBoxVars" : { },
       "devFlowVars" : { },
-      "flatData" : [ {
-        "key" : "guardRate",
-        "val" : "!javascript===\n\nconst lv= '${LV}';\nconst lastv = ${direction.last.val};\nconst SHMh = ${SHMh};\n\n\nfunction calc(){\n\n    if (lv == 'C' || lv == 'D' ) return 0;\n    if (lv == 'A'){\n        let ans= (-1* lastv)>SHMh ? 1 : (-1* lastv)/SHMh;\n        return ans > 0 ? ans : 0;\n    }\n    if(lv == 'B') return 1;\n}\ncalc();"
+      "flowUid" : "9RLQvpmbGa35",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "tsdbQuery",
+        "val" : "import \"math\"\r\nfrom(bucket: \"quote\")\r\n  |> range(start: -52h)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"realtime\" and\r\n    r.symbol == \"${symbol}\" and\r\n    r._field == \"price\"\r\n  )\r\n  |> difference()\r\n  |> movingAverage(n: 144  )\r\n  |> movingAverage(n: 12  )\r\n  |>map(fn: (r) => ({ r with _value : math.abs(x: r._value) }))   \r\n  |> movingAverage(n: 432 )"
+      }, {
+        "key" : "vaildMins",
+        "val" : "10"
+      }, {
+        "key" : "skipCount",
+        "val" : "0"
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "nearVal",
+        "toKey" : {
+          "lv" : "run_flow",
+          "key" : "velocityTH"
+        }
+      } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "brDCdhwwdBqn",
+      "name" : "Acceleration",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flowUid" : "9RLQvpmbGa35",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "tsdbQuery",
+        "val" : "import \"strings\"\r\n\r\ntimedMovingSum = (every, period, column=\"_value\", tables=<-) =>\r\n  tables\r\n    |> window(every: every, period: period)\r\n    |> sum(column:column)\r\n    |> duplicate(column: \"_stop\", as: \"_time\")\r\n    |> window(every: inf)\r\n\r\nfrom(bucket: \"quote\")\r\n  |> range(start: -15h)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"realtime\" and\r\n    r.symbol == \"${symbol}\" and\r\n    r._field == \"price\"\r\n  )\r\n  |> difference()\r\n  |> difference()\r\n  |>timedMovingSum(every: 5m, period: 1h)\r\n  |> movingAverage(n: 144  )"
+      }, {
+        "key" : "vaildMins",
+        "val" : "10"
+      }, {
+        "key" : "skipCount",
+        "val" : "1"
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "nearVal",
+        "toKey" : {
+          "lv" : "run_flow",
+          "key" : "acceleration"
+        }
       } ]
     } ],
     "links" : [ {
@@ -105,76 +178,30 @@
       }
     }, {
       "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "zvwDlvuJefqQ",
-      "name" : "BOTHCheck",
+      "uid" : "tl455y47pObG",
+      "name" : "NONE",
       "condition" : {
         "clazz" : "net.bzk.flow.model.Condition$ConditionTxt",
         "kind" : "NONE",
         "next" : null,
         "left" : "${side}",
-        "right" : "BOTH",
+        "right" : "NONE",
         "not" : false,
         "type" : "equal"
       },
       "transition" : {
-        "toBox" : "Hoh5CNTFiFDi",
-        "endTag" : null,
+        "toBox" : "",
+        "endTag" : "NONE_${acceleration.val}_${direction.last.val}_${direction.macro.state}",
         "failEnd" : false,
         "endResultKeys" : [ ]
       }
     } ],
     "vars" : { },
-    "taskSort" : [ "tDr8UTOVkNiO", "LtgQk1mGlHfR", "BXX48Illzys2", "iy87wOFrKi8w", "4VSz2lcQQNbT", "zvwDlvuJefqQ" ],
+    "taskSort" : [ "KpH4PimCRDSe", "tDr8UTOVkNiO", "brDCdhwwdBqn", "LtgQk1mGlHfR", "tl455y47pObG", "BXX48Illzys2", "4VSz2lcQQNbT" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
-      "endTag" : "${LV}_${side}",
-      "failEnd" : false,
-      "endResultKeys" : [ ]
-    }
-  }, {
-    "clazz" : "net.bzk.flow.model.Box",
-    "uid" : "Hoh5CNTFiFDi",
-    "name" : "SELL",
-    "actions" : [ {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "gsxIHdLoOV2I",
-      "name" : "SellOrder",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "flowUid" : "kCmTvvaxfIBr",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "symbol",
-        "val" : "${symbol}"
-      }, {
-        "key" : "side",
-        "val" : "SELL"
-      }, {
-        "key" : "guardRate",
-        "val" : "${guardRate}"
-      } ],
-      "outputReflects" : [ ]
-    }, {
-      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
-      "uid" : "2482Zm65qdIk",
-      "name" : "InitSellVars",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "flatData" : [ {
-        "key" : "guardRate",
-        "val" : "!javascript===\n\nconst lv= '${LV}';\nconst lastv = ${direction.last.val};\nconst SHMh = ${SHMh};\n\n\nfunction calc(){\n\n    if (lv == 'C' || lv == 'D' ) return 0;\n    if (lv == 'A'){\n        let ans = lastv>SHMh ? 1 : lastv/SHMh;\n        return ans > 0 ? ans : 0;\n    }\n    if(lv == 'B') return 1;\n}\ncalc();"
-      } ]
-    } ],
-    "links" : [ ],
-    "vars" : { },
-    "taskSort" : [ "2482Zm65qdIk", "gsxIHdLoOV2I" ],
-    "whileJudgment" : null,
-    "transition" : {
-      "toBox" : "",
-      "endTag" : "${LV}_${side}",
+      "endTag" : "BUY_${acceleration.val}_${direction.last.val}_${direction.macro.state}",
       "failEnd" : false,
       "endResultKeys" : [ ]
     }

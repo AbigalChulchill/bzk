@@ -175,10 +175,10 @@
       "asynced" : false,
       "inputData" : [ {
         "key" : "investedRate",
-        "val" : "!javascript===\nconst ans= 0.0168 * ${dpWeight};\nans;"
+        "val" : "!javascript===\nconst ans= 0.03668 * ${dpWeight};\nans;"
       }, {
         "key" : "guardRange",
-        "val" : "!javascript===\n\nconst dpw = ${dpWeight};\nconst gr= ${guardRate};\nconst grw = 3.68 * gr;\n\nconst ans = 0.0268 * Math.pow(dpw*(grw+1),-1);\nans;"
+        "val" : "!javascript===\n\nconst dpw = ${dpWeight};\nconst ans = 0.02 * Math.pow(dpw,-1.5);\nans;"
       }, {
         "key" : "symbol",
         "val" : "${symbol}"
