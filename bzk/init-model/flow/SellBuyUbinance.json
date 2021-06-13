@@ -171,10 +171,7 @@
         "toBox" : "Hoh5CNTFiFDi",
         "endTag" : null,
         "failEnd" : false,
-        "endResultKeys" : [ {
-          "lv" : "not_specify",
-          "key" : "LV"
-        } ]
+        "endResultKeys" : [ ]
       }
     }, {
       "clazz" : "net.bzk.flow.model.Link",
