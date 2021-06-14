@@ -61,7 +61,7 @@
         "val" : "${symbol}"
       } ],
       "outputReflects" : [ {
-        "srcKey" : "nearVal",
+        "srcKey" : "ans",
         "toKey" : {
           "lv" : "run_flow",
           "key" : "direction"

@@ -4,6 +4,90 @@
   "name" : "OrderBinance ",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "5ONyW8KpDZA0",
+    "name" : "ToOrder",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "FSNYiIC5dM03",
+      "name" : "GetBinance1MinAmt",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flowUid" : "9RLQvpmbGa35",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "tsdbQuery",
+        "val" : "import \"date\"\nt1 = from(bucket: \"quote\")\n  |> range(start: -8h)\n  |> filter(fn: (r) =>\n    r._measurement == \"realtime\" and\n    r.symbol == \"${symbol}\" and\n    r.trade == \"60s\" and\n    r._field == \"totalAmount\"\n  )\n  |> map(fn: (r) => ({ r with _time: date.truncate(t: r._time, unit: 10s)    }))\n  |> pivot(rowKey:[\"_time\"], columnKey: [\"side\"], valueColumn: \"_value\")\n  |> map(fn: (r) => ({ r with _value: r.sell + r.buy }))    \n  |> movingAverage(n: 10 )\nt1   "
+      }, {
+        "key" : "vaildMins",
+        "val" : "31"
+      }, {
+        "key" : "skipCount",
+        "val" : "0"
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "nearVal",
+        "toKey" : {
+          "lv" : "not_specify",
+          "key" : "amt"
+        }
+      } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "Q9Ov6OSqN0n5",
+      "name" : "GetMA_15",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flowUid" : "9RLQvpmbGa35",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "tsdbQuery",
+        "val" : "from(bucket: \"quote\")\n  |> range(start: -2h)\n  |> filter(fn: (r) =>\n    r._measurement == \"realtime\" and\n    r.symbol == \"${symbol}\" and\n    r._field == \"price\"\n  )\n  |> timedMovingAverage(every: 5m, period: 15m)"
+      }, {
+        "key" : "vaildMins",
+        "val" : "10"
+      }, {
+        "key" : "skipCount",
+        "val" : "1"
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "nearVal",
+        "toKey" : {
+          "lv" : "not_specify",
+          "key" : "ma15m"
+        }
+      } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "N3uy8bAUKMM0",
+      "name" : "ListRecentOrders",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "url" : "${binance.proxyHost}proxy",
+      "uriVariables" : { },
+      "body" : "{\n  \"name\": \"get_recent_trades_list\",\n  \"apiKey\":\"${binance.key}\",\n  \"secret\":\"${binance.secret}\",\n  \"symbol\": \"${symbol}\",\n  \"side\": \"${side}\",\n  \"timeMaped\":true\n}",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : "timeValMap"
+      }
+    } ],
+    "links" : [ ],
+    "vars" : { },
+    "taskSort" : [ "FSNYiIC5dM03", "Q9Ov6OSqN0n5", "N3uy8bAUKMM0" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "htivUO7YKtyD",
+      "endTag" : null,
+      "failEnd" : false,
+      "endResultKeys" : [ ]
+    }
+  }, {
+    "clazz" : "net.bzk.flow.model.Box",
     "uid" : "htivUO7YKtyD",
     "name" : "Box",
     "actions" : [ {
@@ -135,7 +219,7 @@
   },
   "entry" : {
     "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
-    "boxUid" : "htivUO7YKtyD",
+    "boxUid" : "5ONyW8KpDZA0",
     "autoRegister" : false,
     "requiredKeys" : [ "investedRate", "guardRange", "symbol", "side", "currentMove", "tags", "triggerAmt", "rsi", "threshold" ],
     "outputKeys" : [ ]
