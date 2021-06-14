@@ -4,35 +4,6 @@
   "name" : "TSDBPeakFinder",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
-    "uid" : "oZFKhG8jYXGY",
-    "name" : "",
-    "actions" : [ {
-      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
-      "uid" : "iyC5AMAccwQQ",
-      "name" : "clacPeak",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "flatData" : [ {
-        "key" : "ans",
-        "val" : "!javascript===\r\nconst rMap = ${timeValMap};\r\nlet baseVal = ${baseVal};\r\nconst peakMaxWaitSeconds = ${peakMaxWaitSeconds};\r\n\r\nbaseVal = baseVal ? baseVal : 0;\r\nconst STATE_RISE = 'RISE';\r\nconst STATE_FALL = 'FALL';\r\nconst MINED = 99;\r\nconst MAXED = 66;\r\nconst NONE = 22;\r\n\r\nlet keys = Object.keys(rMap);\r\n\r\nkeys = keys.reverse();\r\nconst firstKey = keys[0];\r\n\r\nfunction listMinMax(micro) {\r\n    let ans = {\r\n        min: [],\r\n        max: [],\r\n        all:[]\r\n    };\r\n    for (let i = 0; i < keys.length; i++) {\r\n        let mmr = findMinOrMax(i,micro);\r\n        let info = genMinMax(i)\r\n        if (mmr == MINED) {\r\n            ans.min.push(info);\r\n            ans.all.push(info);\r\n        } else if (mmr == MAXED) {\r\n            ans.max.push(info);\r\n            ans.all.push(info);\r\n        }\r\n    }\r\n    return ans;\r\n}\r\n\r\nfunction getNearInfo(list) {\r\n    let nt = Number.MAX_SAFE_INTEGER;\r\n    let ans = null;\r\n    for (const e of list) {\r\n        let key = e.key;\r\n        let tr = subtractKey(firstKey, key);\r\n        if (tr < nt) {\r\n            nt = tr;\r\n            ans = e;\r\n        }\r\n    }\r\n    return ans;\r\n\r\n}\r\n\r\nfunction genMinMax(i) {\r\n    const key = keys[i];\r\n    return {\r\n        idx: i,\r\n        key: key,\r\n        val: rMap[key],\r\n        dtime: subtractKey(firstKey, key)\r\n    };\r\n}\r\n\r\nfunction mapInfos(listi){\r\n    let ans = {};\r\n    for (const e of listi) {\r\n        ans[e.dtime] = e;\r\n    }\r\n    return ans;\r\n}\r\n\r\nfunction getVal(key){\r\n    return rMap[key] -baseVal ;\r\n}\r\n\r\nfunction isBoundary(timeSize,idx,micro,forward){\r\n    if(idx<0) return true;\r\n    if(idx >= keys.length) return true;\r\n    if(micro && timeSize > peakMaxWaitSeconds) return true;\r\n    if(micro) return false;\r\n    let nidx = forward ? idx-1 : idx +1;\r\n    if(nidx<0) return true;\r\n    if(nidx >= keys.length) return true;   \r\n    let cv = getVal(keys[idx]) ;\r\n    let nv = getVal(keys[nidx]);\r\n    return nv * cv < 0;\r\n}\r\n\r\nfunction findMinOrMax(idx, micro) {\r\n    const curIdx = idx;\r\n    const curKey = keys[idx];\r\n    const curv = getVal(curKey);\r\n    let maxed = true, mined = true;\r\n    let forward = true;\r\n    while (maxed || mined) {\r\n        if (forward) idx--; else idx++;\r\n        let nk = keys[idx];\r\n        let nv = getVal(nk);\r\n        let timeSize = Math.abs(subtractKey(curKey, nk));\r\n        if ( isBoundary(timeSize,idx,micro,forward) ) {\r\n            if (forward) {\r\n                idx = curIdx;\r\n                forward = false;\r\n                continue;\r\n            }\r\n            \r\n            break;\r\n        }\r\n        if (maxed) {\r\n            if (nv > curv) maxed = false\r\n        }\r\n        if (mined) {\r\n            if (nv < curv) mined = false\r\n        }\r\n    }\r\n    if (maxed && mined) return NONE;\r\n    if (maxed && (micro || curv > 0)) return MAXED;\r\n    if (mined && (micro || curv < 0)) return MINED;\r\n    return NONE;\r\n}\r\n\r\nfunction subtractKey(k1, k2) {\r\n    let k1t = new Date(k1);\r\n    let k2t = new Date(k2);\r\n    return (k1t - k2t) / 1000;\r\n}\r\n\r\nfunction genTrendInfo(micro) {\r\n    const minMaxInfo = listMinMax(micro);\r\n    const nearMax = getNearInfo(minMaxInfo.max);\r\n    const nearMin = getNearInfo(minMaxInfo.min);\r\n    const maxNearTime = nearMax ? subtractKey(firstKey, nearMax.key):Number.MAX_SAFE_INTEGER;\r\n    const minNearTime = nearMin ? subtractKey(firstKey, nearMin.key):Number.MAX_SAFE_INTEGER;\r\n    console.log(nearMax);\r\n    console.log(nearMin);\r\n    const state = calcState();\r\n\r\n    console.log(state);\r\n\r\n    function calcState() {\r\n        if (maxNearTime < minNearTime) {\r\n            return maxNearTime > peakMaxWaitSeconds ? STATE_FALL : STATE_RISE;\r\n        } else {\r\n            return minNearTime > peakMaxWaitSeconds ? STATE_RISE : STATE_FALL;\r\n        }\r\n    }\r\n\r\n\r\n    function getOtherNearPeak() {\r\n        if (nearMax && nearMax.idx == 0) return nearMin;\r\n        if (nearMin && nearMin.idx == 0) return nearMax;\r\n        return state == STATE_FALL ? nearMin : nearMax;\r\n    }\r\n\r\n    return {\r\n        state: state,\r\n        maxList: mapInfos(minMaxInfo.max),\r\n        minList: mapInfos(minMaxInfo.min),\r\n        allList: mapInfos(minMaxInfo.all),\r\n        maxNearTime: maxNearTime,\r\n        minNearTime: minNearTime,\r\n        nearMax: nearMax,\r\n        nearMin: nearMin,\r\n        nearPeak: getOtherNearPeak()\r\n    };\r\n}\r\n\r\nconst ans = {\r\n    micro : genTrendInfo(true),\r\n    macro: genTrendInfo(false),\r\n    last:{\r\n        time:firstKey,\r\n        val:rMap[firstKey]\r\n    }\r\n}\r\n\r\nconsole.log(ans);\r\n\r\nans;"
-      } ]
-    } ],
-    "links" : [ ],
-    "vars" : { },
-    "taskSort" : [ "iyC5AMAccwQQ" ],
-    "whileJudgment" : null,
-    "transition" : {
-      "toBox" : "",
-      "endTag" : "DONE_${symbol}",
-      "failEnd" : false,
-      "endResultKeys" : [ {
-        "lv" : "not_specify",
-        "key" : "ans"
-      } ]
-    }
-  }, {
-    "clazz" : "net.bzk.flow.model.Box",
     "uid" : "PeakFinderBox",
     "name" : "Box",
     "actions" : [ {
@@ -116,9 +87,35 @@
       "toBox" : "oZFKhG8jYXGY",
       "endTag" : null,
       "failEnd" : false,
+      "endResultKeys" : [ ]
+    }
+  }, {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "oZFKhG8jYXGY",
+    "name" : "",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
+      "uid" : "iyC5AMAccwQQ",
+      "name" : "clacPeak",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flatData" : [ {
+        "key" : "ans",
+        "val" : "!javascript===\r\nconst rMap = ${timeValMap};\r\nlet baseVal = ${baseVal};\r\nconst peakMaxWaitSeconds = ${peakMaxWaitSeconds};\r\n\r\nbaseVal = baseVal ? baseVal : 0;\r\nconst STATE_RISE = 'RISE';\r\nconst STATE_FALL = 'FALL';\r\nconst MINED = 99;\r\nconst MAXED = 66;\r\nconst NONE = 22;\r\n\r\nlet keys = Object.keys(rMap);\r\n\r\nkeys = keys.reverse();\r\nconst firstKey = keys[0];\r\n\r\nfunction listMinMax(micro) {\r\n    let ans = {\r\n        min: [],\r\n        max: [],\r\n        all:[]\r\n    };\r\n    for (let i = 0; i < keys.length; i++) {\r\n        let mmr = findMinOrMax(i,micro);\r\n        let info = genMinMax(i)\r\n        if (mmr == MINED) {\r\n            ans.min.push(info);\r\n            ans.all.push(info);\r\n        } else if (mmr == MAXED) {\r\n            ans.max.push(info);\r\n            ans.all.push(info);\r\n        }\r\n    }\r\n    return ans;\r\n}\r\n\r\nfunction getNearInfo(list) {\r\n    let nt = Number.MAX_SAFE_INTEGER;\r\n    let ans = null;\r\n    for (const e of list) {\r\n        let key = e.key;\r\n        let tr = subtractKey(firstKey, key);\r\n        if (tr < nt) {\r\n            nt = tr;\r\n            ans = e;\r\n        }\r\n    }\r\n    return ans;\r\n\r\n}\r\n\r\nfunction genMinMax(i) {\r\n    const key = keys[i];\r\n    return {\r\n        idx: i,\r\n        key: key,\r\n        val: rMap[key],\r\n        dtime: subtractKey(firstKey, key)\r\n    };\r\n}\r\n\r\nfunction mapInfos(listi){\r\n    let ans = {};\r\n    for (const e of listi) {\r\n        ans[e.dtime] = e;\r\n    }\r\n    return ans;\r\n}\r\n\r\nfunction getVal(key){\r\n    return rMap[key] -baseVal ;\r\n}\r\n\r\nfunction isBoundary(timeSize,idx,micro,forward){\r\n    if(idx<0) return true;\r\n    if(idx >= keys.length) return true;\r\n    if(micro && timeSize > peakMaxWaitSeconds) return true;\r\n    if(micro) return false;\r\n    let nidx = forward ? idx-1 : idx +1;\r\n    if(nidx<0) return true;\r\n    if(nidx >= keys.length) return true;   \r\n    let cv = getVal(keys[idx]) ;\r\n    let nv = getVal(keys[nidx]);\r\n    return nv * cv < 0;\r\n}\r\n\r\nfunction findMinOrMax(idx, micro) {\r\n    const curIdx = idx;\r\n    const curKey = keys[idx];\r\n    const curv = getVal(curKey);\r\n    let maxed = true, mined = true;\r\n    let forward = true;\r\n    while (maxed || mined) {\r\n        if (forward) idx--; else idx++;\r\n        let nk = keys[idx];\r\n        let nv = getVal(nk);\r\n        let timeSize = Math.abs(subtractKey(curKey, nk));\r\n        if ( isBoundary(timeSize,idx,micro,forward) ) {\r\n            if (forward) {\r\n                idx = curIdx;\r\n                forward = false;\r\n                continue;\r\n            }\r\n            \r\n            break;\r\n        }\r\n        if (maxed) {\r\n            if (nv > curv) maxed = false\r\n        }\r\n        if (mined) {\r\n            if (nv < curv) mined = false\r\n        }\r\n    }\r\n    if (maxed && mined) return NONE;\r\n    if (maxed && (micro || curv > 0)) return MAXED;\r\n    if (mined && (micro || curv < 0)) return MINED;\r\n    return NONE;\r\n}\r\n\r\nfunction subtractKey(k1, k2) {\r\n    let k1t = new Date(k1);\r\n    let k2t = new Date(k2);\r\n    return (k1t - k2t) / 1000;\r\n}\r\n\r\nfunction genTrendInfo(micro) {\r\n    const minMaxInfo = listMinMax(micro);\r\n    const nearMax = getNearInfo(minMaxInfo.max);\r\n    const nearMin = getNearInfo(minMaxInfo.min);\r\n    const maxNearTime = nearMax ? subtractKey(firstKey, nearMax.key):Number.MAX_SAFE_INTEGER;\r\n    const minNearTime = nearMin ? subtractKey(firstKey, nearMin.key):Number.MAX_SAFE_INTEGER;\r\n    console.log(nearMax);\r\n    console.log(nearMin);\r\n    const state = calcState();\r\n\r\n    console.log(state);\r\n\r\n    function calcState() {\r\n        if (maxNearTime < minNearTime) {\r\n            return maxNearTime > peakMaxWaitSeconds ? STATE_FALL : STATE_RISE;\r\n        } else {\r\n            return minNearTime > peakMaxWaitSeconds ? STATE_RISE : STATE_FALL;\r\n        }\r\n    }\r\n\r\n\r\n    function getOtherNearPeak() {\r\n        if (nearMax && nearMax.idx == 0) return nearMin;\r\n        if (nearMin && nearMin.idx == 0) return nearMax;\r\n        return state == STATE_FALL ? nearMin : nearMax;\r\n    }\r\n\r\n    return {\r\n        state: state,\r\n        maxList: mapInfos(minMaxInfo.max),\r\n        minList: mapInfos(minMaxInfo.min),\r\n        allList: mapInfos(minMaxInfo.all),\r\n        maxNearTime: maxNearTime,\r\n        minNearTime: minNearTime,\r\n        nearMax: nearMax,\r\n        nearMin: nearMin,\r\n        nearPeak: getOtherNearPeak()\r\n    };\r\n}\r\n\r\nconst ans = {\r\n    micro : genTrendInfo(true),\r\n    macro: genTrendInfo(false),\r\n    last:{\r\n        time:firstKey,\r\n        val:rMap[firstKey]\r\n    }\r\n}\r\n\r\nconsole.log(ans);\r\n\r\nans;"
+      } ]
+    } ],
+    "links" : [ ],
+    "vars" : { },
+    "taskSort" : [ "iyC5AMAccwQQ" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "DONE_${symbol}",
+      "failEnd" : false,
       "endResultKeys" : [ {
         "lv" : "not_specify",
-        "key" : "nearVal"
+        "key" : "ans"
       } ]
     }
   } ],

@@ -114,58 +114,6 @@
       } ]
     }, {
       "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "yNt02qu0X5B9",
-      "name" : "GetBinance1MinAmt",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "flowUid" : "9RLQvpmbGa35",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "tsdbQuery",
-        "val" : "import \"date\"\nt1 = from(bucket: \"quote\")\n  |> range(start: -8h)\n  |> filter(fn: (r) =>\n    r._measurement == \"realtime\" and\n    r.symbol == \"${symbol}\" and\n    r.trade == \"60s\" and\n    r._field == \"totalAmount\"\n  )\n  |> map(fn: (r) => ({ r with _time: date.truncate(t: r._time, unit: 10s)    }))\n  |> pivot(rowKey:[\"_time\"], columnKey: [\"side\"], valueColumn: \"_value\")\n  |> map(fn: (r) => ({ r with _value: r.sell + r.buy }))    \n  |> movingAverage(n: 10 )\nt1   "
-      }, {
-        "key" : "vaildMins",
-        "val" : "31"
-      }, {
-        "key" : "skipCount",
-        "val" : "0"
-      } ],
-      "outputReflects" : [ {
-        "srcKey" : "nearVal",
-        "toKey" : {
-          "lv" : "not_specify",
-          "key" : "amt"
-        }
-      } ]
-    }, {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "r8p9km417dpW",
-      "name" : "GetMA_15",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "flowUid" : "9RLQvpmbGa35",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "tsdbQuery",
-        "val" : "from(bucket: \"quote\")\n  |> range(start: -2h)\n  |> filter(fn: (r) =>\n    r._measurement == \"realtime\" and\n    r.symbol == \"${symbol}\" and\n    r._field == \"price\"\n  )\n  |> timedMovingAverage(every: 5m, period: 15m)"
-      }, {
-        "key" : "vaildMins",
-        "val" : "10"
-      }, {
-        "key" : "skipCount",
-        "val" : "1"
-      } ],
-      "outputReflects" : [ {
-        "srcKey" : "nearVal",
-        "toKey" : {
-          "lv" : "not_specify",
-          "key" : "ma15m"
-        }
-      } ]
-    }, {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
       "uid" : "VKgNyxHcz1m9",
       "name" : "OrderPost",
       "tryErrorble" : false,
@@ -191,15 +139,6 @@
       }, {
         "key" : "tags",
         "val" : "[\"shortTerm${side}\"]"
-      }, {
-        "key" : "triggerAmt",
-        "val" : "!javascript===\nconst ans=${amt.val};\nans;"
-      }, {
-        "key" : "rsi",
-        "val" : "0.3268"
-      }, {
-        "key" : "threshold",
-        "val" : "${ma15m.val} "
       } ],
       "outputReflects" : [ ]
     } ],
@@ -224,7 +163,7 @@
     "vars" : {
       "avgPeriod" : "30m"
     },
-    "taskSort" : [ "myTOlctOo6Go", "3HWWjqTzCaWp", "9GfPw52JOxuK", "smBt41EJmJ5i", "wqASBCKleyKx", "7SJXjrUlyRji", "yNt02qu0X5B9", "r8p9km417dpW", "VKgNyxHcz1m9" ],
+    "taskSort" : [ "myTOlctOo6Go", "3HWWjqTzCaWp", "9GfPw52JOxuK", "smBt41EJmJ5i", "wqASBCKleyKx", "7SJXjrUlyRji", "VKgNyxHcz1m9" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
