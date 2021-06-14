@@ -4,6 +4,128 @@
   "name" : "OrderBinance ",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "htivUO7YKtyD",
+    "name" : "Box",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "3upPLAHw95l6",
+      "name" : "GetPostionInfo",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "url" : "${binance.proxyHost}proxy",
+      "uriVariables" : { },
+      "body" : "{\r\n    \"name\":\"get_position\",\r\n    \"apiKey\": \"${binance.key}\",\r\n    \"secret\": \"${binance.secret}\",\r\n    \"symbol\": \"${symbol}\"\r\n}",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : "posInfo"
+      }
+    }, {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "OcPQy555y0Gn",
+      "name" : "cancel_by_filter",
+      "tryErrorble" : false,
+      "devBoxVars" : {
+        "symbol" : "EOS",
+        "posInfo" : [ {
+          "entryPrice" : 0,
+          "isAutoAddMargin" : true,
+          "leverage" : 75,
+          "maxNotionalValue" : 10000,
+          "liquidationPrice" : 0,
+          "markPrice" : 6.41487051,
+          "positionAmt" : 0,
+          "symbol" : "EOSUSDT",
+          "unrealizedProfit" : 0,
+          "marginType" : "cross",
+          "isolatedMargin" : 0,
+          "positionSide" : "BOTH"
+        }, {
+          "entryPrice" : 0,
+          "isAutoAddMargin" : true,
+          "leverage" : 75,
+          "maxNotionalValue" : 10000,
+          "liquidationPrice" : 0,
+          "markPrice" : 6.41487051,
+          "positionAmt" : 0,
+          "symbol" : "EOSUSDT",
+          "unrealizedProfit" : 0,
+          "marginType" : "cross",
+          "isolatedMargin" : 0,
+          "positionSide" : "LONG"
+        }, {
+          "entryPrice" : 6.662,
+          "isAutoAddMargin" : true,
+          "leverage" : 75,
+          "maxNotionalValue" : 10000,
+          "liquidationPrice" : 6.70970429,
+          "markPrice" : 6.41487051,
+          "positionAmt" : -110.5,
+          "symbol" : "EOSUSDT",
+          "unrealizedProfit" : 27.30780864,
+          "marginType" : "cross",
+          "isolatedMargin" : 0,
+          "positionSide" : "SHORT"
+        } ]
+      },
+      "devFlowVars" : { },
+      "url" : "${binance.proxyHost}proxy",
+      "uriVariables" : { },
+      "body" : "!javascript===\r\nconst payload= {\r\n  \"name\": \"cancel_by_filter\",\r\n  \"apiKey\": \"${binance.key}\",\r\n  \"secret\": \"${binance.secret}\",\r\n  \"symbol\": \"${symbol}\"\r\n};\r\n\r\nconst pinfolist = ${posInfo};\r\nlet amt = 0;\r\n\r\nfor (let p of pinfolist) {\r\n  amt += Math.abs(p.positionAmt);\r\n}\r\n\r\nif(amt>0){\r\n    payload['notOrderType']='STOP_MARKET';\r\n}\r\n\r\npayload;",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : "postResult"
+      }
+    }, {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "OcPQySOCy0Gn",
+      "name" : "PostOrder",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "url" : "${binance.proxyHost}proxy",
+      "uriVariables" : { },
+      "body" : "!javascript===\nconst side ='${side}';\n\nlet pd = {\n    \"symbol\": \"${symbol}\",\n    \"investedRate\": ${investedRate},\n    \"apiKey\": \"${binance.key}\",\n    \"secret\": \"${binance.secret}\",\n    \"selled\": side == 'SELL',\n    \"name\": \"post_order\",\n    \"guardRange\": ${guardRange},\n    \"currentMove\": ${currentMove},\n    \"tags\":[${tags}]\n};\npd;",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : "postResult"
+      }
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$MailAction",
+      "uid" : "fzgczwZFFaF2",
+      "name" : "NotifyMail",
+      "tryErrorble" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "smtpHost" : "\"smtp.gmail.com\"",
+      "smtpPort" : "465",
+      "username" : "${gmail.username}",
+      "password" : "${gmail.password}",
+      "toMail" : "a29243004@gmail.com",
+      "subject" : "Order CMC",
+      "body" : "    name=\"post_order\" \\n\\r\n    investedRate=${investedRate} \\n\\r\n    guardRange=${guardRange} \\n\\r\n    quote=${postResult.quantity} \\n\\r\n    symbol=\"${symbol}\" \\n\\r\n    selled=${selled} \\n\\r"
+    } ],
+    "links" : [ ],
+    "vars" : { },
+    "taskSort" : [ "OcPQySOCy0Gn", "fzgczwZFFaF2", "3upPLAHw95l6", "OcPQy555y0Gn" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "${symbol} ${side}",
+      "failEnd" : false,
+      "endResultKeys" : [ ]
+    }
+  }, {
+    "clazz" : "net.bzk.flow.model.Box",
     "uid" : "5ONyW8KpDZA0",
     "name" : "ToOrder",
     "actions" : [ {
@@ -126,128 +248,6 @@
       "failEnd" : false,
       "endResultKeys" : [ ]
     }
-  }, {
-    "clazz" : "net.bzk.flow.model.Box",
-    "uid" : "htivUO7YKtyD",
-    "name" : "Box",
-    "actions" : [ {
-      "clazz" : "net.bzk.flow.model.HttpAction",
-      "uid" : "3upPLAHw95l6",
-      "name" : "GetPostionInfo",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "url" : "${binance.proxyHost}proxy",
-      "uriVariables" : { },
-      "body" : "{\r\n    \"name\":\"get_position\",\r\n    \"apiKey\": \"${binance.key}\",\r\n    \"secret\": \"${binance.secret}\",\r\n    \"symbol\": \"${symbol}\"\r\n}",
-      "method" : "POST",
-      "headers" : { },
-      "headersFlat" : "",
-      "key" : {
-        "lv" : "not_specify",
-        "key" : "posInfo"
-      }
-    }, {
-      "clazz" : "net.bzk.flow.model.HttpAction",
-      "uid" : "OcPQy555y0Gn",
-      "name" : "cancel_by_filter",
-      "tryErrorble" : false,
-      "devBoxVars" : {
-        "symbol" : "EOS",
-        "posInfo" : [ {
-          "entryPrice" : 0,
-          "isAutoAddMargin" : true,
-          "leverage" : 75,
-          "maxNotionalValue" : 10000,
-          "liquidationPrice" : 0,
-          "markPrice" : 6.41487051,
-          "positionAmt" : 0,
-          "symbol" : "EOSUSDT",
-          "unrealizedProfit" : 0,
-          "marginType" : "cross",
-          "isolatedMargin" : 0,
-          "positionSide" : "BOTH"
-        }, {
-          "entryPrice" : 0,
-          "isAutoAddMargin" : true,
-          "leverage" : 75,
-          "maxNotionalValue" : 10000,
-          "liquidationPrice" : 0,
-          "markPrice" : 6.41487051,
-          "positionAmt" : 0,
-          "symbol" : "EOSUSDT",
-          "unrealizedProfit" : 0,
-          "marginType" : "cross",
-          "isolatedMargin" : 0,
-          "positionSide" : "LONG"
-        }, {
-          "entryPrice" : 6.662,
-          "isAutoAddMargin" : true,
-          "leverage" : 75,
-          "maxNotionalValue" : 10000,
-          "liquidationPrice" : 6.70970429,
-          "markPrice" : 6.41487051,
-          "positionAmt" : -110.5,
-          "symbol" : "EOSUSDT",
-          "unrealizedProfit" : 27.30780864,
-          "marginType" : "cross",
-          "isolatedMargin" : 0,
-          "positionSide" : "SHORT"
-        } ]
-      },
-      "devFlowVars" : { },
-      "url" : "${binance.proxyHost}proxy",
-      "uriVariables" : { },
-      "body" : "!javascript===\r\nconst payload= {\r\n  \"name\": \"cancel_by_filter\",\r\n  \"apiKey\": \"${binance.key}\",\r\n  \"secret\": \"${binance.secret}\",\r\n  \"symbol\": \"${symbol}\"\r\n};\r\n\r\nconst pinfolist = ${posInfo};\r\nlet amt = 0;\r\n\r\nfor (let p of pinfolist) {\r\n  amt += Math.abs(p.positionAmt);\r\n}\r\n\r\nif(amt>0){\r\n    payload['notOrderType']='STOP_MARKET';\r\n}\r\n\r\npayload;",
-      "method" : "POST",
-      "headers" : { },
-      "headersFlat" : "",
-      "key" : {
-        "lv" : "not_specify",
-        "key" : "postResult"
-      }
-    }, {
-      "clazz" : "net.bzk.flow.model.HttpAction",
-      "uid" : "OcPQySOCy0Gn",
-      "name" : "PostOrder",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "url" : "${binance.proxyHost}proxy",
-      "uriVariables" : { },
-      "body" : "!javascript===\nconst side ='${side}';\n\nlet pd = {\n    \"symbol\": \"${symbol}\",\n    \"investedRate\": ${investedRate},\n    \"apiKey\": \"${binance.key}\",\n    \"secret\": \"${binance.secret}\",\n    \"selled\": side == 'SELL',\n    \"name\": \"post_order\",\n    \"guardRange\": ${guardRange},\n    \"currentMove\": ${currentMove},\n    \"tags\":[${tags}]\n};\npd;",
-      "method" : "POST",
-      "headers" : { },
-      "headersFlat" : "",
-      "key" : {
-        "lv" : "not_specify",
-        "key" : "postResult"
-      }
-    }, {
-      "clazz" : "net.bzk.flow.model.Action$MailAction",
-      "uid" : "fzgczwZFFaF2",
-      "name" : "NotifyMail",
-      "tryErrorble" : true,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "smtpHost" : "\"smtp.gmail.com\"",
-      "smtpPort" : "465",
-      "username" : "${gmail.username}",
-      "password" : "${gmail.password}",
-      "toMail" : "a29243004@gmail.com",
-      "subject" : "Order CMC",
-      "body" : "    name=\"post_order\" \\n\\r\n    investedRate=${investedRate} \\n\\r\n    guardRange=${guardRange} \\n\\r\n    quote=${postResult.quantity} \\n\\r\n    symbol=\"${symbol}\" \\n\\r\n    selled=${selled} \\n\\r"
-    } ],
-    "links" : [ ],
-    "vars" : { },
-    "taskSort" : [ "OcPQySOCy0Gn", "fzgczwZFFaF2", "3upPLAHw95l6", "OcPQy555y0Gn" ],
-    "whileJudgment" : null,
-    "transition" : {
-      "toBox" : "",
-      "endTag" : "${symbol} ${side}",
-      "failEnd" : false,
-      "endResultKeys" : [ ]
-    }
   } ],
   "varCfgNames" : [ "binance.json", "mail.json", "fin-proxy.json" ],
   "vars" : {
@@ -258,12 +258,11 @@
     "guardRange" : 0.05
   },
   "entry" : {
-    "clazz" : "net.bzk.flow.model.Entry$FixedRateEntry",
+    "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
     "boxUid" : "5ONyW8KpDZA0",
     "autoRegister" : false,
-    "period" : 3,
-    "unit" : "HOURS",
-    "initialDelay" : 0
+    "requiredKeys" : [ "side", "symbol", "investedRate", "guardRange", "currentMove", "tags" ],
+    "outputKeys" : [ ]
   },
   "logEncryptKey" : "1234567890123456",
   "threadCfg" : {
