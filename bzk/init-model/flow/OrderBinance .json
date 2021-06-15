@@ -91,7 +91,7 @@
       "devFlowVars" : { },
       "url" : "${binance.proxyHost}proxy",
       "uriVariables" : { },
-      "body" : "!javascript===\nconst side ='${side}';\n\nlet pd = {\n    \"symbol\": \"${symbol}\",\n    \"investedRate\": ${investedRate},\n    \"apiKey\": \"${binance.key}\",\n    \"secret\": \"${binance.secret}\",\n    \"selled\": side == 'SELL',\n    \"name\": \"post_order\",\n    \"guardRange\": ${guardRange},\n    \"currentMove\": ${currentMove},\n    \"tags\":[${tags}]\n};\npd;",
+      "body" : "!javascript===\nconst side ='${side}';\n\nlet pd = {\n    \"symbol\": \"${symbol}\",\n    \"investedRate\": ${investedRate},\n    \"apiKey\": \"${binance.key}\",\n    \"secret\": \"${binance.secret}\",\n    \"selled\": side == 'SELL',\n    \"name\": \"post_order\",\n    \"guardRange\": ${guardRange},\n    \"currentMove\": ${currentMove},\n    \"tags\":${tags}\n};\npd;",
       "method" : "POST",
       "headers" : { },
       "headersFlat" : "",
