@@ -44,7 +44,7 @@
     "actions" : [ {
       "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
       "uid" : "tDr8UTOVkNiO",
-      "name" : "GetRiseOrFall",
+      "name" : "RiseOrFall",
       "tryErrorble" : false,
       "devBoxVars" : { },
       "devFlowVars" : { },
@@ -75,11 +75,14 @@
       "devBoxVars" : { },
       "devFlowVars" : { },
       "flatData" : [ {
+        "key" : "~velocityThWeight",
+        "val" : "!javascript===\nconst vb = ${volumeBias.val};\nconst curTH = ${velocityTH.val};\n\nfunction calc(){\n    let r = Math.pow(2,vb);\n    return curTH * r;\n}\ncalc();"
+      }, {
         "key" : "~rapidReboundRate",
         "val" : "!javascript===\n\nconst th = ${velocityTH.val};\nconst a = ${acceleration.val};\nconst ans = a/th;\nans;"
       }, {
         "key" : "side",
-        "val" : "!javascript===\nconst rrr = bzk.g('rapidReboundRate');\nconst th = ${velocityTH.val};\nconst lastv =  ${direction.last.val};\nconst macroState = '${direction.macro.state}';\nconst microState = '${direction.micro.state}';\n\n\nfunction clac(){\n    if(Math.abs( rrr)>=2) return rrr>0 ? 'BUY' : 'SELL';    \n    if(macroState!=microState) return 'NONE';\n    if(macroState == 'FALL' && lastv > th ) return 'SELL';\n    if(macroState == 'RISE' && lastv < -th ) return 'BUY';\n    return 'NONE';\n}\n\nclac();"
+        "val" : "!javascript===\nconst rrr = bzk.g('rapidReboundRate');\nconst th = bzk.g('velocityThWeight');\nconst lastv =  ${direction.last.val};\nconst macroState = '${direction.macro.state}';\nconst microState = '${direction.micro.state}';\n\nfunction clac(){\n    if(Math.abs( rrr)>=2) return rrr>0 ? 'BUY' : 'SELL';    \n    if(macroState!=microState) return 'NONE';\n    if(macroState == 'FALL' && lastv > th ) return 'SELL';\n    if(macroState == 'RISE' && lastv < -th ) return 'BUY';\n    return 'NONE';\n}\nclac();"
       } ]
     }, {
       "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
@@ -153,6 +156,32 @@
           "key" : "acceleration"
         }
       } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "toNo8ZA1DBhY",
+      "name" : "VolumeBias",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flowUid" : "9RLQvpmbGa35",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "tsdbQuery",
+        "val" : "import \"date\"\r\nimport \"math\"\r\n\r\navg12h = from(bucket: \"quote\")\r\n  |> range(start: -7d)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"realtime\" and\r\n    r.symbol == \"${symbol}\" and\r\n    (r._field == \"volume_24h\" or r._field == \"price\")\r\n  )\r\n  |> map(fn: (r) => ({ r with _time: date.truncate(t: r._time, unit: 5m)    }))\r\n  |> pivot(rowKey:[\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")\r\n  |> map(fn: (r) => ({ r with _value: r.volume_24h / r.price }))    \r\n  |> difference()\r\n  |>map(fn: (r) => ({ r with _value: math.abs(x: r._value)  }))   \r\n  |> mean()\r\n  |> findColumn(\r\n    fn: (key) => true,\r\n    column: \"_value\"\r\n  )  \r\n\r\n\r\nfrom(bucket: \"quote\")\r\n  |> range(start: -3h)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"realtime\" and\r\n    r.symbol == \"${symbol}\" and\r\n    (r._field == \"volume_24h\" or r._field == \"price\")\r\n  )\r\n  |> map(fn: (r) => ({ r with _time: date.truncate(t: r._time, unit: 5m)    }))\r\n  |> pivot(rowKey:[\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")\r\n  |> map(fn: (r) => ({ r with _value: r.volume_24h / r.price }))    \r\n  |> difference()\r\n  |> movingAverage(n: 24  )\r\n  |>map(fn: (r) => ({ r with _value: (r._value / avg12h[0])   }))   \r\n "
+      }, {
+        "key" : "vaildMins",
+        "val" : "10"
+      }, {
+        "key" : "skipCount",
+        "val" : "0"
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "nearVal",
+        "toKey" : {
+          "lv" : "run_flow",
+          "key" : "volumeBias"
+        }
+      } ]
     } ],
     "links" : [ {
       "clazz" : "net.bzk.flow.model.Link",
@@ -194,7 +223,7 @@
       }
     } ],
     "vars" : { },
-    "taskSort" : [ "KpH4PimCRDSe", "tDr8UTOVkNiO", "brDCdhwwdBqn", "LtgQk1mGlHfR", "tl455y47pObG", "BXX48Illzys2", "4VSz2lcQQNbT" ],
+    "taskSort" : [ "KpH4PimCRDSe", "tDr8UTOVkNiO", "toNo8ZA1DBhY", "brDCdhwwdBqn", "LtgQk1mGlHfR", "tl455y47pObG", "BXX48Illzys2", "4VSz2lcQQNbT" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
