@@ -123,10 +123,10 @@
       "asynced" : false,
       "inputData" : [ {
         "key" : "investedRate",
-        "val" : "!javascript===\nconst ans= 0.03668 * ${dpWeight};\nans;"
+        "val" : "!javascript===\nconst ans= 0.05 * ${dpWeight};\nans;"
       }, {
         "key" : "guardRange",
-        "val" : "!javascript===\n\nconst dpw = ${dpWeight};\nconst ans = 0.02 * Math.pow(dpw,-1.5);\nans;"
+        "val" : "!javascript===\n\nconst ans = 0.0268\nans;"
       }, {
         "key" : "symbol",
         "val" : "${symbol}"
