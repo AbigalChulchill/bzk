@@ -4,6 +4,130 @@
   "name" : "OrderBinance ",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "5ONyW8KpDZA0",
+    "name" : "ToOrder",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "Q9Ov6OSqN0n5",
+      "name" : "GetMA_15",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flowUid" : "9RLQvpmbGa35",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "tsdbQuery",
+        "val" : "from(bucket: \"quote\")\n  |> range(start: -2h)\n  |> filter(fn: (r) =>\n    r._measurement == \"realtime\" and\n    r.symbol == \"${symbol}\" and\n    r._field == \"price\"\n  )\n  |> timedMovingAverage(every: 5m, period: 15m)"
+      }, {
+        "key" : "vaildMins",
+        "val" : "10"
+      }, {
+        "key" : "skipCount",
+        "val" : "1"
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "nearVal",
+        "toKey" : {
+          "lv" : "not_specify",
+          "key" : "ma15m"
+        }
+      } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "N3uy8bAUKMM0",
+      "name" : "ListRecentOrders",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "url" : "${binance.proxyHost}proxy",
+      "uriVariables" : { },
+      "body" : "{\n  \"name\": \"get_recent_trades_list\",\n  \"apiKey\":\"${binance.key}\",\n  \"secret\":\"${binance.secret}\",\n  \"symbol\": \"${symbol}\",\n  \"side\": \"${side}\",\n  \"timeMaped\":true,\n  \"limit\":1000\n}",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : "recentOrders"
+      }
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "HORt3eoZKjII",
+      "name" : "CalcPeak",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flowUid" : "PeakFinder5",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "tsdbQuery",
+        "val" : "NONE"
+      }, {
+        "key" : "peakMaxWaitSeconds",
+        "val" : "3"
+      }, {
+        "key" : "symbol",
+        "val" : "${symbol}"
+      }, {
+        "key" : "timeValMap",
+        "val" : "!javascript===\nconst info = ${recentOrders};\nconst side = '${side}';\n\nfunction fetch(){\n    return side == 'BUY' ? info.buy.timeValMap :  info.sell.timeValMap;\n}\nfetch();"
+      }, {
+        "key" : "baseVal",
+        "val" : "${ma15m.val}"
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "ans",
+        "toKey" : {
+          "lv" : "run_flow",
+          "key" : "peakInfo"
+        }
+      } ]
+    } ],
+    "links" : [ {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "9CDUn4IFHhHD",
+      "name" : "BaseLine",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
+        "kind" : "NONE",
+        "next" : null,
+        "polyglot" : "js",
+        "code" : "const side ='${side}';\r\nconst baseLine = ${ma15m.val};\r\nconst lastv = ${peakInfo.last.val};\r\n\r\nfunction calc(){\r\n    return side == 'BUY' ? lastv >= baseLine : lastv <= baseLine;\r\n}\r\n\r\ncalc();"
+      },
+      "transition" : {
+        "toBox" : "",
+        "endTag" : "BaseBYE_${symbol} ${side}> B:${ma15m.val} L:${peakInfo.last.val}",
+        "failEnd" : false,
+        "endResultKeys" : [ ]
+      }
+    }, {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "5TnlNO0U4Npj",
+      "name" : "direction",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
+        "kind" : "NONE",
+        "next" : null,
+        "polyglot" : "js",
+        "code" : "const side ='${side}';\r\nconst microD = '${peakInfo.micro.state}';\r\nconst macroD = '${peakInfo.macro.state}';\r\n\r\nfunction calc(){\r\n    if(macroD != macroD) return true;\r\n    if (side == 'BUY' && microD == 'FALL') return true;\r\n    if (side == 'SELL' && microD == 'RISE') return true;\r\n    return false;\r\n}\r\n\r\ncalc();"
+      },
+      "transition" : {
+        "toBox" : "",
+        "endTag" : "d_bye ${symbol} ${side} > mi:${peakInfo.micro.state} ma: ${peakInfo.macro.state}",
+        "failEnd" : false,
+        "endResultKeys" : [ ]
+      }
+    } ],
+    "vars" : { },
+    "taskSort" : [ "Q9Ov6OSqN0n5", "N3uy8bAUKMM0", "HORt3eoZKjII", "9CDUn4IFHhHD", "5TnlNO0U4Npj" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "htivUO7YKtyD",
+      "endTag" : null,
+      "failEnd" : false,
+      "endResultKeys" : [ ]
+    }
+  }, {
+    "clazz" : "net.bzk.flow.model.Box",
     "uid" : "htivUO7YKtyD",
     "name" : "Box",
     "actions" : [ {
@@ -130,135 +254,11 @@
     } ],
     "links" : [ ],
     "vars" : { },
-    "taskSort" : [ "3H1IkGkleZp5", "OcPQySOCy0Gn", "fzgczwZFFaF2", "3upPLAHw95l6", "OcPQy555y0Gn" ],
+    "taskSort" : [ "3upPLAHw95l6", "OcPQy555y0Gn", "fzgczwZFFaF2", "3H1IkGkleZp5", "OcPQySOCy0Gn" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
       "endTag" : "${symbol} ${side}",
-      "failEnd" : false,
-      "endResultKeys" : [ ]
-    }
-  }, {
-    "clazz" : "net.bzk.flow.model.Box",
-    "uid" : "5ONyW8KpDZA0",
-    "name" : "ToOrder",
-    "actions" : [ {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "Q9Ov6OSqN0n5",
-      "name" : "GetMA_15",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "flowUid" : "9RLQvpmbGa35",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "tsdbQuery",
-        "val" : "from(bucket: \"quote\")\n  |> range(start: -2h)\n  |> filter(fn: (r) =>\n    r._measurement == \"realtime\" and\n    r.symbol == \"${symbol}\" and\n    r._field == \"price\"\n  )\n  |> timedMovingAverage(every: 5m, period: 15m)"
-      }, {
-        "key" : "vaildMins",
-        "val" : "10"
-      }, {
-        "key" : "skipCount",
-        "val" : "1"
-      } ],
-      "outputReflects" : [ {
-        "srcKey" : "nearVal",
-        "toKey" : {
-          "lv" : "not_specify",
-          "key" : "ma15m"
-        }
-      } ]
-    }, {
-      "clazz" : "net.bzk.flow.model.HttpAction",
-      "uid" : "N3uy8bAUKMM0",
-      "name" : "ListRecentOrders",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "url" : "${binance.proxyHost}proxy",
-      "uriVariables" : { },
-      "body" : "{\n  \"name\": \"get_recent_trades_list\",\n  \"apiKey\":\"${binance.key}\",\n  \"secret\":\"${binance.secret}\",\n  \"symbol\": \"${symbol}\",\n  \"side\": \"${side}\",\n  \"timeMaped\":true,\n  \"limit\":1000\n}",
-      "method" : "POST",
-      "headers" : { },
-      "headersFlat" : "",
-      "key" : {
-        "lv" : "not_specify",
-        "key" : "recentOrders"
-      }
-    }, {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "HORt3eoZKjII",
-      "name" : "CalcPeak",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "flowUid" : "PeakFinder5",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "tsdbQuery",
-        "val" : "NONE"
-      }, {
-        "key" : "peakMaxWaitSeconds",
-        "val" : "3"
-      }, {
-        "key" : "symbol",
-        "val" : "${symbol}"
-      }, {
-        "key" : "timeValMap",
-        "val" : "!javascript===\nconst info = ${recentOrders};\nconst side = '${side}';\n\nfunction fetch(){\n    return side == 'BUY' ? info.buy.timeValMap :  info.sell.timeValMap;\n}\nfetch();"
-      }, {
-        "key" : "baseVal",
-        "val" : "${ma15m.val}"
-      } ],
-      "outputReflects" : [ {
-        "srcKey" : "ans",
-        "toKey" : {
-          "lv" : "run_flow",
-          "key" : "peakInfo"
-        }
-      } ]
-    } ],
-    "links" : [ {
-      "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "9CDUn4IFHhHD",
-      "name" : "BaseLine",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
-        "kind" : "NONE",
-        "next" : null,
-        "polyglot" : "js",
-        "code" : "const side ='${side}';\r\nconst baseLine = ${ma15m.val};\r\nconst lastv = ${peakInfo.last.val};\r\n\r\nfunction calc(){\r\n    return side == 'BUY' ? lastv >= baseLine : lastv <= baseLine;\r\n}\r\n\r\ncalc();"
-      },
-      "transition" : {
-        "toBox" : "",
-        "endTag" : "BaseBYE_${symbol} ${side}> B:${ma15m.val} L:${peakInfo.last.val}",
-        "failEnd" : false,
-        "endResultKeys" : [ ]
-      }
-    }, {
-      "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "5TnlNO0U4Npj",
-      "name" : "direction",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
-        "kind" : "NONE",
-        "next" : null,
-        "polyglot" : "js",
-        "code" : "const side ='${side}';\r\nconst microD = '${peakInfo.micro.state}';\r\nconst macroD = '${peakInfo.macro.state}';\r\n\r\nfunction calc(){\r\n    if(macroD != macroD) return true;\r\n    if (side == 'BUY' && microD == 'FALL') return true;\r\n    if (side == 'SELL' && microD == 'RISE') return true;\r\n    return false;\r\n}\r\n\r\ncalc();"
-      },
-      "transition" : {
-        "toBox" : "",
-        "endTag" : "d_bye ${symbol} ${side} > mi:${peakInfo.micro.state} ma: ${peakInfo.macro.state}",
-        "failEnd" : false,
-        "endResultKeys" : [ ]
-      }
-    } ],
-    "vars" : { },
-    "taskSort" : [ "Q9Ov6OSqN0n5", "N3uy8bAUKMM0", "HORt3eoZKjII", "9CDUn4IFHhHD", "5TnlNO0U4Npj" ],
-    "whileJudgment" : null,
-    "transition" : {
-      "toBox" : "htivUO7YKtyD",
-      "endTag" : null,
       "failEnd" : false,
       "endResultKeys" : [ ]
     }
