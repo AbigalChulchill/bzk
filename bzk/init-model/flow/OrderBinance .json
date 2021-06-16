@@ -91,7 +91,7 @@
       "devFlowVars" : { },
       "url" : "${binance.proxyHost}proxy",
       "uriVariables" : { },
-      "body" : "!javascript===\nconst side ='${side}';\n\nlet pd = {\n    \"symbol\": \"${symbol}\",\n    \"investedRate\": ${investedRate},\n    \"apiKey\": \"${binance.key}\",\n    \"secret\": \"${binance.secret}\",\n    \"selled\": side == 'SELL',\n    \"name\": \"post_order\",\n    \"guardRange\": ${guardRange},\n    \"currentMove\": ${currentMove},\n    \"tags\":${tags}\n};\npd;",
+      "body" : "${body}",
       "method" : "POST",
       "headers" : { },
       "headersFlat" : "",
@@ -113,10 +113,24 @@
       "toMail" : "a29243004@gmail.com",
       "subject" : "Order CMC",
       "body" : "    name=\"post_order\" \\n\\r\n    investedRate=${investedRate} \\n\\r\n    guardRange=${guardRange} \\n\\r\n    quote=${postResult.quantity} \\n\\r\n    symbol=\"${symbol}\" \\n\\r\n    selled=${selled} \\n\\r"
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
+      "uid" : "3H1IkGkleZp5",
+      "name" : "GenBody",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flatData" : [ {
+        "key" : "body",
+        "val" : "!javascript===\nconst side ='${side}';\n\nlet pd = {\n    \"symbol\": \"${symbol}\",\n    \"investedRate\": ${investedRate},\n    \"apiKey\": \"${binance.key}\",\n    \"secret\": \"${binance.secret}\",\n    \"selled\": side == 'SELL',\n    \"name\": \"post_order\",\n    \"guardRange\": ${guardRange},\n    \"currentMove\": ${currentMove}\n};\npd;"
+      }, {
+        "key" : "body.tags",
+        "val" : "${tags}"
+      } ]
     } ],
     "links" : [ ],
     "vars" : { },
-    "taskSort" : [ "OcPQySOCy0Gn", "fzgczwZFFaF2", "3upPLAHw95l6", "OcPQy555y0Gn" ],
+    "taskSort" : [ "3H1IkGkleZp5", "OcPQySOCy0Gn", "fzgczwZFFaF2", "3upPLAHw95l6", "OcPQy555y0Gn" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
