@@ -69,6 +69,9 @@ export class JobsComponent implements OnInit, AfterViewInit {
     const t = this.loading.show();
     this.savedFlows = await this.jobClient.listAll();
     this.flowPoolInfos = await this.flowClient.listFlowPoolInfo().toPromise();
+    for (const sf of this.savedFlows) {
+      this.loadArchiveRunInfos(sf);
+    }
     this.reflesh(t);
 
 
@@ -78,7 +81,6 @@ export class JobsComponent implements OnInit, AfterViewInit {
     const vdata = new Array<Row>();
     for (const sf of this.savedFlows) {
       vdata.push(this.genRow(sf));
-      this.loadArchiveRunInfos(sf);
     }
     this.dataSource.data = vdata;
     this.loading.dismiss(t);
