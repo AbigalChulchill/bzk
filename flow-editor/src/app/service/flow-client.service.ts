@@ -50,6 +50,10 @@ export class FlowClientService {
     return this.httpClient.get<FlowPoolInfo>(environment.apiHost + FlowClientService.URL_PREFIX + uid);
   }
 
+  public listArchiveRunInfo(uid: string): Observable<Array<RunInfo>> {
+    return this.httpClient.get<Array<RunInfo>>(environment.apiHost + FlowClientService.URL_PREFIX + 'archive/runinfo/' + uid);
+  }
+
   public forceRemovePool(uid: string): Observable<void> {
     return this.httpClient.post<void>(environment.apiHost + FlowClientService.URL_PREFIX + 'pool/' + uid + '/remove?type=force', null);
   }

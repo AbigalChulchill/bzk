@@ -72,13 +72,18 @@ public class RunFlowService implements ApplicationListener<InitFlowEvent> {
 	}
 
 	public List<FlowPoolInfo> listFlowPoolInfo() {
-		return runPoolDao.listPools().stream().map(p -> new FlowPoolInfo(p.getModel(), p.listRunInfos()))
+		return runPoolDao.listPools().stream().map(p -> new FlowPoolInfo(p.getModel(), p.listRunInfos(false)))
 				.collect(Collectors.toList());
 	}
 
+	public List<RunInfo> listArchiveRunInfo(String uid) {
+		var p = runPoolDao.getPool(uid);
+		return p.listArchiveRunInfo();
+	}
+	
 	public FlowPoolInfo getFlowPoolInfo(String uid) {
 		var p = runPoolDao.getPool(uid);
-		return new FlowPoolInfo(p.getModel(), p.listRunInfos());
+		return new FlowPoolInfo(p.getModel(), p.listRunInfos(true));
 	}
 
 	public void forceRemove(String fuid) {

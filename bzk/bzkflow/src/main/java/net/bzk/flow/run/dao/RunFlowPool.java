@@ -63,11 +63,11 @@ public class RunFlowPool {
 	}
 
 	public FlowRuner create() {
-		FlowRuner ans = runFlowDao.create(model,r-> onEndFlowRuner(r));
+		FlowRuner ans = runFlowDao.create(model, r -> onEndFlowRuner(r));
 		map.put(ans.getInfo().getUid(), ans);
 		return ans;
 	}
-	
+
 	private void onEndFlowRuner(FlowRuner r) {
 		var info = r.getInfo();
 		ArchiveRun ar = new ArchiveRun();
@@ -91,11 +91,17 @@ public class RunFlowPool {
 		entryer.schedule(() -> createAndStart());
 	}
 
-	public List<RunInfo> listRunInfos() {
-		List<RunInfo> ans= map.values().stream().map(FlowRuner::getInfo).collect(Collectors.toList());
-		var arList= archiveRunDao.findByFlowUid(model.getUid());
-		arList.forEach(e-> ans.add(e.getInfo()));
+	public List<RunInfo> listRunInfos(boolean includeArchive) {
+		List<RunInfo> ans = map.values().stream().map(FlowRuner::getInfo).collect(Collectors.toList());
+		if (includeArchive) {
+			ans.addAll(listArchiveRunInfo());
+		}
 		return ans;
+	}
+
+	public List<RunInfo> listArchiveRunInfo() {
+		return archiveRunDao.findByFlowUid(model.getUid()).stream().map(ar -> ar.getInfo())
+				.collect(Collectors.toList());
 	}
 
 	public void forceCancelAll() {
