@@ -251,10 +251,27 @@
         "key" : "body.tags",
         "val" : "${tags}"
       } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "iD0dtfzuxhXl",
+      "name" : "RecordTSDB",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "url" : "${finProxyUrl}/proxy/tsdb/insert/multiple",
+      "uriVariables" : { },
+      "body" : "!javascript===\n\nconst sbl = '${symbol}';\nconst side = '${side}';\nconst postResult = ${postResult};\nconst  now = new Date();\nconst nowiso = now.toISOString();\n\nlet ans = [];\n\nfunction genPointDto(fd,v){\n  const row = {\n      measurement : 'order-measurement',\n      tags:{\n        \"symbol\" : sbl,        \n        \"category\":'cryptocurrency',\n        \"source\":'binance',\n        \"side\":side,\n      },\n      field: fd,\n      val:v,\n      time :nowiso\n  };\n  return row;\n}\n\nans.push(genPointDto('price',postResult.price));\nans.push(genPointDto('stopPrice',postResult.stopPrice));\nans.push(genPointDto('quantity',postResult.quantity));\n\nans;",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "{}",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : "tsdbPosted"
+      }
     } ],
     "links" : [ ],
     "vars" : { },
-    "taskSort" : [ "3upPLAHw95l6", "OcPQy555y0Gn", "fzgczwZFFaF2", "3H1IkGkleZp5", "OcPQySOCy0Gn" ],
+    "taskSort" : [ "3upPLAHw95l6", "OcPQy555y0Gn", "fzgczwZFFaF2", "3H1IkGkleZp5", "OcPQySOCy0Gn", "iD0dtfzuxhXl" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
