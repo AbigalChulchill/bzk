@@ -71,6 +71,13 @@ public class FlowController {
 	public FlowPoolInfo getPoolInfo(@PathVariable String uid) {
 		return runFlowService.getFlowPoolInfo(uid);
 	}
+	
+	@ResponseStatus(HttpStatus.OK)
+	@ResponseBody
+	@RequestMapping(value = "archive/runinfo/{uid}", method = RequestMethod.GET)
+	public List<RunInfo> listArchiveRunInfo(@PathVariable String uid) {
+		return runFlowService.listArchiveRunInfo(uid);
+	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
