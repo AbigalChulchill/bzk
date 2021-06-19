@@ -132,7 +132,7 @@
       },
       "transition" : {
         "toBox" : "",
-        "endTag" : "TH_${symbol} : ${th.val} ${direction.last.val}",
+        "endTag" : "TH_${symbol} ${side} : ${th.val} ${direction.last.val}",
         "failEnd" : false,
         "endResultKeys" : [ ]
       }
@@ -151,14 +151,16 @@
   } ],
   "varCfgNames" : [ ],
   "vars" : {
+    "symbol" : "BTC",
     "side" : "BUY"
   },
   "entry" : {
-    "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
+    "clazz" : "net.bzk.flow.model.Entry$FixedRateEntry",
     "boxUid" : "X9XRPTTIQJIQ",
     "autoRegister" : false,
-    "requiredKeys" : [ "symbol", "side", "guardRate" ],
-    "outputKeys" : [ ]
+    "period" : 3,
+    "unit" : "HOURS",
+    "initialDelay" : 0
   },
   "logEncryptKey" : "1234567890123456",
   "threadCfg" : {
