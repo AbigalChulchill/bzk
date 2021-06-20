@@ -73,7 +73,7 @@ public class MailActionCall extends ActionCall<MailAction> {
 			Multipart mp = new MimeMultipart();
 			MimeBodyPart mbp = new MimeBodyPart();
 
-			// 設定郵件內容的型態為 text/html
+
 			mbp.setContent(text, "text/html;charset=UTF-8");
 			mp.addBodyPart(mbp);
 			message.setContent(mp);

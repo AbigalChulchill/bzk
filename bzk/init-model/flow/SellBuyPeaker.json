@@ -86,7 +86,7 @@
       "asynced" : false,
       "inputData" : [ {
         "key" : "tsdbQuery",
-        "val" : "from(bucket: \"quote\")\r\n  |> range(start: -4h)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"realtime\" and\r\n    r._field == \"price\" and\r\n    r.symbol == \"${symbol}\" \r\n  )\r\n  |> map(fn: (r) => ({ r with cp: r._value   }))\r\n  |>movingAverage(n: 12)\r\n  |> map(fn: (r) => ({ r with _value: (r.cp-r._value)/r._value   }))\r\n  |> map(fn: (r) => ({ r with _value: if ${thLineCondition} then r._value else 0.00 }))\r\n  |>movingAverage(n: 30)\r\n  |> map(fn: (r) => ({ r with _value: r._value*2.00 }))"
+        "val" : "from(bucket: \"quote\")\r\n  |> range(start: -6h)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"realtime\" and\r\n    r._field == \"price\" and\r\n    r.symbol == \"${symbol}\" \r\n  )\r\n  |> map(fn: (r) => ({ r with cp: r._value   }))\r\n  |>movingAverage(n: 12)\r\n  |> map(fn: (r) => ({ r with _value: (r.cp-r._value)/r._value   }))\r\n  |> map(fn: (r) => ({ r with _value: if ${thLineCondition} then r._value else 0.00 }))\r\n  |>movingAverage(n: 30)"
       }, {
         "key" : "vaildMins",
         "val" : "11"
