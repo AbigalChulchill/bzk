@@ -195,7 +195,7 @@
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
-      "endTag" : "BUY_${acceleration.val}_${direction.last.val}_${direction.macro.state}",
+      "endTag" : "BUY ${symbol} ${acceleration.val}_${direction.last.val}_${direction.macro.state}",
       "failEnd" : false,
       "endResultKeys" : [ ]
     }
@@ -230,7 +230,7 @@
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
-      "endTag" : "SELL_${acceleration.val}_${direction.last.val}_${direction.macro.state}",
+      "endTag" : "SELL ${symbol}  ${acceleration.val}_${direction.last.val}_${direction.macro.state}",
       "failEnd" : false,
       "endResultKeys" : [ ]
     }
