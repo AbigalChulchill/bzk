@@ -155,12 +155,11 @@
     "side" : "BUY"
   },
   "entry" : {
-    "clazz" : "net.bzk.flow.model.Entry$FixedRateEntry",
+    "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
     "boxUid" : "X9XRPTTIQJIQ",
     "autoRegister" : false,
-    "period" : 3,
-    "unit" : "HOURS",
-    "initialDelay" : 0
+    "requiredKeys" : [ "side", "symbol", "guardRate" ],
+    "outputKeys" : [ ]
   },
   "logEncryptKey" : "1234567890123456",
   "threadCfg" : {
