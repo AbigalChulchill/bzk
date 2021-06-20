@@ -43,7 +43,7 @@
       "asynced" : false,
       "inputData" : [ {
         "key" : "tsdbQuery",
-        "val" : "  from(bucket: \"quote\")\n  |> range(start: -7d)\n  |> filter(fn: (r) =>\n    r._measurement == \"realtime\" and\n    r.symbol == \"${symbol}\" and\n    r._field == \"price\"\n  )\n  |> difference()\n  |> movingAverage(n: 288  )\n  |> movingAverage(n: 12  )\n\n"
+        "val" : "  from(bucket: \"quote\")\n  |> range(start: -5d)\n  |> filter(fn: (r) =>\n    r._measurement == \"realtime\" and\n    r.symbol == \"${symbol}\" and\n    r._field == \"price\"\n  )\n  |> difference()\n  |> movingAverage(n: 288  )\n  |> movingAverage(n: 12  )\n\n"
       }, {
         "key" : "peakMaxWaitSeconds",
         "val" : "3600"
