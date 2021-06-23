@@ -23,7 +23,7 @@ import net.bzk.flow.Constant;
 import net.bzk.flow.model.Action;
 import net.bzk.flow.model.Box;
 import net.bzk.flow.model.Condition;
-import net.bzk.flow.model.ConvertInfra.VarValList;
+import net.bzk.flow.dto.ConvertInfra.VarValList;
 import net.bzk.flow.model.Link;
 import net.bzk.flow.model.RunLog.RunState;
 import net.bzk.flow.model.Transition;

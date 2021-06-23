@@ -35,7 +35,14 @@ public class Entry implements OType {
 		
 		private List<String> requiredKeys;
 		private List<String> outputKeys;
-		
+	}
+
+	@Data
+	@EqualsAndHashCode(callSuper = false)
+	public static class EventEntry extends Entry{
+
+		private Condition condition;
+
 	}
 
 }

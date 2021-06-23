@@ -5,7 +5,6 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
@@ -18,11 +17,10 @@ import javax.persistence.Table;
 import lombok.Data;
 import net.bzk.auth.model.CreateUpdateDate;
 import net.bzk.auth.service.CommService;
-import net.bzk.flow.model.ConvertInfra.VarMapConvert;
-import net.bzk.flow.model.ConvertInfra.VarValList;
-import net.bzk.flow.model.ConvertInfra.VarValListConvert;
+import net.bzk.flow.dto.ConvertInfra.VarMapConvert;
+import net.bzk.flow.dto.ConvertInfra.VarValList;
+import net.bzk.flow.dto.ConvertInfra.VarValListConvert;
 import net.bzk.flow.model.var.VarMap;
-import net.bzk.flow.run.action.ActionCall.Uids;
 
 @SuppressWarnings("serial")
 @Data

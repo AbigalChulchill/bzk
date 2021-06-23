@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -50,13 +51,17 @@ public class BzkFlowUtils {
 	}
 
 	public static String replaceText(FastVarQueryer varQueryer, String aJson) {
+		return replaceText(k-> varQueryer.f(k).orElse(null),aJson);
+
+	}
+
+	public static String replaceText(Function<String,Object> f, String aJson) {
 		List<String> keys = PlaceholderUtils.listStringSubstitutorKeys(aJson);
 		if (keys.size() == 0)
 			return null;
 		StrPlacer sp = PlaceholderUtils.build(aJson);
 		for (String k : keys) {
-			Optional<Object> fo = varQueryer.f(k);
-			String jo = JsonUtils.valueToString(fo.orElse(null));
+			String jo = JsonUtils.valueToString(f.apply(k));
 			sp.place(k, StringEscapeUtils.escapeJson(jo));
 		}
 		String rJson = sp.replace();
