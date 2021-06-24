@@ -27,10 +27,7 @@ public class Transition {
 
 	@JsonIgnore
 	public String setupEndTag(FastVarQueryer varQueryer) {
-		String tag = BzkFlowUtils.replaceText(varQueryer, endTag);
-		if (StringUtils.isNotBlank(tag)) {
-			endTag = tag;
-		}
+		endTag = BzkFlowUtils.replaceTextNotNull(varQueryer, endTag);
 		return endTag;
 	}
 

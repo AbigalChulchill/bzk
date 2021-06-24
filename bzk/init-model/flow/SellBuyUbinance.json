@@ -174,11 +174,12 @@
       "uid" : "HS57eKRpsKot",
       "name" : "BUY_Check",
       "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
+        "clazz" : "net.bzk.flow.model.Condition$ConditionTxt",
         "kind" : "NONE",
         "next" : null,
-        "left" : "0",
-        "right" : "0",
+        "left" : "${side}",
+        "right" : "BUY",
+        "not" : false,
         "type" : "equal"
       },
       "transition" : {
@@ -193,7 +194,7 @@
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
-      "endTag" : "BYE ${symbol}  A: ${acceleration.val} L:${direction.last.val} D:${direction.macro.state} T:${velocityThWeight}",
+      "endTag" : "BYE ${symbol}  ${side}",
       "failEnd" : false,
       "endResultKeys" : [ ]
     }
