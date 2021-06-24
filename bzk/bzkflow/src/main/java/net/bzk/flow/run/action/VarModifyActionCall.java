@@ -43,9 +43,6 @@ public class VarModifyActionCall extends ActionCall<VarModifyAction> {
 		String code = e.getVal();
 		Object o = getPolyglotEngine().parseScriptbleText(code, Object.class);
 		logUtils.logActionCall( getUids(), "o:"+ o);
-		if(o.equals("BUY_TH_BYE")){
-			System.out.println(o);
-		}
 		ans.setVal(o);
 		varService.putVarVal(getUids(), ans);
 		return ans;
