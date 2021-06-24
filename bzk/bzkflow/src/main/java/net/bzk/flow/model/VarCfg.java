@@ -13,7 +13,7 @@ import javax.persistence.Table;
 import lombok.Data;
 import net.bzk.auth.model.CreateUpdateDate;
 import net.bzk.auth.service.CommService;
-import net.bzk.flow.model.ConvertInfra.VarMapConvert;
+import net.bzk.flow.dto.ConvertInfra.VarMapConvert;
 import net.bzk.flow.model.var.VarMap;
 
 @SuppressWarnings("serial")

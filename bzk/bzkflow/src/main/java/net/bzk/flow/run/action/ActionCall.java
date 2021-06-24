@@ -11,10 +11,9 @@ import org.graalvm.polyglot.Value;
 
 import lombok.Data;
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 import net.bzk.flow.BzkFlowUtils;
 import net.bzk.flow.Constant;
-import net.bzk.flow.PolyglotEngine;
+import net.bzk.flow.infra.PolyglotEngine;
 import net.bzk.flow.model.Action;
 import net.bzk.flow.model.RunLog.RunState;
 import net.bzk.flow.model.var.VarLv;
@@ -52,7 +51,7 @@ public abstract class ActionCall<T extends Action> implements Callable<VarValSet
 		uids.actionUid = a.getUid();
 		uids.runActionUid = RandomStringUtils.randomAlphanumeric(Constant.RUN_UID_SIZE);
 		varQueryer.init(_uids);
-		polyglotEngine = PolyglotEngine.builder().logUtils(logUtils).varQueryer(varQueryer).build();
+		polyglotEngine = PolyglotEngine.FlowPolyglotEngine.builder().logUtils(logUtils).varQueryer(varQueryer).build();
 		model = replaceModel(a);
 		logUtils.log(uids, RunState.ModelReplaced, l -> {
 			l.setMsg(JsonUtils.toJson(model));

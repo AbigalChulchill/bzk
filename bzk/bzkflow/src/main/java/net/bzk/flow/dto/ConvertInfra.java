@@ -1,4 +1,4 @@
-package net.bzk.flow.model;
+package net.bzk.flow.dto;
 
 import java.util.ArrayList;
 import java.util.Collection;
