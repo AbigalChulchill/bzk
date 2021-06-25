@@ -28,10 +28,10 @@
       "asynced" : false,
       "inputData" : [ {
         "key" : "investedRate",
-        "val" : "!javascript===\nconst ans= 0.05 ;\nans;"
+        "val" : "!javascript===\nconst ans= ${investedRate} ;\nans;"
       }, {
         "key" : "guardRange",
-        "val" : "!javascript===\nconst ans = 0.02868\nans;"
+        "val" : "!javascript===\nconst ans = ${guardRate}\nans;"
       }, {
         "key" : "symbol",
         "val" : "${symbol}"
@@ -57,7 +57,7 @@
       "asynced" : false,
       "inputData" : [ {
         "key" : "tsdbQuery",
-        "val" : "from(bucket: \"quote\")\r\n  |> range(start: -12h)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"realtime\" and\r\n    r._field == \"price\" and\r\n    r.symbol == \"${symbol}\" \r\n  )\r\n  |> map(fn: (r) => ({ r with cp: r._value   }))\r\n  |>movingAverage(n: 12)\r\n  |> map(fn: (r) => ({ r with _value: (r.cp-r._value)/r._value   }))"
+        "val" : "from(bucket: \"quote\")\r\n  |> range(start: -12h)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"realtime\" and\r\n    r._field == \"price\" and\r\n    r.symbol == \"${symbol}\" \r\n  )\r\n  |> map(fn: (r) => ({ r with cp: r._value   }))\r\n  |>movingAverage(n: ${periodN})\r\n  |> map(fn: (r) => ({ r with _value: (r.cp-r._value)/r._value   }))"
       }, {
         "key" : "peakMaxWaitSeconds",
         "val" : "!javascript===\nconst ans = 21*60;\nans;"
@@ -86,7 +86,7 @@
       "asynced" : false,
       "inputData" : [ {
         "key" : "tsdbQuery",
-        "val" : "from(bucket: \"quote\")\r\n  |> range(start: -6h)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"realtime\" and\r\n    r._field == \"price\" and\r\n    r.symbol == \"${symbol}\" \r\n  )\r\n  |> map(fn: (r) => ({ r with cp: r._value   }))\r\n  |>movingAverage(n: 12)\r\n  |> map(fn: (r) => ({ r with _value: (r.cp-r._value)/r._value   }))\r\n  |> map(fn: (r) => ({ r with _value: if ${thLineCondition} then r._value else 0.00 }))\r\n  |>movingAverage(n: 30)"
+        "val" : "from(bucket: \"quote\")\r\n  |> range(start: -6h)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"realtime\" and\r\n    r._field == \"price\" and\r\n    r.symbol == \"${symbol}\" \r\n  )\r\n  |> map(fn: (r) => ({ r with cp: r._value   }))\r\n  |>movingAverage(n: ${periodN})\r\n  |> map(fn: (r) => ({ r with _value: (r.cp-r._value)/r._value   }))\r\n  |> map(fn: (r) => ({ r with _value: if ${thLineCondition} then r._value else 0.00 }))\r\n  |>movingAverage(n: ${periodN})\r\n  |> map(fn: (r) => ({ r with _value: r._value*${thRate} }))"
       }, {
         "key" : "vaildMins",
         "val" : "11"
@@ -136,11 +136,29 @@
         "failEnd" : false,
         "endResultKeys" : [ ]
       }
+    }, {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "zoj7cYA8G4zB",
+      "name" : "CheckTHRange",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
+        "kind" : "NONE",
+        "next" : null,
+        "left" : "!javascript===\nlet th = ${th.val};\nlet absth = Math.abs(th);\nabsth;\n",
+        "right" : "${thth}",
+        "type" : "lessthan"
+      },
+      "transition" : {
+        "toBox" : "",
+        "endTag" : " thth: ${thth}  th: ${th.val}",
+        "failEnd" : false,
+        "endResultKeys" : [ ]
+      }
     } ],
     "vars" : {
       "avgPeriod" : "30m"
     },
-    "taskSort" : [ "myTOlctOo6Go", "x2sNttDa4erM", "BNyujdRoVPR6", "Q02zQxrdbatv", "7SJXjrUlyRji", "VKgNyxHcz1m9" ],
+    "taskSort" : [ "myTOlctOo6Go", "x2sNttDa4erM", "BNyujdRoVPR6", "Q02zQxrdbatv", "7SJXjrUlyRji", "zoj7cYA8G4zB", "VKgNyxHcz1m9" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
@@ -152,13 +170,16 @@
   "varCfgNames" : [ ],
   "vars" : {
     "symbol" : "BTC",
-    "side" : "BUY"
+    "side" : "BUY",
+    "periodN" : 12,
+    "thRate" : "1.00",
+    "thth" : 0
   },
   "entry" : {
     "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
     "boxUid" : "X9XRPTTIQJIQ",
     "autoRegister" : false,
-    "requiredKeys" : [ "side", "symbol", "guardRate" ],
+    "requiredKeys" : [ "side", "symbol", "guardRate", "thRate", "periodN", "investedRate", "thth" ],
     "outputKeys" : [ ]
   },
   "logEncryptKey" : "1234567890123456",

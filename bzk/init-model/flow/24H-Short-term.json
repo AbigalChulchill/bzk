@@ -1,0 +1,101 @@
+{
+  "clazz" : "net.bzk.flow.model.Flow",
+  "uid" : "xmApa6XymPPy",
+  "name" : "24H-Short-term",
+  "boxs" : [ {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "zvXIPNk3Yybr",
+    "name" : "Box",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "e9lYbqNlhXtu",
+      "name" : "BUY",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flowUid" : "kCmTvvaxfIBr",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "side",
+        "val" : "BUY"
+      }, {
+        "key" : "symbol",
+        "val" : "${symbol}"
+      }, {
+        "key" : "guardRate",
+        "val" : "0.00686"
+      }, {
+        "key" : "thRate",
+        "val" : "\"2.00\""
+      }, {
+        "key" : "periodN",
+        "val" : "12"
+      }, {
+        "key" : "investedRate",
+        "val" : "0.01"
+      }, {
+        "key" : "thth",
+        "val" : "0.00668"
+      } ],
+      "outputReflects" : [ ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "WCd0u2SmWA5h",
+      "name" : "SELL",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flowUid" : "kCmTvvaxfIBr",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "side",
+        "val" : "SELL"
+      }, {
+        "key" : "symbol",
+        "val" : "${symbol}"
+      }, {
+        "key" : "guardRate",
+        "val" : "0.00686"
+      }, {
+        "key" : "thRate",
+        "val" : "\"2.00\""
+      }, {
+        "key" : "periodN",
+        "val" : "12"
+      }, {
+        "key" : "investedRate",
+        "val" : "0.01"
+      }, {
+        "key" : "thth",
+        "val" : "0.00666"
+      } ],
+      "outputReflects" : [ ]
+    } ],
+    "links" : [ ],
+    "vars" : { },
+    "taskSort" : [ "e9lYbqNlhXtu", "WCd0u2SmWA5h" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "TODO Why",
+      "failEnd" : false,
+      "endResultKeys" : [ ]
+    }
+  } ],
+  "varCfgNames" : [ ],
+  "vars" : { },
+  "entry" : {
+    "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
+    "boxUid" : "zvXIPNk3Yybr",
+    "autoRegister" : false,
+    "requiredKeys" : [ "symbol" ],
+    "outputKeys" : [ ]
+  },
+  "logEncryptKey" : "1234567890123456",
+  "threadCfg" : {
+    "corePoolSize" : 10,
+    "maximumPoolSize" : 50,
+    "keepAliveTime" : 500,
+    "aliveUnit" : "MINUTES"
+  }
+}

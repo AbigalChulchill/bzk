@@ -219,7 +219,10 @@
         "val" : "BUY"
       }, {
         "key" : "guardRate",
-        "val" : "0"
+        "val" : "0.0268"
+      }, {
+        "key" : "investedRate",
+        "val" : "0.1"
       } ],
       "outputReflects" : [ ]
     } ],
@@ -254,7 +257,10 @@
         "val" : "SELL"
       }, {
         "key" : "guardRate",
-        "val" : "0"
+        "val" : "0.0268"
+      }, {
+        "key" : "investedRate",
+        "val" : "0.1"
       } ],
       "outputReflects" : [ ]
     } ],
