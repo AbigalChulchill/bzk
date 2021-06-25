@@ -60,12 +60,18 @@
     "symbols" : [ "BCH", "BNB", "BTC", "EOS", "ETC", "ETH", "LTC", "XRP" ]
   },
   "entry" : {
-    "clazz" : "net.bzk.flow.model.Entry$FixedRateEntry",
+    "clazz" : "net.bzk.flow.model.Entry$EventEntry",
     "boxUid" : "SlINz2lOTApz",
     "autoRegister" : false,
-    "period" : 200,
-    "unit" : "SECONDS",
-    "initialDelay" : 0
+    "condition" : {
+      "clazz" : "net.bzk.flow.model.Condition$ConditionTxt",
+      "kind" : "NONE",
+      "next" : null,
+      "left" : "${data}",
+      "right" : "CurrentCMCQuote",
+      "not" : false,
+      "type" : "equal"
+    }
   },
   "logEncryptKey" : "1234567890123456",
   "threadCfg" : {
