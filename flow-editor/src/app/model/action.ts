@@ -480,3 +480,15 @@ export class SysAction extends Action {
   })
   public data ='{}';
 }
+
+
+@OTypeClass({
+  clazz: 'net.bzk.flow.model.Action$EventAction'
+})
+export class EventAction extends Action {
+  @PropInfo({
+    title: 'data',
+    type: PropType.MultipleText,
+  })
+  public data ='{}';
+}

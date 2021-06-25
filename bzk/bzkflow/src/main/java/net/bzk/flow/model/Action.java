@@ -149,6 +149,12 @@ public class Action extends BzkObj {
 		private String func;
 		private String data;
 	}
+
+	@Data
+	@EqualsAndHashCode(callSuper = false)
+	public static class EventAction extends Action {
+		private String data;
+	}
 	
 	
 

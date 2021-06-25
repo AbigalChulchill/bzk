@@ -1,5 +1,7 @@
 package net.bzk.flow.dto;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import net.bzk.flow.run.action.ActionCall.Uids;
 import net.bzk.infrastructure.obj.JsonMap;
@@ -16,6 +18,7 @@ public class FlowRunEvent extends ApplicationEvent {
     }
 
     @Data
+    @AllArgsConstructor(access = AccessLevel.PUBLIC)
     public static class EventData {
         private Uids uids;
         private Object data;
