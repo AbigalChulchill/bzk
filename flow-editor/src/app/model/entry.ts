@@ -3,6 +3,8 @@ import { ChronoUnit } from './enums';
 import { OTypeClass } from '../utils/bzk-utils';
 import { PropClazz, PropEnums, PropInfo, PropType } from '../utils/prop-utils';
 import { OType } from './bzk-obj';
+import { Condition, ConditionTxt } from './condition';
+import { Type } from 'class-transformer';
 
 
 export class Entry extends OType {
@@ -77,3 +79,21 @@ export class PluginEntry extends Entry {
 }
 
 
+@OTypeClass({
+  clazz: 'net.bzk.flow.model.Entry$EventEntry'
+})
+@PropClazz({
+  title: 'EventEntry'
+})
+export class EventEntry extends Entry {
+
+  @PropInfo({
+    title: 'condition',
+    type: PropType.Custom,
+    customView: 'ConditionComponent',
+    customViewFolded: true
+  })
+  @Type(() => Condition)
+  public condition: Condition = new ConditionTxt() ;
+
+}
