@@ -76,7 +76,7 @@
         "val" : "!javascript===\n\nconst th = ${velocityTH.val};\nconst a = ${acceleration.val};\nconst ans = a/th;\nans;"
       }, {
         "key" : "side",
-        "val" : "!javascript===\nconst rrr = bzk.g('rapidReboundRate');\nconst th = bzk.g('velocityThWeight');\nconst lastv =  ${direction.last.val};\nconst macroState = '${direction.macro.state}';\nconst microState = '${direction.micro.state}';\n\nfunction clac(){\n    if(Math.abs( rrr)>=2) return rrr>0 ? 'BUY' : 'SELL';    \n    if(macroState!=microState) return 'STATE_NOT_EQ';\n    if(macroState == 'FALL'  ){\n        if(lastv > th['SELL']){\n             return 'SELL';\n        }\n        return 'SELL_TH_BYE';\n    }\n    if(macroState == 'RISE'  ){\n        if(lastv < th['BUY']){\n            return 'BUY';\n        }\n        return 'BUY_TH_BYE';\n    }\n    throw new Error('no support check');\n}\nclac();"
+        "val" : "!javascript===\nconst rrr = bzk.g('rapidReboundRate');\nconst th = bzk.g('velocityThWeight');\nconst lastv =  ${direction.last.val};\nconst macroState = '${direction.macro.state}';\nconst microState = '${direction.micro.state}';\n\nfunction clac(){\n    if(Math.abs( rrr)>=2) return rrr>0 ? 'BUY' : 'SELL';    \n    //if(macroState!=microState) return 'STATE_NOT_EQ';\n    if(macroState == 'FALL'  ){\n        if(lastv > th['SELL']){\n             return 'SELL';\n        }\n        return 'SELL_TH_BYE';\n    }\n    if(macroState == 'RISE'  ){\n        if(lastv < th['BUY']){\n            return 'BUY';\n        }\n        return 'BUY_TH_BYE';\n    }\n    throw new Error('no support check');\n}\nclac();"
       } ]
     }, {
       "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
