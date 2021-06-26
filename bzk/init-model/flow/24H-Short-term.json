@@ -29,13 +29,13 @@
         "val" : "\"2.00\""
       }, {
         "key" : "periodN",
-        "val" : "12"
+        "val" : "\"12\""
       }, {
         "key" : "investedRate",
         "val" : "0.01"
       }, {
         "key" : "thth",
-        "val" : "0.00668"
+        "val" : "0.003"
       } ],
       "outputReflects" : [ ]
     }, {
@@ -61,13 +61,13 @@
         "val" : "\"2.00\""
       }, {
         "key" : "periodN",
-        "val" : "12"
+        "val" : "\"12\""
       }, {
         "key" : "investedRate",
         "val" : "0.01"
       }, {
         "key" : "thth",
-        "val" : "0.00666"
+        "val" : "0.003"
       } ],
       "outputReflects" : [ ]
     } ],
