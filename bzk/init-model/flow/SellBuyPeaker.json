@@ -111,7 +111,7 @@
         "kind" : "NONE",
         "next" : null,
         "polyglot" : "js",
-        "code" : "const side = '${side}';\r\nconst macroState = '${direction.macro.state}';\r\nconst microState = '${direction.micro.state}';\r\n\r\nfunction check(){\r\n    if(macroState!=microState) return true;\r\n    if(side == 'SELL') return macroState == 'RISE'\r\n    if(side == 'BUY') return macroState == 'FALL'\r\n    throw new Error('Whoops! side:'+side);\r\n}\r\ncheck();"
+        "code" : "const side = '${side}';\r\nconst macroState = '${direction.macro.state}';\r\nconst microState = '${direction.micro.state}';\r\n\r\nfunction check(){\r\n\r\n    if(side == 'SELL') return macroState == 'RISE'\r\n    if(side == 'BUY') return macroState == 'FALL'\r\n    throw new Error('Whoops! side:'+side);\r\n}\r\ncheck();"
       },
       "transition" : {
         "toBox" : "",

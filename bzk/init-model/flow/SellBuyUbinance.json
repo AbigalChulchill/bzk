@@ -223,6 +223,9 @@
       }, {
         "key" : "investedRate",
         "val" : "0.1"
+      }, {
+        "key" : "thth",
+        "val" : "0.003"
       } ],
       "outputReflects" : [ ]
     } ],
@@ -261,6 +264,9 @@
       }, {
         "key" : "investedRate",
         "val" : "0.1"
+      }, {
+        "key" : "thth",
+        "val" : "0.003"
       } ],
       "outputReflects" : [ ]
     } ],
