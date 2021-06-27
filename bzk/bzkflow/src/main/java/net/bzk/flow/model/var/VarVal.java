@@ -1,8 +1,13 @@
 package net.bzk.flow.model.var;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
+@NoArgsConstructor
 public class VarVal {
 
 	private VarLv lv;
@@ -42,5 +47,7 @@ public class VarVal {
 		result = prime * result + ((val == null) ? 0 : val.hashCode());
 		return result;
 	}
+
+
 
 }

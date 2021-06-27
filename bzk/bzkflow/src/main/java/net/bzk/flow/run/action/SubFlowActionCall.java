@@ -6,6 +6,7 @@ import java.util.concurrent.ExecutorService;
 
 import javax.inject.Inject;
 
+import net.bzk.flow.Constant;
 import net.bzk.flow.run.flow.FlowRuner;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -57,9 +58,10 @@ public class SubFlowActionCall extends ActionCall<SubFlowAction> {
         }
 
         fr.run();
+        String endTag = getEndTag(fr.getInfo());
         if (fr.getInfo().getState() == State.Fail) {
             logUtils.logActionCall(getUids(), "getState is Fail");
-            throw new BzkRuntimeException(getFailEndTag(fr.getInfo()));
+            throw new BzkRuntimeException(endTag);
         }
         List<VarVal> ers = fr.getInfo().getEndResult();
         VarValSet ans = new VarValSet();
@@ -69,16 +71,24 @@ public class SubFlowActionCall extends ActionCall<SubFlowAction> {
             if (vkro.isEmpty())
                 continue;
             VarKeyReflect vkr = vkro.get();
-            VarVal nvv = new VarVal();
-            nvv.setKey(vkr.getToKey().getKey());
-            nvv.setLv(vkr.getToKey().getLv());
-            nvv.setVal(vv.getVal());
-            ans.add(nvv);
+            addVarVal(ans, vkr.getToKey().getLv(), vkr.getToKey().getKey(), vv.getVal());
         }
+        addVarVal(ans, VarLv.run_box, Constant.subStateKey(fr.getModel().getName()), fr.getInfo().getState());
+        addVarVal(ans, VarLv.run_box, Constant.subTagKey(fr.getModel().getName()), endTag);
+
+
         return ans;
     }
 
-    private String getFailEndTag(FlowRuner.RunInfo ri) {
+    private void addVarVal(VarValSet ans, VarLv l, String k, Object v) {
+        VarVal nvv = new VarVal();
+        nvv.setKey(k);
+        nvv.setLv(l);
+        nvv.setVal(v);
+        ans.add(nvv);
+    }
+
+    private String getEndTag(FlowRuner.RunInfo ri) {
         if (ri.getTransition() == null) return StringUtils.EMPTY;
         if (ri.getTransition().getEndTag() == null) return StringUtils.EMPTY;
         return ri.getTransition().getEndTag();
