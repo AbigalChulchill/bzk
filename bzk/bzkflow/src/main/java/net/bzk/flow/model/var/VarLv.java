@@ -7,20 +7,23 @@ import lombok.NoArgsConstructor;
 
 public enum VarLv {
 	
-	not_specify,run_flow,run_box;
+	not_specify,run_flow,run_box,run_sys;
 	
-	public static final String PRFIX_BOX = "@";
-	public static final String PRFIX_FLOW = "~";
-	public static final String PRFIX_NOT_SPECIFTY = "$";
+	public static final String PREFIX_BOX = "@";
+	public static final String PREFIX_FLOW = "~";
+	public static final String PREFIX_SYS = "%";
+	public static final String PREFIX_NOT_SPECIFY = "$";
 	
 	
 	public static VarKey checkLvByPrefix(String fqe) {
-		if (fqe.startsWith(PRFIX_BOX))
-			return new VarKey(VarLv.run_box, fqe.replace(PRFIX_BOX, ""));
-		if (fqe.startsWith(PRFIX_FLOW))
-			return new VarKey(VarLv.run_flow, fqe.replace(PRFIX_FLOW, ""));
-		if (fqe.startsWith(PRFIX_NOT_SPECIFTY))
-			return new VarKey(VarLv.not_specify, fqe.replace(PRFIX_NOT_SPECIFTY, ""));
+		if (fqe.startsWith(PREFIX_BOX))
+			return new VarKey(VarLv.run_box, fqe.replace(PREFIX_BOX, ""));
+		if (fqe.startsWith(PREFIX_FLOW))
+			return new VarKey(VarLv.run_flow, fqe.replace(PREFIX_FLOW, ""));
+		if (fqe.startsWith(PREFIX_SYS))
+			return new VarKey(VarLv.run_sys, fqe.replace(PREFIX_FLOW, ""));
+		if (fqe.startsWith(PREFIX_NOT_SPECIFY))
+			return new VarKey(VarLv.not_specify, fqe.replace(PREFIX_NOT_SPECIFY, ""));
 		return new VarKey(VarLv.not_specify, fqe);
 	}
 	

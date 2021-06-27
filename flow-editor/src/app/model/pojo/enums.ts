@@ -5,12 +5,14 @@ export class VarLvF {
       case VarLv.not_specify: return '$';
       case VarLv.run_box: return '!';
       case VarLv.run_flow: return '~';
+      case VarLv.run_sys: return '%';
     }
   }
 
   public static checkByPrefix(s: string, def: VarLv = null): VarLv {
     if (s.startsWith(this.getPrefix(VarLv.run_box))) { return VarLv.run_box; }
     if (s.startsWith(this.getPrefix(VarLv.run_flow))) { return VarLv.run_flow; }
+    if (s.startsWith(this.getPrefix(VarLv.run_sys))) { return VarLv.run_sys; }
     if (s.startsWith(this.getPrefix(VarLv.not_specify))) { return VarLv.not_specify; }
     return def;
   }
@@ -40,7 +42,7 @@ export enum Polyglot {
 }
 
 export enum VarLv {
-  not_specify = 'not_specify', run_flow = 'run_flow', run_box = 'run_box'
+  not_specify = 'not_specify', run_flow = 'run_flow', run_box = 'run_box', run_sys = 'run_sys'
 }
 
 export enum ConvertMethod {

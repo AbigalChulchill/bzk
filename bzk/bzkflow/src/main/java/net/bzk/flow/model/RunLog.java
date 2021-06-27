@@ -56,6 +56,9 @@ public class RunLog implements Serializable, CreateUpdateDate {
 	@Column(nullable = true, columnDefinition = "TEXT")
 	@Convert(converter = VarMapConvert.class)
 	private VarMap boxVar;
+	@Column(nullable = true, columnDefinition = "TEXT")
+	@Convert(converter = VarMapConvert.class)
+	private VarMap sysVar;
 	private String boxName;
 	@Enumerated(EnumType.STRING)
 	private RunState state;

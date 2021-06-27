@@ -23,7 +23,7 @@ public class PlaceholderUtils {
 	}
 
 	public static List<String> listPlaceHolderKeys(String txt, String start, String end) {
-		return listPlaceHolderKeys(txt,start,end,"[\\w . ! ~ $ _ -]");
+		return listPlaceHolderKeys(txt,start,end,"[\\w . ! ~ $ % _ -]");
 	}
 	
 	public static List<String> listPlaceHolderKeys(String txt, String start, String end,String content) {
