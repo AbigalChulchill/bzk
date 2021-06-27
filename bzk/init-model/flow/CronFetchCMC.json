@@ -1,1 +1,98 @@
-{"clazz":"net.bzk.flow.model.Flow","uid":"WD9C43w3dAL2","name":"CronFetchCMC","boxs":[{"clazz":"net.bzk.flow.model.Box","uid":"ajyASBWbeZV6","name":"Box","actions":[{"clazz":"net.bzk.flow.model.HttpAction","uid":"Jj7CsxrbKdSm","name":"RequestToFinProxy","tryErrorble":false,"devBoxVars":{},"devFlowVars":{},"url":"${finProxyUrl}/proxy/save/CMC/util_now","uriVariables":{},"body":"{}","method":"POST","headers":{},"headersFlat":"{}","key":{"lv":"not_specify","key":""}}],"links":[],"vars":{},"taskSort":["Jj7CsxrbKdSm"],"whileJudgment":null,"transition":{"toBox":"","endTag":"DONE","failEnd":false,"endResultKeys":[]}}],"varCfgNames":["fin-proxy.json"],"vars":{},"entry":{"clazz":"net.bzk.flow.model.Entry$FixedRateEntry","boxUid":"ajyASBWbeZV6","autoRegister":true,"period":24,"unit":"HOURS","initialDelay":0},"logEncryptKey":"1234567890123456","threadCfg":{"corePoolSize":10,"maximumPoolSize":50,"keepAliveTime":500,"aliveUnit":"MINUTES"}}
+{
+  "clazz" : "net.bzk.flow.model.Flow",
+  "uid" : "WD9C43w3dAL2",
+  "name" : "CronFetchCMC",
+  "boxs" : [ {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "ajyASBWbeZV6",
+    "name" : "Box",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "Jj7CsxrbKdSm",
+      "name" : "RequestToFinProxy",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "url" : "${finProxyUrl}/proxy/save/CMC/util_now/sync",
+      "uriVariables" : { },
+      "body" : "{}",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "{}",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : ""
+      }
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$EventAction",
+      "uid" : "THy7T41cesZH",
+      "name" : "Event",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "data" : "CronFetchCMC"
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "KdQbAEyNSg3F",
+      "name" : "BiasAvg",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flowUid" : "PeakFinder5",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "tsdbQuery",
+        "val" : "TODO"
+      }, {
+        "key" : "peakMaxWaitSeconds",
+        "val" : "TODO"
+      }, {
+        "key" : "symbol",
+        "val" : "TODO"
+      }, {
+        "key" : "timeValMap",
+        "val" : "TODO"
+      }, {
+        "key" : "baseVal",
+        "val" : "TODO"
+      }, {
+        "key" : "macroAmplitudeRate",
+        "val" : "TODO"
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "ans",
+        "toKey" : {
+          "lv" : "not_specify",
+          "key" : ""
+        }
+      } ]
+    } ],
+    "links" : [ ],
+    "vars" : { },
+    "taskSort" : [ "Jj7CsxrbKdSm", "THy7T41cesZH", "KdQbAEyNSg3F" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "DONE",
+      "failEnd" : false,
+      "endResultKeys" : [ ]
+    }
+  } ],
+  "varCfgNames" : [ "fin-proxy.json" ],
+  "vars" : { },
+  "entry" : {
+    "clazz" : "net.bzk.flow.model.Entry$FixedRateEntry",
+    "boxUid" : "ajyASBWbeZV6",
+    "autoRegister" : true,
+    "period" : 24,
+    "unit" : "HOURS",
+    "initialDelay" : 0
+  },
+  "logEncryptKey" : "1234567890123456",
+  "threadCfg" : {
+    "corePoolSize" : 10,
+    "maximumPoolSize" : 50,
+    "keepAliveTime" : 500,
+    "aliveUnit" : "MINUTES"
+  }
+}
