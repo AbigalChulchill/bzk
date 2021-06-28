@@ -1,121 +1,145 @@
 {
-  "clazz" : "net.bzk.flow.model.Flow",
-  "uid" : "nEz73RShrgYl",
-  "name" : "TakeProfit",
-  "boxs" : [ {
-    "clazz" : "net.bzk.flow.model.Box",
-    "uid" : "Bcb74l8xn8Vp",
-    "name" : "Box",
-    "actions" : [ {
-      "clazz" : "net.bzk.flow.model.HttpAction",
-      "uid" : "SeLyuTfm6Sj5",
-      "name" : "PostAPIBuy",
-      "tryErrorble" : true,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "url" : "${binance.proxyHost}proxy",
-      "uriVariables" : { },
-      "body" : "{\n    \"name\": \"profit/cut\",\n    \"apiKey\":\"${binance.key}\",\n    \"secret\":\"${binance.secret}\",\n    \"profitRate\": 0.1086,\n    \"topRate\": 0.866,\n    \"bottomRate\":-0.00868,\n    \"cutCount\": 3,\n    \"stepMoveOnRate\":0.001,\n    \"symbol\":\"${curSBL.symbol}\",\n    \"positionSide\":\"LONG\"\n}",
-      "method" : "POST",
-      "headers" : { },
-      "headersFlat" : "",
-      "key" : {
-        "lv" : "not_specify",
-        "key" : ""
+  "clazz": "net.bzk.flow.model.Flow",
+  "uid": "nEz73RShrgYl",
+  "logEncryptKey": "1234567890123456",
+  "vars": {
+    "symbols": [
+      {
+        "symbol": "BTC",
+        "finName": "bitcoin"
+      },
+      {
+        "symbol": "BCH",
+        "finName": "Bitcoin Cash"
+      },
+      {
+        "symbol": "ETH",
+        "finName": "ethereum"
+      },
+      {
+        "symbol": "ETC",
+        "finName": "Ethereum Classic"
+      },
+      {
+        "symbol": "LTC",
+        "finName": "Litecoin"
+      },
+      {
+        "symbol": "XRP",
+        "finName": "XRP"
+      },
+      {
+        "symbol": "EOS",
+        "finName": "EOS"
+      },
+      {
+        "symbol": "BNB",
+        "finName": "Binance Coin"
       }
-    }, {
-      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
-      "uid" : "MchPyIhpKH9G",
-      "name" : "LoopIdx",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "flatData" : [ {
-        "key" : "curSBL",
-        "val" : "!javascript===\nconst sbs = ${symbols};\nconst idx = ${symbolIdx};\nconst sb = sbs[idx];\nsb;"
-      }, {
-        "key" : "symbolIdx",
-        "val" : "!javascript===\n${symbolIdx}+1;"
-      } ]
-    }, {
-      "clazz" : "net.bzk.flow.model.HttpAction",
-      "uid" : "GxsPPJaDxutP",
-      "name" : "PostAPISell",
-      "tryErrorble" : true,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "url" : "${binance.proxyHost}proxy",
-      "uriVariables" : { },
-      "body" : "{\n    \"name\": \"profit/cut\",\n    \"apiKey\":\"${binance.key}\",\n    \"secret\":\"${binance.secret}\",\n    \"profitRate\": 0.1086,\n    \"topRate\": 0.866,\n    \"bottomRate\":-0.00868,\n    \"cutCount\": 3,\n    \"stepMoveOnRate\":0.001,\n    \"symbol\":\"${curSBL.symbol}\",\n    \"positionSide\":\"SHORT\"\n}",
-      "method" : "POST",
-      "headers" : { },
-      "headersFlat" : "",
-      "key" : {
-        "lv" : "not_specify",
-        "key" : ""
+    ]
+  },
+  "varCfgNames": [
+    "binance.json"
+  ],
+  "threadCfg": {
+    "corePoolSize": 10,
+    "maximumPoolSize": 50,
+    "keepAliveTime": 500,
+    "aliveUnit": "MINUTES"
+  },
+  "name": "TakeProfit",
+  "boxs": [
+    {
+      "clazz": "net.bzk.flow.model.Box",
+      "uid": "Bcb74l8xn8Vp",
+      "name": "Box",
+      "actions": [
+        {
+          "clazz": "net.bzk.flow.model.HttpAction",
+          "uid": "SeLyuTfm6Sj5",
+          "name": "PostAPIBuy",
+          "tryErrorble": true,
+          "devBoxVars": {},
+          "devFlowVars": {},
+          "url": "${binance.proxyHost}proxy",
+          "method": "POST",
+          "uriVariables": {},
+          "body": "{\n    \"name\": \"profit/cut\",\n    \"apiKey\":\"${binance.key}\",\n    \"secret\":\"${binance.secret}\",\n    \"profitRate\": 0.0686,\n    \"topRate\": 0.866,\n    \"bottomRate\":-0.00868,\n    \"cutCount\": 3,\n    \"stepMoveOnRate\":0.001,\n    \"symbol\":\"${curSBL.symbol}\",\n    \"positionSide\":\"LONG\"\n}",
+          "headers": {},
+          "headersFlat": "",
+          "key": {
+            "lv": "not_specify",
+            "key": ""
+          }
+        },
+        {
+          "clazz": "net.bzk.flow.model.Action$VarModifyAction",
+          "uid": "MchPyIhpKH9G",
+          "name": "LoopIdx",
+          "tryErrorble": false,
+          "devBoxVars": {},
+          "devFlowVars": {},
+          "flatData": [
+            {
+              "key": "curSBL",
+              "val": "!javascript===\nconst sbs = ${symbols};\nconst idx = ${symbolIdx};\nconst sb = sbs[idx];\nsb;"
+            },
+            {
+              "key": "symbolIdx",
+              "val": "!javascript===\n${symbolIdx}+1;"
+            }
+          ]
+        },
+        {
+          "clazz": "net.bzk.flow.model.HttpAction",
+          "uid": "GxsPPJaDxutP",
+          "name": "PostAPISell",
+          "tryErrorble": true,
+          "devBoxVars": {},
+          "devFlowVars": {},
+          "url": "${binance.proxyHost}proxy",
+          "method": "POST",
+          "uriVariables": {},
+          "body": "{\n    \"name\": \"profit/cut\",\n    \"apiKey\":\"${binance.key}\",\n    \"secret\":\"${binance.secret}\",\n    \"profitRate\": 0.0686,\n    \"topRate\": 0.866,\n    \"bottomRate\":-0.00868,\n    \"cutCount\": 3,\n    \"stepMoveOnRate\":0.001,\n    \"symbol\":\"${curSBL.symbol}\",\n    \"positionSide\":\"SHORT\"\n}",
+          "headers": {},
+          "headersFlat": "",
+          "key": {
+            "lv": "not_specify",
+            "key": ""
+          }
+        }
+      ],
+      "links": [],
+      "vars": {
+        "symbolIdx": 0
+      },
+      "taskSort": [
+        "MchPyIhpKH9G",
+        "SeLyuTfm6Sj5",
+        "GxsPPJaDxutP"
+      ],
+      "transition": {
+        "toBox": "",
+        "failEnd": false,
+        "endTag": "DONE",
+        "endResultKeys": []
+      },
+      "whileJudgment": {
+        "clazz": "net.bzk.flow.model.Condition$ConditionNum",
+        "kind": "NONE",
+        "left": "${symbolIdx}",
+        "right": "!javascript===\nconst sbs = ${symbols};\nconst len= sbs.length;\nlen;",
+        "type": "lessthan",
+        "next": null
       }
-    } ],
-    "links" : [ ],
-    "vars" : {
-      "symbolIdx" : 0
-    },
-    "taskSort" : [ "MchPyIhpKH9G", "SeLyuTfm6Sj5", "GxsPPJaDxutP" ],
-    "whileJudgment" : {
-      "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
-      "kind" : "NONE",
-      "next" : null,
-      "left" : "${symbolIdx}",
-      "right" : "!javascript===\nconst sbs = ${symbols};\nconst len= sbs.length;\nlen;",
-      "type" : "lessthan"
-    },
-    "transition" : {
-      "toBox" : "",
-      "endTag" : "DONE",
-      "failEnd" : false,
-      "endResultKeys" : [ ]
     }
-  } ],
-  "varCfgNames" : [ "binance.json" ],
-  "vars" : {
-    "symbols" : [ {
-      "symbol" : "BTC",
-      "finName" : "bitcoin"
-    }, {
-      "symbol" : "BCH",
-      "finName" : "Bitcoin Cash"
-    }, {
-      "symbol" : "ETH",
-      "finName" : "ethereum"
-    }, {
-      "symbol" : "ETC",
-      "finName" : "Ethereum Classic"
-    }, {
-      "symbol" : "LTC",
-      "finName" : "Litecoin"
-    }, {
-      "symbol" : "XRP",
-      "finName" : "XRP"
-    }, {
-      "symbol" : "EOS",
-      "finName" : "EOS"
-    }, {
-      "symbol" : "BNB",
-      "finName" : "Binance Coin"
-    } ]
-  },
-  "entry" : {
-    "clazz" : "net.bzk.flow.model.Entry$FixedRateEntry",
-    "boxUid" : "Bcb74l8xn8Vp",
-    "autoRegister" : true,
-    "period" : 3,
-    "unit" : "MINUTES",
-    "initialDelay" : 0
-  },
-  "logEncryptKey" : "1234567890123456",
-  "threadCfg" : {
-    "corePoolSize" : 10,
-    "maximumPoolSize" : 50,
-    "keepAliveTime" : 500,
-    "aliveUnit" : "MINUTES"
+  ],
+  "entry": {
+    "clazz": "net.bzk.flow.model.Entry$FixedRateEntry",
+    "autoRegister": true,
+    "period": 200,
+    "unit": "SECONDS",
+    "initialDelay": 0,
+    "boxUid": "Bcb74l8xn8Vp"
   }
 }
