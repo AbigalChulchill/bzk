@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import javax.inject.Inject;
 
+import net.bzk.flow.run.dao.SysVarDao;
 import org.springframework.stereotype.Service;
 
 import lombok.Getter;
@@ -20,42 +21,43 @@ import net.bzk.infrastructure.obj.JsonMap;
 @Service
 public class RunVarService {
 
-	@Getter
-	@Inject
-	private RunBoxDao boxDao;
-	@Getter
-	@Inject
-	private RunFlowDao flowDao;
+    @Getter
+    @Inject
+    private RunBoxDao boxDao;
+    @Getter
+    @Inject
+    private RunFlowDao flowDao;
+    @Inject
+    private SysVarDao sysVarDao;
 
-	public Optional<Object> findByQuery(DtoVarQuery q) {
-		VarLv p = q.getPoint();
-		return findValVal(q.getUids(), p, q.getKey());
-	}
-	
+    public Optional<Object> findByQuery(DtoVarQuery q) {
+        VarLv p = q.getPoint();
+        return findValVal(q.getUids(), p, q.getKey());
+    }
 
 
-	private ProcVars genProcVars(Uids uids) {
-		return new ProcVars(flowDao.getVarMapByUid(uids.getRunFlowUid()), boxDao.getVarMapByUid(uids.getRunBoxUid()));
-	}
-	
-	public JsonMap getFlowVar(Uids uids) {
-		return flowDao.getVarMapByUid(uids.getRunFlowUid());
-	}
+    private ProcVars genProcVars(Uids uids) {
+        return new ProcVars(sysVarDao, flowDao.getVarMapByUid(uids.getRunFlowUid()), boxDao.getVarMapByUid(uids.getRunBoxUid()));
+    }
 
-	public Optional<Object> findValVal(Uids uids, VarLv p, String key) {
-		return genProcVars(uids).find(p, key);
-	}
+    public JsonMap getFlowVar(Uids uids) {
+        return flowDao.getVarMapByUid(uids.getRunFlowUid());
+    }
 
-	public void putVarVal(Uids uids, VarVal val) {
-		ProcVars pv = genProcVars(uids);
-		pv.put(val.getLv(), val.getKey(), val.getVal());
-	}
+    public Optional<Object> findValVal(Uids uids, VarLv p, String key) {
+        return genProcVars(uids).find(p, key);
+    }
 
-	public void putVarVals(Uids uids, VarValSet vvs) {
-		for (VarVal vv : vvs.list()) {
-			putVarVal(uids, vv);
-		}
-	}
+    public void putVarVal(Uids uids, VarVal val) {
+        ProcVars pv = genProcVars(uids);
+        pv.put(val.getLv(), val.getKey(), val.getVal());
+    }
+
+    public void putVarVals(Uids uids, VarValSet vvs) {
+        for (VarVal vv : vvs.list()) {
+            putVarVal(uids, vv);
+        }
+    }
 
 
 }

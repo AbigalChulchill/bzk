@@ -103,7 +103,7 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
 	}
 
 	/**
-	 * @param exp {@link https://github.com/json-path/JsonPath}
+	 * @param exp {@link "https://github.com/json-path/JsonPath"}
 	 * @return
 	 */
 	public Object findByJsonPath(String exp) {

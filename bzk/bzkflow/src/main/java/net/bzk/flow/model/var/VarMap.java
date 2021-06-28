@@ -24,12 +24,17 @@ public class VarMap extends JsonMap {
 	@Data
 	@AllArgsConstructor(access = AccessLevel.PUBLIC)
 	public static class ProcVars {
+		private JsonMap sys;
 		private VarMap flow;
 		private VarMap box;
 
+
 		public Optional<Object> find(VarLv lv, String key) {
+			Object so = sys.getByPath(key);
 			Object fo = flow.getByPath(key);
 			Object bo = box.getByPath(key);
+			if (lv == VarLv.run_sys)
+				return Optional.ofNullable(so);
 			if (lv == VarLv.run_flow)
 				return Optional.ofNullable(fo);
 			if (lv == VarLv.run_box)
@@ -44,6 +49,10 @@ public class VarMap extends JsonMap {
 		}
 
 		public void put(VarLv lv, String key, Object o) {
+			if (lv == VarLv.run_sys) {
+				sys.putByPath(key, o);
+				return;
+			}
 			if (lv == VarLv.run_flow) {
 				flow.putByPath(key, o);
 				return;
