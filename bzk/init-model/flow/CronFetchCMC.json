@@ -31,45 +31,10 @@
       "devBoxVars" : { },
       "devFlowVars" : { },
       "data" : "CronFetchCMC"
-    }, {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "KdQbAEyNSg3F",
-      "name" : "BiasAvg",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "flowUid" : "PeakFinder5",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "tsdbQuery",
-        "val" : "TODO"
-      }, {
-        "key" : "peakMaxWaitSeconds",
-        "val" : "TODO"
-      }, {
-        "key" : "symbol",
-        "val" : "TODO"
-      }, {
-        "key" : "timeValMap",
-        "val" : "TODO"
-      }, {
-        "key" : "baseVal",
-        "val" : "TODO"
-      }, {
-        "key" : "macroAmplitudeRate",
-        "val" : "TODO"
-      } ],
-      "outputReflects" : [ {
-        "srcKey" : "ans",
-        "toKey" : {
-          "lv" : "not_specify",
-          "key" : ""
-        }
-      } ]
     } ],
     "links" : [ ],
     "vars" : { },
-    "taskSort" : [ "Jj7CsxrbKdSm", "THy7T41cesZH", "KdQbAEyNSg3F" ],
+    "taskSort" : [ "Jj7CsxrbKdSm", "THy7T41cesZH" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
