@@ -23,7 +23,7 @@
         "val" : "${symbol}"
       }, {
         "key" : "guardRate",
-        "val" : "0.00686"
+        "val" : "0.015"
       }, {
         "key" : "thRate",
         "val" : "\"2.00\""
@@ -32,7 +32,7 @@
         "val" : "\"12\""
       }, {
         "key" : "investedRate",
-        "val" : "0.01"
+        "val" : "0.03"
       }, {
         "key" : "thth",
         "val" : "0.003"
@@ -55,7 +55,7 @@
         "val" : "${symbol}"
       }, {
         "key" : "guardRate",
-        "val" : "0.00686"
+        "val" : "0.015"
       }, {
         "key" : "thRate",
         "val" : "\"2.00\""
@@ -64,7 +64,7 @@
         "val" : "\"12\""
       }, {
         "key" : "investedRate",
-        "val" : "0.01"
+        "val" : "0.03"
       }, {
         "key" : "thth",
         "val" : "0.003"
