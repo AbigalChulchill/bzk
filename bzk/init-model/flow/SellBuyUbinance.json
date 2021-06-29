@@ -4,6 +4,88 @@
   "name" : "SellBuyUbinance",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "YOqDrvPxxCiK",
+    "name" : "BUY",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "U9DwmbucQ94V",
+      "name" : "BuyOrder",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flowUid" : "kCmTvvaxfIBr",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "symbol",
+        "val" : "${symbol}"
+      }, {
+        "key" : "side",
+        "val" : "BUY"
+      }, {
+        "key" : "guardRate",
+        "val" : "0.0268"
+      }, {
+        "key" : "investedRate",
+        "val" : "0.1"
+      }, {
+        "key" : "thth",
+        "val" : "0.003"
+      } ],
+      "outputReflects" : [ ]
+    } ],
+    "links" : [ ],
+    "vars" : { },
+    "taskSort" : [ "U9DwmbucQ94V" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "O BUY ${symbol}  ${acceleration.val}_${direction.last.val}_${direction.macro.state}",
+      "failEnd" : false,
+      "endResultKeys" : [ ]
+    }
+  }, {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "Hoh5CNTFiFDi",
+    "name" : "SELL",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "gsxIHdLoOV2I",
+      "name" : "SellOrder",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flowUid" : "kCmTvvaxfIBr",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "symbol",
+        "val" : "${symbol}"
+      }, {
+        "key" : "side",
+        "val" : "SELL"
+      }, {
+        "key" : "guardRate",
+        "val" : "0.0268"
+      }, {
+        "key" : "investedRate",
+        "val" : "0.1"
+      }, {
+        "key" : "thth",
+        "val" : "0.003"
+      } ],
+      "outputReflects" : [ ]
+    } ],
+    "links" : [ ],
+    "vars" : { },
+    "taskSort" : [ "gsxIHdLoOV2I" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "O SELL ${symbol}  ${acceleration.val}_${direction.last.val}_${direction.macro.state}",
+      "failEnd" : false,
+      "endResultKeys" : [ ]
+    }
+  }, {
+    "clazz" : "net.bzk.flow.model.Box",
     "uid" : "vKSau3Y0hT1i",
     "name" : "Box",
     "actions" : [ {
@@ -74,9 +156,6 @@
       }, {
         "key" : "~rapidReboundRate",
         "val" : "!javascript===\n\nconst th = ${velocityTH.val};\nconst a = ${acceleration.val};\nconst ans = a/th;\nans;"
-      }, {
-        "key" : "side",
-        "val" : "!javascript===\nconst rrr = bzk.g('rapidReboundRate');\nconst th = bzk.g('velocityThWeight');\nconst lastv =  ${direction.last.val};\nconst macroState = '${direction.macro.state}';\nconst microState = '${direction.micro.state}';\n\nfunction clac(){\n    if(Math.abs( rrr)>=2) return rrr>0 ? 'BUY' : 'SELL';    \n    //if(macroState!=microState) return 'STATE_NOT_EQ';\n    if(macroState == 'FALL'  ){\n        if(lastv > th['SELL']){\n             return 'SELL';\n        }\n        return 'SELL_TH_BYE';\n    }\n    if(macroState == 'RISE'  ){\n        if(lastv < th['BUY']){\n            return 'BUY';\n        }\n        return 'BUY_TH_BYE';\n    }\n    throw new Error('no support check');\n}\nclac();"
       } ]
     }, {
       "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
@@ -129,6 +208,20 @@
           "lv" : "run_flow",
           "key" : "volumeBias"
         }
+      } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
+      "uid" : "TA1tlPz4LZ1Z",
+      "name" : "FixTarget",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flatData" : [ {
+        "key" : "~side",
+        "val" : "!javascript===\nconst rrr = ${rapidReboundRate};\nconst th = ${velocityThWeight};\nconst lastv =  ${direction.last.val};\nconst macroState = '${direction.macro.state}';\nconst microState = '${direction.micro.state}';\n\nfunction clac(){\n    if(Math.abs( rrr)>=2) return rrr>0 ? 'BUY' : 'SELL';    \n    //if(macroState!=microState) return 'STATE_NOT_EQ';\n    if(macroState == 'FALL'  ){\n        if(lastv > th.SELL){\n             return 'SELL';\n        }\n        return 'SELL_TH_BYE';\n    }\n    if(macroState == 'RISE'  ){\n        if(lastv < th.BUY){\n            return 'BUY';\n        }\n        return 'BUY_TH_BYE';\n    }\n    throw new Error('no support check');\n}\nclac();"
+      }, {
+        "key" : "overTH",
+        "val" : "!javascript===\nconst side = bzk.g('side');\nconst th = ${velocityThWeight};\nfunction calc(){\n    if(side == 'SELL_TH_BYE') return th.SELL;\n    if(side == 'BUY_TH_BYE') return th.BUY;\n    return 'IT PASS';\n}\ncalc();"
       } ]
     } ],
     "links" : [ {
@@ -190,93 +283,11 @@
       }
     } ],
     "vars" : { },
-    "taskSort" : [ "KpH4PimCRDSe", "tDr8UTOVkNiO", "toNo8ZA1DBhY", "brDCdhwwdBqn", "LtgQk1mGlHfR", "tl455y47pObG", "BXX48Illzys2", "HS57eKRpsKot" ],
+    "taskSort" : [ "KpH4PimCRDSe", "tDr8UTOVkNiO", "toNo8ZA1DBhY", "brDCdhwwdBqn", "LtgQk1mGlHfR", "TA1tlPz4LZ1Z", "tl455y47pObG", "BXX48Illzys2", "HS57eKRpsKot" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
-      "endTag" : "BYE ${symbol}  ${side}",
-      "failEnd" : false,
-      "endResultKeys" : [ ]
-    }
-  }, {
-    "clazz" : "net.bzk.flow.model.Box",
-    "uid" : "YOqDrvPxxCiK",
-    "name" : "BUY",
-    "actions" : [ {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "U9DwmbucQ94V",
-      "name" : "BuyOrder",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "flowUid" : "kCmTvvaxfIBr",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "symbol",
-        "val" : "${symbol}"
-      }, {
-        "key" : "side",
-        "val" : "BUY"
-      }, {
-        "key" : "guardRate",
-        "val" : "0.0268"
-      }, {
-        "key" : "investedRate",
-        "val" : "0.1"
-      }, {
-        "key" : "thth",
-        "val" : "0.003"
-      } ],
-      "outputReflects" : [ ]
-    } ],
-    "links" : [ ],
-    "vars" : { },
-    "taskSort" : [ "U9DwmbucQ94V" ],
-    "whileJudgment" : null,
-    "transition" : {
-      "toBox" : "",
-      "endTag" : "BUY ${symbol}  ${acceleration.val}_${direction.last.val}_${direction.macro.state}",
-      "failEnd" : false,
-      "endResultKeys" : [ ]
-    }
-  }, {
-    "clazz" : "net.bzk.flow.model.Box",
-    "uid" : "Hoh5CNTFiFDi",
-    "name" : "SELL",
-    "actions" : [ {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "gsxIHdLoOV2I",
-      "name" : "SellOrder",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "flowUid" : "kCmTvvaxfIBr",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "symbol",
-        "val" : "${symbol}"
-      }, {
-        "key" : "side",
-        "val" : "SELL"
-      }, {
-        "key" : "guardRate",
-        "val" : "0.0268"
-      }, {
-        "key" : "investedRate",
-        "val" : "0.1"
-      }, {
-        "key" : "thth",
-        "val" : "0.003"
-      } ],
-      "outputReflects" : [ ]
-    } ],
-    "links" : [ ],
-    "vars" : { },
-    "taskSort" : [ "gsxIHdLoOV2I" ],
-    "whileJudgment" : null,
-    "transition" : {
-      "toBox" : "",
-      "endTag" : "SELL ${symbol}  ${acceleration.val}_${direction.last.val}_${direction.macro.state}",
+      "endTag" : "${symbol}  ${side}  A:${acceleration.val} L:${direction.last.val} D:${direction.macro.state} TH: ${overTH}",
       "failEnd" : false,
       "endResultKeys" : [ ]
     }
