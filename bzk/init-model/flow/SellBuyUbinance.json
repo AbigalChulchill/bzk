@@ -194,7 +194,7 @@
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
-      "endTag" : "BYE ${symbol}  ${side}",
+      "endTag" : "${symbol}  ${side}  A:${acceleration.val} L:${direction.last.val} D:${direction.macro.state} TH: ${velocityThWeight}",
       "failEnd" : false,
       "endResultKeys" : [ ]
     }
@@ -235,7 +235,7 @@
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
-      "endTag" : "BUY ${symbol}  ${acceleration.val}_${direction.last.val}_${direction.macro.state}",
+      "endTag" : "O BUY ${symbol}  ${acceleration.val}_${direction.last.val}_${direction.macro.state}",
       "failEnd" : false,
       "endResultKeys" : [ ]
     }
@@ -276,7 +276,7 @@
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
-      "endTag" : "SELL ${symbol}  ${acceleration.val}_${direction.last.val}_${direction.macro.state}",
+      "endTag" : "O SELL ${symbol}  ${acceleration.val}_${direction.last.val}_${direction.macro.state}",
       "failEnd" : false,
       "endResultKeys" : [ ]
     }
