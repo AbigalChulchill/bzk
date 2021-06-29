@@ -10,7 +10,7 @@
       "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
       "uid" : "e9lYbqNlhXtu",
       "name" : "BUY",
-      "tryErrorble" : false,
+      "tryErrorble" : true,
       "devBoxVars" : { },
       "devFlowVars" : { },
       "flowUid" : "kCmTvvaxfIBr",
@@ -42,7 +42,7 @@
       "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
       "uid" : "WCd0u2SmWA5h",
       "name" : "SELL",
-      "tryErrorble" : false,
+      "tryErrorble" : true,
       "devBoxVars" : { },
       "devFlowVars" : { },
       "flowUid" : "kCmTvvaxfIBr",
@@ -77,7 +77,7 @@
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
-      "endTag" : "TODO Why",
+      "endTag" : "DONE ${symbol}",
       "failEnd" : false,
       "endResultKeys" : [ ]
     }
