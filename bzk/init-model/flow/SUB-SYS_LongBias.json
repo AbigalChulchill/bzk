@@ -1,0 +1,73 @@
+{
+  "clazz" : "net.bzk.flow.model.Flow",
+  "uid" : "h6LMt4UTDR8U",
+  "name" : "SUB-SYS_LongBias",
+  "boxs" : [ {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "d6qUszCxvhR6",
+    "name" : "Box",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "xA29JotKCgJg",
+      "name" : "FR_Bais",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flowUid" : "PeakFinder5",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "tsdbQuery",
+        "val" : "import \"strings\"\r\nfrom(bucket: \"quote\")\r\n  |> range(start: 2019-06-29T14:35:56Z, stop:2021-06-29T14:35:56Z)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"daily\" and\r\n    r.valmean == \"open\" and\r\n    r.symbol == \"BTC\"\r\n  )\r\n  |> map(fn: (r) => ({ r with cp: r._value   }))\r\n  |> movingAverage(n: int( v: strings.replaceAll(v: \"15d\", t: \"d\", u: \"\")) )\r\n  |> map(fn: (r) => ({ r with _value: (r.cp-r._value)/r._value   }))\r\n  |>map(fn: (r) => ({ r with alias: \"Bias\" }))   "
+      }, {
+        "key" : "peakMaxWaitSeconds",
+        "val" : "TODO"
+      }, {
+        "key" : "symbol",
+        "val" : "TODO"
+      }, {
+        "key" : "timeValMap",
+        "val" : "TODO"
+      }, {
+        "key" : "baseVal",
+        "val" : "TODO"
+      }, {
+        "key" : "macroAmplitudeRate",
+        "val" : "TODO"
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "ans",
+        "toKey" : {
+          "lv" : "not_specify",
+          "key" : ""
+        }
+      } ]
+    } ],
+    "links" : [ ],
+    "vars" : { },
+    "taskSort" : [ "xA29JotKCgJg" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "TODO Why",
+      "failEnd" : false,
+      "endResultKeys" : [ ]
+    }
+  } ],
+  "varCfgNames" : [ ],
+  "vars" : { },
+  "entry" : {
+    "clazz" : "net.bzk.flow.model.Entry$FixedRateEntry",
+    "boxUid" : "d6qUszCxvhR6",
+    "autoRegister" : false,
+    "period" : -1,
+    "unit" : "SECONDS",
+    "initialDelay" : 2
+  },
+  "logEncryptKey" : "1234567890123456",
+  "threadCfg" : {
+    "corePoolSize" : 10,
+    "maximumPoolSize" : 50,
+    "keepAliveTime" : 500,
+    "aliveUnit" : "MINUTES"
+  }
+}

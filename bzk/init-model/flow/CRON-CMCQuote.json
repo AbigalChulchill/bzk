@@ -1,7 +1,7 @@
 {
   "clazz" : "net.bzk.flow.model.Flow",
   "uid" : "Qvf1dAt3VdSp",
-  "name" : "CurrentCMCQuote",
+  "name" : "CRON-CMCQuote",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
     "uid" : "0wakszWfpHcG",
