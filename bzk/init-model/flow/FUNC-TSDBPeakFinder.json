@@ -1,95 +1,8 @@
 {
   "clazz" : "net.bzk.flow.model.Flow",
   "uid" : "PeakFinder5",
-  "name" : "TSDBPeakFinder",
+  "name" : "FUNC-TSDBPeakFinder",
   "boxs" : [ {
-    "clazz" : "net.bzk.flow.model.Box",
-    "uid" : "PeakFinderBox",
-    "name" : "Box",
-    "actions" : [ {
-      "clazz" : "net.bzk.flow.model.HttpAction",
-      "uid" : "dvmT4XVIVBPF",
-      "name" : "Request",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "url" : "${finProxyUrl}/proxy/tsdb",
-      "uriVariables" : { },
-      "body" : "${queryBody}",
-      "method" : "POST",
-      "headers" : { },
-      "headersFlat" : "",
-      "key" : {
-        "lv" : "not_specify",
-        "key" : "restResult"
-      }
-    }, {
-      "clazz" : "net.bzk.flow.model.Action$JSONPathAction",
-      "uid" : "mwO7JgHLkhPF",
-      "name" : "trim",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "syntax" : "$..values",
-      "source" : {
-        "lv" : "not_specify",
-        "key" : "restResult"
-      },
-      "target" : {
-        "lv" : "not_specify",
-        "key" : "listValues"
-      }
-    }, {
-      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
-      "uid" : "Py7WIVmpPePF",
-      "name" : "trimValues",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "flatData" : [ {
-        "key" : "~timeValMap",
-        "val" : "!javascript===\nconst list= ${listValues};\nlist[0];"
-      } ]
-    }, {
-      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
-      "uid" : "wZpivuVWQvPF",
-      "name" : "GenQueryBody",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "flatData" : [ {
-        "key" : "queryBody.query",
-        "val" : "${tsdbQuery}"
-      } ]
-    } ],
-    "links" : [ {
-      "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "BCwo4iJtHdKK",
-      "name" : "HasMap",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
-        "kind" : "NONE",
-        "next" : null,
-        "polyglot" : "js",
-        "code" : "let map = ${timeValMap};\nlet exist = map!=null;\nexist;"
-      },
-      "transition" : {
-        "toBox" : "oZFKhG8jYXGY",
-        "endTag" : null,
-        "failEnd" : false,
-        "endResultKeys" : [ ]
-      }
-    } ],
-    "vars" : { },
-    "taskSort" : [ "BCwo4iJtHdKK", "wZpivuVWQvPF", "dvmT4XVIVBPF", "mwO7JgHLkhPF", "Py7WIVmpPePF" ],
-    "whileJudgment" : null,
-    "transition" : {
-      "toBox" : "oZFKhG8jYXGY",
-      "endTag" : null,
-      "failEnd" : false,
-      "endResultKeys" : [ ]
-    }
-  }, {
     "clazz" : "net.bzk.flow.model.Box",
     "uid" : "oZFKhG8jYXGY",
     "name" : "",
@@ -1970,6 +1883,93 @@
         "lv" : "not_specify",
         "key" : "ans"
       } ]
+    }
+  }, {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "PeakFinderBox",
+    "name" : "Box",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "dvmT4XVIVBPF",
+      "name" : "Request",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "url" : "${finProxyUrl}/proxy/tsdb",
+      "uriVariables" : { },
+      "body" : "${queryBody}",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : "restResult"
+      }
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$JSONPathAction",
+      "uid" : "mwO7JgHLkhPF",
+      "name" : "trim",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "syntax" : "$..values",
+      "source" : {
+        "lv" : "not_specify",
+        "key" : "restResult"
+      },
+      "target" : {
+        "lv" : "not_specify",
+        "key" : "listValues"
+      }
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
+      "uid" : "Py7WIVmpPePF",
+      "name" : "trimValues",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flatData" : [ {
+        "key" : "~timeValMap",
+        "val" : "!javascript===\nconst list= ${listValues};\nlist[0];"
+      } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
+      "uid" : "wZpivuVWQvPF",
+      "name" : "GenQueryBody",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flatData" : [ {
+        "key" : "queryBody.query",
+        "val" : "${tsdbQuery}"
+      } ]
+    } ],
+    "links" : [ {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "BCwo4iJtHdKK",
+      "name" : "HasMap",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
+        "kind" : "NONE",
+        "next" : null,
+        "polyglot" : "js",
+        "code" : "let map = ${timeValMap};\nlet exist = map!=null;\nexist;"
+      },
+      "transition" : {
+        "toBox" : "oZFKhG8jYXGY",
+        "endTag" : null,
+        "failEnd" : false,
+        "endResultKeys" : [ ]
+      }
+    } ],
+    "vars" : { },
+    "taskSort" : [ "BCwo4iJtHdKK", "wZpivuVWQvPF", "dvmT4XVIVBPF", "mwO7JgHLkhPF", "Py7WIVmpPePF" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "oZFKhG8jYXGY",
+      "endTag" : null,
+      "failEnd" : false,
+      "endResultKeys" : [ ]
     }
   } ],
   "varCfgNames" : [ "fin-proxy.json" ],

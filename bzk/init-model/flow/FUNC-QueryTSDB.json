@@ -1,7 +1,7 @@
 {
   "clazz" : "net.bzk.flow.model.Flow",
   "uid" : "9RLQvpmbGa35",
-  "name" : "QueryTSDB",
+  "name" : "FUNC-QueryTSDB",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
     "uid" : "xRzWKAi4XvVg",

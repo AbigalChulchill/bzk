@@ -1,90 +1,8 @@
 {
   "clazz" : "net.bzk.flow.model.Flow",
   "uid" : "LlXZCvcaZsK8",
-  "name" : "SellBuyUbinance",
+  "name" : "SUB-SellBuyUbinance",
   "boxs" : [ {
-    "clazz" : "net.bzk.flow.model.Box",
-    "uid" : "YOqDrvPxxCiK",
-    "name" : "BUY",
-    "actions" : [ {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "U9DwmbucQ94V",
-      "name" : "BuyOrder",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "flowUid" : "kCmTvvaxfIBr",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "symbol",
-        "val" : "${symbol}"
-      }, {
-        "key" : "side",
-        "val" : "BUY"
-      }, {
-        "key" : "guardRate",
-        "val" : "0.0268"
-      }, {
-        "key" : "investedRate",
-        "val" : "0.1"
-      }, {
-        "key" : "thth",
-        "val" : "0.003"
-      } ],
-      "outputReflects" : [ ]
-    } ],
-    "links" : [ ],
-    "vars" : { },
-    "taskSort" : [ "U9DwmbucQ94V" ],
-    "whileJudgment" : null,
-    "transition" : {
-      "toBox" : "",
-      "endTag" : "O BUY ${symbol}  ${acceleration.val}_${direction.last.val}_${direction.macro.state}",
-      "failEnd" : false,
-      "endResultKeys" : [ ]
-    }
-  }, {
-    "clazz" : "net.bzk.flow.model.Box",
-    "uid" : "Hoh5CNTFiFDi",
-    "name" : "SELL",
-    "actions" : [ {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "gsxIHdLoOV2I",
-      "name" : "SellOrder",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "flowUid" : "kCmTvvaxfIBr",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "symbol",
-        "val" : "${symbol}"
-      }, {
-        "key" : "side",
-        "val" : "SELL"
-      }, {
-        "key" : "guardRate",
-        "val" : "0.0268"
-      }, {
-        "key" : "investedRate",
-        "val" : "0.1"
-      }, {
-        "key" : "thth",
-        "val" : "0.003"
-      } ],
-      "outputReflects" : [ ]
-    } ],
-    "links" : [ ],
-    "vars" : { },
-    "taskSort" : [ "gsxIHdLoOV2I" ],
-    "whileJudgment" : null,
-    "transition" : {
-      "toBox" : "",
-      "endTag" : "O SELL ${symbol}  ${acceleration.val}_${direction.last.val}_${direction.macro.state}",
-      "failEnd" : false,
-      "endResultKeys" : [ ]
-    }
-  }, {
     "clazz" : "net.bzk.flow.model.Box",
     "uid" : "vKSau3Y0hT1i",
     "name" : "Box",
@@ -288,6 +206,88 @@
     "transition" : {
       "toBox" : "",
       "endTag" : "${symbol}  ${side}  A:${acceleration.val} L:${direction.last.val} D:${direction.macro.state} TH: ${overTH}",
+      "failEnd" : false,
+      "endResultKeys" : [ ]
+    }
+  }, {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "YOqDrvPxxCiK",
+    "name" : "BUY",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "U9DwmbucQ94V",
+      "name" : "BuyOrder",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flowUid" : "kCmTvvaxfIBr",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "symbol",
+        "val" : "${symbol}"
+      }, {
+        "key" : "side",
+        "val" : "BUY"
+      }, {
+        "key" : "guardRate",
+        "val" : "0.0268"
+      }, {
+        "key" : "investedRate",
+        "val" : "0.1"
+      }, {
+        "key" : "thth",
+        "val" : "0.003"
+      } ],
+      "outputReflects" : [ ]
+    } ],
+    "links" : [ ],
+    "vars" : { },
+    "taskSort" : [ "U9DwmbucQ94V" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "O BUY ${symbol}  ${acceleration.val}_${direction.last.val}_${direction.macro.state}",
+      "failEnd" : false,
+      "endResultKeys" : [ ]
+    }
+  }, {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "Hoh5CNTFiFDi",
+    "name" : "SELL",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "gsxIHdLoOV2I",
+      "name" : "SellOrder",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flowUid" : "kCmTvvaxfIBr",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "symbol",
+        "val" : "${symbol}"
+      }, {
+        "key" : "side",
+        "val" : "SELL"
+      }, {
+        "key" : "guardRate",
+        "val" : "0.0268"
+      }, {
+        "key" : "investedRate",
+        "val" : "0.1"
+      }, {
+        "key" : "thth",
+        "val" : "0.003"
+      } ],
+      "outputReflects" : [ ]
+    } ],
+    "links" : [ ],
+    "vars" : { },
+    "taskSort" : [ "gsxIHdLoOV2I" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "O SELL ${symbol}  ${acceleration.val}_${direction.last.val}_${direction.macro.state}",
       "failEnd" : false,
       "endResultKeys" : [ ]
     }

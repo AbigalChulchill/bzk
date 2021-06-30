@@ -1,0 +1,250 @@
+{
+  "clazz" : "net.bzk.flow.model.Flow",
+  "uid" : "ebBli92LdIYZzOo7",
+  "name" : "CRON-AutoFund",
+  "boxs" : [ {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "os5alTWuo8sG",
+    "name" : "Fund",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
+      "uid" : "f7V2cufsehiv",
+      "name" : "GetCMD",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flatData" : [ {
+        "key" : "cmd",
+        "val" : "!javascript===\r\n const i = ${curI};\r\nconst list = ${bfx.fund.strategy};\r\nconst ans = list[i];\r\nans;"
+      }, {
+        "key" : "curI",
+        "val" : "!javascript===\r\n ${curI}+1;"
+      }, {
+        "key" : "bfxSignHeader",
+        "val" : "!javascript===\r\n null"
+      } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "WUaNxD2C8X5H",
+      "name" : "PostOathFundRest",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flowUid" : "gBDvmpqUFgQD",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "apiPath",
+        "val" : "!javascript===\r\n \"v2/auth/w/funding/offer/submit\""
+      }, {
+        "key" : "apiBody",
+        "val" : "!javascript===\r\n ${bfxRestBody}"
+      }, {
+        "key" : "apiMethod",
+        "val" : "!javascript===\r\n \"POST\""
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "HttpResult",
+        "toKey" : {
+          "lv" : "not_specify",
+          "key" : "FundAns"
+        }
+      } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$PolyglotAction",
+      "uid" : "vavBM6ZK6VbW",
+      "name" : "bfxRestBodyGen",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "code" : "const cmd = ${cmd};\nconst r = cmd.rate+'';\nconst p = cmd.day;\nconst a = cmd.amount+'';\nconst ans= {\n \t\ttype: 'LIMIT',\n \t\tsymbol: 'fUSD',\n \t\tamount: a,\n \t\trate: r,\n \t\tperiod: p\n};\nans;",
+      "polyglot" : "js",
+      "resultLv" : "not_specify",
+      "resultKey" : "bfxRestBody"
+    } ],
+    "links" : [ ],
+    "vars" : {
+      "curI" : 0
+    },
+    "taskSort" : [ "f7V2cufsehiv", "vavBM6ZK6VbW", "WUaNxD2C8X5H" ],
+    "whileJudgment" : {
+      "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
+      "kind" : "NONE",
+      "next" : null,
+      "polyglot" : "js",
+      "code" : "function check(){\r\n    const i = ${curI};\r\n    const list = ${bfx.fund.strategy};\r\n    const lsize = list.length;\r\n    return i<lsize;\r\n}\r\n\r\ncheck();"
+    },
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "Done",
+      "failEnd" : false,
+      "endResultKeys" : [ ]
+    }
+  }, {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "VzPzT54lux1a8rsJ",
+    "name" : "CheckCanFund",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$JSONPathAction",
+      "uid" : "Q3WCk5OfTMpy",
+      "name" : "FindUSWallet",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "syntax" : "$[?(@[1]=='USD' &&  @[0]=='funding')].*",
+      "source" : {
+        "lv" : "not_specify",
+        "key" : "bfxWallet"
+      },
+      "target" : {
+        "lv" : "not_specify",
+        "key" : "bfxWallet"
+      }
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
+      "uid" : "0sXIo2uBG96v",
+      "name" : "PruneUSDWallet",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flatData" : [ {
+        "key" : "bfx.fund",
+        "val" : "!javascript===\r\n const orgUsdW = ${bfxWallet};\nconst ans = {\n    balance : orgUsdW[4],\n    sum : orgUsdW[2],\n};\nans;\n"
+      }, {
+        "key" : "bfxWallet",
+        "val" : "!javascript===\r\n null"
+      } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "7OWwv0TlT5Vm",
+      "name" : "FtechFundWallet",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flowUid" : "gBDvmpqUFgQD",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "apiPath",
+        "val" : "!javascript===\r\n \"v2/auth/r/wallets\""
+      }, {
+        "key" : "apiBody",
+        "val" : "!javascript===\r\n {}"
+      }, {
+        "key" : "apiMethod",
+        "val" : "!javascript===\r\n \"POST\""
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "HttpResult",
+        "toKey" : {
+          "lv" : "not_specify",
+          "key" : "bfxWallet"
+        }
+      } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "zE4r6lyacXUR",
+      "name" : "GetFundStrategy",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flowUid" : "ccBli92LdIYagOo7",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "balance",
+        "val" : "!javascript===\r\n ${bfx.fund.balance}"
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "bfx.fund.strategy",
+        "toKey" : {
+          "lv" : "not_specify",
+          "key" : "bfx.fund.strategy"
+        }
+      } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "9Jgy9lXtAD4N",
+      "name" : "CancelAllFund",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flowUid" : "gBDvmpqUFgQD",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "apiPath",
+        "val" : "!javascript===\r\n \"v2/auth/w/funding/offer/cancel/all\""
+      }, {
+        "key" : "apiBody",
+        "val" : "!javascript===\r\n {\n \t\t\"currency\": \"USD\"\n}"
+      }, {
+        "key" : "apiMethod",
+        "val" : " \"POST\""
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "HttpResult",
+        "toKey" : {
+          "lv" : "not_specify",
+          "key" : "CAns"
+        }
+      } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$WaitAction",
+      "uid" : "DCWlV3wdOFOi",
+      "name" : "Wait5Sec",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "unit" : "SECONDS",
+      "step" : 5
+    } ],
+    "links" : [ {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "vJpivgy8jwUQ",
+      "name" : "ToFund",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
+        "kind" : "NONE",
+        "next" : null,
+        "left" : "${bfx.fund.balance}",
+        "right" : "50",
+        "type" : "lessthan"
+      },
+      "transition" : {
+        "toBox" : "",
+        "endTag" : "NOMoney",
+        "failEnd" : false,
+        "endResultKeys" : [ {
+          "lv" : "not_specify",
+          "key" : "bfx.fund.balance"
+        } ]
+      }
+    } ],
+    "vars" : { },
+    "taskSort" : [ "9Jgy9lXtAD4N", "DCWlV3wdOFOi", "7OWwv0TlT5Vm", "Q3WCk5OfTMpy", "0sXIo2uBG96v", "vJpivgy8jwUQ", "zE4r6lyacXUR" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "os5alTWuo8sG",
+      "endTag" : null,
+      "failEnd" : false,
+      "endResultKeys" : [ {
+        "lv" : "not_specify",
+        "key" : "bfx.fund.strategy"
+      } ]
+    }
+  } ],
+  "varCfgNames" : [ ],
+  "vars" : { },
+  "entry" : {
+    "clazz" : "net.bzk.flow.model.Entry$FixedRateEntry",
+    "boxUid" : "VzPzT54lux1a8rsJ",
+    "autoRegister" : true,
+    "period" : 100,
+    "unit" : "MINUTES",
+    "initialDelay" : 0
+  },
+  "logEncryptKey" : "1234567890123456",
+  "threadCfg" : {
+    "corePoolSize" : 10,
+    "maximumPoolSize" : 50,
+    "keepAliveTime" : 500,
+    "aliveUnit" : "MINUTES"
+  }
+}

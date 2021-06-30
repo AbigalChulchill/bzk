@@ -1,7 +1,7 @@
 {
   "clazz" : "net.bzk.flow.model.Flow",
   "uid" : "h6LMt4UTDR8U",
-  "name" : "SYS_LongBias",
+  "name" : "SUB-SYS_LongBias",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
     "uid" : "d6qUszCxvhR6",

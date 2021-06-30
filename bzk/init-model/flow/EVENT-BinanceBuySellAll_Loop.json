@@ -1,7 +1,7 @@
 {
   "clazz" : "net.bzk.flow.model.Flow",
   "uid" : "4QoVx2Wbhdxz",
-  "name" : "BinanceBuySellAll_Loop",
+  "name" : "EVENT-BinanceBuySellAll_Loop",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
     "uid" : "SlINz2lOTApz",

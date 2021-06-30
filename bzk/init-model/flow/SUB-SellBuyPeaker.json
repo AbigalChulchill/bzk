@@ -1,7 +1,7 @@
 {
   "clazz" : "net.bzk.flow.model.Flow",
   "uid" : "kCmTvvaxfIBr",
-  "name" : "SellBuyPeaker",
+  "name" : "SUB-SellBuyPeaker",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
     "uid" : "X9XRPTTIQJIQ",

@@ -1,7 +1,7 @@
 {
   "clazz" : "net.bzk.flow.model.Flow",
   "uid" : "WD9C43w3dAL2",
-  "name" : "CronFetchCMC",
+  "name" : "CRON-FetchCMC",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
     "uid" : "ajyASBWbeZV6",
