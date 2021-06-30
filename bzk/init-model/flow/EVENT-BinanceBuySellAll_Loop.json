@@ -34,26 +34,12 @@
         "val" : "${curSymbol}"
       } ],
       "outputReflects" : [ ]
-    }, {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "SYcaGsBFkY99",
-      "name" : "Short-Term",
-      "tryErrorble" : true,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "flowUid" : "xmApa6XymPPy",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "symbol",
-        "val" : "${curSymbol}"
-      } ],
-      "outputReflects" : [ ]
     } ],
     "links" : [ ],
     "vars" : {
       "symbolIdx" : 0
     },
-    "taskSort" : [ "VBcwBUuoBz8z", "uCYOwWdhTX61", "SYcaGsBFkY99" ],
+    "taskSort" : [ "VBcwBUuoBz8z", "uCYOwWdhTX61" ],
     "whileJudgment" : {
       "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
       "kind" : "NONE",
