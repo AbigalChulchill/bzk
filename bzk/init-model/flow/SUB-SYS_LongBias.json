@@ -9,7 +9,7 @@
     "actions" : [ {
       "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
       "uid" : "xA29JotKCgJg",
-      "name" : "FR_Bais",
+      "name" : "FR_15DBais",
       "tryErrorble" : false,
       "devBoxVars" : { },
       "devFlowVars" : { },
@@ -17,34 +17,57 @@
       "asynced" : false,
       "inputData" : [ {
         "key" : "tsdbQuery",
-        "val" : "import \"strings\"\r\nfrom(bucket: \"quote\")\r\n  |> range(start: 2019-06-29T14:35:56Z, stop:2021-06-29T14:35:56Z)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"daily\" and\r\n    r.valmean == \"open\" and\r\n    r.symbol == \"BTC\"\r\n  )\r\n  |> map(fn: (r) => ({ r with cp: r._value   }))\r\n  |> movingAverage(n: int( v: strings.replaceAll(v: \"15d\", t: \"d\", u: \"\")) )\r\n  |> map(fn: (r) => ({ r with _value: (r.cp-r._value)/r._value   }))\r\n  |>map(fn: (r) => ({ r with alias: \"Bias\" }))   "
+        "val" : "import \"strings\"\r\nfrom(bucket: \"quote\")\r\n  |> range(start: 2019-06-29T14:35:56Z, stop:2021-06-29T14:35:56Z)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"daily\" and\r\n    r.valmean == \"open\" and\r\n    r.symbol == \"${symbol}\"\r\n  )\r\n  |> map(fn: (r) => ({ r with cp: r._value   }))\r\n  |> movingAverage(n: int( v: strings.replaceAll(v: \"15d\", t: \"d\", u: \"\")) )\r\n  |> map(fn: (r) => ({ r with _value: (r.cp-r._value)/r._value   }))"
       }, {
         "key" : "peakMaxWaitSeconds",
-        "val" : "TODO"
+        "val" : "!javascript===\nconst ans = 60*60*24*3;\nans;"
       }, {
         "key" : "symbol",
-        "val" : "TODO"
-      }, {
-        "key" : "timeValMap",
-        "val" : "TODO"
-      }, {
-        "key" : "baseVal",
-        "val" : "TODO"
+        "val" : "${symbol}"
       }, {
         "key" : "macroAmplitudeRate",
-        "val" : "TODO"
+        "val" : "0.05"
       } ],
       "outputReflects" : [ {
         "srcKey" : "ans",
         "toKey" : {
-          "lv" : "not_specify",
-          "key" : ""
+          "lv" : "run_sys",
+          "key" : "FR_15DBais"
+        }
+      } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "W4DpIyWRgLGM",
+      "name" : "FR_5DAVG",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flowUid" : "PeakFinder5",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "tsdbQuery",
+        "val" : "import \"strings\"\r\nfrom(bucket: \"quote\")\r\n  |> range(start: -365d)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"daily\" and\r\n    r.valmean == \"open\" and\r\n    r.symbol == \"${symbol}\"\r\n  )\r\n |> movingAverage(n: int( v: strings.replaceAll(v: \"5d\", t: \"d\", u: \"\")) )"
+      }, {
+        "key" : "peakMaxWaitSeconds",
+        "val" : "!javascript===\nconst ans = 60*60*24*5;\nans;"
+      }, {
+        "key" : "symbol",
+        "val" : "${symbol}"
+      }, {
+        "key" : "macroAmplitudeRate",
+        "val" : "0.01"
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "ans",
+        "toKey" : {
+          "lv" : "run_sys",
+          "key" : "FR_5DAVG"
         }
       } ]
     } ],
     "links" : [ ],
     "vars" : { },
-    "taskSort" : [ "xA29JotKCgJg" ],
+    "taskSort" : [ "xA29JotKCgJg", "W4DpIyWRgLGM" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
@@ -54,7 +77,9 @@
     }
   } ],
   "varCfgNames" : [ ],
-  "vars" : { },
+  "vars" : {
+    "symbol" : "BTC"
+  },
   "entry" : {
     "clazz" : "net.bzk.flow.model.Entry$FixedRateEntry",
     "boxUid" : "d6qUszCxvhR6",
