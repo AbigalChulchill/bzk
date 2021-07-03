@@ -9,7 +9,7 @@
     "actions" : [ {
       "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
       "uid" : "xA29JotKCgJg",
-      "name" : "FR_15DBais",
+      "name" : "RF_15DBais_rate",
       "tryErrorble" : false,
       "devBoxVars" : { },
       "devFlowVars" : { },
@@ -17,7 +17,7 @@
       "asynced" : false,
       "inputData" : [ {
         "key" : "tsdbQuery",
-        "val" : "import \"strings\"\r\nfrom(bucket: \"quote\")\r\n  |> range(start: 2019-06-29T14:35:56Z, stop:2021-06-29T14:35:56Z)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"daily\" and\r\n    r.valmean == \"open\" and\r\n    r.symbol == \"${symbol}\"\r\n  )\r\n  |> map(fn: (r) => ({ r with cp: r._value   }))\r\n  |> movingAverage(n: int( v: strings.replaceAll(v: \"15d\", t: \"d\", u: \"\")) )\r\n  |> map(fn: (r) => ({ r with _value: (r.cp-r._value)/r._value   }))"
+        "val" : "import \"strings\"\r\nfrom(bucket: \"quote\")\r\n  |> range(start: -100d)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"daily\" and\r\n    r.valmean == \"open\" and\r\n    r.symbol == \"${symbol}\"\r\n  )\r\n  |> map(fn: (r) => ({ r with cp: r._value   }))\r\n  |> movingAverage(n: int( v: strings.replaceAll(v: \"15d\", t: \"d\", u: \"\")) )\r\n  |> map(fn: (r) => ({ r with _value: (r.cp-r._value)/r._value   }))"
       }, {
         "key" : "peakMaxWaitSeconds",
         "val" : "!javascript===\nconst ans = 60*60*24*3;\nans;"
@@ -32,13 +32,80 @@
         "srcKey" : "ans",
         "toKey" : {
           "lv" : "run_sys",
-          "key" : "FR_15DBais"
+          "key" : "FR_15DBais_rate"
         }
       } ]
     }, {
       "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "W4DpIyWRgLGM",
-      "name" : "FR_5DAVG",
+      "uid" : "Tw3zbE62xO8i",
+      "name" : "AVG_5D",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flowUid" : "9RLQvpmbGa35",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "tsdbQuery",
+        "val" : "import \"strings\"\nfrom(bucket: \"quote\")\n  |> range(start: -30d)\n  |> filter(fn: (r) =>\n    r._measurement == \"daily\" and\n    r.valmean == \"close\" and\n    r.symbol == \"${symbol}\"\n  )\n |> movingAverage(n: int( v: strings.replaceAll(v: \"5d\", t: \"d\", u: \"\")) )"
+      }, {
+        "key" : "vaildMins",
+        "val" : "1500"
+      }, {
+        "key" : "skipCount",
+        "val" : "0"
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "nearVal",
+        "toKey" : {
+          "lv" : "run_sys",
+          "key" : "AVG_5D"
+        }
+      } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "uoZV5GCzKACM",
+      "name" : "SFT_30D_rate",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flowUid" : "9RLQvpmbGa35",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "tsdbQuery",
+        "val" : "org= from(bucket: \"quote\")\r\n  |> range(start: -100d)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"daily\" and\r\n    r.valmean == \"close\" and\r\n    r.symbol == \"${symbol}\"\r\n  )\r\n\r\nsft= org\r\n  |> timeShift(duration: 30d)\r\n\r\njoin(tables: {org: org, sft: sft}, on: [\"_time\"])\r\n    |> map(fn: (r) => ({ r with _value: r._value_org - r._value_sft     }))\r\n"
+      }, {
+        "key" : "vaildMins",
+        "val" : "1500"
+      }, {
+        "key" : "skipCount",
+        "val" : "0"
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "nearVal",
+        "toKey" : {
+          "lv" : "run_sys",
+          "key" : "SFT_30D_rate"
+        }
+      } ]
+    } ],
+    "links" : [ ],
+    "vars" : { },
+    "taskSort" : [ "xA29JotKCgJg", "Tw3zbE62xO8i", "uoZV5GCzKACM" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "wXs9dMAVsKYJ",
+      "endTag" : null,
+      "failEnd" : false,
+      "endResultKeys" : [ ]
+    }
+  }, {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "wXs9dMAVsKYJ",
+    "name" : "Bias",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "pmouJlCpnrX5",
+      "name" : "RF_5DBais",
       "tryErrorble" : false,
       "devBoxVars" : { },
       "devFlowVars" : { },
@@ -46,32 +113,32 @@
       "asynced" : false,
       "inputData" : [ {
         "key" : "tsdbQuery",
-        "val" : "import \"strings\"\r\nfrom(bucket: \"quote\")\r\n  |> range(start: -365d)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"daily\" and\r\n    r.valmean == \"open\" and\r\n    r.symbol == \"${symbol}\"\r\n  )\r\n |> movingAverage(n: int( v: strings.replaceAll(v: \"5d\", t: \"d\", u: \"\")) )"
+        "val" : "import \"strings\"\nfrom(bucket: \"quote\")\n  |> range(start: -50d)\n  |> filter(fn: (r) =>\n    r._measurement == \"daily\" and\n    r.valmean == \"close\" and\n    r.symbol == \"${symbol}\"\n  )\n  |> map(fn: (r) => ({ r with cp: r._value   }))\n  |> movingAverage(n: int( v: strings.replaceAll(v: \"5d\", t: \"d\", u: \"\")) )\n  |> map(fn: (r) => ({ r with _value: r.cp-r._value   }))\n"
       }, {
         "key" : "peakMaxWaitSeconds",
-        "val" : "!javascript===\nconst ans = 60*60*24*5;\nans;"
+        "val" : "!javascript===\nconst ans = 60*60*24*3;\nans;"
       }, {
         "key" : "symbol",
         "val" : "${symbol}"
       }, {
         "key" : "macroAmplitudeRate",
-        "val" : "0.01"
+        "val" : "0.1"
       } ],
       "outputReflects" : [ {
         "srcKey" : "ans",
         "toKey" : {
           "lv" : "run_sys",
-          "key" : "FR_5DAVG"
+          "key" : "Bais.${symbol}.RF.D5"
         }
       } ]
     } ],
     "links" : [ ],
     "vars" : { },
-    "taskSort" : [ "xA29JotKCgJg", "W4DpIyWRgLGM" ],
+    "taskSort" : [ "pmouJlCpnrX5" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
-      "endTag" : "TODO Why",
+      "endTag" : "END",
       "failEnd" : false,
       "endResultKeys" : [ ]
     }
@@ -84,9 +151,9 @@
     "clazz" : "net.bzk.flow.model.Entry$FixedRateEntry",
     "boxUid" : "d6qUszCxvhR6",
     "autoRegister" : false,
-    "period" : -1,
-    "unit" : "SECONDS",
-    "initialDelay" : 2
+    "period" : 10,
+    "unit" : "HOURS",
+    "initialDelay" : 0
   },
   "logEncryptKey" : "1234567890123456",
   "threadCfg" : {
