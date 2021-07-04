@@ -297,41 +297,6 @@
         "key" : "side7d",
         "val" : "const th = bzk.g('TH');\r\nconst rf = ${RF_Bias_FIXED};\r\nconst d = rf.macro.state;\r\nconst lastv = rf.last.val;\r\nconst dtime = rf.macro.nearPeak.dtime;\r\nfunction calc(){\r\n    if(!checkTime()) return 'OVER_PICK';\r\n    if(d == 'FALL'){\r\n        return lastv > th ? 'SELL':'7D_SELL_TH';\r\n    }\r\n    if(d== 'RISE'){\r\n        return lastv < th ? 'BUY':'7D_BUY_TH';\r\n    }\r\n    throw new Error('not support='+d);\r\n    \r\n}\r\n\r\nfunction checkTime(){\r\n    return dtime < (5 * 60 * 60);\r\n}\r\n\r\ncalc();"
       } ]
-    }, {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "FZR9H7jjNq07",
-      "name" : "RF_Bias_Rate_Fixed",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "flowUid" : "PeakFinder5",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "tsdbQuery",
-        "val" : "import \"strings\"\r\na=  from(bucket: \"quote\")\r\n  |> range(start: -5d)\r\n   |> filter(fn: (r) =>\r\n    r._measurement == \"realtime\" and\r\n    r.symbol == \"${symbol}\" and\r\n    r._field == \"price\"\r\n  )\r\n  |>mean()\r\n  |> findColumn(\r\n      fn: (key) => key._field == \"price\",\r\n      column: \"_value\"\r\n    )\r\n\r\nfrom(bucket: \"quote\")\r\n  |> range(start: -5d)\r\n   |> filter(fn: (r) =>\r\n    r._measurement == \"realtime\" and\r\n    r.symbol == \"${symbol}\" and\r\n    r._field == \"price\"\r\n  )\r\n  |>map(fn: (r) => ({ r with _value: r._value - a[0] }))  \r\n  |> movingAverage(n: int( v: strings.replaceAll(v: \"12h\", t: \"h\", u: \"\"))*12 )\r\n"
-      }, {
-        "key" : "peakMaxWaitSeconds",
-        "val" : "TODO"
-      }, {
-        "key" : "symbol",
-        "val" : "TODO"
-      }, {
-        "key" : "timeValMap",
-        "val" : "TODO"
-      }, {
-        "key" : "baseVal",
-        "val" : "TODO"
-      }, {
-        "key" : "macroAmplitudeRate",
-        "val" : "TODO"
-      } ],
-      "outputReflects" : [ {
-        "srcKey" : "ans",
-        "toKey" : {
-          "lv" : "not_specify",
-          "key" : ""
-        }
-      } ]
     } ],
     "links" : [ {
       "clazz" : "net.bzk.flow.model.Link",
@@ -373,7 +338,7 @@
       }
     } ],
     "vars" : { },
-    "taskSort" : [ "FZR9H7jjNq07", "zpYbJsMkkB3R", "L2HlEddXV6pa", "rcpWKc8OlITQ", "tKVLlIi2OOtc" ],
+    "taskSort" : [ "zpYbJsMkkB3R", "L2HlEddXV6pa", "rcpWKc8OlITQ", "tKVLlIi2OOtc" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",

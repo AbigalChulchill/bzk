@@ -142,7 +142,7 @@
       "next" : null,
       "left" : "${symbolIdx}",
       "right" : "!javascript===\nconst sbs = ${symbols};\nconst len= sbs.length\nlen",
-      "type" : "equal"
+      "type" : "lessthan"
     },
     "transition" : {
       "toBox" : "wXs9dMAVsKYJ",
