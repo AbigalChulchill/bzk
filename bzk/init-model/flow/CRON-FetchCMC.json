@@ -21,7 +21,7 @@
       "headersFlat" : "{}",
       "key" : {
         "lv" : "not_specify",
-        "key" : ""
+        "key" : "result"
       }
     }, {
       "clazz" : "net.bzk.flow.model.Action$EventAction",

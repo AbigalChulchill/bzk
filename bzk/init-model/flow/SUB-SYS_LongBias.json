@@ -4,6 +4,50 @@
   "name" : "SUB-SYS_LongBias",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "wXs9dMAVsKYJ",
+    "name" : "Bias",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "pmouJlCpnrX5",
+      "name" : "RF_5DBais",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flowUid" : "PeakFinder5",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "tsdbQuery",
+        "val" : "import \"strings\"\nfrom(bucket: \"quote\")\n  |> range(start: -50d)\n  |> filter(fn: (r) =>\n    r._measurement == \"daily\" and\n    r.valmean == \"close\" and\n    r.symbol == \"${symbol}\"\n  )\n  |> map(fn: (r) => ({ r with cp: r._value   }))\n  |> movingAverage(n: int( v: strings.replaceAll(v: \"5d\", t: \"d\", u: \"\")) )\n  |> map(fn: (r) => ({ r with _value: r.cp-r._value   }))\n  |> movingAverage(n: int( v: strings.replaceAll(v: \"5d\", t: \"d\", u: \"\")) )\n"
+      }, {
+        "key" : "peakMaxWaitSeconds",
+        "val" : "!javascript===\nconst ans = 60*60*24*3;\nans;"
+      }, {
+        "key" : "symbol",
+        "val" : "${symbol}"
+      }, {
+        "key" : "macroAmplitudeRate",
+        "val" : "0.1"
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "ans",
+        "toKey" : {
+          "lv" : "run_sys",
+          "key" : "Bais.${symbol}.RF.D5"
+        }
+      } ]
+    } ],
+    "links" : [ ],
+    "vars" : { },
+    "taskSort" : [ "pmouJlCpnrX5" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "END",
+      "failEnd" : false,
+      "endResultKeys" : [ ]
+    }
+  }, {
+    "clazz" : "net.bzk.flow.model.Box",
     "uid" : "d6qUszCxvhR6",
     "name" : "Box",
     "actions" : [ {
@@ -49,7 +93,7 @@
         "val" : "import \"strings\"\nfrom(bucket: \"quote\")\n  |> range(start: -30d)\n  |> filter(fn: (r) =>\n    r._measurement == \"daily\" and\n    r.valmean == \"close\" and\n    r.symbol == \"${symbol}\"\n  )\n |> movingAverage(n: int( v: strings.replaceAll(v: \"5d\", t: \"d\", u: \"\")) )"
       }, {
         "key" : "vaildMins",
-        "val" : "1500"
+        "val" : "3000"
       }, {
         "key" : "skipCount",
         "val" : "0"
@@ -75,7 +119,7 @@
         "val" : "org= from(bucket: \"quote\")\r\n  |> range(start: -100d)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"daily\" and\r\n    r.valmean == \"close\" and\r\n    r.symbol == \"${symbol}\"\r\n  )\r\n\r\nsft= org\r\n  |> timeShift(duration: 30d)\r\n\r\njoin(tables: {org: org, sft: sft}, on: [\"_time\"])\r\n    |> map(fn: (r) => ({ r with _value: r._value_org - r._value_sft     }))\r\n"
       }, {
         "key" : "vaildMins",
-        "val" : "1500"
+        "val" : "3000"
       }, {
         "key" : "skipCount",
         "val" : "0"
@@ -95,50 +139,6 @@
     "transition" : {
       "toBox" : "wXs9dMAVsKYJ",
       "endTag" : null,
-      "failEnd" : false,
-      "endResultKeys" : [ ]
-    }
-  }, {
-    "clazz" : "net.bzk.flow.model.Box",
-    "uid" : "wXs9dMAVsKYJ",
-    "name" : "Bias",
-    "actions" : [ {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "pmouJlCpnrX5",
-      "name" : "RF_5DBais",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "flowUid" : "PeakFinder5",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "tsdbQuery",
-        "val" : "import \"strings\"\nfrom(bucket: \"quote\")\n  |> range(start: -50d)\n  |> filter(fn: (r) =>\n    r._measurement == \"daily\" and\n    r.valmean == \"close\" and\n    r.symbol == \"${symbol}\"\n  )\n  |> map(fn: (r) => ({ r with cp: r._value   }))\n  |> movingAverage(n: int( v: strings.replaceAll(v: \"5d\", t: \"d\", u: \"\")) )\n  |> map(fn: (r) => ({ r with _value: r.cp-r._value   }))\n"
-      }, {
-        "key" : "peakMaxWaitSeconds",
-        "val" : "!javascript===\nconst ans = 60*60*24*3;\nans;"
-      }, {
-        "key" : "symbol",
-        "val" : "${symbol}"
-      }, {
-        "key" : "macroAmplitudeRate",
-        "val" : "0.1"
-      } ],
-      "outputReflects" : [ {
-        "srcKey" : "ans",
-        "toKey" : {
-          "lv" : "run_sys",
-          "key" : "Bais.${symbol}.RF.D5"
-        }
-      } ]
-    } ],
-    "links" : [ ],
-    "vars" : { },
-    "taskSort" : [ "pmouJlCpnrX5" ],
-    "whileJudgment" : null,
-    "transition" : {
-      "toBox" : "",
-      "endTag" : "END",
       "failEnd" : false,
       "endResultKeys" : [ ]
     }
