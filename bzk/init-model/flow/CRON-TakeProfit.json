@@ -21,7 +21,7 @@
       "headersFlat" : "",
       "key" : {
         "lv" : "not_specify",
-        "key" : ""
+        "key" : "b_resp"
       }
     }, {
       "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
@@ -52,7 +52,7 @@
       "headersFlat" : "",
       "key" : {
         "lv" : "not_specify",
-        "key" : ""
+        "key" : "s_resp"
       }
     } ],
     "links" : [ ],
