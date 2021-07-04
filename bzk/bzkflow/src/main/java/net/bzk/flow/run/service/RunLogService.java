@@ -35,8 +35,6 @@ public class RunLogService {
     private RunBoxDao runBoxDao;
     @Inject
     private RunFlowDao runFlowDao;
-    @Inject
-    private SysVarDao sysVarDao;
 
     public void logActionCall(Uids u, String msg) {
         RunLog brl = genLog(u);
@@ -85,7 +83,6 @@ public class RunLogService {
         RunLog ans = new RunLog();
         ans.setFlowVar(fr.getVars());
         ans.setBoxVar(br.getVars());
-        ans.setSysVar(sysVarDao);
         ans.setBoxName(b.getName());
         if (ao.isPresent())
             ans.setActionName(ao.get().getName());
