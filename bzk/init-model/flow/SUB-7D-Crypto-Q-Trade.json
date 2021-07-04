@@ -4,47 +4,6 @@
   "name" : "SUB-7D-Crypto-Q-Trade",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
-    "uid" : "Hoh5CNTFiFDi",
-    "name" : "SELL",
-    "actions" : [ {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "gsxIHdLoOV2I",
-      "name" : "SellOrder",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "flowUid" : "kCmTvvaxfIBr",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "symbol",
-        "val" : "${symbol}"
-      }, {
-        "key" : "side",
-        "val" : "SELL"
-      }, {
-        "key" : "guardRate",
-        "val" : "0.03"
-      }, {
-        "key" : "investedRate",
-        "val" : "0.12"
-      }, {
-        "key" : "thth",
-        "val" : "0.003"
-      } ],
-      "outputReflects" : [ ]
-    } ],
-    "links" : [ ],
-    "vars" : { },
-    "taskSort" : [ "gsxIHdLoOV2I" ],
-    "whileJudgment" : null,
-    "transition" : {
-      "toBox" : "",
-      "endTag" : "O SELL ${symbol}  ${acceleration.val}_${direction.last.val}_${direction.macro.state}",
-      "failEnd" : false,
-      "endResultKeys" : [ ]
-    }
-  }, {
-    "clazz" : "net.bzk.flow.model.Box",
     "uid" : "vKSau3Y0hT1i",
     "name" : "Box",
     "actions" : [ {
@@ -252,6 +211,47 @@
     }
   }, {
     "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "Hoh5CNTFiFDi",
+    "name" : "SELL",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "gsxIHdLoOV2I",
+      "name" : "SellOrder",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flowUid" : "kCmTvvaxfIBr",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "symbol",
+        "val" : "${symbol}"
+      }, {
+        "key" : "side",
+        "val" : "SELL"
+      }, {
+        "key" : "guardRate",
+        "val" : "0.03"
+      }, {
+        "key" : "investedRate",
+        "val" : "0.12"
+      }, {
+        "key" : "thth",
+        "val" : "0.003"
+      } ],
+      "outputReflects" : [ ]
+    } ],
+    "links" : [ ],
+    "vars" : { },
+    "taskSort" : [ "gsxIHdLoOV2I" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "O SELL ${symbol}  ${acceleration.val}_${direction.last.val}_${direction.macro.state}",
+      "failEnd" : false,
+      "endResultKeys" : [ ]
+    }
+  }, {
+    "clazz" : "net.bzk.flow.model.Box",
     "uid" : "b6j6H05VX2Wq",
     "name" : "7D_MINMAX",
     "actions" : [ {
@@ -292,10 +292,21 @@
       "devFlowVars" : { },
       "flatData" : [ {
         "key" : "TH",
-        "val" : "!javascript===\nconst rf = bzk.g('Bais.${symbol}.RF.D5');\nconst d = rf.macro.state;\nconst macro = rf.macro;\n\nfunction calc(){\n    if(d == 'FALL'){\n        let ans= -macro.nearMin.val / 2;\n        if(ans<0) throw new Error(d+' ans:'+ans);\n        return ans;\n    }\n    if(d== 'RISE'){\n        let ans= -macro.nearMax.val / 2;\n        if(ans>0) throw new Error(d+' ans:'+ans);\n        return ans;\n    }\n    throw new Error('not support='+d);\n}\n\ncalc();\n\n"
+        "val" : "!javascript===\nconst rf = ${RFBias5DSYS};\nconst d = rf.macro.state;\nconst macro = rf.macro;\n\nfunction calc(){\n    if(d == 'FALL'){\n        let ans= -macro.nearMin.val / 2;\n        if(ans<0) throw new Error(d+' ans:'+ans);\n        return ans;\n    }\n    if(d== 'RISE'){\n        let ans= -macro.nearMax.val / 2;\n        if(ans>0) throw new Error(d+' ans:'+ans);\n        return ans;\n    }\n    throw new Error('not support='+d);\n}\n\ncalc();\n\n"
       }, {
         "key" : "side7d",
-        "val" : "const th = bzk.g('TH');\r\nconst rf = ${RF_Bias_FIXED};\r\nconst d = rf.macro.state;\r\nconst lastv = rf.last.val;\r\nconst dtime = rf.macro.nearPeak.dtime;\r\nfunction calc(){\r\n    if(!checkTime()) return 'OVER_PICK';\r\n    if(d == 'FALL'){\r\n        return lastv > th ? 'SELL':'7D_SELL_TH';\r\n    }\r\n    if(d== 'RISE'){\r\n        return lastv < th ? 'BUY':'7D_BUY_TH';\r\n    }\r\n    throw new Error('not support='+d);\r\n    \r\n}\r\n\r\nfunction checkTime(){\r\n    return dtime < (5 * 60 * 60);\r\n}\r\n\r\ncalc();"
+        "val" : "!javascript===\r\nconst th = bzk.g('TH');\r\nconst rf = ${RF_Bias_FIXED};\r\nconst d = rf.macro.state;\r\nconst lastv = rf.last.val;\r\nconst dtime = rf.macro.nearPeak.dtime;\r\nfunction calc(){\r\n    if(!checkTime()) return 'OVER_PICK';\r\n    if(d == 'FALL'){\r\n        return lastv > th ? 'SELL':'7D_SELL_TH';\r\n    }\r\n    if(d== 'RISE'){\r\n        return lastv < th ? 'BUY':'7D_BUY_TH';\r\n    }\r\n    throw new Error('not support='+d);\r\n    \r\n}\r\n\r\nfunction checkTime(){\r\n    return dtime < (5 * 60 * 60);\r\n}\r\n\r\ncalc();"
+      } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
+      "uid" : "Ae6fhb7iKPwn",
+      "name" : "RFBias5DSYS",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flatData" : [ {
+        "key" : "RFBias5DSYS",
+        "val" : "!javascript===\nconst rf = bzk.g('Bais.${symbol}.RF.D5');\nrf;"
       } ]
     } ],
     "links" : [ {
@@ -338,7 +349,7 @@
       }
     } ],
     "vars" : { },
-    "taskSort" : [ "zpYbJsMkkB3R", "L2HlEddXV6pa", "rcpWKc8OlITQ", "tKVLlIi2OOtc" ],
+    "taskSort" : [ "zpYbJsMkkB3R", "Ae6fhb7iKPwn", "L2HlEddXV6pa", "rcpWKc8OlITQ", "tKVLlIi2OOtc" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
@@ -394,11 +405,12 @@
     "peakPeriodNum" : 144
   },
   "entry" : {
-    "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
+    "clazz" : "net.bzk.flow.model.Entry$FixedRateEntry",
     "boxUid" : "vKSau3Y0hT1i",
     "autoRegister" : false,
-    "requiredKeys" : [ "symbol" ],
-    "outputKeys" : [ ]
+    "period" : 100,
+    "unit" : "HOURS",
+    "initialDelay" : 0
   },
   "logEncryptKey" : "1234567890123456",
   "threadCfg" : {

@@ -44,6 +44,8 @@ public class VarMap extends JsonMap {
 					return Optional.of(bo);
 				if (fo != null)
 					return Optional.of(fo);
+				if (so != null)
+					return Optional.of(so);
 			}
 			return Optional.empty();
 		}

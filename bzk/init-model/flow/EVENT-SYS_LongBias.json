@@ -145,8 +145,8 @@
       "type" : "lessthan"
     },
     "transition" : {
-      "toBox" : "wXs9dMAVsKYJ",
-      "endTag" : null,
+      "toBox" : "",
+      "endTag" : "DONE",
       "failEnd" : false,
       "endResultKeys" : [ ]
     }
@@ -156,18 +156,12 @@
     "symbols" : [ "BCH", "BNB", "BTC", "EOS", "ETC", "ETH", "LTC", "XRP" ]
   },
   "entry" : {
-    "clazz" : "net.bzk.flow.model.Entry$EventEntry",
+    "clazz" : "net.bzk.flow.model.Entry$FixedRateEntry",
     "boxUid" : "d6qUszCxvhR6",
-    "autoRegister" : true,
-    "condition" : {
-      "clazz" : "net.bzk.flow.model.Condition$ConditionTxt",
-      "kind" : "NONE",
-      "next" : null,
-      "left" : "${data}",
-      "right" : "CronFetchCMC",
-      "not" : false,
-      "type" : "equal"
-    }
+    "autoRegister" : false,
+    "period" : 100,
+    "unit" : "HOURS",
+    "initialDelay" : 0
   },
   "logEncryptKey" : "1234567890123456",
   "threadCfg" : {
