@@ -43,182 +43,191 @@ import net.bzk.infrastructure.ex.BzkRuntimeException;
 @Slf4j
 public class BoxRuner {
 
-	@Inject
-	private ApplicationContext context;
-	@Inject
-	private RunVarService runVarService;
-	@Inject
-	protected FastVarQueryer varQueryer;
-	@Inject
-	private RunLogService logUtils;
-	@Getter
-	private Box model;
-	@Getter
-	private String uid;
-	@Getter
-	@Setter
-	private VarMap vars = new VarMap();
-	@Getter
-	private Bundle bundle;
+    @Inject
+    private ApplicationContext context;
+    @Inject
+    private RunVarService runVarService;
+    @Inject
+    protected FastVarQueryer varQueryer;
+    @Inject
+    private RunLogService logUtils;
+    @Getter
+    private Box model;
+    @Getter
+    private String uid;
+    @Getter
+    @Setter
+    private VarMap vars = new VarMap();
+    @Getter
+    private Bundle bundle;
 
-	@Data
-	@Builder
-	public static class Bundle {
-		private String runFlowUid;
-		private String flowUid;
-		private FlowRuner flowRuner;
-	}
+    @Data
+    @Builder
+    public static class Bundle {
+        private String runFlowUid;
+        private String flowUid;
+        private FlowRuner flowRuner;
+    }
 
-	public BoxRuner init(Bundle b, Box m) {
-		model = m;
-		bundle = b;
-		uid = RandomStringUtils.randomAlphanumeric(Constant.RUN_UID_SIZE);
-		vars = m.getVars();
-		varQueryer.init(genUids());
-		return this;
-	}
+    public BoxRuner init(Bundle b, Box m) {
+        model = m;
+        bundle = b;
+        uid = RandomStringUtils.randomAlphanumeric(Constant.RUN_UID_SIZE);
+        vars = m.getVars();
+        varQueryer.init(genUids());
+        return this;
+    }
 
-	public Uids genUids() {
-		Uids ans = new Uids();
-		ans.setBoxUid(model.getUid());
-		ans.setRunBoxUid(uid);
-		ans.setFlowUid(bundle.flowUid);
-		ans.setRunFlowUid(bundle.runFlowUid);
-		return ans;
-	}
+    public Uids genUids() {
+        Uids ans = new Uids();
+        ans.setBoxUid(model.getUid());
+        ans.setRunBoxUid(uid);
+        ans.setFlowUid(bundle.flowUid);
+        ans.setRunFlowUid(bundle.runFlowUid);
+        return ans;
+    }
 
-	public synchronized void run() {
+    public synchronized void run() {
+        try {
+            logUtils.log(genUids(), RunState.BoxStart, l -> {
+            });
+            if (model.getWhileJudgment() == null) {
+                if (rundownAndLog())
+                    return;
+            } else {
+                while (checkConditioner(model.getWhileJudgment())) {
+                    if (rundownAndLog()) {
+                        return;
+                    }
+                    logUtils.log(genUids(), RunState.WhileLoopBottom);
+                }
+            }
+            if (model.getTransition().isEnd()) {
+                endFlow(model.getTransition());
+            } else {
+                transitBox(model.getTransition());
+            }
+        } catch (Exception ex) {
+            logUtils.log(genUids(), RunState.BoxError, l -> {
+                l.setException(ex.toString());
+                l.setExceptionClazz(ex.getClass().toGenericString());
+                l.setMsg(ex.getMessage());
+            });
+            throw ex;
+        }
 
-		logUtils.log(genUids(), RunState.BoxStart, l -> {
-		});
-		if (model.getWhileJudgment() == null) {
-			if (rundownAndLog())
-				return;
-		} else {
-			while (checkConditioner(model.getWhileJudgment())) {
-				if (rundownAndLog()) {
-					return;
-				}
-				logUtils.log(genUids(), RunState.WhileLoopBottom);
-			}
-		}
-		if (model.getTransition().isEnd()) {
-			endFlow(model.getTransition());
-		} else {
-			transitBox(model.getTransition());
-		}
-	}
+    }
 
-	private boolean rundownAndLog() {
-		logUtils.log(genUids(), RunState.BoxLoop);
-		boolean b = rundown();
-		return b;
-	}
+    private boolean rundownAndLog() {
+        logUtils.log(genUids(), RunState.BoxLoop);
+        boolean b = rundown();
+        return b;
+    }
 
-	// true : break; false : continue
-	private boolean rundown() {
-		List<String> taskSort = model.getTaskSort();
-		for (int i = 0; i < taskSort.size(); i++) {
-			String tuid = taskSort.get(i);
-			if (runAction(tuid)) {
-				continue;
-			}
-			Link l = findLink(tuid).get();
-			if (runLink(l)) {
-				return true;
-			}
-		}
-		return false;
-	}
+    // true : break; false : continue
+    private boolean rundown() {
+        List<String> taskSort = model.getTaskSort();
+        for (int i = 0; i < taskSort.size(); i++) {
+            String tuid = taskSort.get(i);
+            if (runAction(tuid)) {
+                continue;
+            }
+            Link l = findLink(tuid).get();
+            if (runLink(l)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-	public boolean runAction(String aUid) {
-		Optional<Action> ao = findAction(aUid);
-		if (!ao.isPresent()) {
-			return false;
-		}
-		Action a = ao.get();
-		VarValSet vvs = callAction(a);
-		if (vvs != null) {
-			runVarService.putVarVals(genUids(), vvs);
-		}
+    public boolean runAction(String aUid) {
+        Optional<Action> ao = findAction(aUid);
+        if (!ao.isPresent()) {
+            return false;
+        }
+        Action a = ao.get();
+        VarValSet vvs = callAction(a);
+        if (vvs != null) {
+            runVarService.putVarVals(genUids(), vvs);
+        }
 
-		logUtils.log(genUids(), RunState.EndAction);
-		return true;
-	}
+        logUtils.log(genUids(), RunState.EndAction);
+        return true;
+    }
 
-	private boolean endFlow(Transition t) {
-		if (!t.isEnd())
-			return false;
-		logUtils.log(genUids(), RunState.EndFlow, l -> l.setMsg(t.setupEndTag(varQueryer)));
-		bundle.flowRuner.onEnd(t, listEndResult(t));
-		return true;
-	}
+    private boolean endFlow(Transition t) {
+        if (!t.isEnd())
+            return false;
+        logUtils.log(genUids(), RunState.EndFlow, l -> l.setMsg(t.setupEndTag(varQueryer)));
+        bundle.flowRuner.onEnd(t, listEndResult(t));
+        return true;
+    }
 
-	private List<VarVal> listEndResult(Transition t) {
-		return t.getEndResultKeys().stream().map(this::getVarVal).collect(Collectors.toList());
-	}
+    private List<VarVal> listEndResult(Transition t) {
+        return t.getEndResultKeys().stream().map(this::getVarVal).collect(Collectors.toList());
+    }
 
-	private VarVal getVarVal(VarKey k) {
-		VarVal ans = new VarVal();
-		Object o = runVarService.findValVal(genUids(), k.getLv(), k.getKey()).get();
-		ans.setKey(k.getKey());
-		ans.setLv(k.getLv());
-		ans.setVal(o);
-		return ans;
-	}
+    private VarVal getVarVal(VarKey k) {
+        VarVal ans = new VarVal();
+        Object o = runVarService.findValVal(genUids(), k.getLv(), k.getKey()).get();
+        ans.setKey(k.getKey());
+        ans.setLv(k.getLv());
+        ans.setVal(o);
+        return ans;
+    }
 
-	private boolean runLink(Link l) {
-		if (checkConditioner(l.getCondition())) {
-			if (!endFlow(l.getTransition())) {
-				transitBox(l.getTransition());
-			}
-			return true;
-		}
-		return false;
-	}
+    private boolean runLink(Link l) {
+        if (checkConditioner(l.getCondition())) {
+            if (!endFlow(l.getTransition())) {
+                transitBox(l.getTransition());
+            }
+            return true;
+        }
+        return false;
+    }
 
-	private void transitBox(Transition t) {
-		logUtils.log(genUids(), RunState.LinkTo);
-		var rl = listEndResult(t);
-		bundle.flowRuner.runBoxByUid(t.getToBox(), rl);
-	}
+    private void transitBox(Transition t) {
+        logUtils.log(genUids(), RunState.LinkTo);
+        var rl = listEndResult(t);
+        bundle.flowRuner.runBoxByUid(t.getToBox(), rl);
+    }
 
-	private boolean checkConditioner(Condition c) {
-		var cer = Conditioner.initConditioner(context, genUids(), c);
-		return cer.isTrue();
-	}
+    private boolean checkConditioner(Condition c) {
+        var cer = Conditioner.initConditioner(context, genUids(), c);
+        return cer.isTrue();
+    }
 
-	public Optional<Action> findAction(String uid) {
-		return model.getActions().stream().filter(a -> StringUtils.equals(uid, a.getUid())).findFirst();
-	}
+    public Optional<Action> findAction(String uid) {
+        return model.getActions().stream().filter(a -> StringUtils.equals(uid, a.getUid())).findFirst();
+    }
 
-	public Optional<Link> findLink(String uid) {
-		return model.getLinks().stream().filter(l -> StringUtils.equals(uid, l.getUid())).findFirst();
-	}
+    public Optional<Link> findLink(String uid) {
+        return model.getLinks().stream().filter(l -> StringUtils.equals(uid, l.getUid())).findFirst();
+    }
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private VarValSet callAction(Action a) {
-		try {
-			logUtils.log(genUids(), RunState.StartAction);
-			ActionCall naer = context.getBean(a.getClazz(), ActionCall.class);
-			naer.initBase(genUids(), a);
-			Callable<VarValSet> cb = naer;
-			VarValSet ans = cb.call();
-			logUtils.log(naer.getUids(), RunState.ActionResult, l -> l.setVarVals(VarValList.gen(ans.list())));
-			return ans;
-		} catch (Exception e) {
-			logUtils.log(genUids(), RunState.ActionCallFail,l->{
-				l.setFailed(true);
-				l.setMsg(e.getMessage());
-				l.setException(ExceptionUtils.getStackTrace(e));
-				l.setExceptionClazz(e.getClass().toGenericString());
-			});
-			if (a.isTryErrorble()) {
-				return VarValSet.genError(a, e);
-			}
-			throw new BzkRuntimeException(e);
-		}
-	}
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private VarValSet callAction(Action a) {
+        try {
+            logUtils.log(genUids(), RunState.StartAction);
+            ActionCall naer = context.getBean(a.getClazz(), ActionCall.class);
+            naer.initBase(genUids(), a);
+            Callable<VarValSet> cb = naer;
+            VarValSet ans = cb.call();
+            logUtils.log(naer.getUids(), RunState.ActionResult, l -> l.setVarVals(VarValList.gen(ans.list())));
+            return ans;
+        } catch (Exception e) {
+            logUtils.log(genUids(), RunState.ActionCallFail, l -> {
+                l.setFailed(true);
+                l.setMsg(e.getMessage());
+                l.setException(ExceptionUtils.getStackTrace(e));
+                l.setExceptionClazz(e.getClass().toGenericString());
+            });
+            if (a.isTryErrorble()) {
+                return VarValSet.genError(a, e);
+            }
+            throw new BzkRuntimeException(e);
+        }
+    }
 
 //	public static class VarValB {
 //		public ActionCall call;

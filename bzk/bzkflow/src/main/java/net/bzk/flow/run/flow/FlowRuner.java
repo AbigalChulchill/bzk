@@ -85,6 +85,7 @@ public class FlowRuner implements Runnable {
 		} catch (Exception e) {
 			e.printStackTrace();
 			info.state = State.Fail;
+			callback.accept(this);
 		}
 
 	}

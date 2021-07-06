@@ -4,7 +4,9 @@ import java.util.function.Consumer;
 
 import javax.inject.Inject;
 
+import lombok.extern.slf4j.Slf4j;
 import net.bzk.flow.run.dao.SysVarDao;
+import net.bzk.infrastructure.JsonUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +22,7 @@ import net.bzk.flow.run.flow.BoxRuner;
 import net.bzk.flow.run.flow.FlowRuner;
 import net.bzk.infrastructure.convert.Overwrite;
 
+@Slf4j
 @Service
 public class RunLogService {
 
@@ -66,10 +69,16 @@ public class RunLogService {
 
     @Transactional
     public void log(Uids u, RunState sr, Consumer<RunLog> cs) {
-        var ans = genLog(u);
-        ans.setState(sr);
-        cs.accept(ans);
-        dao.save(ans);
+        try {
+            var ans = genLog(u);
+            ans.setState(sr);
+            cs.accept(ans);
+            dao.save(ans);
+        } catch (Exception e) {
+            var us = JsonUtils.toJson(u);
+            log.error(us + " " + sr, e);
+        }
+
     }
 
     public RunLog genLog(Uids u) {

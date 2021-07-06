@@ -56,7 +56,7 @@ export enum RunState {
   ActionCallFail = 'ActionCallFail', ActionCallWarn = 'ActionCallWarn',
   ActionResult = 'ActionResult', WhileLoopBottom = 'WhileLoopBottom',
   ConditionFail = 'ConditionFail', ModelReplaced = 'ModelReplaced', PolyglotExecute = 'PolyglotExecute',
-  ConditionResult = 'ConditionResult'
+  ConditionResult = 'ConditionResult', BoxError = 'BoxError'
 
 }
 

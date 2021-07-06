@@ -33,7 +33,7 @@ public class RunLog implements Serializable, CreateUpdateDate {
 		BoxStart, BoxLoop, BoxLoopDone, EndFlow, LinkTo,
 		StartAction, EndAction, ActionCall, ActionCallFail,
 		ActionCallWarn, ActionResult, WhileLoopBottom,
-		ConditionFail, ModelReplaced, PolyglotExecute, ConditionResult,
+		ConditionFail, ModelReplaced, PolyglotExecute, ConditionResult, BoxError,
 
 	}
 
