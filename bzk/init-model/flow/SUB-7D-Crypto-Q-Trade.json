@@ -90,7 +90,7 @@
         "key" : "side7d",
         "val" : "!javascript===\r\nconst th = bzk.g('TH');\r\nconst rf = ${RF_Bias_FIXED};\r\nconst d = rf.macro.state;\r\nconst lastv = rf.last.val;\r\nconst dtime = rf.macro.nearPeak.dtime;\r\nfunction calc(){\r\n    if(!checkTime()) return 'OVER_PICK_'+d;\r\n    if(d == 'FALL'){\r\n        return lastv > th ? 'SELL':'7D_SELL_TH';\r\n    }\r\n    if(d== 'RISE'){\r\n        return lastv < th ? 'BUY':'7D_BUY_TH';\r\n    }\r\n    throw new Error('not support='+d);\r\n    \r\n}\r\n\r\nfunction checkTime(){\r\n    return dtime < (5 * 60 * 60);\r\n}\r\n\r\ncalc();"
       }, {
-        "key" : "trigger_type",
+        "key" : "~trigger_type",
         "val" : "7DMM"
       } ]
     }, {
@@ -155,6 +155,47 @@
         "lv" : "not_specify",
         "key" : "trigger_type"
       } ]
+    }
+  }, {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "YOqDrvPxxCiK",
+    "name" : "BUY",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "U9DwmbucQ94V",
+      "name" : "BuyOrder",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flowUid" : "kCmTvvaxfIBr",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "symbol",
+        "val" : "${symbol}"
+      }, {
+        "key" : "side",
+        "val" : "BUY"
+      }, {
+        "key" : "guardRate",
+        "val" : "0.03"
+      }, {
+        "key" : "investedRate",
+        "val" : "0.12"
+      }, {
+        "key" : "thth",
+        "val" : "0.003"
+      } ],
+      "outputReflects" : [ ]
+    } ],
+    "links" : [ ],
+    "vars" : { },
+    "taskSort" : [ "U9DwmbucQ94V" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "O ${trigger_type} BUY ${symbol}  ${acceleration.val}_${direction.last.val}_${direction.macro.state}",
+      "failEnd" : false,
+      "endResultKeys" : [ ]
     }
   }, {
     "clazz" : "net.bzk.flow.model.Box",
@@ -229,7 +270,7 @@
         "key" : "~rapidReboundRate",
         "val" : "!javascript===\n\nconst th = ${velocityTH.val};\nconst a = ${acceleration.val};\nconst ans = a/th;\nans;"
       }, {
-        "key" : "trigger_type",
+        "key" : "~trigger_type",
         "val" : "v"
       } ]
     }, {
@@ -368,47 +409,6 @@
         "lv" : "not_specify",
         "key" : "trigger_type"
       } ]
-    }
-  }, {
-    "clazz" : "net.bzk.flow.model.Box",
-    "uid" : "YOqDrvPxxCiK",
-    "name" : "BUY",
-    "actions" : [ {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "U9DwmbucQ94V",
-      "name" : "BuyOrder",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "flowUid" : "kCmTvvaxfIBr",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "symbol",
-        "val" : "${symbol}"
-      }, {
-        "key" : "side",
-        "val" : "BUY"
-      }, {
-        "key" : "guardRate",
-        "val" : "0.03"
-      }, {
-        "key" : "investedRate",
-        "val" : "0.12"
-      }, {
-        "key" : "thth",
-        "val" : "0.003"
-      } ],
-      "outputReflects" : [ ]
-    } ],
-    "links" : [ ],
-    "vars" : { },
-    "taskSort" : [ "U9DwmbucQ94V" ],
-    "whileJudgment" : null,
-    "transition" : {
-      "toBox" : "",
-      "endTag" : "O ${trigger_type} BUY ${symbol}  ${acceleration.val}_${direction.last.val}_${direction.macro.state}",
-      "failEnd" : false,
-      "endResultKeys" : [ ]
     }
   } ],
   "varCfgNames" : [ ],
