@@ -8,87 +8,6 @@
     "name" : "Box",
     "actions" : [ {
       "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "xA29JotKCgJg",
-      "name" : "RF_15DBais_rate",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "flowUid" : "PeakFinder5",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "tsdbQuery",
-        "val" : "import \"strings\"\r\nfrom(bucket: \"quote\")\r\n  |> range(start: -100d)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"daily\" and\r\n    r.valmean == \"close\" and\r\n    r.symbol == \"${symbol}\"\r\n  )\r\n  |> map(fn: (r) => ({ r with cp: r._value   }))\r\n  |> movingAverage(n: int( v: strings.replaceAll(v: \"15d\", t: \"d\", u: \"\")) )\r\n  |> map(fn: (r) => ({ r with _value: (r.cp-r._value)/r._value   }))"
-      }, {
-        "key" : "peakMaxWaitSeconds",
-        "val" : "!javascript===\nconst ans = 60*60*24*3;\nans;"
-      }, {
-        "key" : "symbol",
-        "val" : "${symbol}"
-      }, {
-        "key" : "macroAmplitudeRate",
-        "val" : "0.05"
-      } ],
-      "outputReflects" : [ {
-        "srcKey" : "ans",
-        "toKey" : {
-          "lv" : "run_sys",
-          "key" : "Bais.${symbol}.RF_rate.D15"
-        }
-      } ]
-    }, {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "Tw3zbE62xO8i",
-      "name" : "AVG_5D",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "flowUid" : "9RLQvpmbGa35",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "tsdbQuery",
-        "val" : "import \"strings\"\nfrom(bucket: \"quote\")\n  |> range(start: -30d)\n  |> filter(fn: (r) =>\n    r._measurement == \"daily\" and\n    r.valmean == \"close\" and\n    r.symbol == \"${symbol}\"\n  )\n |> movingAverage(n: int( v: strings.replaceAll(v: \"5d\", t: \"d\", u: \"\")) )"
-      }, {
-        "key" : "vaildMins",
-        "val" : "3000"
-      }, {
-        "key" : "skipCount",
-        "val" : "0"
-      } ],
-      "outputReflects" : [ {
-        "srcKey" : "nearVal",
-        "toKey" : {
-          "lv" : "run_sys",
-          "key" : "AVG.${symbol}.D5"
-        }
-      } ]
-    }, {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "uoZV5GCzKACM",
-      "name" : "SFT_30D_rate",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "flowUid" : "9RLQvpmbGa35",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "tsdbQuery",
-        "val" : "org= from(bucket: \"quote\")\r\n  |> range(start: -100d)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"daily\" and\r\n    r.valmean == \"close\" and\r\n    r.symbol == \"${symbol}\"\r\n  )\r\n\r\nsft= org\r\n  |> timeShift(duration: 30d)\r\n\r\njoin(tables: {org: org, sft: sft}, on: [\"_time\"])\r\n    |> map(fn: (r) => ({ r with _value: r._value_org - r._value_sft     }))\r\n"
-      }, {
-        "key" : "vaildMins",
-        "val" : "3000"
-      }, {
-        "key" : "skipCount",
-        "val" : "0"
-      } ],
-      "outputReflects" : [ {
-        "srcKey" : "nearVal",
-        "toKey" : {
-          "lv" : "run_sys",
-          "key" : "SFT.${symbol}.rate.D30"
-        }
-      } ]
-    }, {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
       "uid" : "WP5kSBhQyCAK",
       "name" : "RF_5DBais",
       "tryErrorble" : false,
@@ -130,12 +49,52 @@
         "key" : "symbolIdx",
         "val" : "!javascript===\n${symbolIdx}+1"
       } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "VE0ZPTVqBAYL",
+      "name" : "RF_Fixed_120DBais_MA15D",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flowUid" : "PeakFinder5",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "tsdbQuery",
+        "val" : "import \"strings\"\na = from(bucket: \"quote\")\n  |> range(start: -120d)\n  |> filter(fn: (r) =>\n    r._measurement == \"daily\" and\n    r.valmean == \"open\" and\n    r.symbol == \"${symbol}\"\n  )\n  |>mean()\n  |> findColumn(\n      fn: (key) => key.valmean == \"open\",\n      column: \"_value\"\n    )\n\n\nfrom(bucket: \"quote\")\n  |> range(start: -120d)\n  |> filter(fn: (r) =>\n    r._measurement == \"daily\" and\n    r.valmean == \"open\" and\n    r.symbol == \"${symbol}\"\n  )\n  |>map(fn: (r) => ({ r with _value: r._value - a[0] }))  \n  |> map(fn: (r) => ({ r with alias:\"orignal\" }))    \n  |> movingAverage(n: int( v: strings.replaceAll(v: \"15d\", t: \"d\", u: \"\")) )\n  "
+      }, {
+        "key" : "peakMaxWaitSeconds",
+        "val" : "!javascript===\nconst ans = 60*60*24*8;\nans;"
+      }, {
+        "key" : "symbol",
+        "val" : "${symbol}"
+      }, {
+        "key" : "macroAmplitudeRate",
+        "val" : "0.02"
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "ans",
+        "toKey" : {
+          "lv" : "run_sys",
+          "key" : "Bais.${symbol}.Fixed.120D.RF.MA15D"
+        }
+      } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
+      "uid" : "lIOOCcM9zfPN",
+      "name" : "OrganizeVars",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flatData" : [ {
+        "key" : "%Crude.${symbol}.120D",
+        "val" : "!javascript===\nconst rf = bzk.g(\"%Bais.${symbol}.Fixed.120D.RF.MA15D\");\n\nfunction calc(){\n\n}\n\n"
+      } ]
     } ],
     "links" : [ ],
     "vars" : {
       "symbolIdx" : 0
     },
-    "taskSort" : [ "244CIjUbhzKo", "xA29JotKCgJg", "Tw3zbE62xO8i", "uoZV5GCzKACM", "WP5kSBhQyCAK" ],
+    "taskSort" : [ "244CIjUbhzKo", "WP5kSBhQyCAK", "VE0ZPTVqBAYL", "lIOOCcM9zfPN" ],
     "whileJudgment" : {
       "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
       "kind" : "NONE",
