@@ -44,6 +44,9 @@
       }, {
         "key" : "tags",
         "val" : "[\"shortTerm${side}\"]"
+      }, {
+        "key" : "trigger",
+        "val" : "${trigger}"
       } ],
       "outputReflects" : [ ]
     }, {
@@ -115,7 +118,7 @@
       },
       "transition" : {
         "toBox" : "",
-        "endTag" : "dir--${symbol}-${side}:   ${direction.macro.state} ${direction.micro.state}",
+        "endTag" : "dir--${symbol}-${side}:   ${direction.macro.state} ${direction.micro.state} T:${trigger}",
         "failEnd" : false,
         "endResultKeys" : [ ]
       }
@@ -132,7 +135,7 @@
       },
       "transition" : {
         "toBox" : "",
-        "endTag" : "TH_${symbol} ${side} : ${th.val} ${direction.last.val}",
+        "endTag" : "TH_${symbol} ${side} : ${th.val} ${direction.last.val} T:${trigger}",
         "failEnd" : false,
         "endResultKeys" : [ ]
       }
@@ -150,7 +153,7 @@
       },
       "transition" : {
         "toBox" : "",
-        "endTag" : " thth: ${thth}  th: ${th.val}",
+        "endTag" : " thth: ${thth}  th: ${th.val}  T:${trigger}",
         "failEnd" : false,
         "endResultKeys" : [ ]
       }
@@ -173,13 +176,14 @@
     "side" : "BUY",
     "periodN" : 12,
     "thRate" : "1.00",
+    "trigger" : "NONE",
     "thth" : 0
   },
   "entry" : {
     "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
     "boxUid" : "X9XRPTTIQJIQ",
     "autoRegister" : false,
-    "requiredKeys" : [ "side", "symbol", "guardRate", "thRate", "periodN", "investedRate", "thth" ],
+    "requiredKeys" : [ "side", "symbol", "guardRate", "thRate", "periodN", "investedRate", "thth", "trigger" ],
     "outputKeys" : [ ]
   },
   "logEncryptKey" : "1234567890123456",
