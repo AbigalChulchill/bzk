@@ -48,50 +48,6 @@
     }
   }, {
     "clazz" : "net.bzk.flow.model.Box",
-    "uid" : "Hoh5CNTFiFDi",
-    "name" : "SELL",
-    "actions" : [ {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "gsxIHdLoOV2I",
-      "name" : "SellOrder",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "flowUid" : "kCmTvvaxfIBr",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "symbol",
-        "val" : "${symbol}"
-      }, {
-        "key" : "side",
-        "val" : "SELL"
-      }, {
-        "key" : "guardRate",
-        "val" : "0.032"
-      }, {
-        "key" : "investedRate",
-        "val" : "0.25"
-      }, {
-        "key" : "thth",
-        "val" : "${thth}"
-      }, {
-        "key" : "trigger",
-        "val" : "${trigger_type}"
-      } ],
-      "outputReflects" : [ ]
-    } ],
-    "links" : [ ],
-    "vars" : { },
-    "taskSort" : [ "gsxIHdLoOV2I" ],
-    "whileJudgment" : null,
-    "transition" : {
-      "toBox" : "",
-      "endTag" : "O ${trigger_type} SELL ${symbol}  ${acceleration.val}_${direction.last.val}_${direction.macro.state}",
-      "failEnd" : false,
-      "endResultKeys" : [ ]
-    }
-  }, {
-    "clazz" : "net.bzk.flow.model.Box",
     "uid" : "b6j6H05VX2Wq",
     "name" : "7D_MINMAX",
     "actions" : [ {
@@ -205,6 +161,50 @@
         "lv" : "not_specify",
         "key" : "trigger_type"
       } ]
+    }
+  }, {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "Hoh5CNTFiFDi",
+    "name" : "SELL",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "gsxIHdLoOV2I",
+      "name" : "SellOrder",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flowUid" : "kCmTvvaxfIBr",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "symbol",
+        "val" : "${symbol}"
+      }, {
+        "key" : "side",
+        "val" : "SELL"
+      }, {
+        "key" : "guardRate",
+        "val" : "0.032"
+      }, {
+        "key" : "investedRate",
+        "val" : "0.25"
+      }, {
+        "key" : "thth",
+        "val" : "${thth}"
+      }, {
+        "key" : "trigger",
+        "val" : "${trigger_type}"
+      } ],
+      "outputReflects" : [ ]
+    } ],
+    "links" : [ ],
+    "vars" : { },
+    "taskSort" : [ "gsxIHdLoOV2I" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "O ${trigger_type} SELL ${symbol}  ${acceleration.val}_${direction.last.val}_${direction.macro.state}",
+      "failEnd" : false,
+      "endResultKeys" : [ ]
     }
   }, {
     "clazz" : "net.bzk.flow.model.Box",

@@ -1870,10 +1870,41 @@
         "key" : "ans",
         "val" : "!javascript===\r\nconst rMap = ${timeValMap};\r\nlet baseVal = ${baseVal};\r\nconst peakMaxWaitSeconds = ${peakMaxWaitSeconds};\r\nconst macroAmplitudeRate = ${macroAmplitudeRate};\r\n\r\nbaseVal = baseVal ? baseVal : 0;\r\nconst STATE_RISE = 'RISE';\r\nconst STATE_FALL = 'FALL';\r\nconst MINED = 99;\r\nconst MAXED = 66;\r\nconst NONE = 22;\r\n\r\nlet keys = Object.keys(rMap);\r\n\r\nkeys = keys.reverse();\r\nconst firstKey = keys[0];\r\n\r\nfunction listMinMax(micro, filter = null) {\r\n    let ans = {\r\n        min: [],\r\n        max: [],\r\n        all: []\r\n    };\r\n    for (let i = 0; i < keys.length; i++) {\r\n        let mmr = findMinOrMax(i, micro);\r\n        let info = genMinMax(i)\r\n        if (mmr == MINED) {\r\n            ans.min.push(info);\r\n            ans.all.push(info);\r\n        } else if (mmr == MAXED) {\r\n            ans.max.push(info);\r\n            ans.all.push(info);\r\n        }\r\n    }\r\n    if (filter) ans = filter(ans);\r\n    return ans;\r\n}\r\n\r\nfunction getNearInfo(list) {\r\n    let nt = Number.MAX_SAFE_INTEGER;\r\n    let ans = null;\r\n    for (const e of list) {\r\n        let key = e.key;\r\n        let tr = subtractKey(firstKey, key);\r\n        if (tr < nt) {\r\n            nt = tr;\r\n            ans = e;\r\n        }\r\n    }\r\n    return ans;\r\n\r\n}\r\n\r\nfunction genMinMax(i) {\r\n    const key = keys[i];\r\n    return {\r\n        idx: i,\r\n        key: key,\r\n        val: rMap[key],\r\n        dtime: subtractKey(firstKey, key)\r\n    };\r\n}\r\n\r\nfunction mapInfos(listi) {\r\n    let ans = {};\r\n    for (const e of listi) {\r\n        ans[e.dtime] = e;\r\n    }\r\n    return ans;\r\n}\r\n\r\nfunction getVal(key) {\r\n    return rMap[key] - baseVal;\r\n}\r\n\r\nfunction isBoundary(timeSize, idx, micro, forward) {\r\n    if (idx < 0) return true;\r\n    if (idx >= keys.length) return true;\r\n    if (micro && timeSize > peakMaxWaitSeconds) return true;\r\n    if (micro) return false;\r\n    let nidx = forward ? idx - 1 : idx + 1;\r\n    if (nidx < 0) return true;\r\n    if (nidx >= keys.length) return true;\r\n    let cv = getVal(keys[idx]);\r\n    let nv = getVal(keys[nidx]);\r\n    return nv * cv < 0;\r\n}\r\n\r\nfunction findMinOrMax(idx, micro) {\r\n    const curIdx = idx;\r\n    const curKey = keys[idx];\r\n    const curv = getVal(curKey);\r\n    let maxed = true, mined = true;\r\n    let forward = true;\r\n    while (maxed || mined) {\r\n        if (forward) idx--; else idx++;\r\n        let nk = keys[idx];\r\n        let nv = getVal(nk);\r\n        let timeSize = Math.abs(subtractKey(curKey, nk));\r\n        if (isBoundary(timeSize, idx, micro, forward)) {\r\n            if (forward) {\r\n                idx = curIdx;\r\n                forward = false;\r\n                continue;\r\n            }\r\n\r\n            break;\r\n        }\r\n        if (maxed) {\r\n            if (nv > curv) maxed = false\r\n        }\r\n        if (mined) {\r\n            if (nv < curv) mined = false\r\n        }\r\n    }\r\n    if (maxed && mined) return NONE;\r\n    if (maxed && (micro || curv > 0)) return MAXED;\r\n    if (mined && (micro || curv < 0)) return MINED;\r\n    return NONE;\r\n}\r\n\r\nfunction subtractKey(k1, k2) {\r\n    let k1t = new Date(k1);\r\n    let k2t = new Date(k2);\r\n    return (k1t - k2t) / 1000;\r\n}\r\n\r\nfunction genTrendInfo(micro, ft = null) {\r\n    const minMaxInfo = listMinMax(micro, ft);\r\n    const nearMax = getNearInfo(minMaxInfo.max);\r\n    const nearMin = getNearInfo(minMaxInfo.min);\r\n    const maxNearTime = nearMax ? subtractKey(firstKey, nearMax.key) : Number.MAX_SAFE_INTEGER;\r\n    const minNearTime = nearMin ? subtractKey(firstKey, nearMin.key) : Number.MAX_SAFE_INTEGER;\r\n    console.log(nearMax);\r\n    console.log(nearMin);\r\n    const state = calcState();\r\n\r\n    console.log(state);\r\n\r\n    function calcState() {\r\n        if (maxNearTime < minNearTime) {\r\n            return maxNearTime > peakMaxWaitSeconds ? STATE_FALL : STATE_RISE;\r\n        } else {\r\n            return minNearTime > peakMaxWaitSeconds ? STATE_RISE : STATE_FALL;\r\n        }\r\n    }\r\n\r\n\r\n    function getOtherNearPeak() {\r\n        if (nearMax && nearMax.idx == 0) return nearMin;\r\n        if (nearMin && nearMin.idx == 0) return nearMax;\r\n        return state == STATE_FALL ? nearMin : nearMax;\r\n    }\r\n\r\n    return {\r\n        state: state,\r\n        maxList: mapInfos(minMaxInfo.max),\r\n        minList: mapInfos(minMaxInfo.min),\r\n        allList: mapInfos(minMaxInfo.all),\r\n        maxNearTime: maxNearTime,\r\n        minNearTime: minNearTime,\r\n        nearMax: nearMax,\r\n        nearMin: nearMin,\r\n        nearPeak: getOtherNearPeak()\r\n    };\r\n}\r\n\r\nfunction macroAmplitudeFilter(iArrays) {\r\n    let sidx = 0;\r\n    while (sidx < iArrays.all.length) {\r\n        let list = iArrays.all;\r\n        let rmList = listAmplitudeSmall(sidx, list);\r\n        for(let rmv of rmList){\r\n            removeByIdx(iArrays.all,rmv.idx);\r\n            removeByIdx(iArrays.min,rmv.idx);\r\n            removeByIdx(iArrays.max,rmv.idx);\r\n        }\r\n        sidx++;\r\n    }\r\n    return iArrays;\r\n}\r\n\r\nfunction removeByIdx(list,idx){\r\n    let index = list.findIndex(e=> e.idx == idx);\r\n    if(index<0) return;\r\n    list.splice(index, 1);\r\n}\r\n\r\nfunction listAmplitudeSmall(idx, list) {\r\n    let ans = [];\r\n    const curV = Math.abs(list[idx].val);\r\n    let forward = true, later = true;\r\n\r\n    for (let i = 1; i < list.length; i++) {\r\n        let fr = getRmForward(i);\r\n        let lr = getRmLater(i);\r\n        if (fr) ans.push(fr);\r\n        if (lr) ans.push(lr);\r\n    }\r\n\r\n    return ans;\r\n\r\n    function getRmForward(pidx) {\r\n        if (!forward) return null;\r\n        let fidx = idx - pidx;\r\n        if (fidx < 0) {\r\n            forward = false;\r\n            return null;\r\n        }\r\n        return checkOveAmplitudeRate(fidx);\r\n    }\r\n\r\n    function getRmLater(pidx) {\r\n        if (!later) return null;\r\n        let fidx = idx + pidx;\r\n        if (fidx >= list.length) {\r\n            later = false;\r\n            return null;\r\n        }\r\n        return checkOveAmplitudeRate(fidx);\r\n\r\n    }\r\n\r\n    function checkOveAmplitudeRate(fidx) {\r\n        const tv = Math.abs(list[fidx].val);\r\n        const r = tv / curV;\r\n        if (r > macroAmplitudeRate) {\r\n            later = false;\r\n            return null;\r\n        }\r\n        return list[fidx];\r\n    }\r\n}\r\n\r\nconst ans = {\r\n    micro: genTrendInfo(true),\r\n    macro: genTrendInfo(false, macroAmplitudeFilter),\r\n    last: {\r\n        time: firstKey,\r\n        val: rMap[firstKey]\r\n    }\r\n}\r\n\r\nans;"
       } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$PolyglotAction",
+      "uid" : "Li5DcLzFTPIf",
+      "name" : "clacRate",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "code" : "const rf = ${ans};\r\nconst macro = rf.macro;\r\nconst state = rf.macro.state;\r\nconst lastV = rf.last.val;\r\nconst h = getH();\r\nconst halfH = h / 2;\r\nconst A = 'A', B = 'B', C = 'C', D = 'D', E = 'E', F = 'F', G = 'G', H = 'H';\r\nconst pos = getPos();\r\n\r\nfunction getH() {\r\n    if (state == 'FALL') return Math.abs(macro.nearMin.val);\r\n    if (state == 'RISE') return Math.abs(macro.nearMax.val);\r\n    throw new Error('getH not support ' + state);\r\n}\r\n\r\nfunction getPos() {\r\n    if (state == 'RISE') {\r\n        if (lastV <= 0) {\r\n            return lastV <= -halfH ? A : B;\r\n        } else {\r\n            return lastV >= halfH ? D : C;\r\n        }\r\n    }\r\n    if (state == 'FALL') {\r\n        if (lastV <= 0) {\r\n            return lastV <= -halfH ? H : G;\r\n        } else {\r\n            return lastV >= halfH ? E : F;\r\n        }\r\n    }\r\n    throw new Error('getPos not support ' + state + ' v:' + lastV);\r\n}\r\n\r\nfunction calcInvestRate(sb) {\r\n    if (sb == 'SELL') return lastV / h;\r\n    if (sb == 'BUY') return -lastV / h;\r\n    throw new Error('calcInvestRate not support ' + state + ' v:' + lastV);\r\n}\r\n\r\nfunction calcMiddleGroudRate() {\r\n    let s = Math.abs(lastV) - halfH;\r\n    let p = s / halfH;\r\n    return Math.pow(0.5, p);\r\n}\r\n\r\nfunction calcLongGroudRate() {\r\n    let absl = Math.abs(lastV);\r\n    let p = absl / h;\r\n    return Math.pow(0.5, p);\r\n}\r\n\r\nfunction calcGroudRate(sb) {\r\n    switch (pos) {\r\n        case A: return sb == 'BUY' ? calcMiddleGroudRate() : calcLongGroudRate();\r\n        case B: return sb == 'BUY' ? calcMiddleGroudRate() : 0;\r\n        case C: return sb == 'BUY' ? calcMiddleGroudRate() : 0;\r\n        case D: return sb == 'BUY' ? calcMiddleGroudRate() : calcLongGroudRate();\r\n        case E: return sb == 'BUY' ? calcLongGroudRate() : calcMiddleGroudRate();\r\n        case F: return sb == 'BUY' ? 0 : calcMiddleGroudRate();\r\n        case G: return sb == 'BUY' ? 0 : calcMiddleGroudRate();\r\n        case H: return sb == 'BUY' ? calcLongGroudRate() : calcMiddleGroudRate();\r\n    }\r\n    throw new Error('not support ' + state + ' v:' + lastV+ 'POS:'+pos);\r\n\r\n}\r\n\r\nfunction calc() {\r\n    return {\r\n        'SELL':{\r\n            'investRate': calcInvestRate('SELL'),\r\n            'groudRate': calcGroudRate('SELL'),\r\n        },\r\n        'BUY':{\r\n            'investRate': calcInvestRate('BUY'),\r\n            'groudRate': calcGroudRate('BUY'),\r\n        },\r\n        'pos': pos,\r\n        'h': h,\r\n        'lastv': lastV,\r\n        'state':state\r\n    }\r\n}\r\n\r\ncalc();",
+      "polyglot" : "js",
+      "resultLv" : "not_specify",
+      "resultKey" : "rate"
     } ],
-    "links" : [ ],
+    "links" : [ {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "RdRHnwROwUP9",
+      "name" : "noClacRate",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
+        "kind" : "NONE",
+        "next" : null,
+        "polyglot" : "js",
+        "code" : "const ced = !${calcRated};\r\nced;"
+      },
+      "transition" : {
+        "toBox" : "",
+        "endTag" : "DONE_${symbol}",
+        "failEnd" : false,
+        "endResultKeys" : [ {
+          "lv" : "not_specify",
+          "key" : "ans"
+        } ]
+      }
+    } ],
     "vars" : { },
-    "taskSort" : [ "iyC5AMAccwQQ" ],
+    "taskSort" : [ "iyC5AMAccwQQ", "RdRHnwROwUP9", "Li5DcLzFTPIf" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
@@ -1882,6 +1913,9 @@
       "endResultKeys" : [ {
         "lv" : "not_specify",
         "key" : "ans"
+      }, {
+        "lv" : "not_specify",
+        "key" : "rate"
       } ]
     }
   }, {
@@ -1975,13 +2009,14 @@
   "varCfgNames" : [ "fin-proxy.json" ],
   "vars" : {
     "tsdbQuery" : "from(bucket: \"quote\")\r\n  |> range(start: -30h)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"realtime\" and\r\n    r.symbol == \"ETH\" and\r\n    r._field == \"price\"\r\n  )\r\n  |> difference()\r\n  |> movingAverage(n: 144 )\r\n  |> difference()\r\n  |> movingAverage(n: 144 )\r\n  |>map(fn: (r) => ({ r with alias: \"h12\" }))  ",
+    "calcRated" : false,
     "peakMaxWaitSeconds" : 7200
   },
   "entry" : {
     "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
     "boxUid" : "PeakFinderBox",
     "autoRegister" : false,
-    "requiredKeys" : [ "tsdbQuery", "peakMaxWaitSeconds", "symbol", "timeValMap", "baseVal", "macroAmplitudeRate" ],
+    "requiredKeys" : [ "tsdbQuery", "peakMaxWaitSeconds", "symbol", "timeValMap", "baseVal", "macroAmplitudeRate", "calcRated" ],
     "outputKeys" : [ "ans" ]
   },
   "logEncryptKey" : "1234567890123456",

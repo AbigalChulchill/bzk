@@ -70,12 +70,21 @@
       }, {
         "key" : "macroAmplitudeRate",
         "val" : "0.02"
+      }, {
+        "key" : "calcRated",
+        "val" : "true"
       } ],
       "outputReflects" : [ {
         "srcKey" : "ans",
         "toKey" : {
           "lv" : "run_sys",
           "key" : "Bais.${symbol}.Fixed.120D.RF.MA15D"
+        }
+      }, {
+        "srcKey" : "rate",
+        "toKey" : {
+          "lv" : "run_sys",
+          "key" : "Bais.${symbol}.Fixed.120D.RF.MA15D.OrderRate"
         }
       } ]
     }, {
@@ -86,8 +95,8 @@
       "devBoxVars" : { },
       "devFlowVars" : { },
       "flatData" : [ {
-        "key" : "%Crude.${symbol}.120D",
-        "val" : "!javascript===\nconst rf = bzk.g(\"%Bais.${symbol}.Fixed.120D.RF.MA15D\");\n\nfunction calc(){\n\n}\n\n"
+        "key" : "TEST",
+        "val" : "!javascript===\nconst rf = bzk.g(\"%Bais.${symbol}.Fixed.120D.RF.MA15D\");\nrf;\n\n"
       } ]
     } ],
     "links" : [ ],
