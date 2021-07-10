@@ -75,34 +75,8 @@
       "endResultKeys" : [ ]
     }
   } ],
-  "varCfgNames" : [ "binance.json" ],
-  "vars" : {
-    "symbols" : [ {
-      "symbol" : "BTC",
-      "finName" : "bitcoin"
-    }, {
-      "symbol" : "BCH",
-      "finName" : "Bitcoin Cash"
-    }, {
-      "symbol" : "ETH",
-      "finName" : "ethereum"
-    }, {
-      "symbol" : "ETC",
-      "finName" : "Ethereum Classic"
-    }, {
-      "symbol" : "LTC",
-      "finName" : "Litecoin"
-    }, {
-      "symbol" : "XRP",
-      "finName" : "XRP"
-    }, {
-      "symbol" : "EOS",
-      "finName" : "EOS"
-    }, {
-      "symbol" : "BNB",
-      "finName" : "Binance Coin"
-    } ]
-  },
+  "varCfgNames" : [ "binance.json", "crypto-symbol.json" ],
+  "vars" : { },
   "entry" : {
     "clazz" : "net.bzk.flow.model.Entry$FixedRateEntry",
     "boxUid" : "Bcb74l8xn8Vp",

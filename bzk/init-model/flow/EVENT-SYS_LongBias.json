@@ -110,10 +110,8 @@
       "endResultKeys" : [ ]
     }
   } ],
-  "varCfgNames" : [ ],
-  "vars" : {
-    "symbols" : [ "BCH", "BNB", "BTC", "EOS", "ETC", "ETH", "LTC", "XRP" ]
-  },
+  "varCfgNames" : [ "crypto-symbol.json" ],
+  "vars" : { },
   "entry" : {
     "clazz" : "net.bzk.flow.model.Entry$EventEntry",
     "boxUid" : "d6qUszCxvhR6",

@@ -1,7 +1,7 @@
 {
   "clazz" : "net.bzk.flow.model.Flow",
   "uid" : "Qvf1dAt3VdSp",
-  "name" : "CRON-CMCQuote",
+  "name" : "CRON-5M-CMCQuote",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
     "uid" : "0wakszWfpHcG",
@@ -13,7 +13,7 @@
       "tryErrorble" : false,
       "devBoxVars" : { },
       "devFlowVars" : { },
-      "url" : "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=BTC,ETH,BCH,ETC,LTC,XRP,EOS,BNB",
+      "url" : "!javascript===\nconst symbols = ${symbols};\nconst sblstr = symbols.join(',');\nconst url_temp ='https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol='+sblstr;\nurl_temp;",
       "uriVariables" : { },
       "body" : "{}",
       "method" : "GET",
@@ -87,7 +87,7 @@
       "endResultKeys" : [ ]
     }
   } ],
-  "varCfgNames" : [ "fin-proxy.json", "coinmarketcap.json" ],
+  "varCfgNames" : [ "fin-proxy.json", "coinmarketcap.json", "crypto-symbol.json" ],
   "vars" : { },
   "entry" : {
     "clazz" : "net.bzk.flow.model.Entry$FixedRateEntry",
