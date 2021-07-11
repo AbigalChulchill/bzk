@@ -7,6 +7,23 @@
     "uid" : "ajyASBWbeZV6",
     "name" : "Box",
     "actions" : [ {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "Jj7CsxrbKdSm",
+      "name" : "RequestToFinProxy",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "url" : "${finProxyUrl}/proxy/save/CMC/util_now/sync",
+      "uriVariables" : { },
+      "body" : "{}",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "{}",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : "result"
+      }
+    }, {
       "clazz" : "net.bzk.flow.model.Action$EventAction",
       "uid" : "THy7T41cesZH",
       "name" : "Event",
@@ -17,7 +34,7 @@
     } ],
     "links" : [ ],
     "vars" : { },
-    "taskSort" : [ "THy7T41cesZH" ],
+    "taskSort" : [ "Jj7CsxrbKdSm", "THy7T41cesZH" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
