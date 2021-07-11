@@ -95,8 +95,11 @@
       "devBoxVars" : { },
       "devFlowVars" : { },
       "flatData" : [ {
-        "key" : "TEST",
+        "key" : "TEST_ANS",
         "val" : "!javascript===\nconst rf = bzk.g(\"%Bais.${symbol}.Fixed.120D.RF.MA15D\");\nrf;\n\n"
+      }, {
+        "key" : "TEST_RATE",
+        "val" : "!javascript===\nconst rf = bzk.g('%Bais.${symbol}.Fixed.120D.RF.MA15D.OrderRate');\nrf;"
       } ]
     } ],
     "links" : [ ],
