@@ -21,7 +21,7 @@ public enum VarLv {
 		if (fqe.startsWith(PREFIX_FLOW))
 			return new VarKey(VarLv.run_flow, fqe.replace(PREFIX_FLOW, ""));
 		if (fqe.startsWith(PREFIX_SYS))
-			return new VarKey(VarLv.run_sys, fqe.replace(PREFIX_FLOW, ""));
+			return new VarKey(VarLv.run_sys, fqe.replace(PREFIX_SYS, ""));
 		if (fqe.startsWith(PREFIX_NOT_SPECIFY))
 			return new VarKey(VarLv.not_specify, fqe.replace(PREFIX_NOT_SPECIFY, ""));
 		return new VarKey(VarLv.not_specify, fqe);
