@@ -48,6 +48,7 @@ public class RunLog implements Serializable, CreateUpdateDate {
 	private String runBoxUid;
 	private String actionUid;
 	private String runActionUid;
+	private String refRunFlowUid;
 	@Column(nullable = true, columnDefinition = "TEXT")
 	private String msg;
 	@Column(nullable = true, columnDefinition = "TEXT")

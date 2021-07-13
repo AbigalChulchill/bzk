@@ -7,7 +7,9 @@ import java.util.concurrent.ExecutorService;
 import javax.inject.Inject;
 
 import net.bzk.flow.Constant;
+import net.bzk.flow.model.RunLog;
 import net.bzk.flow.run.flow.FlowRuner;
+import net.bzk.infrastructure.JsonUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
@@ -40,29 +42,45 @@ public class SubFlowActionCall extends ActionCall<SubFlowAction> {
         super(SubFlowAction.class);
     }
 
+
     @Override
     public VarValSet call() throws Exception {
-
         var frp = flowPoolDao.getPool(getModel().getFlowUid());
         var fr = frp.create();
+        injectParams(fr);
+        return runRunner(fr);
+    }
 
-        List<KVPair> kvs = getModel().getInputData();
-        for (var kp : kvs) {
-            Object rv = getPolyglotEngine().parseScriptbleText(kp.getVal(), Object.class);
-            var kinfo = VarLv.checkLvByPrefix(kp.getKey());
-            fr.getVars().put(kinfo.getKey(), rv);
-        }
+    private VarValSet runRunner(FlowRuner fr) {
+        logUtils.log(getUids(), RunLog.RunState.ActionCall, r -> {
+            r.setRefRunFlowUid(fr.getInfo().getUid());
+            r.setMsg(JsonUtils.toJson(fr.getModel()));
+        });
         if (getModel().isAsynced()) {
             executorService.execute(fr::run);
             return new VarValSet();
         }
-
         fr.run();
         String endTag = getEndTag(fr.getInfo());
         if (fr.getInfo().getState() == State.Fail) {
             logUtils.logActionCall(getUids(), "getState is Fail");
             throw new BzkRuntimeException(endTag);
         }
+        return genVarSet(fr);
+
+    }
+
+    private void injectParams(FlowRuner fr) {
+        List<KVPair> kvs = getModel().getInputData();
+        for (var kp : kvs) {
+            Object rv = getPolyglotEngine().parseScriptbleText(kp.getVal(), Object.class);
+            var kinfo = VarLv.checkLvByPrefix(kp.getKey());
+            fr.getVars().put(kinfo.getKey(), rv);
+        }
+    }
+
+    private VarValSet genVarSet(FlowRuner fr) {
+
         List<VarVal> ers = fr.getInfo().getEndResult();
         VarValSet ans = new VarValSet();
         List<VarKeyReflect> omap = getModel().getOutputReflects();
@@ -74,9 +92,7 @@ public class SubFlowActionCall extends ActionCall<SubFlowAction> {
             addVarVal(ans, vkr.getToKey().getLv(), vkr.getToKey().getKey(), vv.getVal());
         }
         addVarVal(ans, VarLv.run_box, Constant.subStateKey(fr.getModel().getName()), fr.getInfo().getState());
-        addVarVal(ans, VarLv.run_box, Constant.subTagKey(fr.getModel().getName()), endTag);
-
-
+        addVarVal(ans, VarLv.run_box, Constant.subTagKey(fr.getModel().getName()), getEndTag(fr.getInfo()));
         return ans;
     }
 

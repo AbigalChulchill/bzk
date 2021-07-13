@@ -29,6 +29,12 @@ export class PathGuideService implements CanActivate {
       return false;
     }
 
+    if (state.url === '/logout') {
+      this.authentication.logOut();
+      this.router.navigate(['login']);
+      return false;
+    }
+
 
     return true;
 

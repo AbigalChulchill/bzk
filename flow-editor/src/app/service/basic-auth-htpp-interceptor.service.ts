@@ -16,10 +16,10 @@ export class BasicAuthHtppInterceptorService implements HttpInterceptor {
       return next.handle(req);
     }
 
-    if (sessionStorage.getItem('token') && !this.isSkipTokenByUrl(req)) {
+    if (localStorage.getItem('token') && !this.isSkipTokenByUrl(req)) {
       req = req.clone({
         setHeaders: {
-          Authorization: sessionStorage.getItem('token')
+          Authorization: localStorage.getItem('token')
         }
       });
     }

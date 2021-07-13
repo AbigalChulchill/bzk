@@ -11,6 +11,7 @@ export class RunLog {
   public runBoxUid: string;
   public actionUid: string;
   public runActionUid: string;
+  public refRunFlowUid: string;
 
   public msg: string;
   public flowVar: BaseVar;
@@ -20,7 +21,7 @@ export class RunLog {
   public failed = false;
   public exception: string;
   public exceptionClazz: string;
-  public  varVals:Array<VarVal>;
+  public varVals: Array<VarVal>;
   public actionName: string;
 
   public updateAt: string;

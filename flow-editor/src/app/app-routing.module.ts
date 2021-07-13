@@ -24,6 +24,7 @@ const routes: Routes = [
   { path: 'job/:uid/log/:runFlowUid', component: RunLogComponent,canActivate: [PathGuideService]  },
   { path: 'config', component: ConfigComponent, canActivate: [PathGuideService] },
   { path: 'login', component: LoginComponent },
+  { path: 'logout', component: LoginComponent, canActivate: [PathGuideService]  },
 
 
   { path: '', component: RootSidebarComponent , outlet:'sidebar' },

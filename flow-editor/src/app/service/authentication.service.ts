@@ -41,18 +41,18 @@ export class AuthenticationService {
 
   public setUserInfo(username: string, ats: Authority[]) {
     const auths = JSON.stringify(ats);
-    sessionStorage.setItem('username', username);
-    sessionStorage.setItem('auths', auths);
+    localStorage.setItem('username', username);
+    localStorage.setItem('auths', auths);
   }
 
 
   public setToken(tk: string) {
     const tokenStr = 'Bearer ' + tk;
-    sessionStorage.setItem('token', tokenStr);
+    localStorage.setItem('token', tokenStr);
   }
 
   public getUserName(): string {
-    return sessionStorage.getItem('username');
+    return localStorage.getItem('username');
   }
 
   signup(username, password, email, refCode) {
@@ -60,7 +60,7 @@ export class AuthenticationService {
   }
 
   isUserLoggedIn() {
-    const user = sessionStorage.getItem('username');
+    const user = localStorage.getItem('username');
     // console.log(!(user === null));
     return !(user === null);
   }
@@ -70,11 +70,12 @@ export class AuthenticationService {
   }
 
   public listAuthorities(): Authority[] {
-    return this.isUserLoggedIn() ? JSON.parse(sessionStorage.getItem('auths')) : [];
+    return this.isUserLoggedIn() ? JSON.parse(localStorage.getItem('auths')) : [];
   }
 
-  logOut() {
-    sessionStorage.removeItem('username');
+  public logOut():void {
+    localStorage.removeItem('username');
+    localStorage.removeItem('auths');
   }
 
 }
