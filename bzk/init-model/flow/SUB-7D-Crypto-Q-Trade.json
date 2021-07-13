@@ -4,122 +4,6 @@
   "name" : "SUB-7D-Crypto-Q-Trade",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
-    "uid" : "b6j6H05VX2Wq",
-    "name" : "7D_MINMAX",
-    "actions" : [ {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "zpYbJsMkkB3R",
-      "name" : "RF_Bias_FIXED",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "flowUid" : "PeakFinder5",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "tsdbQuery",
-        "val" : "import \"strings\"\na=  from(bucket: \"quote\")\n  |> range(start: -5d)\n   |> filter(fn: (r) =>\n    r._measurement == \"realtime\" and\n    r.symbol == \"${symbol}\" and\n    r._field == \"price\"\n  )\n  |>mean()\n  |> findColumn(\n      fn: (key) => key._field == \"price\",\n      column: \"_value\"\n    )\n\nfrom(bucket: \"quote\")\n  |> range(start: -5d)\n   |> filter(fn: (r) =>\n    r._measurement == \"realtime\" and\n    r.symbol == \"${symbol}\" and\n    r._field == \"price\"\n  )\n  |>map(fn: (r) => ({ r with _value: r._value - a[0] }))  "
-      }, {
-        "key" : "peakMaxWaitSeconds",
-        "val" : "3600"
-      }, {
-        "key" : "symbol",
-        "val" : "${symbol}"
-      }, {
-        "key" : "macroAmplitudeRate",
-        "val" : "0.1"
-      } ],
-      "outputReflects" : [ {
-        "srcKey" : "ans",
-        "toKey" : {
-          "lv" : "not_specify",
-          "key" : "RF_Bias_FIXED"
-        }
-      } ]
-    }, {
-      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
-      "uid" : "L2HlEddXV6pa",
-      "name" : "GenVars",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "flatData" : [ {
-        "key" : "TH",
-        "val" : "!javascript===\nconst rf = ${RFBias5DSYS};\nconst d = '${RF_Bias_FIXED.macro.state}';\nconst macro = rf.macro;\n\nfunction calc(){\n    if(d == 'FALL'){\n        let ans= -macro.nearMin.val / 2;\n        if(ans<0) throw new Error(d+' ans:'+ans);\n        return ans;\n    }\n    if(d== 'RISE'){\n        let ans= -macro.nearMax.val / 2;\n        if(ans>0) throw new Error(d+' ans:'+ans);\n        return ans;\n    }\n    throw new Error('not support='+d);\n}\n\ncalc();\n\n"
-      }, {
-        "key" : "side7d",
-        "val" : "!javascript===\r\nconst th = bzk.g('TH');\r\nconst rf = ${RF_Bias_FIXED};\r\nconst d = rf.macro.state;\r\nconst lastv = rf.last.val;\r\nconst dtime = rf.macro.nearPeak.dtime;\r\nfunction calc(){\r\n    if(!checkTime()) return 'OVER_PICK_'+d;\r\n    if(d == 'FALL'){\r\n        return lastv > th ? 'SELL':'7D_SELL_TH';\r\n    }\r\n    if(d== 'RISE'){\r\n        return lastv < th ? 'BUY':'7D_BUY_TH';\r\n    }\r\n    throw new Error('not support='+d);\r\n    \r\n}\r\n\r\nfunction checkTime(){\r\n    return dtime < (6 * 60 * 60);\r\n}\r\n\r\ncalc();"
-      }, {
-        "key" : "~trigger_type",
-        "val" : "7DM"
-      }, {
-        "key" : "thth",
-        "val" : "0.00268"
-      } ]
-    }, {
-      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
-      "uid" : "Ae6fhb7iKPwn",
-      "name" : "RFBias5DSYS",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "flatData" : [ {
-        "key" : "RFBias5DSYS",
-        "val" : "!javascript===\nconst rf = bzk.g('Bais.${symbol}.RF.D5');\nrf;"
-      } ]
-    } ],
-    "links" : [ {
-      "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "rcpWKc8OlITQ",
-      "name" : "S_Check",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionTxt",
-        "kind" : "NONE",
-        "next" : null,
-        "left" : "${side7d}",
-        "right" : "SELL",
-        "not" : false,
-        "type" : "equal"
-      },
-      "transition" : {
-        "toBox" : "Hoh5CNTFiFDi",
-        "endTag" : null,
-        "failEnd" : false,
-        "endResultKeys" : [ ]
-      }
-    }, {
-      "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "tKVLlIi2OOtc",
-      "name" : "B_Check",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionTxt",
-        "kind" : "NONE",
-        "next" : null,
-        "left" : "${side7d}",
-        "right" : "BUY",
-        "not" : false,
-        "type" : "equal"
-      },
-      "transition" : {
-        "toBox" : "YOqDrvPxxCiK",
-        "endTag" : null,
-        "failEnd" : false,
-        "endResultKeys" : [ ]
-      }
-    } ],
-    "vars" : { },
-    "taskSort" : [ "zpYbJsMkkB3R", "Ae6fhb7iKPwn", "L2HlEddXV6pa", "rcpWKc8OlITQ", "tKVLlIi2OOtc" ],
-    "whileJudgment" : null,
-    "transition" : {
-      "toBox" : "",
-      "endTag" : "${symbol} side:${side} side7d: ${side7d}",
-      "failEnd" : false,
-      "endResultKeys" : [ {
-        "lv" : "not_specify",
-        "key" : "trigger_type"
-      } ]
-    }
-  }, {
-    "clazz" : "net.bzk.flow.model.Box",
     "uid" : "Hoh5CNTFiFDi",
     "name" : "SELL",
     "actions" : [ {
@@ -139,10 +23,10 @@
         "val" : "SELL"
       }, {
         "key" : "guardRate",
-        "val" : "0.035"
+        "val" : "0.03"
       }, {
         "key" : "investedRate",
-        "val" : "0.3"
+        "val" : "0.18"
       }, {
         "key" : "thth",
         "val" : "${thth}"
@@ -159,50 +43,6 @@
     "transition" : {
       "toBox" : "",
       "endTag" : "O ${trigger_type} SELL ${symbol}  ${acceleration.val}_${direction.last.val}_${direction.macro.state}",
-      "failEnd" : false,
-      "endResultKeys" : [ ]
-    }
-  }, {
-    "clazz" : "net.bzk.flow.model.Box",
-    "uid" : "YOqDrvPxxCiK",
-    "name" : "BUY",
-    "actions" : [ {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "U9DwmbucQ94V",
-      "name" : "BuyOrder",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "flowUid" : "kCmTvvaxfIBr",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "symbol",
-        "val" : "${symbol}"
-      }, {
-        "key" : "side",
-        "val" : "BUY"
-      }, {
-        "key" : "guardRate",
-        "val" : "0.035"
-      }, {
-        "key" : "investedRate",
-        "val" : "0.3"
-      }, {
-        "key" : "thth",
-        "val" : "${thth}"
-      }, {
-        "key" : "trigger",
-        "val" : "${trigger_type}"
-      } ],
-      "outputReflects" : [ ]
-    } ],
-    "links" : [ ],
-    "vars" : { },
-    "taskSort" : [ "U9DwmbucQ94V" ],
-    "whileJudgment" : null,
-    "transition" : {
-      "toBox" : "",
-      "endTag" : "O ${trigger_type} BUY ${symbol}  ${acceleration.val}_${direction.last.val}_${direction.macro.state}",
       "failEnd" : false,
       "endResultKeys" : [ ]
     }
@@ -416,6 +256,166 @@
     "transition" : {
       "toBox" : "b6j6H05VX2Wq",
       "endTag" : null,
+      "failEnd" : false,
+      "endResultKeys" : [ {
+        "lv" : "not_specify",
+        "key" : "trigger_type"
+      } ]
+    }
+  }, {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "YOqDrvPxxCiK",
+    "name" : "BUY",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "U9DwmbucQ94V",
+      "name" : "BuyOrder",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flowUid" : "kCmTvvaxfIBr",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "symbol",
+        "val" : "${symbol}"
+      }, {
+        "key" : "side",
+        "val" : "BUY"
+      }, {
+        "key" : "guardRate",
+        "val" : "0.03"
+      }, {
+        "key" : "investedRate",
+        "val" : "0.18"
+      }, {
+        "key" : "thth",
+        "val" : "${thth}"
+      }, {
+        "key" : "trigger",
+        "val" : "${trigger_type}"
+      } ],
+      "outputReflects" : [ ]
+    } ],
+    "links" : [ ],
+    "vars" : { },
+    "taskSort" : [ "U9DwmbucQ94V" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "O ${trigger_type} BUY ${symbol}  ${acceleration.val}_${direction.last.val}_${direction.macro.state}",
+      "failEnd" : false,
+      "endResultKeys" : [ ]
+    }
+  }, {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "b6j6H05VX2Wq",
+    "name" : "7D_MINMAX",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "zpYbJsMkkB3R",
+      "name" : "RF_Bias_FIXED",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flowUid" : "PeakFinder5",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "tsdbQuery",
+        "val" : "import \"strings\"\na=  from(bucket: \"quote\")\n  |> range(start: -5d)\n   |> filter(fn: (r) =>\n    r._measurement == \"realtime\" and\n    r.symbol == \"${symbol}\" and\n    r._field == \"price\"\n  )\n  |>mean()\n  |> findColumn(\n      fn: (key) => key._field == \"price\",\n      column: \"_value\"\n    )\n\nfrom(bucket: \"quote\")\n  |> range(start: -5d)\n   |> filter(fn: (r) =>\n    r._measurement == \"realtime\" and\n    r.symbol == \"${symbol}\" and\n    r._field == \"price\"\n  )\n  |>map(fn: (r) => ({ r with _value: r._value - a[0] }))  "
+      }, {
+        "key" : "peakMaxWaitSeconds",
+        "val" : "3600"
+      }, {
+        "key" : "symbol",
+        "val" : "${symbol}"
+      }, {
+        "key" : "macroAmplitudeRate",
+        "val" : "0.1"
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "ans",
+        "toKey" : {
+          "lv" : "not_specify",
+          "key" : "RF_Bias_FIXED"
+        }
+      } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
+      "uid" : "L2HlEddXV6pa",
+      "name" : "GenVars",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flatData" : [ {
+        "key" : "TH",
+        "val" : "!javascript===\nconst rf = ${RFBias5DSYS};\nconst d = '${RF_Bias_FIXED.macro.state}';\nconst macro = rf.macro;\n\nfunction calc(){\n    if(d == 'FALL'){\n        let ans= -macro.nearMin.val / 2;\n        if(ans<0) throw new Error(d+' ans:'+ans);\n        return ans;\n    }\n    if(d== 'RISE'){\n        let ans= -macro.nearMax.val / 2;\n        if(ans>0) throw new Error(d+' ans:'+ans);\n        return ans;\n    }\n    throw new Error('not support='+d);\n}\n\ncalc();\n\n"
+      }, {
+        "key" : "side7d",
+        "val" : "!javascript===\r\nconst th = bzk.g('TH');\r\nconst rf = ${RF_Bias_FIXED};\r\nconst d = rf.macro.state;\r\nconst lastv = rf.last.val;\r\nconst dtime = rf.macro.nearPeak.dtime;\r\nfunction calc(){\r\n    if(!checkTime()) return 'OVER_PICK_'+d;\r\n    if(d == 'FALL'){\r\n        return lastv > th ? 'SELL':'7D_SELL_TH';\r\n    }\r\n    if(d== 'RISE'){\r\n        return lastv < th ? 'BUY':'7D_BUY_TH';\r\n    }\r\n    throw new Error('not support='+d);\r\n    \r\n}\r\n\r\nfunction checkTime(){\r\n    return dtime < (6 * 60 * 60);\r\n}\r\n\r\ncalc();"
+      }, {
+        "key" : "~trigger_type",
+        "val" : "7DM"
+      }, {
+        "key" : "thth",
+        "val" : "0.00268"
+      } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
+      "uid" : "Ae6fhb7iKPwn",
+      "name" : "RFBias5DSYS",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flatData" : [ {
+        "key" : "RFBias5DSYS",
+        "val" : "!javascript===\nconst rf = bzk.g('Bais.${symbol}.RF.D5');\nrf;"
+      } ]
+    } ],
+    "links" : [ {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "rcpWKc8OlITQ",
+      "name" : "S_Check",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionTxt",
+        "kind" : "NONE",
+        "next" : null,
+        "left" : "${side7d}",
+        "right" : "SELL",
+        "not" : false,
+        "type" : "equal"
+      },
+      "transition" : {
+        "toBox" : "Hoh5CNTFiFDi",
+        "endTag" : null,
+        "failEnd" : false,
+        "endResultKeys" : [ ]
+      }
+    }, {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "tKVLlIi2OOtc",
+      "name" : "B_Check",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionTxt",
+        "kind" : "NONE",
+        "next" : null,
+        "left" : "${side7d}",
+        "right" : "BUY",
+        "not" : false,
+        "type" : "equal"
+      },
+      "transition" : {
+        "toBox" : "YOqDrvPxxCiK",
+        "endTag" : null,
+        "failEnd" : false,
+        "endResultKeys" : [ ]
+      }
+    } ],
+    "vars" : { },
+    "taskSort" : [ "zpYbJsMkkB3R", "Ae6fhb7iKPwn", "L2HlEddXV6pa", "rcpWKc8OlITQ", "tKVLlIi2OOtc" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "${symbol} side:${side} side7d: ${side7d}",
       "failEnd" : false,
       "endResultKeys" : [ {
         "lv" : "not_specify",
