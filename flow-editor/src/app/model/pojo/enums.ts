@@ -51,12 +51,12 @@ export enum ConvertMethod {
 
 
 export enum RunState {
-  BoxStart = 'BoxStart', BoxLoop = 'BoxLoop', BoxLoopDone = 'BoxLoopDone', EndFlow = 'EndFlow', LinkTo = 'LinkTo',
+  BoxStart = 'BoxStart', BoxLoop = 'BoxLoop', EndFlow = 'EndFlow', LinkTo = 'LinkTo',
   StartAction = 'StartAction', EndAction = 'EndAction', ActionCall = 'ActionCall',
   ActionCallFail = 'ActionCallFail', ActionCallWarn = 'ActionCallWarn',
   ActionResult = 'ActionResult', WhileLoopBottom = 'WhileLoopBottom',
   ConditionFail = 'ConditionFail', ModelReplaced = 'ModelReplaced', PolyglotExecute = 'PolyglotExecute',
-  ConditionResult = 'ConditionResult', BoxError = 'BoxError'
+  ConditionResult = 'ConditionResult', BoxError = 'BoxError',ScriptError='ScriptError'
 
 }
 

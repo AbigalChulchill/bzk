@@ -77,7 +77,7 @@ public class PolyglotEngine {
 
         @Override
         public void logWarn(String s) {
-            logUtils.logActionCallWarn(varQueryer.getUids(), s);
+            logUtils.logWithMsg(varQueryer.getUids(), RunState.ScriptError, s);
         }
     }
 
