@@ -1,3 +1,4 @@
+import { VarLv } from './../model/pojo/enums';
 import { Link } from "../model/box";
 import { Flow } from "../model/flow";
 import { Transition } from "../model/transition";
@@ -18,6 +19,7 @@ export class RunInfo {
   public transition: Transition;
   public startAt = '-';
   public endAt = '-';
+  public endResult: Array<object>;
 
 }
 

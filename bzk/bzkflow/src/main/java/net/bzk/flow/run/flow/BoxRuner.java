@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import net.bzk.flow.model.var.VarLv;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -164,7 +165,10 @@ public class BoxRuner {
     }
 
     private List<VarVal> listEndResult(Transition t) {
-        return t.getEndResultKeys().stream().map(this::getVarVal).collect(Collectors.toList());
+        List<VarVal> ans = t.getEndResultKeys().stream().map(this::getVarVal).collect(Collectors.toList());
+        var pr= t.packResult(logUtils,varQueryer);
+        ans.add(VarVal.gen(VarLv.run_box,Constant.PACK_RESULT_KEY,pr));
+        return ans;
     }
 
     private VarVal getVarVal(VarKey k) {

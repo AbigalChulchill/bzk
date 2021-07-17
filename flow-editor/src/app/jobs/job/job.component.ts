@@ -1,3 +1,4 @@
+import { DialogService } from './../../uikit/dialog.service';
 import { UrlParamsService } from './../../service/url-params.service';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
@@ -8,6 +9,7 @@ import { FlowClientService } from 'src/app/service/flow-client.service';
 import { LoadingService } from 'src/app/service/loading.service';
 import { ActivatedRoute } from '@angular/router';
 import { ModifyingFlowService } from 'src/app/service/modifying-flow.service';
+import { ReadJsonProvide } from 'src/app/uikit/json-editor/json-editor.component';
 
 @Component({
   selector: 'app-job',
@@ -16,6 +18,7 @@ import { ModifyingFlowService } from 'src/app/service/modifying-flow.service';
 })
 export class JobComponent implements OnInit,AfterViewInit {
 
+  ReadJsonProvide=ReadJsonProvide;
 
   displayedColumns: string[] = ['runUid', 'startAt', 'endAt', 'state', 'endTag', 'actions'];
   dataSource: MatTableDataSource<Row>;
@@ -29,7 +32,7 @@ export class JobComponent implements OnInit,AfterViewInit {
     private loading: LoadingService,
     private flowClient: FlowClientService,
     private route: ActivatedRoute,
-
+    public dialogService:DialogService
 
   ) {
     this.dataSource = new MatTableDataSource(new Array<Row>());
@@ -81,6 +84,7 @@ export class JobComponent implements OnInit,AfterViewInit {
     ans.state = ri.state;
     ans.startAt = ri.startAt;
     ans.endAt = ri.endAt;
+    ans.endResult = ri.endResult;
     try{
       ans.endTag = ri.transition.endTag;
     }catch(ex){
@@ -96,4 +100,5 @@ export class Row {
   public endAt: string;
   public state: FlowState;
   public endTag = '';
+  public endResult : Array<object>;
 }

@@ -6,6 +6,7 @@ import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dial
 import { CodeEditorComponent } from './code-editor/code-editor.component';
 import { ListLogType } from '../service/run-log-client.service';
 import { ScrollStrategy } from '@angular/cdk/overlay';
+import { JsonEditorComponent } from './json-editor/json-editor.component';
 
 declare let $: any;
 
@@ -21,28 +22,36 @@ export class DialogService {
   ) { }
 
   public open(dialogC: any): MatDialogRef<any> {
-     this.dialogRef = this.dialog.open(dialogC);
-     return this.dialogRef;
+    this.dialogRef = this.dialog.open(dialogC);
+    return this.dialogRef;
   }
 
-  public openCodeEditor(tp:TextProvide): void {
+  public openCodeEditor(tp: TextProvide): void {
     console.log('openCodeEditor');
-    const df= this.dialog.open(CodeEditorComponent);
-    const cec:CodeEditorComponent = df.componentInstance;
+    const df = this.dialog.open(CodeEditorComponent);
+    const cec: CodeEditorComponent = df.componentInstance;
     cec.data = tp;
   }
 
-  public openCloudBackup(impCB:()=>void):void{
-    const df= this.dialog.open(CloudBackupListComponent);
-    const cbc:CloudBackupListComponent = df.componentInstance;
+  public openJsonViewer(tp: TextProvide): void {
+    console.log('openJsonViewer');
+    const df = this.dialog.open(JsonEditorComponent);
+    const jsonC: JsonEditorComponent = df.componentInstance;
+    jsonC.fullWidth = true;
+    jsonC.setData(tp);
+  }
+
+  public openCloudBackup(impCB: () => void): void {
+    const df = this.dialog.open(CloudBackupListComponent);
+    const cbc: CloudBackupListComponent = df.componentInstance;
     cbc.onImportDoneAction = impCB;
   }
 
-  public openRunLoag(uid:string,type:ListLogType):void{
+  public openRunLoag(uid: string, type: ListLogType): void {
     const cfg = new MatDialogConfig();
     cfg.minHeight = 500;
-    const df= this.dialog.open(RunLogComponent,cfg);
-    const cbc:RunLogComponent = df.componentInstance;
+    const df = this.dialog.open(RunLogComponent, cfg);
+    const cbc: RunLogComponent = df.componentInstance;
     cbc.listType = type;
     cbc.queryUid = uid;
 
