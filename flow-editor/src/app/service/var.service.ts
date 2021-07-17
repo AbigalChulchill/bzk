@@ -1,3 +1,4 @@
+import { Constant } from 'src/app/infrastructure/constant';
 import { VarCfgService } from './var-cfg.service';
 import { CommUtils } from 'src/app/utils/comm-utils';
 import { StringUtils } from './../utils/string-utils';
@@ -23,8 +24,9 @@ export class VarService {
   public listAllKeys(): Array<string> {
     const list = VarUtils.listVarKeyByFlow(ModelUpdateAdapter.getInstance().getFlow());
     const ans = new Array<string>();
+    ans.push(Constant.PACK_RESULT_KEY);
     const includeKeys = this.varCfgService.listKeys(ModelUpdateAdapter.getInstance().getFlow());
-    for(const k of includeKeys){
+    for (const k of includeKeys) {
       CommUtils.pushUnique(ans, k);
     }
     list.forEach(s => {

@@ -135,8 +135,8 @@
         "code" : "const lastv =  ${direction.last.val};\r\nconst th = ${th.val};\r\nconst side = '${side}';\r\n\r\nfunction calc(){\r\n    if(side == 'SELL') return lastv < th;\r\n    if(side == 'BUY') return lastv > th;\r\n    throw new Error('Whoops! side:'+side);\r\n}\r\n\r\ncalc();\r\n"
       },
       "transition" : {
-        "toBox" : "",
-        "endTag" : "TH_${symbol} ${side} : ${th.val} ${direction.last.val} T:${trigger}",
+        "toBox" : "36vcsdaTkWky",
+        "endTag" : null,
         "failEnd" : false,
         "endResultKeys" : [ ],
         "resultCode" : ""
@@ -173,8 +173,70 @@
       "endResultKeys" : [ ],
       "resultCode" : ""
     }
+  }, {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "36vcsdaTkWky",
+    "name" : "Record_BYE",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$NodejsAction",
+      "uid" : "pMJZ0bcgeddh",
+      "name" : "",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "alwayCleanWorkDir" : false,
+      "code" : "",
+      "installs" : [ ],
+      "dependencies" : { },
+      "devDependencies" : { }
+    }, {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "U1l4EG0tRV3s",
+      "name" : "",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "url" : "",
+      "uriVariables" : { },
+      "body" : "{}",
+      "method" : "GET",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : ""
+      }
+    }, {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "65eKSmNiL1nJ",
+      "name" : "",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "url" : "",
+      "uriVariables" : { },
+      "body" : "{}",
+      "method" : "GET",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : ""
+      }
+    } ],
+    "links" : [ ],
+    "vars" : { },
+    "taskSort" : [ "pMJZ0bcgeddh", "U1l4EG0tRV3s", "65eKSmNiL1nJ" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "END",
+      "failEnd" : false,
+      "endResultKeys" : [ ],
+      "resultCode" : ""
+    }
   } ],
-  "varCfgNames" : [ ],
+  "varCfgNames" : [ "fin-proxy.json" ],
   "vars" : {
     "symbol" : "BTC",
     "side" : "BUY",
