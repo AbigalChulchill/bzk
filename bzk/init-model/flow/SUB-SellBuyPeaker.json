@@ -178,55 +178,37 @@
     "uid" : "36vcsdaTkWky",
     "name" : "Record_BYE",
     "actions" : [ {
-      "clazz" : "net.bzk.flow.model.Action$NodejsAction",
-      "uid" : "pMJZ0bcgeddh",
-      "name" : "",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "alwayCleanWorkDir" : false,
-      "code" : "",
-      "installs" : [ ],
-      "dependencies" : { },
-      "devDependencies" : { }
-    }, {
-      "clazz" : "net.bzk.flow.model.HttpAction",
-      "uid" : "U1l4EG0tRV3s",
-      "name" : "",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "url" : "",
-      "uriVariables" : { },
-      "body" : "{}",
-      "method" : "GET",
-      "headers" : { },
-      "headersFlat" : "",
-      "key" : {
-        "lv" : "not_specify",
-        "key" : ""
-      }
-    }, {
       "clazz" : "net.bzk.flow.model.HttpAction",
       "uid" : "65eKSmNiL1nJ",
-      "name" : "",
+      "name" : "Post",
       "tryErrorble" : false,
       "devBoxVars" : { },
       "devFlowVars" : { },
-      "url" : "",
+      "url" : "${finProxyUrl}/proxy/tsdb/insert/multiple",
       "uriVariables" : { },
       "body" : "{}",
-      "method" : "GET",
+      "method" : "POST",
       "headers" : { },
       "headersFlat" : "",
       "key" : {
         "lv" : "not_specify",
         "key" : ""
       }
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$PolyglotAction",
+      "uid" : "asaxvahgwJpm",
+      "name" : "GenBody",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "code" : "const list= ${quotes};\nconst ans = [];\n\nfor (const q of list) {\n    price = q['quote']['USD']['price']\n    volume_24h = q['quote']['USD']['volume_24h']\n    ans.push(genPointDto('price',price,q));\n    ans.push(genPointDto('volume_24h',volume_24h,q));\n}\n\n\n\nfunction genPointDto(fd,v,q){\n  const row = {\n      measurement : 'realtime',\n      tags:{\n        symbol : q['symbol'],\n        name : q['name'],\n        category:'cryptocurrency',\n        source:'coinmarketcap'\n      },\n      field: fd,\n      val:v,\n      time :q['last_updated']\n  };\n  return row;\n}\n\nans;\n",
+      "polyglot" : "js",
+      "resultLv" : "not_specify",
+      "resultKey" : "body"
     } ],
     "links" : [ ],
     "vars" : { },
-    "taskSort" : [ "pMJZ0bcgeddh", "U1l4EG0tRV3s", "65eKSmNiL1nJ" ],
+    "taskSort" : [ "asaxvahgwJpm", "65eKSmNiL1nJ" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
