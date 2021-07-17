@@ -15,7 +15,7 @@
       "devFlowVars" : { },
       "url" : "${binance.proxyHost}proxy",
       "uriVariables" : { },
-      "body" : "{\n    \"name\": \"profit/cut\",\n    \"apiKey\":\"${binance.key}\",\n    \"secret\":\"${binance.secret}\",\n    \"profitRate\": 0.1,\n    \"topRate\": 0.866,\n    \"bottomRate\":-0.03,\n    \"cutCount\": 3,\n    \"stepMoveOnRate\":0.001,\n    \"symbol\":\"${curSBL}\",\n    \"positionSide\":\"LONG\"\n}",
+      "body" : "{\n    \"name\": \"profit/cut\",\n    \"apiKey\":\"${binance.key}\",\n    \"secret\":\"${binance.secret}\",\n    \"profitRate\": 0.1,\n    \"topRate\": 0.886,\n    \"bottomRate\":-0.01,\n    \"cutCount\": 5,\n    \"stepMoveOnRate\":0.0002,\n    \"symbol\":\"${curSBL}\",\n    \"positionSide\":\"LONG\"\n}",
       "method" : "POST",
       "headers" : { },
       "headersFlat" : "",
@@ -46,7 +46,7 @@
       "devFlowVars" : { },
       "url" : "${binance.proxyHost}proxy",
       "uriVariables" : { },
-      "body" : "{\n    \"name\": \"profit/cut\",\n    \"apiKey\":\"${binance.key}\",\n    \"secret\":\"${binance.secret}\",\n    \"profitRate\": 0.1,\n    \"topRate\": 0.866,\n    \"bottomRate\":-0.03,\n    \"cutCount\": 3,\n    \"stepMoveOnRate\":0.001,\n    \"symbol\":\"${curSBL}\",\n    \"positionSide\":\"SHORT\"\n}",
+      "body" : "{\n    \"name\": \"profit/cut\",\n    \"apiKey\":\"${binance.key}\",\n    \"secret\":\"${binance.secret}\",\n    \"profitRate\": 0.1,\n    \"topRate\": 0.886,\n    \"bottomRate\":-0.01,\n    \"cutCount\": 5,\n    \"stepMoveOnRate\":0.0002,\n    \"symbol\":\"${curSBL}\",\n    \"positionSide\":\"SHORT\"\n}",
       "method" : "POST",
       "headers" : { },
       "headersFlat" : "",
@@ -72,7 +72,8 @@
       "toBox" : "",
       "endTag" : "DONE",
       "failEnd" : false,
-      "endResultKeys" : [ ]
+      "endResultKeys" : [ ],
+      "resultCode" : ""
     }
   } ],
   "varCfgNames" : [ "binance.json", "crypto-symbol.json" ],

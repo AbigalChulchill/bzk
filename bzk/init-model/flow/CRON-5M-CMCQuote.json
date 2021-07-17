@@ -84,7 +84,8 @@
       "toBox" : "",
       "endTag" : "TODO Why",
       "failEnd" : false,
-      "endResultKeys" : [ ]
+      "endResultKeys" : [ ],
+      "resultCode" : ""
     }
   } ],
   "varCfgNames" : [ "fin-proxy.json", "coinmarketcap.json", "crypto-symbol.json" ],

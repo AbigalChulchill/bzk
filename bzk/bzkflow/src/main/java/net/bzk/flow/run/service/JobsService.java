@@ -36,70 +36,77 @@ import net.bzk.infrastructure.ex.BzkRuntimeException;
 @Service
 public class JobsService {
 
-	@Value("${init.data.path}")
-	private String initDataPath;
-	@Value("${init.data.saveback}")
-	private boolean saveBackInited = false;
-	@Inject
-	private ApplicationEventPublisher applicationEventPublisher;
-	@Inject
-	private JobsDao dao;
-	@Inject
-	private ObjectMapper mapper;
+    @Value("${init.data.path}")
+    private String initDataPath;
+    @Value("${init.data.saveback}")
+    private boolean saveBackInited = false;
+    @Inject
+    private ApplicationEventPublisher applicationEventPublisher;
+    @Inject
+    private JobsDao dao;
+    @Inject
+    private ObjectMapper mapper;
 
-	@PostConstruct
-	public void loadInitData() {
-		var dir = new File(initDataPath);
-		if (!dir.exists()) {
-			dir.mkdirs();
-		}
-		var ffs = FileUtils.listFiles(dir, new String[] { "json" }, false);
-		List<Flow> fls= ffs.stream().map(this::importByFile).collect(Collectors.toList());
-		CommUtils.pl("mapper:" + mapper);
-		applicationEventPublisher.publishEvent(new InitFlowEvent(this,fls));
-	}
+    @PostConstruct
+    public void loadInitData() {
+        var dir = new File(initDataPath);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        var ffs = FileUtils.listFiles(dir, new String[]{"json"}, false);
+        List<Flow> fls = ffs.stream().map(this::importByFile).collect(Collectors.toList());
+        CommUtils.pl("mapper:" + mapper);
+        applicationEventPublisher.publishEvent(new InitFlowEvent(this, fls));
+    }
 
-	@Transactional
-	private Flow importByFile(File f) {
-		try {
-			Flow flow = BzkFlowUtils.getFlowJsonMapper().readValue(f, Flow.class);
-			save(flow, false);
-			return flow;
-		} catch (IOException e) {
-			throw new BzkRuntimeException(e);
-		}
-	}
+    @Transactional
+    private Flow importByFile(File f) {
+        try {
+            Flow flow = BzkFlowUtils.getFlowJsonMapper().readValue(f, Flow.class);
+            migrateTransitionResultCode(flow);
+            save(flow, false);
+            return flow;
+        } catch (IOException e) {
+            throw new BzkRuntimeException(e);
+        }
+    }
+
+    private void migrateTransitionResultCode(Flow f) {
+        for (var t : f.listAllTransition()) {
+            if (t.getResultCode() != null) continue;
+            t.setResultCode("");
+        }
+    }
 
 
+    @Transactional
+    public Job save(Flow f, boolean saveFile) throws IOException {
+        var sfo = dao.findById(f.getUid());
+        Job sf = sfo.orElse(Job.gen(f));
+        sf.setModel(f);
+        if (saveBackInited && saveFile) {
+            FileUtils.write(new File(initDataPath + f.getName() + ".json"), JsonUtils.toPrettyJson(f),
+                    Charset.forName("UTF-8"));
+        }
+        return dao.save(sf);
+    }
 
-	@Transactional
-	public Job save(Flow f, boolean saveFile) throws IOException {
-		var sfo = dao.findById(f.getUid());
-		Job sf = sfo.orElse(Job.gen(f));
-		sf.setModel(f);
-		if (saveBackInited && saveFile) {
-			FileUtils.write(new File(initDataPath + f.getName() + ".json"), JsonUtils.toPrettyJson(f),
-					Charset.forName("UTF-8"));
-		}
-		return dao.save(sf);
-	}
+    @Transactional
+    public void remove(String uid) {
+        var e = dao.findById(uid).get();
+        dao.delete(e);
+    }
 
-	@Transactional
-	public void remove(String uid) {
-		var e = dao.findById(uid).get();
-		dao.delete(e);
-	}
+    public class InitFlowEvent extends ApplicationEvent {
 
-	public class InitFlowEvent extends ApplicationEvent {
-		
-		@Getter
-		private List<Flow>flows;
+        @Getter
+        private List<Flow> flows;
 
-		public InitFlowEvent(Object source,List<Flow> fs) {
-			super(source);
-			flows = fs;
-		}
+        public InitFlowEvent(Object source, List<Flow> fs) {
+            super(source);
+            flows = fs;
+        }
 
-	}
+    }
 
 }

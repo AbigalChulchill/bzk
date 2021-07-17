@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -58,6 +59,21 @@ public class Flow extends BzkObj {
 	public List<Action> listAllActions() {
 		List<Action> ans = new ArrayList<>();
 		boxs.forEach(b -> ans.addAll(b.getActions()));
+		return ans;
+	}
+
+	@JsonIgnore
+	public List<Link> listAllLink() {
+		List<Link> ans = new ArrayList<>();
+		boxs.forEach(b -> ans.addAll(b.getLinks()));
+		return ans;
+	}
+
+	@JsonIgnore
+	public List<Transition> listAllTransition() {
+		List<Transition> ans = new ArrayList<>();
+		ans.addAll(listAllLink().stream().map(l->l.getTransition()).collect(Collectors.toList()));
+		ans.addAll(getBoxs().stream().map(l->l.getTransition()).collect(Collectors.toList()));
 		return ans;
 	}
 

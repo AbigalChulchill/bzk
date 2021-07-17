@@ -26,4 +26,10 @@ export class Transition {
   })
   @Type(() => VarKey)
   public endResultKeys = new Array<VarKey>();
+
+  @PropInfo({
+    title: 'resultCode',
+    type: PropType.MultipleText,
+  })
+  public resultCode = '';
 }
