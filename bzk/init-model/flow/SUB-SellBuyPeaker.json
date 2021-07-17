@@ -120,7 +120,8 @@
         "toBox" : "",
         "endTag" : "dir--${symbol}-${side}:   ${direction.macro.state} ${direction.micro.state} T:${trigger}",
         "failEnd" : false,
-        "endResultKeys" : [ ]
+        "endResultKeys" : [ ],
+        "resultCode" : ""
       }
     }, {
       "clazz" : "net.bzk.flow.model.Link",
@@ -137,7 +138,8 @@
         "toBox" : "",
         "endTag" : "TH_${symbol} ${side} : ${th.val} ${direction.last.val} T:${trigger}",
         "failEnd" : false,
-        "endResultKeys" : [ ]
+        "endResultKeys" : [ ],
+        "resultCode" : ""
       }
     }, {
       "clazz" : "net.bzk.flow.model.Link",
@@ -155,7 +157,8 @@
         "toBox" : "",
         "endTag" : " thth: ${thth}  th: ${th.val}  T:${trigger}",
         "failEnd" : false,
-        "endResultKeys" : [ ]
+        "endResultKeys" : [ ],
+        "resultCode" : ""
       }
     } ],
     "vars" : {
@@ -167,7 +170,8 @@
       "toBox" : "",
       "endTag" : "OK ${symbol}-${side}:  ${guardRate}",
       "failEnd" : false,
-      "endResultKeys" : [ ]
+      "endResultKeys" : [ ],
+      "resultCode" : ""
     }
   } ],
   "varCfgNames" : [ ],

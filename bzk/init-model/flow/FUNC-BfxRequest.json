@@ -64,7 +64,8 @@
       "endResultKeys" : [ {
         "lv" : "not_specify",
         "key" : "HttpResult"
-      } ]
+      } ],
+      "resultCode" : ""
     }
   } ],
   "varCfgNames" : [ "bitfinex.json" ],

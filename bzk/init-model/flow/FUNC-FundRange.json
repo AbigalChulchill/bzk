@@ -62,7 +62,8 @@
       "endResultKeys" : [ {
         "lv" : "not_specify",
         "key" : "bfx.fund.strategy"
-      } ]
+      } ],
+      "resultCode" : ""
     }
   } ],
   "varCfgNames" : [ ],

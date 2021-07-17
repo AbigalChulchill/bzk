@@ -63,19 +63,22 @@ public class JobsService {
     private Flow importByFile(File f) {
         try {
             Flow flow = BzkFlowUtils.getFlowJsonMapper().readValue(f, Flow.class);
-            migrateTransitionResultCode(flow);
-            save(flow, false);
+            boolean migrated = migrateTransitionResultCode(flow);
+            save(flow, migrated);
             return flow;
         } catch (IOException e) {
             throw new BzkRuntimeException(e);
         }
     }
 
-    private void migrateTransitionResultCode(Flow f) {
+    private boolean migrateTransitionResultCode(Flow f) {
+        boolean ans = false;
         for (var t : f.listAllTransition()) {
             if (t.getResultCode() != null) continue;
             t.setResultCode("");
+            ans = true;
         }
+        return ans;
     }
 
 

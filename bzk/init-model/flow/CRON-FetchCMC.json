@@ -40,7 +40,8 @@
       "toBox" : "",
       "endTag" : "DONE",
       "failEnd" : false,
-      "endResultKeys" : [ ]
+      "endResultKeys" : [ ],
+      "resultCode" : ""
     }
   } ],
   "varCfgNames" : [ "fin-proxy.json" ],

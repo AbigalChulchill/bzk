@@ -24,7 +24,8 @@
       "toBox" : "",
       "endTag" : "TODO Why",
       "failEnd" : false,
-      "endResultKeys" : [ ]
+      "endResultKeys" : [ ],
+      "resultCode" : ""
     }
   } ],
   "varCfgNames" : [ ],

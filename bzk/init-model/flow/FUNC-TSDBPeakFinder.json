@@ -1900,7 +1900,8 @@
         "endResultKeys" : [ {
           "lv" : "not_specify",
           "key" : "ans"
-        } ]
+        } ],
+        "resultCode" : ""
       }
     } ],
     "vars" : { },
@@ -1916,7 +1917,8 @@
       }, {
         "lv" : "not_specify",
         "key" : "rate"
-      } ]
+      } ],
+      "resultCode" : ""
     }
   }, {
     "clazz" : "net.bzk.flow.model.Box",
@@ -1993,7 +1995,8 @@
         "toBox" : "oZFKhG8jYXGY",
         "endTag" : null,
         "failEnd" : false,
-        "endResultKeys" : [ ]
+        "endResultKeys" : [ ],
+        "resultCode" : ""
       }
     } ],
     "vars" : { },
@@ -2003,7 +2006,8 @@
       "toBox" : "oZFKhG8jYXGY",
       "endTag" : null,
       "failEnd" : false,
-      "endResultKeys" : [ ]
+      "endResultKeys" : [ ],
+      "resultCode" : ""
     }
   } ],
   "varCfgNames" : [ "fin-proxy.json" ],

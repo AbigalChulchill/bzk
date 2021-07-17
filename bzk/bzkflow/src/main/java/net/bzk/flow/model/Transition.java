@@ -21,7 +21,7 @@ public class Transition {
     private String endTag = "TODO Why";
     private boolean failEnd = false;
     private List<VarKey> endResultKeys = new ArrayList<>();
-    private String resultCode;
+    private String resultCode = "";
 
     @JsonIgnore
     public boolean isEnd() {

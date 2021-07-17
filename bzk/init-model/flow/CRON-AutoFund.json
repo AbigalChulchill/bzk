@@ -137,7 +137,8 @@
         "endResultKeys" : [ {
           "lv" : "not_specify",
           "key" : "bfx.fund.balance"
-        } ]
+        } ],
+        "resultCode" : ""
       }
     } ],
     "vars" : { },
@@ -150,7 +151,8 @@
       "endResultKeys" : [ {
         "lv" : "not_specify",
         "key" : "bfx.fund.strategy"
-      } ]
+      } ],
+      "resultCode" : ""
     }
   }, {
     "clazz" : "net.bzk.flow.model.Box",
@@ -227,7 +229,8 @@
       "toBox" : "",
       "endTag" : "Done",
       "failEnd" : false,
-      "endResultKeys" : [ ]
+      "endResultKeys" : [ ],
+      "resultCode" : ""
     }
   } ],
   "varCfgNames" : [ ],

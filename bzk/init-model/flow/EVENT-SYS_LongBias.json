@@ -119,7 +119,8 @@
       "toBox" : "",
       "endTag" : "DONE",
       "failEnd" : false,
-      "endResultKeys" : [ ]
+      "endResultKeys" : [ ],
+      "resultCode" : ""
     }
   } ],
   "varCfgNames" : [ "crypto-symbol.json" ],
