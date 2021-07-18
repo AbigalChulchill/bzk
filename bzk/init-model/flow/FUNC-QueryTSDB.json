@@ -91,7 +91,7 @@
       "devBoxVars" : { },
       "devFlowVars" : { },
       "code" : "const rMap = ${trimValues};\r\n\r\nlet keys = Object.keys(rMap);\r\nkeys = keys.reverse();\r\nconst firstKey = keys[0];\r\n\r\nfunction findMinMaxIdx() {\r\n    let _min = Number.MAX_SAFE_INTEGER;\r\n    let _max = Number.MIN_SAFE_INTEGER;\r\n    let _minIdx = -1;\r\n    let _maxIdx = -1;\r\n\r\n    for (let i = 0; i < keys.length; i++) {\r\n        let curV = getV(i);\r\n        if (curV > _max) {\r\n            _max = curV;\r\n            _maxIdx = i;\r\n        }\r\n        if (curV < _min) {\r\n            _min = curV;\r\n            _minIdx = i;\r\n        }\r\n    }\r\n    return {\r\n        minIdx: _minIdx,\r\n        maxIdx: _maxIdx\r\n    };\r\n}\r\n\r\nfunction subtractKeySencods(k1, k2) {\r\n    let k1t = new Date(k1);\r\n    let k2t = new Date(k2);\r\n    return (k1t - k2t) / 1000;\r\n}\r\n\r\nfunction genRaw(idx) {\r\n    return {\r\n        idx: idx,\r\n        key: keys[idx],\r\n        val: getV(idx),\r\n        dTime: subtractKeySencods(firstKey, keys[idx])\r\n    };\r\n}\r\n\r\nfunction getV(idx) {\r\n    const k = keys[idx];\r\n    return rMap[k];\r\n}\r\n\r\nfunction calc() {\r\n    const mm = findMinMaxIdx();\r\n    return {\r\n        min: genRaw(mm.minIdx),\r\n        max: genRaw(mm.maxIdx)\r\n    }\r\n}\r\n\r\ncalc();",
-      "polyglot" : "python",
+      "polyglot" : "js",
       "resultLv" : "not_specify",
       "resultKey" : "minMax"
     } ],
