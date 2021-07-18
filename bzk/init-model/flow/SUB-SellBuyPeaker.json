@@ -4,6 +4,62 @@
   "name" : "SUB-SellBuyPeaker",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "36vcsdaTkWky",
+    "name" : "Record_BYE",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "65eKSmNiL1nJ",
+      "name" : "PostFinProxy",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "url" : "${finProxyUrl}/proxy/tsdb/insert/multiple",
+      "uriVariables" : { },
+      "body" : "${body}",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : "postResult"
+      }
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$PolyglotAction",
+      "uid" : "asaxvahgwJpm",
+      "name" : "GenBody",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "code" : "const ans = [];\nconst timeAt = '${direction.last.time}';\nconst price = ${direction.last.val};\nconst reason = '${__pk_result}';\n\nans.push(genPointDto());\n\nfunction genPointDto(){\n  const row = {\n      measurement : 'order-measurement',\n      tags:{\n        symbol : '${symbol}',\n        category:'cryptocurrency',\n        source:'coinmarketcap',\n        trigger:'${trigger}',\n        side:'${side}',\n        reason:reason\n      },\n      field: 'miss_rate',\n      val:price,\n      time :timeAt\n  };\n  return row;\n}\n\nans;\n",
+      "polyglot" : "js",
+      "resultLv" : "not_specify",
+      "resultKey" : "body"
+    } ],
+    "links" : [ ],
+    "vars" : { },
+    "taskSort" : [ "asaxvahgwJpm", "65eKSmNiL1nJ" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "${symbol}-${side}:   ${__pk_result}",
+      "failEnd" : false,
+      "endResultKeys" : [ {
+        "lv" : "not_specify",
+        "key" : "direction"
+      }, {
+        "lv" : "not_specify",
+        "key" : "trigger"
+      }, {
+        "lv" : "not_specify",
+        "key" : "thth"
+      }, {
+        "lv" : "not_specify",
+        "key" : "th"
+      } ],
+      "resultCode" : ""
+    }
+  }, {
+    "clazz" : "net.bzk.flow.model.Box",
     "uid" : "X9XRPTTIQJIQ",
     "name" : "Box",
     "actions" : [ {
@@ -74,7 +130,7 @@
       "outputReflects" : [ {
         "srcKey" : "ans",
         "toKey" : {
-          "lv" : "not_specify",
+          "lv" : "run_flow",
           "key" : "direction"
         }
       } ]
@@ -100,7 +156,7 @@
       "outputReflects" : [ {
         "srcKey" : "nearVal",
         "toKey" : {
-          "lv" : "not_specify",
+          "lv" : "run_flow",
           "key" : "th"
         }
       } ]
@@ -117,11 +173,11 @@
         "code" : "const side = '${side}';\r\nconst macroState = '${direction.macro.state}';\r\nconst microState = '${direction.micro.state}';\r\n\r\nfunction check(){\r\n\r\n    if(side == 'SELL') return macroState == 'RISE'\r\n    if(side == 'BUY') return macroState == 'FALL'\r\n    throw new Error('Whoops! side:'+side);\r\n}\r\ncheck();"
       },
       "transition" : {
-        "toBox" : "",
-        "endTag" : "dir--${symbol}-${side}:   ${direction.macro.state} ${direction.micro.state} T:${trigger}",
+        "toBox" : "36vcsdaTkWky",
+        "endTag" : null,
         "failEnd" : false,
         "endResultKeys" : [ ],
-        "resultCode" : ""
+        "resultCode" : "CheckDirection"
       }
     }, {
       "clazz" : "net.bzk.flow.model.Link",
@@ -139,7 +195,7 @@
         "endTag" : null,
         "failEnd" : false,
         "endResultKeys" : [ ],
-        "resultCode" : ""
+        "resultCode" : "CheckTH"
       }
     }, {
       "clazz" : "net.bzk.flow.model.Link",
@@ -154,11 +210,11 @@
         "type" : "lessthan"
       },
       "transition" : {
-        "toBox" : "",
-        "endTag" : " thth: ${thth}  th: ${th.val}  T:${trigger}",
+        "toBox" : "36vcsdaTkWky",
+        "endTag" : null,
         "failEnd" : false,
         "endResultKeys" : [ ],
-        "resultCode" : ""
+        "resultCode" : "CheckDirection"
       }
     } ],
     "vars" : {
@@ -169,50 +225,6 @@
     "transition" : {
       "toBox" : "",
       "endTag" : "OK ${symbol}-${side}:  ${guardRate}",
-      "failEnd" : false,
-      "endResultKeys" : [ ],
-      "resultCode" : ""
-    }
-  }, {
-    "clazz" : "net.bzk.flow.model.Box",
-    "uid" : "36vcsdaTkWky",
-    "name" : "Record_BYE",
-    "actions" : [ {
-      "clazz" : "net.bzk.flow.model.HttpAction",
-      "uid" : "65eKSmNiL1nJ",
-      "name" : "Post",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "url" : "${finProxyUrl}/proxy/tsdb/insert/multiple",
-      "uriVariables" : { },
-      "body" : "{}",
-      "method" : "POST",
-      "headers" : { },
-      "headersFlat" : "",
-      "key" : {
-        "lv" : "not_specify",
-        "key" : ""
-      }
-    }, {
-      "clazz" : "net.bzk.flow.model.Action$PolyglotAction",
-      "uid" : "asaxvahgwJpm",
-      "name" : "GenBody",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "code" : "const list= ${quotes};\nconst ans = [];\n\nfor (const q of list) {\n    price = q['quote']['USD']['price']\n    volume_24h = q['quote']['USD']['volume_24h']\n    ans.push(genPointDto('price',price,q));\n    ans.push(genPointDto('volume_24h',volume_24h,q));\n}\n\n\n\nfunction genPointDto(fd,v,q){\n  const row = {\n      measurement : 'realtime',\n      tags:{\n        symbol : q['symbol'],\n        name : q['name'],\n        category:'cryptocurrency',\n        source:'coinmarketcap'\n      },\n      field: fd,\n      val:v,\n      time :q['last_updated']\n  };\n  return row;\n}\n\nans;\n",
-      "polyglot" : "js",
-      "resultLv" : "not_specify",
-      "resultKey" : "body"
-    } ],
-    "links" : [ ],
-    "vars" : { },
-    "taskSort" : [ "asaxvahgwJpm", "65eKSmNiL1nJ" ],
-    "whileJudgment" : null,
-    "transition" : {
-      "toBox" : "",
-      "endTag" : "END",
       "failEnd" : false,
       "endResultKeys" : [ ],
       "resultCode" : ""
