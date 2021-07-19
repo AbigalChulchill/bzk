@@ -193,7 +193,7 @@
         "val" : "import \"strings\"\nfrom(bucket: \"quote\")\n  |> range(start: -5d)\n   |> filter(fn: (r) =>\n    r._measurement == \"realtime\" and\n    r.symbol == \"${symbol}\" and\n    r._field == \"price\"\n  )\n  |> difference()\n  |> movingAverage(n: int( v: strings.replaceAll(v: \"12h\", t: \"h\", u: \"\"))*12 )\n  |> movingAverage(n: 12  )\n  |>${thFunc}\n  |>map(fn: (r) => ({ r with _value:-r._value/2.00 }))   "
       }, {
         "key" : "vaildMins",
-        "val" : "10"
+        "val" : "!javascript===\nconst ans = 60*24*5 +100;\nans;"
       }, {
         "key" : "skipCount",
         "val" : "0"
