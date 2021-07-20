@@ -2,6 +2,7 @@ package net.bzk.flow.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -17,6 +18,7 @@ import javax.persistence.Table;
 import lombok.Data;
 import net.bzk.auth.model.CreateUpdateDate;
 import net.bzk.auth.service.CommService;
+import net.bzk.flow.dto.ConvertInfra;
 import net.bzk.flow.dto.ConvertInfra.VarMapConvert;
 import net.bzk.flow.dto.ConvertInfra.VarValList;
 import net.bzk.flow.dto.ConvertInfra.VarValListConvert;
@@ -66,8 +68,8 @@ public class RunLog implements Serializable, CreateUpdateDate {
     @Column(nullable = true, columnDefinition = "TEXT")
     private String exceptionClazz;
     @Column(nullable = true, columnDefinition = "TEXT")
-    @Convert(converter = VarValListConvert.class)
-    private VarValList varVals;
+    @Convert(converter = ConvertInfra.MapConvert.class)
+    private Map varVals;
     private String actionName;
 
     private Date updateAt;

@@ -217,7 +217,7 @@ public class BoxRuner {
             naer.initBase(genUids(), a);
             Callable<VarValSet> cb = naer;
             VarValSet ans = cb.call();
-            logUtils.log(naer.getUids(), RunState.ActionResult, l -> l.setVarVals(VarValList.gen(ans.list())));
+            logUtils.log(naer.getUids(), RunState.ActionResult, l -> l.setVarVals(VarVal.toMap(ans.list())));
             return ans;
         } catch (Exception e) {
             logUtils.log(genUids(), RunState.ActionCallFail, l -> {

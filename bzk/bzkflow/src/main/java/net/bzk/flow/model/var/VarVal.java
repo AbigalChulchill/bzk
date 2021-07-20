@@ -1,11 +1,11 @@
 package net.bzk.flow.model.var;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Data
 public class VarVal implements Serializable {
@@ -53,6 +53,14 @@ public class VarVal implements Serializable {
         ans.setVal(o);
         ans.setKey(k);
         ans.setLv(lv);
+        return ans;
+    }
+
+    public static Map<String,Object> toMap(List<VarVal> vvs){
+        Map<String,Object> ans  = new HashMap<>();
+        for(var vv : vvs){
+            ans.put(vv.getKey(),vv.getVal());
+        }
         return ans;
     }
 

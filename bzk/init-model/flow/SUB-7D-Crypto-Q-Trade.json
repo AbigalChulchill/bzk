@@ -253,7 +253,7 @@
       },
       "transition" : {
         "toBox" : "",
-        "endTag" : "BYE_SIDE_ISSUE ${toSide}",
+        "endTag" : "BYE_SIDE_ISSUE  ${symbol} ${toSide}",
         "failEnd" : false,
         "endResultKeys" : [ {
           "lv" : "not_specify",
