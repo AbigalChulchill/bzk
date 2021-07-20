@@ -2,6 +2,7 @@ package net.bzk.flow.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.persistence.Column;
@@ -69,7 +70,7 @@ public class RunLog implements Serializable, CreateUpdateDate {
     private String exceptionClazz;
     @Column(nullable = true, columnDefinition = "TEXT")
     @Convert(converter = ConvertInfra.MapConvert.class)
-    private Map varVals;
+    private HashMap<String,Object> varVals;
     private String actionName;
 
     private Date updateAt;

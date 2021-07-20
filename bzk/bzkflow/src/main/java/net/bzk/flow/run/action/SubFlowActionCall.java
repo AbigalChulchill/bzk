@@ -1,6 +1,7 @@
 package net.bzk.flow.run.action;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 
@@ -80,16 +81,15 @@ public class SubFlowActionCall extends ActionCall<SubFlowAction> {
     }
 
     private VarValSet genVarSet(FlowRuner fr) {
-
-        List<VarVal> ers = fr.getInfo().getEndResult();
+        Map<String,Object> ers = fr.getInfo().getEndResult();
         VarValSet ans = new VarValSet();
         List<VarKeyReflect> omap = getModel().getOutputReflects();
-        for (VarVal vv : ers) {
+        for (var vv : ers.entrySet()) {
             Optional<VarKeyReflect> vkro = VarKeyReflect.findBySrcKey(omap, vv.getKey());
             if (vkro.isEmpty())
                 continue;
             VarKeyReflect vkr = vkro.get();
-            addVarVal(ans, vkr.getToKey().getLv(), vkr.getToKey().getKey(), vv.getVal());
+            addVarVal(ans, vkr.getToKey().getLv(), vkr.getToKey().getKey(), vv.getValue());
         }
         addVarVal(ans, VarLv.run_box, Constant.subStateKey(fr.getModel().getName()), fr.getInfo().getState());
         addVarVal(ans, VarLv.run_box, Constant.subTagKey(fr.getModel().getName()), getEndTag(fr.getInfo()));

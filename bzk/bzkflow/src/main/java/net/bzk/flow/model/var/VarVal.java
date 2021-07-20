@@ -56,8 +56,8 @@ public class VarVal implements Serializable {
         return ans;
     }
 
-    public static Map<String,Object> toMap(List<VarVal> vvs){
-        Map<String,Object> ans  = new HashMap<>();
+    public static HashMap<String,Object> toMap(List<VarVal> vvs){
+        HashMap<String,Object> ans  = new HashMap<>();
         for(var vv : vvs){
             ans.put(vv.getKey(),vv.getVal());
         }
