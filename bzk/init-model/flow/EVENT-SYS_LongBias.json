@@ -72,7 +72,7 @@
         "val" : "0.02"
       }, {
         "key" : "calcRated",
-        "val" : "true"
+        "val" : "!javascript===\nconst ans = true;\nans;"
       } ],
       "outputReflects" : [ {
         "srcKey" : "ans",
@@ -84,7 +84,7 @@
         "srcKey" : "rate",
         "toKey" : {
           "lv" : "run_sys",
-          "key" : "Bais.${symbol}.Fixed.120D.RF.MA15D.OrderRate"
+          "key" : "Bais.${symbol}.Fixed.120D.RF.MA15D_OrderRate"
         }
       } ]
     }, {

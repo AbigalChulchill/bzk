@@ -90,7 +90,7 @@
       "devFlowVars" : { },
       "flatData" : [ {
         "key" : "~orderRate",
-        "val" : "!javascript===\nconst rf = bzk.g('%Bais.${symbol}.Fixed.120D.RF.MA15D.OrderRate');\nrf;"
+        "val" : "!javascript===\nconst rf = bzk.g('%Bais.${symbol}.Fixed.120D.RF.MA15D_OrderRate');\nrf;"
       } ]
     } ],
     "links" : [ {
