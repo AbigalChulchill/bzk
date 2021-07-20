@@ -177,7 +177,7 @@
       "devFlowVars" : { },
       "flatData" : [ {
         "key" : "~side",
-        "val" : "!javascript===\n\nconst toSide = '${toSide}';\nconst lastv = ${direction.last.val};\nconst th = ${th};\n\n\nfunction clac(){\n\n    if(toSide == 'SELL'  ){\n        if(lastv > th){\n             return 'SELL';\n        }\n        return 'SELL_TH_BYE';\n    }\n    if(toSide == 'BUY'  ){\n        if(lastv < th){\n            return 'BUY';\n        }\n        return 'BUY_TH_BYE';\n    }\n    throw new Error('no support check');\n}\nclac();"
+        "val" : "!javascript===\n\nconst toSide = '${toSide}';\nconst lastv = ${direction.last.val};\nconst th = ${th.val};\n\n\nfunction clac(){\n\n    if(toSide == 'SELL'  ){\n        if(lastv > th){\n             return 'SELL';\n        }\n        return 'SELL_TH_BYE';\n    }\n    if(toSide == 'BUY'  ){\n        if(lastv < th){\n            return 'BUY';\n        }\n        return 'BUY_TH_BYE';\n    }\n    throw new Error('no support check');\n}\nclac();"
       } ]
     }, {
       "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
@@ -249,7 +249,7 @@
         "kind" : "NONE",
         "next" : null,
         "polyglot" : "js",
-        "code" : "const toSide = '${toSide}';\r\nconst lastv = ${direction.last.val};\r\nconst th = ${th};\r\n\r\nfunction checkVal(v){\r\n    if(toSide == 'BUY'){\r\n        return v < 0;\r\n    }\r\n    if(toSide == 'SELL'){\r\n        return v > 0;\r\n    }\r\n}\r\n\r\nfunction checkNotOK(){\r\n    const lvc = checkVal(lastv);\r\n    if (!lvc) return true;\r\n    const thc = checkVal(th);\r\n    if(!thc) return true;\r\n    return false;\r\n}\r\n\r\ncheckNotOK();"
+        "code" : "const toSide = '${toSide}';\r\nconst lastv = ${direction.last.val};\r\nconst th = ${th.val};\r\n\r\nfunction checkVal(v){\r\n    if(toSide == 'BUY'){\r\n        return v < 0;\r\n    }\r\n    if(toSide == 'SELL'){\r\n        return v > 0;\r\n    }\r\n}\r\n\r\nfunction checkNotOK(){\r\n    const lvc = checkVal(lastv);\r\n    if (!lvc) return true;\r\n    const thc = checkVal(th);\r\n    if(!thc) return true;\r\n    return false;\r\n}\r\n\r\ncheckNotOK();"
       },
       "transition" : {
         "toBox" : "",
