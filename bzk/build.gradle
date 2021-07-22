@@ -72,13 +72,6 @@ project(':AuthData') {
   }
 }
 
-project(':flow-gists') {
-  dependencies {
-  	implementation project(':Comm')
-
-  }
-}
-
 project(':bzkflow') {
   dependencies {
   	implementation project(':Comm')

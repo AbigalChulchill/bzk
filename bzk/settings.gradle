@@ -3,7 +3,6 @@ include 'bzkflow'
 include 'AuthData'
 include 'Comm'
 include 'BzkDataSDK'
-include 'flow-gists'
 include 'WsSDK'
 
 

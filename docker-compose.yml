@@ -8,13 +8,7 @@ services:
     ports: 
       - "9202:8080"
     depends_on:
-      - "db"
-  flow-gists:
-    build:
-        context: ./bzk/
-        dockerfile: flow-gists/Dockerfile
-    ports: 
-      - "9203:8081"     
+      - "db" 
   editor-web:
     build: ./flow-editor
     ports: 
