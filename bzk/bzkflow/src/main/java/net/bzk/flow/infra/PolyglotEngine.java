@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import net.bzk.flow.Constant;
 import net.bzk.infrastructure.PolyglotUtils;
@@ -57,7 +58,9 @@ public class PolyglotEngine {
 
 
     public static Map<String, Object> genVarQueryerMap(FastVarQueryer vq) {
-        return PolyglotUtils.genSingleMap("bzk", vq);
+        var ans = PolyglotUtils.genSingleMap("bzk", vq);
+        ans.put("testcall", new TODOtsdb());
+        return ans;
     }
 
     @Builder
@@ -79,6 +82,35 @@ public class PolyglotEngine {
         public void logWarn(String s) {
             logUtils.logWithMsg(varQueryer.getUids(), RunState.ScriptError, s);
         }
+    }
+
+    public static class TODOTimeMap extends HashMap<String, Double> {
+        public TODOTimeMap(Map<? extends String, ? extends Double> m) {
+            super(m);
+        }
+    }
+
+    @Data
+    public static class TODOoutput {
+        private String string;
+        private float ff;
+    }
+
+    public static class TODOtsdb {
+
+        public TODOoutput test(Map inm) {
+            System.out.println(inm);
+            TODOTimeMap m = new TODOTimeMap(inm);
+            String all = "";
+            for (var kv : m.entrySet()) {
+                all += kv.getKey() + " " + kv.getValue();
+            }
+            TODOoutput ans = new TODOoutput();
+            ans.string = all;
+            ans.ff = all.length();
+            return ans;
+        }
+
     }
 
 

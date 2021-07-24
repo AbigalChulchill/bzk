@@ -1,0 +1,82 @@
+{
+  "clazz" : "net.bzk.flow.model.Flow",
+  "uid" : "OKkm1H8hdyIM",
+  "name" : "Flow",
+  "boxs" : [ {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "3MvCJfgTDyzN",
+    "name" : "TEST",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "cCJgQaerQcaz",
+      "name" : "fetch",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flowUid" : "9RLQvpmbGa35",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "tsdbQuery",
+        "val" : "import \"strings\"\nfrom(bucket: \"quote\")\n  |> range(start: -50d)\n  |> filter(fn: (r) =>\n    r._measurement == \"daily\" and\n    r.valmean == \"close\" and\n    r.symbol == \"BTC\"\n  )\n  |> map(fn: (r) => ({ r with cp: r._value   }))\n  |> movingAverage(n: int( v: strings.replaceAll(v: \"5d\", t: \"d\", u: \"\")) )\n  |> map(fn: (r) => ({ r with _value: r.cp-r._value   }))\n  |> movingAverage(n: int( v: strings.replaceAll(v: \"5d\", t: \"d\", u: \"\")) )"
+      }, {
+        "key" : "vaildMins",
+        "val" : "!javascript===\nconst ans = 60*60*24*3;\nans;"
+      }, {
+        "key" : "skipCount",
+        "val" : "0"
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "nearVal",
+        "toKey" : {
+          "lv" : "not_specify",
+          "key" : "testNV"
+        }
+      }, {
+        "srcKey" : "trimValues",
+        "toKey" : {
+          "lv" : "not_specify",
+          "key" : "tsdbMap"
+        }
+      } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$PolyglotAction",
+      "uid" : "MNrcRuXkDR88",
+      "name" : "TESTCALL",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "code" : "const d = testcall.test(${tsdbMap});\r\nd;",
+      "polyglot" : "js",
+      "resultLv" : "not_specify",
+      "resultKey" : "outans"
+    } ],
+    "links" : [ ],
+    "vars" : { },
+    "taskSort" : [ "cCJgQaerQcaz", "MNrcRuXkDR88" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "TODO Why",
+      "failEnd" : false,
+      "endResultKeys" : [ ],
+      "resultCode" : ""
+    }
+  } ],
+  "varCfgNames" : [ ],
+  "vars" : { },
+  "entry" : {
+    "clazz" : "net.bzk.flow.model.Entry$FixedRateEntry",
+    "boxUid" : "3MvCJfgTDyzN",
+    "autoRegister" : false,
+    "period" : 10,
+    "unit" : "DAYS",
+    "initialDelay" : 0
+  },
+  "logEncryptKey" : "1234567890123456",
+  "threadCfg" : {
+    "corePoolSize" : 10,
+    "maximumPoolSize" : 50,
+    "keepAliveTime" : 500,
+    "aliveUnit" : "MINUTES"
+  }
+}
