@@ -215,7 +215,7 @@ public class PeakFinder {
     private double subtractKey(String k1, String k2) {
         var k1t = ZonedDateTime.parse(k1);
         var k2t = ZonedDateTime.parse(k2);
-        return ChronoUnit.MILLIS.between(k1t, k2t) / 1000;
+        return ChronoUnit.MILLIS.between(k2t,k1t ) / 1000;
     }
 
     private TrendInfo genTrendInfo(Dimension micro, Function<MinMaxInfo, MinMaxInfo> filter) {

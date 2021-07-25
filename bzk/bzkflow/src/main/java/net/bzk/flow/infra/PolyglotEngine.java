@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import net.bzk.flow.Constant;
 import net.bzk.infrastructure.PolyglotUtils;
+import net.bzk.infrastructure.tscurve.TsCurveFunc;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Value;
 import org.springframework.http.HttpMethod;
@@ -23,6 +24,10 @@ import net.bzk.infrastructure.JsonUtils;
 @Slf4j
 public class PolyglotEngine {
 
+
+    public enum CodeMember{
+        bzk,tsFunc
+    }
 
     public <R> R parseScriptbleText(String plain, Class<R> clz) {
         Object o = null;
@@ -45,7 +50,8 @@ public class PolyglotEngine {
     }
 
     public Map<String, Object> genVarQueryer() {
-        return null;
+        TsCurveFunc tsFunc = TsCurveFunc.getInstance();
+        return PolyglotUtils.genSingleMap(CodeMember.tsFunc.toString(), tsFunc);
     }
 
     public void logMsg(String s) {
@@ -70,7 +76,9 @@ public class PolyglotEngine {
 
         @Override
         public Map<String, Object> genVarQueryer() {
-            return genVarQueryerMap(varQueryer);
+            var ans = super.genVarQueryer();
+            ans.putAll(genVarQueryerMap(varQueryer));
+            return ans;
         }
 
         @Override

@@ -45,14 +45,46 @@
       "tryErrorble" : false,
       "devBoxVars" : { },
       "devFlowVars" : { },
-      "code" : "const d = testcall.test(${tsdbMap});\r\nd;",
+      "code" : "const days = 60*60*24*5;\r\nconst d = tsFunc.findPeak(${tsdbMap},0,days,0);\r\nd;",
       "polyglot" : "js",
       "resultLv" : "not_specify",
       "resultKey" : "outans"
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "nvnahgumtzxg",
+      "name" : "CaSb",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flowUid" : "PeakFinder5",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "tsdbQuery",
+        "val" : "import \"strings\"\nfrom(bucket: \"quote\")\n  |> range(start: -50d)\n  |> filter(fn: (r) =>\n    r._measurement == \"daily\" and\n    r.valmean == \"close\" and\n    r.symbol == \"BTC\"\n  )\n  |> map(fn: (r) => ({ r with cp: r._value   }))\n  |> movingAverage(n: int( v: strings.replaceAll(v: \"5d\", t: \"d\", u: \"\")) )\n  |> map(fn: (r) => ({ r with _value: r.cp-r._value   }))\n  |> movingAverage(n: int( v: strings.replaceAll(v: \"5d\", t: \"d\", u: \"\")) )"
+      }, {
+        "key" : "peakMaxWaitSeconds",
+        "val" : "!javascript===\n60*60*24*5;"
+      }, {
+        "key" : "symbol",
+        "val" : "BTC"
+      }, {
+        "key" : "baseVal",
+        "val" : "0"
+      }, {
+        "key" : "macroAmplitudeRate",
+        "val" : "0"
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "ans",
+        "toKey" : {
+          "lv" : "not_specify",
+          "key" : "casbd"
+        }
+      } ]
     } ],
     "links" : [ ],
     "vars" : { },
-    "taskSort" : [ "cCJgQaerQcaz", "MNrcRuXkDR88" ],
+    "taskSort" : [ "cCJgQaerQcaz", "MNrcRuXkDR88", "nvnahgumtzxg" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
