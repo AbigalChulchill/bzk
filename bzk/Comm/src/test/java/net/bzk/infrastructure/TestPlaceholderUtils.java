@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 
+import net.bzk.infrastructure.tscurve.PeakFinder;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -23,10 +24,13 @@ public class TestPlaceholderUtils {
 
 	@Test
 	void testlistPlaceHolderKeys() {
+
+//		PeakFinder.LastInfo lf = new PeakFinder.LastInfo();
+
 		final String str = "Hi ${name.var}, how are you? I'm ${namevar2}.test ${!namevar2}. ${~namev.ar2}. ${}";
 		List<String> res = PlaceholderUtils.listStringSubstitutorKeys(str);
 		System.out.println(res);
-		assertEquals(res.size(), 5);
+		assertEquals(res.size(), 4);
 
 	}
 

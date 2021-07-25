@@ -26,13 +26,10 @@ public class PolyglotActionCall extends ActionCall<PolyglotAction> {
 
     @Override
     public VarValSet call() throws Exception {
-//		if(getModel().getUid().equals("1pfZVtQ4gnmO")) {
-//			System.out.println("DEBUG");
-//		}
         VarValSet set = new VarValSet();
         String code = getModel().getCode();
         logUtils.logActionCall(getUids(), "code: " + code);
-        Object ans = PolyglotUtils.callPolyglot(getModel().getPolyglot().toString(), code, PolyglotEngine.genVarQueryerMap(varQueryer));
+        Object ans = getPolyglotEngine().parseCode(getModel().getPolyglot().toString(), code);
         logUtils.logActionCall(getUids(), "get ans " + ans);
         if (ans != null) {
             VarVal vv = new VarVal();

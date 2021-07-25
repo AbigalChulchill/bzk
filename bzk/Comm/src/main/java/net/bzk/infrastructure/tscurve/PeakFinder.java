@@ -4,32 +4,32 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
+
 
 public class PeakFinder {
 
-    public static enum Direction {
+    public enum Direction {
         RISE, FALL
     }
 
-    public static enum PointType {
+    public enum PointType {
         MINED, MAXED, NONE
     }
 
-    public static enum Dimension {
+    public enum Dimension {
         MACRO, MICRO
     }
 
     @Data
     @Builder
     @NoArgsConstructor
+    @AllArgsConstructor
     private static class Point {
         private int idx;
         private String key;
@@ -55,19 +55,36 @@ public class PeakFinder {
     @Data
     @Builder
     @NoArgsConstructor
-    public static class LastInfo{
+    @AllArgsConstructor
+    public static class LastInfo {
         private String time;
         private double val;
     }
 
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    private static class TrendInfo {
+        private Direction state;
+        private Map<Double, Point> maxList;
+        private Map<Double, Point> minList;
+        private Map<Double, Point> allList;
+        private double maxNearTime;
+        private double minNearTime;
+        private Point nearMax;
+        private Point nearMin;
+        private Point nearPeak;
+    }
 
-    private Map<String, Double> rMap = null;
-    private double baseVal = 0;
-    private double peakMaxWaitSeconds = 0;
-    private double macroAmplitudeRate = 0;
-    private List<String> keys = null;
-    private String firstKey;
-    private MacroAmplitudeFilter macroAmplitudeFilter = new MacroAmplitudeFilter();
+
+    private final Map<String, Double> rMap;
+    private final double baseVal;
+    private final double peakMaxWaitSeconds;
+    private final double macroAmplitudeRate;
+    private final List<String> keys;
+    private final String firstKey;
+    private final MacroAmplitudeFilter macroAmplitudeFilter = new MacroAmplitudeFilter();
 
 
     public PeakFinder(Map<String, Double> rm, double baseVal, double peakMaxWaitSeconds, double macroAmplitudeRate) {
@@ -76,17 +93,18 @@ public class PeakFinder {
         this.peakMaxWaitSeconds = peakMaxWaitSeconds;
         this.macroAmplitudeRate = macroAmplitudeRate;
         keys = new ArrayList<>(rMap.keySet());
-        keys.sort((a, b) -> toTime(a).compareTo(toTime(b)));
+        keys.sort(Comparator.comparing(this::toTime));
+        Collections.reverse(keys);
         firstKey = keys.get(0);
 
     }
 
 
-    public Result calc(){
+    public Result calc() {
         Result ans = new Result();
         ans.setLast(LastInfo.builder().val(rMap.get(firstKey)).time(firstKey).build());
-        ans.setMacro(genTrendInfo(Dimension.MACRO,macroAmplitudeFilter));
-        ans.setMicro(genTrendInfo(Dimension.MICRO,null));
+        ans.setMacro(genTrendInfo(Dimension.MACRO, macroAmplitudeFilter));
+        ans.setMicro(genTrendInfo(Dimension.MICRO, null));
         return ans;
 
     }
@@ -99,18 +117,18 @@ public class PeakFinder {
 
     private MinMaxInfo listMinMax(Dimension micro, Function<MinMaxInfo, MinMaxInfo> filter) {
         var ans = new MinMaxInfo();
-        for (var i = 0; i < keys.size(); i++) {
-            let mmr = findMinOrMax(i, micro);
-            let info = genMinMax(i)
-            if (mmr == MINED) {
-                ans.min.push(info);
-                ans.all.push(info);
-            } else if (mmr == MAXED) {
-                ans.max.push(info);
-                ans.all.push(info);
+        for (int i = 0; i < keys.size(); i++) {
+            PointType mmr = findMinOrMax(i, micro);
+            Point info = genMinMax(i);
+            if (mmr == PointType.MINED) {
+                ans.min.add(info);
+                ans.all.add(info);
+            } else if (mmr == PointType.MAXED) {
+                ans.max.add(info);
+                ans.all.add(info);
             }
         }
-        if (filter) ans = filter(ans);
+        if (filter != null) ans = filter.apply(ans);
         return ans;
     }
 
@@ -134,8 +152,8 @@ public class PeakFinder {
         return Point.builder().key(key).idx(i).val(rMap.get(key)).dtime(subtractKey(firstKey, key)).build();
     }
 
-    private Map<Double, Double> mapInfos(List<Point> listi) {
-        Map<Double, Double> ans = new HashMap<>();
+    private Map<Double, Point> mapInfos(List<Point> listi) {
+        Map<Double, Point> ans = new HashMap<>();
         for (var e : listi) {
             ans.put(e.dtime, e);
         }
@@ -146,32 +164,32 @@ public class PeakFinder {
         return rMap.get(key) - baseVal;
     }
 
-    function isBoundary(timeSize, idx, micro, forward) {
+    private boolean isBoundary(String curKey, int idx, Dimension micro, boolean forward) {
         if (idx < 0) return true;
-        if (idx >= keys.length) return true;
-        if (micro && timeSize > peakMaxWaitSeconds) return true;
-        if (micro) return false;
-        let nidx = forward ? idx - 1 : idx + 1;
+        if (idx >= keys.size()) return true;
+        String nk = keys.get(idx);
+        double timeSize = Math.abs(subtractKey(curKey, nk));
+        if (micro == Dimension.MICRO && timeSize > peakMaxWaitSeconds) return true;
+        if (micro == Dimension.MICRO) return false;
+        int nidx = forward ? idx - 1 : idx + 1;
         if (nidx < 0) return true;
-        if (nidx >= keys.length) return true;
-        let cv = getVal(keys[idx]);
-        let nv = getVal(keys[nidx]);
+        if (nidx >= keys.size()) return true;
+        double cv = getVal(keys.get(idx));
+        double nv = getVal(keys.get(nidx));
         return nv * cv < 0;
     }
 
-    function findMinOrMax(idx, micro) {
-    const curIdx = idx;
-    const curKey = keys[idx];
-    const curv = getVal(curKey);
-        let maxed = true, mined = true;
-        let forward = true;
+    private PointType findMinOrMax(int idx, Dimension micro) {
+        int curIdx = idx;
+        String curKey = keys.get(idx);
+        double curv = getVal(curKey);
+        boolean maxed = true, mined = true;
+        boolean forward = true;
         while (maxed || mined) {
             if (forward) idx--;
             else idx++;
-            let nk = keys[idx];
-            let nv = getVal(nk);
-            let timeSize = Math.abs(subtractKey(curKey, nk));
-            if (isBoundary(timeSize, idx, micro, forward)) {
+
+            if (isBoundary(curKey, idx, micro, forward)) {
                 if (forward) {
                     idx = curIdx;
                     forward = false;
@@ -180,17 +198,18 @@ public class PeakFinder {
 
                 break;
             }
+            double nv = getVal(keys.get(idx));
             if (maxed) {
-                if (nv > curv) maxed = false
+                if (nv > curv) maxed = false;
             }
             if (mined) {
-                if (nv < curv) mined = false
+                if (nv < curv) mined = false;
             }
         }
-        if (maxed && mined) return NONE;
-        if (maxed && (micro || curv > 0)) return MAXED;
-        if (mined && (micro || curv < 0)) return MINED;
-        return NONE;
+        if (maxed && mined) return PointType.NONE;
+        if (maxed && (micro == Dimension.MICRO || curv > 0)) return PointType.MAXED;
+        if (mined && (micro == Dimension.MICRO || curv < 0)) return PointType.MINED;
+        return PointType.NONE;
     }
 
     private double subtractKey(String k1, String k2) {
@@ -237,20 +256,7 @@ public class PeakFinder {
         return state == Direction.FALL ? nearMin : nearMax;
     }
 
-    @Data
-    @Builder
-    @NoArgsConstructor
-    private static class TrendInfo {
-        private Direction state;
-        private Map<Double, Double> maxList;
-        private Map<Double, Double> minList;
-        private Map<Double, Double> allList;
-        private double maxNearTime;
-        private double minNearTime;
-        private Point nearMax;
-        private Point nearMin;
-        private Point nearPeak;
-    }
+
 
     public class MacroAmplitudeFilter implements Function<MinMaxInfo, MinMaxInfo> {
 
@@ -260,7 +266,7 @@ public class PeakFinder {
             while (sidx < iArrays.all.size()) {
                 var list = iArrays.all;
                 var rmList = listAmplitudeSmall(sidx, list);
-                for (var rmv : rmList){
+                for (var rmv : rmList) {
                     removeByIdx(iArrays.all, rmv.idx);
                     removeByIdx(iArrays.min, rmv.idx);
                     removeByIdx(iArrays.max, rmv.idx);
