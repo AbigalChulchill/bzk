@@ -4,19 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Service;
 
-import java.time.ZonedDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.function.Function;
 
+import net.bzk.infrastructure.tscurve.TsCurveUtils.Point;
+import net.bzk.infrastructure.tscurve.TsCurveUtils.Direction;
 
-public class PeakFinder {
 
-    public enum Direction {
-        RISE, FALL
-    }
+public class PeakFinder extends TsCurveFunc.TsCurve {
 
     public enum PointType {
         MINED, MAXED, NONE
@@ -24,17 +20,6 @@ public class PeakFinder {
 
     public enum Dimension {
         MACRO, MICRO
-    }
-
-    @Data
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    private static class Point {
-        private int idx;
-        private String key;
-        private double val;
-        private double dtime;
     }
 
     @Data
@@ -78,24 +63,17 @@ public class PeakFinder {
     }
 
 
-    private final Map<String, Double> rMap;
     private final double baseVal;
     private final double peakMaxWaitSeconds;
     private final double macroAmplitudeRate;
-    private final List<String> keys;
-    private final String firstKey;
     private final MacroAmplitudeFilter macroAmplitudeFilter = new MacroAmplitudeFilter();
 
 
     public PeakFinder(Map<String, Double> rm, double baseVal, double peakMaxWaitSeconds, double macroAmplitudeRate) {
-        rMap = rm;
+        super(rm);
         this.baseVal = baseVal;
         this.peakMaxWaitSeconds = peakMaxWaitSeconds;
         this.macroAmplitudeRate = macroAmplitudeRate;
-        keys = new ArrayList<>(rMap.keySet());
-        keys.sort(Comparator.comparing(this::toTime));
-        Collections.reverse(keys);
-        firstKey = keys.get(0);
 
     }
 
@@ -110,16 +88,11 @@ public class PeakFinder {
     }
 
 
-    private ZonedDateTime toTime(String iso8601) {
-        return ZonedDateTime.parse(iso8601);
-    }
-
-
     private MinMaxInfo listMinMax(Dimension micro, Function<MinMaxInfo, MinMaxInfo> filter) {
         var ans = new MinMaxInfo();
         for (int i = 0; i < keys.size(); i++) {
             PointType mmr = findMinOrMax(i, micro);
-            Point info = genMinMax(i);
+            Point info = genPoint(i);
             if (mmr == PointType.MINED) {
                 ans.min.add(info);
                 ans.all.add(info);
@@ -136,8 +109,8 @@ public class PeakFinder {
         double nt = Integer.MAX_VALUE;
         Point ans = null;
         for (var e : list) {
-            var key = e.key;
-            var tr = subtractKey(firstKey, key);
+            var key = e.getKey();
+            var tr = TsCurveUtils.subtractKeySeconds(firstKey, key);
             if (tr < nt) {
                 nt = tr;
                 ans = e;
@@ -147,20 +120,15 @@ public class PeakFinder {
 
     }
 
-    private Point genMinMax(int i) {
-        String key = keys.get(i);
-        return Point.builder().key(key).idx(i).val(rMap.get(key)).dtime(subtractKey(firstKey, key)).build();
-    }
-
     private Map<Double, Point> mapInfos(List<Point> listi) {
         Map<Double, Point> ans = new HashMap<>();
         for (var e : listi) {
-            ans.put(e.dtime, e);
+            ans.put(e.getDtime(), e);
         }
         return ans;
     }
 
-    private double getVal(String key) {
+    public double getValByKey(String key) {
         return rMap.get(key) - baseVal;
     }
 
@@ -168,21 +136,21 @@ public class PeakFinder {
         if (idx < 0) return true;
         if (idx >= keys.size()) return true;
         String nk = keys.get(idx);
-        double timeSize = Math.abs(subtractKey(curKey, nk));
+        double timeSize = Math.abs(TsCurveUtils.subtractKeySeconds(curKey, nk));
         if (micro == Dimension.MICRO && timeSize > peakMaxWaitSeconds) return true;
         if (micro == Dimension.MICRO) return false;
         int nidx = forward ? idx - 1 : idx + 1;
         if (nidx < 0) return true;
         if (nidx >= keys.size()) return true;
-        double cv = getVal(keys.get(idx));
-        double nv = getVal(keys.get(nidx));
+        double cv = getValByKey(keys.get(idx));
+        double nv = getValByKey(keys.get(nidx));
         return nv * cv < 0;
     }
 
     private PointType findMinOrMax(int idx, Dimension micro) {
         int curIdx = idx;
         String curKey = keys.get(idx);
-        double curv = getVal(curKey);
+        double curv = getValByKey(curKey);
         boolean maxed = true, mined = true;
         boolean forward = true;
         while (maxed || mined) {
@@ -198,7 +166,7 @@ public class PeakFinder {
 
                 break;
             }
-            double nv = getVal(keys.get(idx));
+            double nv = getValByKey(keys.get(idx));
             if (maxed) {
                 if (nv > curv) maxed = false;
             }
@@ -212,18 +180,13 @@ public class PeakFinder {
         return PointType.NONE;
     }
 
-    private double subtractKey(String k1, String k2) {
-        var k1t = ZonedDateTime.parse(k1);
-        var k2t = ZonedDateTime.parse(k2);
-        return ChronoUnit.MILLIS.between(k2t,k1t ) / 1000;
-    }
 
     private TrendInfo genTrendInfo(Dimension micro, Function<MinMaxInfo, MinMaxInfo> filter) {
         MinMaxInfo minMaxInfo = listMinMax(micro, filter);
         Point nearMax = getNearInfo(minMaxInfo.max);
         Point nearMin = getNearInfo(minMaxInfo.min);
-        double maxNearTime = nearMax != null ? subtractKey(firstKey, nearMax.key) : Integer.MAX_VALUE;
-        double minNearTime = nearMin != null ? subtractKey(firstKey, nearMin.key) : Integer.MAX_VALUE;
+        double maxNearTime = nearMax != null ? TsCurveUtils.subtractKeySeconds(firstKey, nearMax.getKey()) : Integer.MAX_VALUE;
+        double minNearTime = nearMin != null ? TsCurveUtils.subtractKeySeconds(firstKey, nearMin.getKey()) : Integer.MAX_VALUE;
         System.out.println(nearMax);
         System.out.println(nearMin);
         Direction state = calcState(maxNearTime, minNearTime);
@@ -251,11 +214,10 @@ public class PeakFinder {
     }
 
     private Point getOtherNearPeak(Direction state, Point nearMax, Point nearMin) {
-        if (nearMax != null && nearMax.idx == 0) return nearMin;
-        if (nearMin != null && nearMin.idx == 0) return nearMax;
+        if (nearMax != null && nearMax.getIdx() == 0) return nearMin;
+        if (nearMin != null && nearMin.getIdx() == 0) return nearMax;
         return state == Direction.FALL ? nearMin : nearMax;
     }
-
 
 
     public class MacroAmplitudeFilter implements Function<MinMaxInfo, MinMaxInfo> {
@@ -267,9 +229,9 @@ public class PeakFinder {
                 var list = iArrays.all;
                 var rmList = listAmplitudeSmall(sidx, list);
                 for (var rmv : rmList) {
-                    removeByIdx(iArrays.all, rmv.idx);
-                    removeByIdx(iArrays.min, rmv.idx);
-                    removeByIdx(iArrays.max, rmv.idx);
+                    removeByIdx(iArrays.all, rmv.getIdx());
+                    removeByIdx(iArrays.min, rmv.getIdx());
+                    removeByIdx(iArrays.max, rmv.getIdx());
                 }
                 sidx++;
             }
@@ -277,13 +239,13 @@ public class PeakFinder {
         }
 
         private void removeByIdx(List<Point> list, int idx) {
-            var po = list.stream().filter(p -> p.idx == idx).findFirst();
+            var po = list.stream().filter(p -> p.getIdx() == idx).findFirst();
             if (po.isEmpty()) return;
             list.remove(po.get());
         }
 
         private Point checkOveAmplitudeRate(List<Point> list, int fidx, double curV) {
-            double tv = Math.abs(list.get(fidx).val);
+            double tv = Math.abs(list.get(fidx).getVal());
             double r = tv / curV;
             if (r > macroAmplitudeRate) {
                 return null;
@@ -312,7 +274,7 @@ public class PeakFinder {
 
         private List<Point> listAmplitudeSmall(int idx, List<Point> list) {
             List<Point> ans = new ArrayList<>();
-            double curV = Math.abs(list.get(idx).val);
+            double curV = Math.abs(list.get(idx).getVal());
             boolean forward = true, later = true;
 
             for (int i = 1; i < list.size(); i++) {
