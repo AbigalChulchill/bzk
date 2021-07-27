@@ -20,11 +20,16 @@ public class TsCurveFunc {
         return f.calc();
     }
 
+    public TsContinuousDirection.Result conD(Map<String, Double> rm, TsContinuousDirection.Mode m, int thCount) {
+        TsContinuousDirection tcd = new TsContinuousDirection(rm, m, thCount);
+        return tcd.calc();
+    }
+
     public static TsCurveFunc getInstance() {
         return instance;
     }
 
-    public static class TsCurve{
+    public static class TsCurve {
         protected final Map<String, Double> rMap;
         protected final List<String> keys;
         protected final String firstKey;

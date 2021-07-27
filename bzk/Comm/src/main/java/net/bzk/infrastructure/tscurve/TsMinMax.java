@@ -15,7 +15,7 @@ public class TsMinMax extends TsCurveFunc.TsCurve {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    private class MinMaxIdx {
+    private static class MinMaxIdx {
         private int minIdx;
         private int maxIdx;
     }
