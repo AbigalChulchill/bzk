@@ -69,10 +69,11 @@ public class TsContinuousDirection extends TsCurveFunc.TsCurve {
 
         @Override
         int calcEndIdx(int idx) {
-            if (idx >= keys.size() - 2) return -1;
+
             boolean next = false;
             int lastEnd = -1;
             do {
+                if (idx >= keys.size() - 3) return -1;
                 double curDV = getV(idx) - getV(idx + 1);
                 boolean curG0 = isGreaterZero(curDV);
 
@@ -101,15 +102,15 @@ public class TsContinuousDirection extends TsCurveFunc.TsCurve {
 
     private Map<Mode, ModeLogic> _logic_cache = new ConcurrentHashMap<>();
 
-    private ModeLogic getLogic(Mode m) {
-        switch (m) {
+    private ModeLogic getLogic() {
+        switch (mode) {
             case UNIFORM_SLOPE:
-                if (_logic_cache.containsKey(m)) {
-                    _logic_cache.put(m, new UniformSlopeLogic(this));
+                if (!_logic_cache.containsKey(mode)) {
+                    _logic_cache.put(mode, new UniformSlopeLogic(this));
                 }
-                return _logic_cache.get(m);
+                return _logic_cache.get(mode);
         }
-        throw new NullPointerException("not support " + m);
+        throw new NullPointerException("not support " + mode);
     }
 
     public Result calc() {
@@ -127,7 +128,7 @@ public class TsContinuousDirection extends TsCurveFunc.TsCurve {
     }
 
     private int appendContinuousInfo(List<ContinuousInfo> list, int idx) {
-        int endIdx = getLogic(mode).calcEndIdx(idx);
+        int endIdx = getLogic().calcEndIdx(idx);
         if (endIdx < 0) return idx + 1;
         int count = endIdx - idx;
         if (count >= thCount) list.add(genContinuousInfo(idx, endIdx));
