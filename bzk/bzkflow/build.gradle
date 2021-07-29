@@ -17,6 +17,9 @@ repositories {
 
 dependencies {
 
+	implementation ('de.codecentric:spring-boot-admin-starter-server:2.2.2'){
+		exclude group: "org.slf4j", module: "slf4j-log4j12"
+	}
 	implementation 'commons-io:commons-io:2.6'
 	implementation 'org.apache.commons:commons-text:1.9'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
