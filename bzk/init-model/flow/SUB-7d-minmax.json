@@ -1,11 +1,11 @@
 {
   "clazz" : "net.bzk.flow.model.Flow",
   "uid" : "C06bTWXsMh7D",
-  "name" : "Flow",
+  "name" : "SUB-7d-minmax",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
     "uid" : "2yrIrBRsEZHo",
-    "name" : "Box",
+    "name" : "PrepareData",
     "actions" : [ {
       "clazz" : "net.bzk.flow.model.Action$NodejsAction",
       "uid" : "AGrVuvJGFL5G",
@@ -20,6 +20,32 @@
         "moment" : "^2.26.0"
       },
       "devDependencies" : { }
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "TvxsY0dT0Zrd",
+      "name" : "Fetch7DFixedBias",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flowUid" : "9RLQvpmbGa35",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "tsdbQuery",
+        "val" : "import \"strings\"\r\na=  from(bucket: \"quote\")\r\n  |> range(start: -7d)\r\n   |> filter(fn: (r) =>\r\n    r._measurement == \"realtime\" and\r\n    r.symbol == \"BTC\" and\r\n    r._field == \"price\"\r\n  )\r\n  |>mean()\r\n  |> findColumn(\r\n      fn: (key) => key._field == \"price\",\r\n      column: \"_value\"\r\n    )\r\n\r\nfrom(bucket: \"quote\")\r\n  |> range(start: -7d)\r\n   |> filter(fn: (r) =>\r\n    r._measurement == \"realtime\" and\r\n    r.symbol == \"${symbol}\" and\r\n    r._field == \"price\"\r\n  )\r\n  |>map(fn: (r) => ({ r with _value: r._value - a[0] }))  "
+      }, {
+        "key" : "vaildMins",
+        "val" : "10"
+      }, {
+        "key" : "skipCount",
+        "val" : "0"
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "nearVal",
+        "toKey" : {
+          "lv" : "not_specify",
+          "key" : "D7FixedBias"
+        }
+      } ]
     } ],
     "links" : [ {
       "clazz" : "net.bzk.flow.model.Link",
@@ -35,7 +61,7 @@
       }
     } ],
     "vars" : { },
-    "taskSort" : [ "AGrVuvJGFL5G", "IAa9lfUDXHRo" ],
+    "taskSort" : [ "AGrVuvJGFL5G", "IAa9lfUDXHRo", "TvxsY0dT0Zrd" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",

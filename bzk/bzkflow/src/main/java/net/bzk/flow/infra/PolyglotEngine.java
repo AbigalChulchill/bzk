@@ -64,7 +64,7 @@ public class PolyglotEngine {
 
 
     public static Map<String, Object> genVarQueryerMap(FastVarQueryer vq) {
-        var ans = PolyglotUtils.genSingleMap("bzk", vq);
+        var ans = PolyglotUtils.genSingleMap(CodeMember.bzk.toString(), vq);
         ans.put("testcall", new TODOtsdb());
         return ans;
     }
