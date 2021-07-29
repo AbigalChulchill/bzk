@@ -128,9 +128,6 @@
       }, {
         "lv" : "not_specify",
         "key" : "minMax"
-      }, {
-        "lv" : "not_specify",
-        "key" : "trimValues"
       } ],
       "resultCode" : ""
     }

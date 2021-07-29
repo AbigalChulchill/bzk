@@ -82,8 +82,8 @@
     "clazz" : "net.bzk.flow.model.Entry$FixedRateEntry",
     "boxUid" : "Bcb74l8xn8Vp",
     "autoRegister" : true,
-    "period" : 5,
-    "unit" : "MINUTES",
+    "period" : 200,
+    "unit" : "SECONDS",
     "initialDelay" : 0
   },
   "logEncryptKey" : "1234567890123456",
