@@ -82,7 +82,7 @@ public abstract class Conditioner<T extends Condition> {
             throw new BzkRuntimeException("not support this kind :" + ck);
         } catch (Exception e) {
             logUtils.log(uids, Enums.RunState.ConditionFail, l -> {
-                l.setFailed(true);
+                l.setLogLv(Enums.LogLv.ERROR);
                 l.setMsg(e.getMessage());
                 l.setException(ExceptionUtils.getStackTrace(e));
                 l.setExceptionClazz(e.getClass().toGenericString());

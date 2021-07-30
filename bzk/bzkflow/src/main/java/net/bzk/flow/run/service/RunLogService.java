@@ -56,7 +56,7 @@ public class RunLogService {
         RunLog brl = genLog(u);
         brl.setState(Enums.RunState.ActionCallWarn);
         brl.setMsg(wmsg);
-        brl.setFailed(true);
+        brl.setLogLv(Enums.LogLv.WARNING);
         dao.save(brl);
     }
 
@@ -72,12 +72,22 @@ public class RunLogService {
             var ans = genLog(u);
             ans.setState(sr);
             cs.accept(ans);
+            if (!isEnable(u,ans))
+                return;
             dao.save(ans);
         } catch (Exception e) {
             var us = JsonUtils.toJson(u);
             log.error(us + " " + sr, e);
         }
 
+    }
+
+    private boolean isEnable(Uids u,RunLog ans) {
+        Enums.LogLv llv = ans.getLogLv();
+        BoxRuner br = runBoxDao.getByUid(u.getRunBoxUid());
+        Box b = br.getModel();
+        Enums.LogLv bmLv = b.getMinLogLv();
+        return llv.getLv() >= bmLv.getLv();
     }
 
     public RunLog genLog(Uids u) {

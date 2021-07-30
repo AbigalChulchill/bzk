@@ -49,6 +49,9 @@ export enum ConvertMethod {
   ToJSONText = 'ToJSONText'
 }
 
+export enum LogLv {
+  NONE='NONE', DEBUG='DEBUG', INFO='INFO', WARNING='WARNING', ERROR='ERROR'
+}
 
 export enum RunState {
   BoxStart = 'BoxStart', BoxLoop = 'BoxLoop', EndFlow = 'EndFlow', LinkTo = 'LinkTo',

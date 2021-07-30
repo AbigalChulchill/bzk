@@ -3,19 +3,15 @@ package net.bzk.flow.run.service;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
+import net.bzk.flow.enums.Enums;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationEventPublisher;
@@ -25,7 +21,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.Getter;
 import net.bzk.flow.BzkFlowUtils;
-import net.bzk.flow.model.Action.SubFlowAction;
 import net.bzk.flow.model.Flow;
 import net.bzk.flow.model.Job;
 import net.bzk.flow.run.dao.JobsDao;
@@ -63,7 +58,7 @@ public class JobsService {
     private Flow importByFile(File f) {
         try {
             Flow flow = BzkFlowUtils.getFlowJsonMapper().readValue(f, Flow.class);
-            boolean migrated = migrateTransitionResultCode(flow);
+            boolean migrated = migrateBoxLogLv(flow);
             save(flow, migrated);
             return flow;
         } catch (IOException e) {
@@ -71,11 +66,11 @@ public class JobsService {
         }
     }
 
-    private boolean migrateTransitionResultCode(Flow f) {
+    private boolean migrateBoxLogLv(Flow f) {
         boolean ans = false;
-        for (var t : f.listAllTransition()) {
-            if (t.getResultCode() != null) continue;
-            t.setResultCode("");
+        for (var t : f.getBoxs()) {
+            if (t.getMinLogLv() != null) continue;
+            t.setMinLogLv(Enums.LogLv.WARNING);
             ans = true;
         }
         return ans;

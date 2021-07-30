@@ -20,8 +20,9 @@ public class TsCurveFunc {
         return f.calc();
     }
 
-    public TsContinuousDirection.Result conD(Map<String, Double> rm, TsContinuousDirection.Mode m, int thCount) {
-        TsContinuousDirection tcd = new TsContinuousDirection(rm, m, thCount);
+    public TsContinuousDirection.Result conD(Map<String, Double> rm, String m, int thCount) {
+        TsContinuousDirection.Mode mode =TsContinuousDirection.Mode.valueOf(m);
+        TsContinuousDirection tcd = new TsContinuousDirection(rm, mode, thCount);
         return tcd.calc();
     }
 

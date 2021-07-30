@@ -119,7 +119,8 @@
         "key" : "trimValues"
       } ],
       "resultCode" : ""
-    }
+    },
+    "minLogLv" : "WARNING"
   } ],
   "varCfgNames" : [ "fin-proxy.json" ],
   "vars" : {
@@ -131,7 +132,7 @@
     "boxUid" : "xRzWKAi4XvVg",
     "autoRegister" : false,
     "requiredKeys" : [ "tsdbQuery", "vaildMins", "skipCount" ],
-    "outputKeys" : [ "nearVal" ]
+    "outputKeys" : [ "nearVal", "trimValues" ]
   },
   "logEncryptKey" : "1234567890123456",
   "threadCfg" : {

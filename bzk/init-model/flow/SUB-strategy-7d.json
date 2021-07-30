@@ -1,0 +1,91 @@
+{
+  "clazz" : "net.bzk.flow.model.Flow",
+  "uid" : "C06bTWXsMh7D",
+  "name" : "SUB-strategy-7d",
+  "boxs" : [ {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "2yrIrBRsEZHo",
+    "name" : "PrepareData",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "TvxsY0dT0Zrd",
+      "name" : "Fetch7DFixedBias",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flowUid" : "9RLQvpmbGa35",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "tsdbQuery",
+        "val" : "import \"strings\"\r\na=  from(bucket: \"quote\")\r\n  |> range(start: -7d)\r\n   |> filter(fn: (r) =>\r\n    r._measurement == \"realtime\" and\r\n    r.symbol == \"${symbol}\" and\r\n    r._field == \"price\"\r\n  )\r\n  |>mean()\r\n  |> findColumn(\r\n      fn: (key) => key._field == \"price\",\r\n      column: \"_value\"\r\n    )\r\n\r\nfrom(bucket: \"quote\")\r\n  |> range(start: -7d)\r\n   |> filter(fn: (r) =>\r\n    r._measurement == \"realtime\" and\r\n    r.symbol == \"${symbol}\" and\r\n    r._field == \"price\"\r\n  )\r\n  |>map(fn: (r) => ({ r with _value: r._value - a[0] }))  "
+      }, {
+        "key" : "vaildMins",
+        "val" : "10"
+      }, {
+        "key" : "skipCount",
+        "val" : "0"
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "nearVal",
+        "toKey" : {
+          "lv" : "not_specify",
+          "key" : "D7FixedBias"
+        }
+      }, {
+        "srcKey" : "trimValues",
+        "toKey" : {
+          "lv" : "not_specify",
+          "key" : "D7FixedBiasSerial"
+        }
+      } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
+      "uid" : "i9QUdvKOUXPY",
+      "name" : "analyzeVars",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flatData" : [ {
+        "key" : "~minmax",
+        "val" : "!javascript===\nconst mm = tsFunc.minmax(${D7FixedBiasSerial});\nmm;"
+      }, {
+        "key" : "~peaks",
+        "val" : "!javascript===\nconst peakMaxWaitSeconds = 60*60*1.5;\nconst mm = tsFunc.findPeak(${D7FixedBiasSerial},0,peakMaxWaitSeconds,0.05);\nmm;"
+      }, {
+        "key" : "~conD",
+        "val" : "!javascript===\r\nconst mm = tsFunc.conD(${D7FixedBiasSerial},'UNIFORM_SLOPE',4);\r\nmm;"
+      } ]
+    } ],
+    "links" : [ ],
+    "vars" : {
+      "symbol" : "BTC"
+    },
+    "taskSort" : [ "TvxsY0dT0Zrd", "i9QUdvKOUXPY" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "TODO Why",
+      "failEnd" : false,
+      "endResultKeys" : [ ],
+      "resultCode" : ""
+    },
+    "minLogLv" : "DEBUG"
+  } ],
+  "varCfgNames" : [ ],
+  "vars" : { },
+  "entry" : {
+    "clazz" : "net.bzk.flow.model.Entry$FixedRateEntry",
+    "boxUid" : "2yrIrBRsEZHo",
+    "autoRegister" : false,
+    "period" : -1,
+    "unit" : "SECONDS",
+    "initialDelay" : 2
+  },
+  "logEncryptKey" : "1234567890123456",
+  "threadCfg" : {
+    "corePoolSize" : 10,
+    "maximumPoolSize" : 50,
+    "keepAliveTime" : 500,
+    "aliveUnit" : "MINUTES"
+  }
+}

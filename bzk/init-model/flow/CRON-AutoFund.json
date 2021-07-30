@@ -153,7 +153,8 @@
         "key" : "bfx.fund.strategy"
       } ],
       "resultCode" : ""
-    }
+    },
+    "minLogLv" : "WARNING"
   }, {
     "clazz" : "net.bzk.flow.model.Box",
     "uid" : "os5alTWuo8sG",
@@ -231,7 +232,8 @@
       "failEnd" : false,
       "endResultKeys" : [ ],
       "resultCode" : ""
-    }
+    },
+    "minLogLv" : "WARNING"
   } ],
   "varCfgNames" : [ ],
   "vars" : { },

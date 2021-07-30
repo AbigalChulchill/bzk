@@ -53,14 +53,15 @@ public class RunLog implements Serializable, CreateUpdateDate {
     private String boxName;
     @Enumerated(EnumType.STRING)
     private Enums.RunState state;
-    private boolean failed = false;
+    @Enumerated(EnumType.STRING)
+    private Enums.LogLv logLv = Enums.LogLv.DEBUG;
     @Column(nullable = true, columnDefinition = "TEXT")
     private String exception;
     @Column(nullable = true, columnDefinition = "TEXT")
     private String exceptionClazz;
     @Column(nullable = true, columnDefinition = "TEXT")
     @Convert(converter = ConvertInfra.MapConvert.class)
-    private HashMap<String,Object> varVals;
+    private HashMap<String, Object> varVals;
     private String actionName;
 
     private Date updateAt;

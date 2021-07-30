@@ -1,5 +1,5 @@
 import { BaseVar } from "../infrastructure/meta";
-import { RunState, VarLv } from "./pojo/enums";
+import { LogLv, RunState, VarLv } from "./pojo/enums";
 
 export class RunLog {
 
@@ -18,7 +18,7 @@ export class RunLog {
   public boxVar: BaseVar;
   public boxName: string;
   public state = RunState.ActionCall;
-  public failed = false;
+  public logLv = LogLv.DEBUG;
   public exception: string;
   public exceptionClazz: string;
   public varVals: Array<VarVal>;

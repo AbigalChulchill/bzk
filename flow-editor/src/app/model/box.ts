@@ -1,7 +1,7 @@
 import { Transition } from './transition';
 import { Type } from 'class-transformer';
 import { BzkUtils, OTypeClass } from '../utils/bzk-utils';
-import { PropClazz, PropInfo, PropType } from '../utils/prop-utils';
+import { PropClazz, PropEnums, PropInfo, PropType } from '../utils/prop-utils';
 import { Action } from './action';
 import { BzkObj } from './bzk-obj';
 import { ModelUpdateAdapter } from './service/model-update-adapter';
@@ -10,6 +10,7 @@ import { Constant } from '../infrastructure/constant';
 import { CommUtils } from '../utils/comm-utils';
 import { VarKey } from './var-key';
 import { BaseVar } from '../infrastructure/meta';
+import { LogLv } from './pojo/enums';
 
 @PropClazz({
   title: 'Box',
@@ -57,6 +58,13 @@ export class Box extends BzkObj {
   })
   @Type(() => Condition)
   public whileJudgment :Condition;
+
+  @PropInfo({
+    title: 'minLogLv',
+    type: PropType.Enum
+  })
+  @PropEnums(Object.keys(LogLv))
+  public minLogLv = LogLv.DEBUG;
 
 
   public getTask(uid: string): any {

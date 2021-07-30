@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import net.bzk.flow.enums.Enums;
 import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -22,6 +23,7 @@ public class Box extends BzkObj {
 	private List<String> taskSort = new CopyOnWriteArrayList<>();
 	private Condition whileJudgment;
 	private Transition transition = new Transition();
+	private Enums.LogLv minLogLv = Enums.LogLv.DEBUG;
 
 	@JsonIgnore
 	public Optional<Action> findAction(String aUid) {

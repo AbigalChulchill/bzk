@@ -220,7 +220,7 @@ public class BoxRuner {
             return ans;
         } catch (Exception e) {
             logUtils.log(genUids(), Enums.RunState.ActionCallFail, l -> {
-                l.setFailed(true);
+                l.setLogLv(Enums.LogLv.ERROR);
                 l.setMsg(e.getMessage());
                 l.setException(ExceptionUtils.getStackTrace(e));
                 l.setExceptionClazz(e.getClass().toGenericString());

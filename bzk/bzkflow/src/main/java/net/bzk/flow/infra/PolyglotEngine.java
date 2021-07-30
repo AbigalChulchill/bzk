@@ -19,10 +19,6 @@ import net.bzk.infrastructure.JsonUtils;
 public class PolyglotEngine {
 
 
-    public enum CodeMember{
-        bzk,tsFunc
-    }
-
     public <R> R parseScriptbleText(String plain, Class<R> clz) {
         Object o = null;
         if (plain.startsWith(Constant.SCRIPT_PREFIX)) {
@@ -45,7 +41,7 @@ public class PolyglotEngine {
 
     public Map<String, Object> genVarQueryer() {
         TsCurveFunc tsFunc = TsCurveFunc.getInstance();
-        return PolyglotUtils.genSingleMap(CodeMember.tsFunc.toString(), tsFunc);
+        return PolyglotUtils.genSingleMap(Enums.CodeMember.tsFunc.toString(), tsFunc);
     }
 
     public void logMsg(String s) {
@@ -58,7 +54,7 @@ public class PolyglotEngine {
 
 
     public static Map<String, Object> genVarQueryerMap(FastVarQueryer vq) {
-        var ans = PolyglotUtils.genSingleMap(CodeMember.bzk.toString(), vq);
+        var ans = PolyglotUtils.genSingleMap(Enums.CodeMember.bzk.toString(), vq);
         return ans;
     }
 
