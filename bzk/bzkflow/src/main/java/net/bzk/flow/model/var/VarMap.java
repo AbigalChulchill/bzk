@@ -5,6 +5,7 @@ import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import net.bzk.flow.enums.VarLv;
 import net.bzk.infrastructure.JsonUtils;
 import net.bzk.infrastructure.ex.BzkRuntimeException;
 import net.bzk.infrastructure.obj.JsonMap;

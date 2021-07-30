@@ -7,15 +7,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.http.HttpMethod;
 import org.springframework.util.MultiValueMap;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import net.bzk.flow.model.var.VarLv.VarKey;
-import net.bzk.infrastructure.JsonUtils;
+import net.bzk.flow.enums.VarLv.VarKey;
 
 @Data
 @EqualsAndHashCode(callSuper = false)

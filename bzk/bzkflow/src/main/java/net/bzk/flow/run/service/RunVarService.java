@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import lombok.Getter;
 import net.bzk.flow.api.dto.DtoVarQuery;
-import net.bzk.flow.model.var.VarLv;
+import net.bzk.flow.enums.VarLv;
 import net.bzk.flow.model.var.VarMap.ProcVars;
 import net.bzk.flow.model.var.VarVal;
 import net.bzk.flow.model.var.VarValSet;

@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 
 import lombok.Getter;
 import net.bzk.flow.api.dto.DtoVarQuery;
-import net.bzk.flow.model.var.VarLv;
-import net.bzk.flow.model.var.VarLv.VarKey;
+import net.bzk.flow.enums.VarLv;
+import net.bzk.flow.enums.VarLv.VarKey;
 import net.bzk.flow.run.action.ActionCall.Uids;
 
 @Service

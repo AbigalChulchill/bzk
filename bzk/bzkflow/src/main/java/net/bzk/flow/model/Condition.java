@@ -1,12 +1,8 @@
 package net.bzk.flow.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import net.bzk.flow.model.Action.Polyglot;
-import net.bzk.flow.model.var.VarLv;
-import net.bzk.infrastructure.JsonUtils;
+import net.bzk.flow.enums.Polyglot;
 import net.bzk.infrastructure.convert.OType;
 
 @Data

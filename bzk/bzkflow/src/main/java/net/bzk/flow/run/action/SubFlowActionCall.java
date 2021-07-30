@@ -8,7 +8,7 @@ import java.util.concurrent.ExecutorService;
 import javax.inject.Inject;
 
 import net.bzk.flow.Constant;
-import net.bzk.flow.model.RunLog;
+import net.bzk.flow.enums.Enums;
 import net.bzk.flow.run.flow.FlowRuner;
 import net.bzk.infrastructure.JsonUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.bzk.flow.api.dto.VarKeyReflect;
 import net.bzk.flow.model.Action.KVPair;
 import net.bzk.flow.model.Action.SubFlowAction;
-import net.bzk.flow.model.var.VarLv;
+import net.bzk.flow.enums.VarLv;
 import net.bzk.flow.model.var.VarVal;
 import net.bzk.flow.model.var.VarValSet;
 import net.bzk.flow.run.dao.RunFlowPoolDao;
@@ -53,7 +53,7 @@ public class SubFlowActionCall extends ActionCall<SubFlowAction> {
     }
 
     private VarValSet runRunner(FlowRuner fr) {
-        logUtils.log(getUids(), RunLog.RunState.ActionCall, r -> {
+        logUtils.log(getUids(), Enums.RunState.ActionCall, r -> {
             r.setRefRunFlowUid(fr.getInfo().getUid());
             r.setMsg(JsonUtils.toJson(fr.getModel()));
         });

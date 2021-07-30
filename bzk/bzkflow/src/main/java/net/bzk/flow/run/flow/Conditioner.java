@@ -2,6 +2,7 @@ package net.bzk.flow.run.flow;
 
 import javax.inject.Inject;
 
+import net.bzk.flow.enums.Enums;
 import net.bzk.infrastructure.JsonUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.context.ApplicationContext;
@@ -11,7 +12,6 @@ import net.bzk.flow.BzkFlowUtils;
 import net.bzk.flow.infra.PolyglotEngine;
 import net.bzk.flow.model.Condition;
 import net.bzk.flow.model.Condition.ConKind;
-import net.bzk.flow.model.RunLog.RunState;
 import net.bzk.flow.run.action.ActionCall.Uids;
 import net.bzk.flow.run.service.FastVarQueryer;
 import net.bzk.flow.run.service.RunLogService;
@@ -81,7 +81,7 @@ public abstract class Conditioner<T extends Condition> {
                 return checkSelf() || ncn.isTrue();
             throw new BzkRuntimeException("not support this kind :" + ck);
         } catch (Exception e) {
-            logUtils.log(uids, RunState.ConditionFail, l -> {
+            logUtils.log(uids, Enums.RunState.ConditionFail, l -> {
                 l.setFailed(true);
                 l.setMsg(e.getMessage());
                 l.setException(ExceptionUtils.getStackTrace(e));

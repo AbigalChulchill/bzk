@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import net.bzk.flow.enums.VarLv;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
@@ -12,7 +13,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.bzk.flow.model.Action;
 import net.bzk.infrastructure.JsonUtils;
-import net.bzk.infrastructure.obj.JsonMap;
 
 public class VarValSet {
 

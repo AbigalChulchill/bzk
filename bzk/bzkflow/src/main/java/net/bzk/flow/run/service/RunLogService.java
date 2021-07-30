@@ -5,15 +5,14 @@ import java.util.function.Consumer;
 import javax.inject.Inject;
 
 import lombok.extern.slf4j.Slf4j;
-import net.bzk.flow.run.dao.SysVarDao;
+import net.bzk.flow.enums.Enums;
 import net.bzk.infrastructure.JsonUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import net.bzk.flow.model.Box;
 import net.bzk.flow.model.RunLog;
-import net.bzk.flow.model.RunLog.RunState;
-import net.bzk.flow.run.action.ActionCall;
+import net.bzk.flow.enums.Enums.RunState;
 import net.bzk.flow.run.action.ActionCall.Uids;
 import net.bzk.flow.run.dao.RunBoxDao;
 import net.bzk.flow.run.dao.RunFlowDao;
@@ -41,7 +40,7 @@ public class RunLogService {
 
     public void logActionCall(Uids u, String msg) {
         RunLog brl = genLog(u);
-        brl.setState(RunState.ActionCall);
+        brl.setState(Enums.RunState.ActionCall);
         brl.setMsg(msg);
         dao.save(brl);
     }
@@ -55,7 +54,7 @@ public class RunLogService {
 
     public void logActionCallWarn(Uids u, String wmsg) {
         RunLog brl = genLog(u);
-        brl.setState(RunState.ActionCallWarn);
+        brl.setState(Enums.RunState.ActionCallWarn);
         brl.setMsg(wmsg);
         brl.setFailed(true);
         dao.save(brl);

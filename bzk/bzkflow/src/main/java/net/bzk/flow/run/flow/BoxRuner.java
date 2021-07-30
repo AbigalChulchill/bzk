@@ -7,7 +7,8 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
-import net.bzk.flow.model.var.VarLv;
+import net.bzk.flow.enums.Enums;
+import net.bzk.flow.enums.VarLv;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -24,11 +25,9 @@ import net.bzk.flow.Constant;
 import net.bzk.flow.model.Action;
 import net.bzk.flow.model.Box;
 import net.bzk.flow.model.Condition;
-import net.bzk.flow.dto.ConvertInfra.VarValList;
 import net.bzk.flow.model.Link;
-import net.bzk.flow.model.RunLog.RunState;
 import net.bzk.flow.model.Transition;
-import net.bzk.flow.model.var.VarLv.VarKey;
+import net.bzk.flow.enums.VarLv.VarKey;
 import net.bzk.flow.model.var.VarMap;
 import net.bzk.flow.model.var.VarVal;
 import net.bzk.flow.model.var.VarValSet;
@@ -90,7 +89,7 @@ public class BoxRuner {
 
     public synchronized void run() {
         try {
-            logUtils.log(genUids(), RunState.BoxStart, l -> {
+            logUtils.log(genUids(), Enums.RunState.BoxStart, l -> {
             });
             if (model.getWhileJudgment() == null) {
                 if (rundownAndLog())
@@ -100,7 +99,7 @@ public class BoxRuner {
                     if (rundownAndLog()) {
                         return;
                     }
-                    logUtils.log(genUids(), RunState.WhileLoopBottom);
+                    logUtils.log(genUids(), Enums.RunState.WhileLoopBottom);
                 }
             }
             if (model.getTransition().isEnd()) {
@@ -109,7 +108,7 @@ public class BoxRuner {
                 transitBox(model.getTransition());
             }
         } catch (Exception ex) {
-            logUtils.log(genUids(), RunState.BoxError, l -> {
+            logUtils.log(genUids(), Enums.RunState.BoxError, l -> {
                 l.setException(ex.toString());
                 l.setExceptionClazz(ex.getClass().toGenericString());
                 l.setMsg(ex.getMessage());
@@ -120,7 +119,7 @@ public class BoxRuner {
     }
 
     private boolean rundownAndLog() {
-        logUtils.log(genUids(), RunState.BoxLoop);
+        logUtils.log(genUids(), Enums.RunState.BoxLoop);
         boolean b = rundown();
         return b;
     }
@@ -152,14 +151,14 @@ public class BoxRuner {
             runVarService.putVarVals(genUids(), vvs);
         }
 
-        logUtils.log(genUids(), RunState.EndAction);
+        logUtils.log(genUids(), Enums.RunState.EndAction);
         return true;
     }
 
     private boolean endFlow(Transition t) {
         if (!t.isEnd())
             return false;
-        logUtils.log(genUids(), RunState.EndFlow, l -> l.setMsg(t.setupEndTag(varQueryer)));
+        logUtils.log(genUids(), Enums.RunState.EndFlow, l -> l.setMsg(t.setupEndTag(varQueryer)));
         bundle.flowRuner.onEnd(t, listEndResult(t));
         return true;
     }
@@ -191,7 +190,7 @@ public class BoxRuner {
     }
 
     private void transitBox(Transition t) {
-        logUtils.log(genUids(), RunState.LinkTo);
+        logUtils.log(genUids(), Enums.RunState.LinkTo);
         var rl = listEndResult(t);
         bundle.flowRuner.runBoxByUid(t.getToBox(), rl);
     }
@@ -212,15 +211,15 @@ public class BoxRuner {
     @SuppressWarnings({"rawtypes", "unchecked"})
     private VarValSet callAction(Action a) {
         try {
-            logUtils.log(genUids(), RunState.StartAction);
+            logUtils.log(genUids(), Enums.RunState.StartAction);
             ActionCall naer = context.getBean(a.getClazz(), ActionCall.class);
             naer.initBase(genUids(), a);
             Callable<VarValSet> cb = naer;
             VarValSet ans = cb.call();
-            logUtils.log(naer.getUids(), RunState.ActionResult, l -> l.setVarVals(VarVal.toMap(ans.list())));
+            logUtils.log(naer.getUids(), Enums.RunState.ActionResult, l -> l.setVarVals(VarVal.toMap(ans.list())));
             return ans;
         } catch (Exception e) {
-            logUtils.log(genUids(), RunState.ActionCallFail, l -> {
+            logUtils.log(genUids(), Enums.RunState.ActionCallFail, l -> {
                 l.setFailed(true);
                 l.setMsg(e.getMessage());
                 l.setException(ExceptionUtils.getStackTrace(e));

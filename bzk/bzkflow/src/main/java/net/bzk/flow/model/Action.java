@@ -7,6 +7,8 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 
+import net.bzk.flow.enums.Enums;
+import net.bzk.flow.enums.Polyglot;
 import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -14,9 +16,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import net.bzk.flow.api.dto.VarKeyReflect;
-import net.bzk.flow.model.var.VarLv;
+import net.bzk.flow.enums.VarLv;
 import net.bzk.flow.model.var.VarMap;
-import net.bzk.flow.model.var.VarLv.VarKey;
+import net.bzk.flow.enums.VarLv.VarKey;
 import net.bzk.infrastructure.CommUtils;
 import net.bzk.infrastructure.JsonUtils;
 
@@ -55,10 +57,6 @@ public class Action extends BzkObj {
 			return sha1;
 		}
 
-	}
-
-	public static enum Polyglot {
-		js, R, ruby, python
 	}
 
 	@Data
@@ -111,15 +109,11 @@ public class Action extends BzkObj {
 		private List<VarKeyReflect> outputReflects;
 	}
 
-	public static enum ConvertMethod {
-		ToJSONText;
-	}
-
 	@Data
 	@EqualsAndHashCode(callSuper = false)
 	public static class ConvertAction extends Action {
 		private Polyglot polyglot = Polyglot.js;
-		private ConvertMethod method;
+		private Enums.ConvertMethod method;
 		private String code;
 		private VarKey output;
 	}

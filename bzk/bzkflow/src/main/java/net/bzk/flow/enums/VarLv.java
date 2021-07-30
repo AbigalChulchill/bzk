@@ -1,4 +1,4 @@
-package net.bzk.flow.model.var;
+package net.bzk.flow.enums;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

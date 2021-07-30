@@ -3,7 +3,6 @@ package net.bzk.flow.model;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -21,8 +20,7 @@ import net.bzk.auth.model.CreateUpdateDate;
 import net.bzk.auth.service.CommService;
 import net.bzk.flow.dto.ConvertInfra;
 import net.bzk.flow.dto.ConvertInfra.VarMapConvert;
-import net.bzk.flow.dto.ConvertInfra.VarValList;
-import net.bzk.flow.dto.ConvertInfra.VarValListConvert;
+import net.bzk.flow.enums.Enums;
 import net.bzk.flow.model.var.VarMap;
 
 @SuppressWarnings("serial")
@@ -31,14 +29,6 @@ import net.bzk.flow.model.var.VarMap;
 @EntityListeners(CommService.class)
 @Table
 public class RunLog implements Serializable, CreateUpdateDate {
-
-    public static enum RunState {
-        BoxStart, BoxLoop, EndFlow, LinkTo,
-        StartAction, EndAction, ActionCall, ActionCallFail,
-        ActionCallWarn, ActionResult, WhileLoopBottom,
-        ConditionFail, ModelReplaced, PolyglotExecute, ConditionResult, BoxError, ScriptError
-
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -62,7 +52,7 @@ public class RunLog implements Serializable, CreateUpdateDate {
     private VarMap boxVar;
     private String boxName;
     @Enumerated(EnumType.STRING)
-    private RunState state;
+    private Enums.RunState state;
     private boolean failed = false;
     @Column(nullable = true, columnDefinition = "TEXT")
     private String exception;

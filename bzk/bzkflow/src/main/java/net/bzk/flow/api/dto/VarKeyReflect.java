@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 
 import lombok.Data;
-import net.bzk.flow.model.var.VarLv.VarKey;
+import net.bzk.flow.enums.VarLv.VarKey;
 
 @Data
 public class VarKeyReflect {

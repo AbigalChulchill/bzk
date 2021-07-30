@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
 import net.bzk.flow.BzkFlowUtils;
-import net.bzk.flow.model.var.VarLv.VarKey;
+import net.bzk.flow.enums.VarLv.VarKey;
 import net.bzk.flow.run.service.FastVarQueryer;
 
 @Data

@@ -1,9 +1,8 @@
 package net.bzk.flow.api.dto;
 
 import lombok.Data;
-import net.bzk.flow.model.var.VarLv;
+import net.bzk.flow.enums.VarLv;
 import net.bzk.flow.run.action.ActionCall.Uids;
-import net.bzk.infrastructure.ex.BzkRuntimeException;
 
 @Data
 public class DtoVarQuery {

@@ -1,10 +1,10 @@
 package net.bzk.flow.run.flow;
 
+import net.bzk.flow.enums.Enums;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import net.bzk.flow.model.Condition.ConditionNum;
-import net.bzk.flow.model.RunLog.RunState;
 import net.bzk.infrastructure.ex.BzkRuntimeException;
 
 @Service("net.bzk.flow.model.Condition$ConditionNum")
@@ -21,7 +21,7 @@ public class ConditionNumer extends Conditioner<ConditionNum> {
 		double rd =  getPolyglotEngine().parseScriptbleText(getModel().getRight(),Double.class) ;
 		double ld = getPolyglotEngine().parseScriptbleText(getModel().getLeft(),Double.class) ;
 		boolean ans = checkNum(rd, ld);
-		logUtils.logWithMsg(getUids(), RunState.ConditionResult,
+		logUtils.logWithMsg(getUids(), Enums.RunState.ConditionResult,
 				ld + " " + getModel().getType() + " " + rd + "  : " + ans);
 		return ans;
 	}

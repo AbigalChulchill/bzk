@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
 import net.bzk.flow.model.Action.KVPair;
 import net.bzk.flow.model.Action.VarModifyAction;
-import net.bzk.flow.model.var.VarLv;
+import net.bzk.flow.enums.VarLv;
 import net.bzk.flow.model.var.VarVal;
 import net.bzk.flow.model.var.VarValSet;
 

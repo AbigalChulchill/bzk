@@ -1,11 +1,11 @@
 package net.bzk.flow.model.var;
 
 import lombok.Data;
+import net.bzk.flow.enums.VarLv;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Data
 public class VarVal implements Serializable {

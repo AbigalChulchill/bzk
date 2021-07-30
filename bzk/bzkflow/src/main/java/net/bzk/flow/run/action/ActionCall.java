@@ -5,6 +5,7 @@ import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 
+import net.bzk.flow.enums.Enums;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Value;
@@ -15,8 +16,7 @@ import net.bzk.flow.BzkFlowUtils;
 import net.bzk.flow.Constant;
 import net.bzk.flow.infra.PolyglotEngine;
 import net.bzk.flow.model.Action;
-import net.bzk.flow.model.RunLog.RunState;
-import net.bzk.flow.model.var.VarLv;
+import net.bzk.flow.enums.VarLv;
 import net.bzk.flow.model.var.VarMap;
 import net.bzk.flow.model.var.VarValSet;
 import net.bzk.flow.run.service.FastVarQueryer;
@@ -53,7 +53,7 @@ public abstract class ActionCall<T extends Action> implements Callable<VarValSet
 		varQueryer.init(_uids);
 		polyglotEngine = PolyglotEngine.FlowPolyglotEngine.builder().logUtils(logUtils).varQueryer(varQueryer).build();
 		model = replaceModel(a);
-		logUtils.log(uids, RunState.ModelReplaced, l -> {
+		logUtils.log(uids, Enums.RunState.ModelReplaced, l -> {
 			l.setMsg(JsonUtils.toJson(model));
 		});
 		return this;

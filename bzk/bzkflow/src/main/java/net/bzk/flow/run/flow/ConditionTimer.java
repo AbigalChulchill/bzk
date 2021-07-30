@@ -2,12 +2,11 @@ package net.bzk.flow.run.flow;
 
 import java.time.ZonedDateTime;
 
+import net.bzk.flow.enums.Enums;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import net.bzk.flow.model.Condition.ConditionTime;
-import net.bzk.flow.model.Condition.TimeCheckType;
-import net.bzk.flow.model.RunLog.RunState;
 import net.bzk.infrastructure.ex.BzkRuntimeException;
 
 @Service("net.bzk.flow.model.Condition$ConditionTime")
@@ -35,7 +34,7 @@ public class ConditionTimer extends Conditioner<ConditionTime> {
 		ZonedDateTime rat = parse(rs);
 
 		var ans = checkTime(lat, rat);
-		logUtils.logWithMsg(getUids(), RunState.ConditionResult,
+		logUtils.logWithMsg(getUids(), Enums.RunState.ConditionResult,
 				lat + " is" + getModel().getType() + "( " + rat + " ) : " + ans);
 		return ans;
 	}
