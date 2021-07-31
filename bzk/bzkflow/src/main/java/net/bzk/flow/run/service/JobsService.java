@@ -50,7 +50,6 @@ public class JobsService {
         }
         var ffs = FileUtils.listFiles(dir, new String[]{"json"}, false);
         List<Flow> fls = ffs.stream().map(this::importByFile).collect(Collectors.toList());
-        CommUtils.pl("mapper:" + mapper);
         applicationEventPublisher.publishEvent(new InitFlowEvent(this, fls));
     }
 
