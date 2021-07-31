@@ -27,6 +27,9 @@ public class TsMinMax extends TsCurveFunc.TsCurve {
     public static class MinMaxPoint {
         private Point min;
         private Point max;
+        private Point near;
+        private Point far;
+        private String nearKey;
     }
 
 
@@ -59,7 +62,26 @@ public class TsMinMax extends TsCurveFunc.TsCurve {
 
     public MinMaxPoint calc() {
         var mm = findMinMaxIdx();
-        return MinMaxPoint.builder().min(genPoint(mm.minIdx)).max(genPoint(mm.maxIdx)).build();
+        String nearKey = null;
+        Point near,far;
+        var min = genPoint(mm.minIdx);
+        var max = genPoint(mm.maxIdx);
+        if(min.getDtime()<max.getDtime()){
+            near = min;
+            far = max;
+            nearKey = "min";
+        }else{
+            near = max;
+            far = min;
+            nearKey = "max";
+        }
+        return MinMaxPoint.builder()
+                .min(min)
+                .max(max)
+                .nearKey(nearKey)
+                .near(near)
+                .far(far)
+                .build();
     }
 
 }

@@ -39,17 +39,17 @@ public class RunLogService {
     private RunFlowDao runFlowDao;
 
     public void logActionCall(Uids u, String msg) {
-        RunLog brl = genLog(u);
-        brl.setState(Enums.RunState.ActionCall);
-        brl.setMsg(msg);
-        dao.save(brl);
+        log(u,Enums.RunState.ActionCall,brl->{
+            brl.setState(Enums.RunState.ActionCall);
+            brl.setMsg(msg);
+        });
     }
 
     public void logWithMsg(Uids u, RunState rs, String msg) {
-        RunLog brl = genLog(u);
-        brl.setState(rs);
-        brl.setMsg(msg);
-        dao.save(brl);
+        log(u,Enums.RunState.ActionCall,brl->{
+            brl.setState(rs);
+            brl.setMsg(msg);
+        });
     }
 
     public void logActionCallWarn(Uids u, String wmsg) {

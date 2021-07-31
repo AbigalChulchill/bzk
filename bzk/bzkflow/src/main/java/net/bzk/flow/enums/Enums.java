@@ -26,7 +26,11 @@ public class Enums {
         }
     }
 
-    public enum CodeMember{
-        bzk,tsFunc
+    public enum CodeMember {
+        bzk, tsFunc, pe;
+
+        public String getCode() {
+            return '$' + this.toString();
+        }
     }
 }

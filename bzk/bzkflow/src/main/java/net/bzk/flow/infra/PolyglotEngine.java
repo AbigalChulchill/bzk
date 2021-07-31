@@ -41,7 +41,9 @@ public class PolyglotEngine {
 
     public Map<String, Object> genVarQueryer() {
         TsCurveFunc tsFunc = TsCurveFunc.getInstance();
-        return PolyglotUtils.genSingleMap(Enums.CodeMember.tsFunc.toString(), tsFunc);
+        Map<String, Object> ans = PolyglotUtils.genSingleMap(Enums.CodeMember.tsFunc.getCode(), tsFunc);
+        ans.put(Enums.CodeMember.pe.getCode(), this);
+        return ans;
     }
 
     public void logMsg(String s) {
@@ -54,7 +56,7 @@ public class PolyglotEngine {
 
 
     public static Map<String, Object> genVarQueryerMap(FastVarQueryer vq) {
-        var ans = PolyglotUtils.genSingleMap(Enums.CodeMember.bzk.toString(), vq);
+        var ans = PolyglotUtils.genSingleMap(Enums.CodeMember.bzk.getCode(), vq);
         return ans;
     }
 

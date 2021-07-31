@@ -4,6 +4,75 @@
   "name" : "SUB-strategy-7d",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "UdfFblT52of8",
+    "name" : "MIN_MAX",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
+      "uid" : "POnGmKqao8p1",
+      "name" : "MM_InitVars",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flatData" : [ {
+        "key" : "toSellOrBuy",
+        "val" : "!javascript===\r\nconst min = ${minmax.min};\r\nconst max = ${minmax.max};\r\n\r\nfunction calc(){\r\n    return min.dtime<max.dtime? \"BUY\" : \"SELL\";\r\n}\r\ncalc();"
+      } ]
+    } ],
+    "links" : [ {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "uQEGkV35pjX8",
+      "name" : "TimeOver3H",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
+        "kind" : "NONE",
+        "next" : null,
+        "left" : "${minmax.near.dtime}",
+        "right" : "!javascript===\n60*60*3;",
+        "type" : "greater_equal"
+      },
+      "transition" : {
+        "toBox" : "",
+        "endTag" : "END",
+        "failEnd" : false,
+        "endResultKeys" : [ {
+          "lv" : "not_specify",
+          "key" : "toSellOrBuy"
+        } ],
+        "resultCode" : ""
+      }
+    }, {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "fwsKgL8JiZnq",
+      "name" : "P_TH",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
+        "kind" : "NONE",
+        "next" : null,
+        "left" : "0",
+        "right" : "0",
+        "type" : "equal"
+      },
+      "transition" : {
+        "toBox" : "",
+        "endTag" : "END",
+        "failEnd" : false,
+        "endResultKeys" : [ ],
+        "resultCode" : ""
+      }
+    } ],
+    "vars" : { },
+    "taskSort" : [ "POnGmKqao8p1", "uQEGkV35pjX8", "fwsKgL8JiZnq" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "END",
+      "failEnd" : false,
+      "endResultKeys" : [ ],
+      "resultCode" : ""
+    },
+    "minLogLv" : "DEBUG"
+  }, {
+    "clazz" : "net.bzk.flow.model.Box",
     "uid" : "2yrIrBRsEZHo",
     "name" : "PrepareData",
     "actions" : [ {
@@ -47,24 +116,35 @@
       "devFlowVars" : { },
       "flatData" : [ {
         "key" : "~minmax",
-        "val" : "!javascript===\nconst mm = tsFunc.minmax(${D7FixedBiasSerial});\nmm;"
+        "val" : "!javascript===\nconst mm = $tsFunc.minmax(${D7FixedBiasSerial});\nmm;"
       }, {
         "key" : "~peaks",
-        "val" : "!javascript===\nconst peakMaxWaitSeconds = 60*60*1.5;\nconst mm = tsFunc.findPeak(${D7FixedBiasSerial},0,peakMaxWaitSeconds,0.05);\nmm;"
+        "val" : "!javascript===\nconst peakMaxWaitSeconds = 60*60*1.5;\nconst mm = $tsFunc.findPeak(${D7FixedBiasSerial},0,peakMaxWaitSeconds,0.05);\nmm;"
       }, {
         "key" : "~conD",
-        "val" : "!javascript===\r\nconst mm = tsFunc.conD(${D7FixedBiasSerial},'UNIFORM_SLOPE',4);\r\nmm;"
+        "val" : "!javascript===\r\nconst mm = $tsFunc.conD(${D7FixedBiasSerial},'UNIFORM_SLOPE',4);\r\nmm;"
+      } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
+      "uid" : "0eatfgv9HoEq",
+      "name" : "CalcVars",
+      "tryErrorble" : false,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flatData" : [ {
+        "key" : "~lastInfo",
+        "val" : "${peaks.last}"
       } ]
     } ],
     "links" : [ ],
     "vars" : {
       "symbol" : "BTC"
     },
-    "taskSort" : [ "TvxsY0dT0Zrd", "i9QUdvKOUXPY" ],
+    "taskSort" : [ "TvxsY0dT0Zrd", "i9QUdvKOUXPY", "0eatfgv9HoEq" ],
     "whileJudgment" : null,
     "transition" : {
-      "toBox" : "",
-      "endTag" : "TODO Why",
+      "toBox" : "UdfFblT52of8",
+      "endTag" : null,
       "failEnd" : false,
       "endResultKeys" : [ ],
       "resultCode" : ""
