@@ -4,75 +4,6 @@
   "name" : "SUB-strategy-7d",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
-    "uid" : "UdfFblT52of8",
-    "name" : "MIN_MAX",
-    "actions" : [ {
-      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
-      "uid" : "POnGmKqao8p1",
-      "name" : "MM_InitVars",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "flatData" : [ {
-        "key" : "toSellOrBuy",
-        "val" : "!javascript===\r\nconst min = ${minmax.min};\r\nconst max = ${minmax.max};\r\n\r\nfunction calc(){\r\n    return min.dtime<max.dtime? \"BUY\" : \"SELL\";\r\n}\r\ncalc();"
-      } ]
-    } ],
-    "links" : [ {
-      "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "uQEGkV35pjX8",
-      "name" : "TimeOver3H",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
-        "kind" : "NONE",
-        "next" : null,
-        "left" : "${minmax.near.dtime}",
-        "right" : "!javascript===\n60*60*3;",
-        "type" : "greater_equal"
-      },
-      "transition" : {
-        "toBox" : "",
-        "endTag" : "END",
-        "failEnd" : false,
-        "endResultKeys" : [ {
-          "lv" : "not_specify",
-          "key" : "toSellOrBuy"
-        } ],
-        "resultCode" : ""
-      }
-    }, {
-      "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "fwsKgL8JiZnq",
-      "name" : "P_TH",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
-        "kind" : "NONE",
-        "next" : null,
-        "left" : "0",
-        "right" : "0",
-        "type" : "equal"
-      },
-      "transition" : {
-        "toBox" : "",
-        "endTag" : "END",
-        "failEnd" : false,
-        "endResultKeys" : [ ],
-        "resultCode" : ""
-      }
-    } ],
-    "vars" : { },
-    "taskSort" : [ "POnGmKqao8p1", "uQEGkV35pjX8", "fwsKgL8JiZnq" ],
-    "whileJudgment" : null,
-    "transition" : {
-      "toBox" : "",
-      "endTag" : "END",
-      "failEnd" : false,
-      "endResultKeys" : [ ],
-      "resultCode" : ""
-    },
-    "minLogLv" : "DEBUG"
-  }, {
-    "clazz" : "net.bzk.flow.model.Box",
     "uid" : "2yrIrBRsEZHo",
     "name" : "PrepareData",
     "actions" : [ {
@@ -80,6 +11,7 @@
       "uid" : "TvxsY0dT0Zrd",
       "name" : "Fetch7DFixedBias",
       "tryErrorble" : false,
+      "enable" : true,
       "devBoxVars" : { },
       "devFlowVars" : { },
       "flowUid" : "9RLQvpmbGa35",
@@ -112,6 +44,7 @@
       "uid" : "i9QUdvKOUXPY",
       "name" : "analyzeVars",
       "tryErrorble" : false,
+      "enable" : true,
       "devBoxVars" : { },
       "devFlowVars" : { },
       "flatData" : [ {
@@ -129,18 +62,64 @@
       "uid" : "0eatfgv9HoEq",
       "name" : "CalcVars",
       "tryErrorble" : false,
+      "enable" : true,
       "devBoxVars" : { },
       "devFlowVars" : { },
       "flatData" : [ {
         "key" : "~lastInfo",
         "val" : "${peaks.last}"
       } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "IeJ9bGECoNPn",
+      "name" : "BinanceQuote",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "url" : "${binance.proxyHost}proxy",
+      "uriVariables" : { },
+      "body" : "{\r\n    \"name\":\"get_recent_trades_list\",\r\n    \"apiKey\":\"${binance.key}\",\r\n    \"secret\":\"${binance.secret}\",\r\n    \"symbol\":\"${symbol}\",\r\n    \"limit\":1000,\r\n    \"timeMaped\":true\r\n}",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : "curQuote"
+      }
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "vfG3Fh5HNVce",
+      "name" : "Fetch7Davg",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flowUid" : "9RLQvpmbGa35",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "tsdbQuery",
+        "val" : "a=  from(bucket: \"quote\")\r\n  |> range(start: -7d)\r\n   |> filter(fn: (r) =>\r\n    r._measurement == \"realtime\" and\r\n    r.symbol == \"${symbol}\" and\r\n    r._field == \"price\"\r\n  )\r\n  |>mean()"
+      }, {
+        "key" : "vaildMins",
+        "val" : "11"
+      }, {
+        "key" : "skipCount",
+        "val" : "0"
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "nearVal",
+        "toKey" : {
+          "lv" : "run_flow",
+          "key" : "avg"
+        }
+      } ]
     } ],
     "links" : [ ],
     "vars" : {
       "symbol" : "BTC"
     },
-    "taskSort" : [ "TvxsY0dT0Zrd", "i9QUdvKOUXPY", "0eatfgv9HoEq" ],
+    "taskSort" : [ "vfG3Fh5HNVce", "TvxsY0dT0Zrd", "i9QUdvKOUXPY", "0eatfgv9HoEq", "IeJ9bGECoNPn" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "UdfFblT52of8",
@@ -150,8 +129,97 @@
       "resultCode" : ""
     },
     "minLogLv" : "DEBUG"
+  }, {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "UdfFblT52of8",
+    "name" : "MIN_MAX",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
+      "uid" : "POnGmKqao8p1",
+      "name" : "MM_InitVars",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flatData" : [ {
+        "key" : "toSellOrBuy",
+        "val" : "!javascript===\r\nconst min = ${minmax.min};\r\nconst max = ${minmax.max};\r\n\r\nfunction calc(){\r\n    return min.dtime<max.dtime? \"BUY\" : \"SELL\";\r\n}\r\ncalc();"
+      } ]
+    } ],
+    "links" : [ {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "uQEGkV35pjX8",
+      "name" : "TimeOver12H",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
+        "kind" : "NONE",
+        "next" : null,
+        "left" : "${minmax.near.dtime}",
+        "right" : "!javascript===\n60*60*12;",
+        "type" : "greater_equal"
+      },
+      "transition" : {
+        "toBox" : "",
+        "endTag" : "END",
+        "failEnd" : false,
+        "endResultKeys" : [ {
+          "lv" : "not_specify",
+          "key" : "toSellOrBuy"
+        } ],
+        "resultCode" : ""
+      }
+    }, {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "fwsKgL8JiZnq",
+      "name" : "P_TH",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
+        "kind" : "NONE",
+        "next" : null,
+        "left" : "0",
+        "right" : "0",
+        "type" : "equal"
+      },
+      "transition" : {
+        "toBox" : "",
+        "endTag" : "END",
+        "failEnd" : false,
+        "endResultKeys" : [ ],
+        "resultCode" : ""
+      }
+    }, {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "wbxiE4C90UxL",
+      "name" : "TimeLess15m",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
+        "kind" : "NONE",
+        "next" : null,
+        "left" : "${minmax.near.dtime}",
+        "right" : "!javascript===\r\n60*16;",
+        "type" : "lessthan"
+      },
+      "transition" : {
+        "toBox" : "",
+        "endTag" : "END",
+        "failEnd" : false,
+        "endResultKeys" : [ ],
+        "resultCode" : ""
+      }
+    } ],
+    "vars" : { },
+    "taskSort" : [ "POnGmKqao8p1", "uQEGkV35pjX8", "wbxiE4C90UxL", "fwsKgL8JiZnq" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "END",
+      "failEnd" : false,
+      "endResultKeys" : [ ],
+      "resultCode" : ""
+    },
+    "minLogLv" : "DEBUG"
   } ],
-  "varCfgNames" : [ ],
+  "varCfgNames" : [ "binance.json" ],
   "vars" : { },
   "entry" : {
     "clazz" : "net.bzk.flow.model.Entry$FixedRateEntry",

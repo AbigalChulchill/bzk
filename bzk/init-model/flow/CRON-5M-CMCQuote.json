@@ -4,92 +4,6 @@
   "name" : "CRON-5M-CMCQuote",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
-    "uid" : "0wakszWfpHcG",
-    "name" : "Box",
-    "actions" : [ {
-      "clazz" : "net.bzk.flow.model.HttpAction",
-      "uid" : "iwevVRUu5A5Q",
-      "name" : "ListQuote",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "url" : "!javascript===\nconst symbols = ${symbols};\nconst sblstr = symbols.join(',');\nconst url_temp ='https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol='+sblstr;\nurl_temp;",
-      "uriVariables" : { },
-      "body" : "{}",
-      "method" : "GET",
-      "headers" : { },
-      "headersFlat" : "{\"X-CMC_PRO_API_KEY\":\"${X-CMC_PRO_API_KEY}\"}",
-      "key" : {
-        "lv" : "not_specify",
-        "key" : "cmcResponse"
-      }
-    }, {
-      "clazz" : "net.bzk.flow.model.Action$JSONPathAction",
-      "uid" : "LzSVQvPqp58C",
-      "name" : "ParseQuote",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "syntax" : "$.data.*",
-      "source" : {
-        "lv" : "not_specify",
-        "key" : "cmcResponse"
-      },
-      "target" : {
-        "lv" : "not_specify",
-        "key" : "quotes"
-      }
-    }, {
-      "clazz" : "net.bzk.flow.model.Action$PolyglotAction",
-      "uid" : "QO79vQAswtbx",
-      "name" : "PackPayload",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "code" : "const list= ${quotes};\r\nconst ans = [];\r\n\r\nfor (const q of list) {\r\n    price = q['quote']['USD']['price']\r\n    volume_24h = q['quote']['USD']['volume_24h']\r\n    ans.push(genPointDto('price',price,q));\r\n    ans.push(genPointDto('volume_24h',volume_24h,q));\r\n}\r\n\r\n\r\n\r\nfunction genPointDto(fd,v,q){\r\n  const row = {\r\n      measurement : 'realtime',\r\n      tags:{\r\n        symbol : q['symbol'],\r\n        name : q['name'],\r\n        category:'cryptocurrency',\r\n        source:'coinmarketcap'\r\n      },\r\n      field: fd,\r\n      val:v,\r\n      time :q['last_updated']\r\n  };\r\n  return row;\r\n}\r\n\r\nans;\r\n",
-      "polyglot" : "js",
-      "resultLv" : "not_specify",
-      "resultKey" : "packPayload"
-    }, {
-      "clazz" : "net.bzk.flow.model.HttpAction",
-      "uid" : "9A78TT8muamL",
-      "name" : "Submit",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "url" : "${finProxyUrl}/proxy/tsdb/insert/multiple",
-      "uriVariables" : { },
-      "body" : "${packPayload}",
-      "method" : "POST",
-      "headers" : { },
-      "headersFlat" : "{}",
-      "key" : {
-        "lv" : "not_specify",
-        "key" : "insertDBResult"
-      }
-    }, {
-      "clazz" : "net.bzk.flow.model.Action$EventAction",
-      "uid" : "G08EvC8DqvRU",
-      "name" : "pushEvent",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "data" : "CurrentCMCQuote"
-    } ],
-    "links" : [ ],
-    "vars" : { },
-    "taskSort" : [ "iwevVRUu5A5Q", "LzSVQvPqp58C", "QO79vQAswtbx", "9A78TT8muamL", "G08EvC8DqvRU" ],
-    "whileJudgment" : null,
-    "transition" : {
-      "toBox" : "lDD9SkPygqPy",
-      "endTag" : null,
-      "failEnd" : false,
-      "endResultKeys" : [ ],
-      "resultCode" : ""
-    },
-    "minLogLv" : "WARNING"
-  }, {
-    "clazz" : "net.bzk.flow.model.Box",
     "uid" : "lDD9SkPygqPy",
     "name" : "Binance",
     "actions" : [ {
@@ -97,6 +11,7 @@
       "uid" : "paP5qdvAAz9R",
       "name" : "LoopGen",
       "tryErrorble" : false,
+      "enable" : true,
       "devBoxVars" : { },
       "devFlowVars" : { },
       "flatData" : [ {
@@ -111,6 +26,7 @@
       "uid" : "Rn4ry2okhydc",
       "name" : "RestPost",
       "tryErrorble" : false,
+      "enable" : true,
       "devBoxVars" : { },
       "devFlowVars" : { },
       "url" : "${binance.proxyHost}proxy",
@@ -140,6 +56,97 @@
     "transition" : {
       "toBox" : "",
       "endTag" : "END",
+      "failEnd" : false,
+      "endResultKeys" : [ ],
+      "resultCode" : ""
+    },
+    "minLogLv" : "WARNING"
+  }, {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "0wakszWfpHcG",
+    "name" : "Box",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "iwevVRUu5A5Q",
+      "name" : "ListQuote",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "url" : "!javascript===\nconst symbols = ${symbols};\nconst sblstr = symbols.join(',');\nconst url_temp ='https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol='+sblstr;\nurl_temp;",
+      "uriVariables" : { },
+      "body" : "{}",
+      "method" : "GET",
+      "headers" : { },
+      "headersFlat" : "{\"X-CMC_PRO_API_KEY\":\"${X-CMC_PRO_API_KEY}\"}",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : "cmcResponse"
+      }
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$JSONPathAction",
+      "uid" : "LzSVQvPqp58C",
+      "name" : "ParseQuote",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "syntax" : "$.data.*",
+      "source" : {
+        "lv" : "not_specify",
+        "key" : "cmcResponse"
+      },
+      "target" : {
+        "lv" : "not_specify",
+        "key" : "quotes"
+      }
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$PolyglotAction",
+      "uid" : "QO79vQAswtbx",
+      "name" : "PackPayload",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "code" : "const list= ${quotes};\r\nconst ans = [];\r\n\r\nfor (const q of list) {\r\n    price = q['quote']['USD']['price']\r\n    volume_24h = q['quote']['USD']['volume_24h']\r\n    ans.push(genPointDto('price',price,q));\r\n    ans.push(genPointDto('volume_24h',volume_24h,q));\r\n}\r\n\r\n\r\n\r\nfunction genPointDto(fd,v,q){\r\n  const row = {\r\n      measurement : 'realtime',\r\n      tags:{\r\n        symbol : q['symbol'],\r\n        name : q['name'],\r\n        category:'cryptocurrency',\r\n        source:'coinmarketcap'\r\n      },\r\n      field: fd,\r\n      val:v,\r\n      time :q['last_updated']\r\n  };\r\n  return row;\r\n}\r\n\r\nans;\r\n",
+      "polyglot" : "js",
+      "resultLv" : "not_specify",
+      "resultKey" : "packPayload"
+    }, {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "9A78TT8muamL",
+      "name" : "Submit",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "url" : "${finProxyUrl}/proxy/tsdb/insert/multiple",
+      "uriVariables" : { },
+      "body" : "${packPayload}",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "{}",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : "insertDBResult"
+      }
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$EventAction",
+      "uid" : "G08EvC8DqvRU",
+      "name" : "pushEvent",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "data" : "CurrentCMCQuote"
+    } ],
+    "links" : [ ],
+    "vars" : { },
+    "taskSort" : [ "iwevVRUu5A5Q", "LzSVQvPqp58C", "QO79vQAswtbx", "9A78TT8muamL", "G08EvC8DqvRU" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "lDD9SkPygqPy",
+      "endTag" : null,
       "failEnd" : false,
       "endResultKeys" : [ ],
       "resultCode" : ""

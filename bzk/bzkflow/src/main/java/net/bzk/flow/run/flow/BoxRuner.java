@@ -142,10 +142,10 @@ public class BoxRuner {
 
     public boolean runAction(String aUid) {
         Optional<Action> ao = findAction(aUid);
-        if (!ao.isPresent()) {
-            return false;
-        }
+        if (!ao.isPresent()) return false;
+
         Action a = ao.get();
+        if (!a.isEnable()) return true;
         VarValSet vvs = callAction(a);
         if (vvs != null) {
             runVarService.putVarVals(genUids(), vvs);
@@ -165,8 +165,8 @@ public class BoxRuner {
 
     private List<VarVal> listEndResult(Transition t) {
         List<VarVal> ans = t.getEndResultKeys().stream().map(this::getVarVal).collect(Collectors.toList());
-        var pr= t.packResult(logUtils,varQueryer);
-        ans.add(VarVal.gen(VarLv.run_box,Constant.PACK_RESULT_KEY,pr));
+        var pr = t.packResult(logUtils, varQueryer);
+        ans.add(VarVal.gen(VarLv.run_box, Constant.PACK_RESULT_KEY, pr));
         return ans;
     }
 

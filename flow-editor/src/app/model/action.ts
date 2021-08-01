@@ -25,6 +25,11 @@ export class Action extends BzkObj {
     type: PropType.Boolean,
   })
   public tryErrorble = false;
+  @PropInfo({
+    title: 'enable',
+    type: PropType.Boolean,
+  })
+  public enable = true;
 
   @PropInfo({
     title: 'devBoxVars',

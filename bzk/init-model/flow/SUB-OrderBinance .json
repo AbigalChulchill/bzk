@@ -4,144 +4,6 @@
   "name" : "SUB-OrderBinance ",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
-    "uid" : "5ONyW8KpDZA0",
-    "name" : "ToOrder",
-    "actions" : [ {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "Q9Ov6OSqN0n5",
-      "name" : "GetMA_15",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "flowUid" : "9RLQvpmbGa35",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "tsdbQuery",
-        "val" : "from(bucket: \"quote\")\n  |> range(start: -2h)\n  |> filter(fn: (r) =>\n    r._measurement == \"realtime\" and\n    r.symbol == \"${symbol}\" and\n    r._field == \"price\"\n  )\n  |> timedMovingAverage(every: 5m, period: 15m)"
-      }, {
-        "key" : "vaildMins",
-        "val" : "10"
-      }, {
-        "key" : "skipCount",
-        "val" : "1"
-      } ],
-      "outputReflects" : [ {
-        "srcKey" : "nearVal",
-        "toKey" : {
-          "lv" : "not_specify",
-          "key" : "ma15m"
-        }
-      } ]
-    }, {
-      "clazz" : "net.bzk.flow.model.HttpAction",
-      "uid" : "N3uy8bAUKMM0",
-      "name" : "ListRecentOrders",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "url" : "${binance.proxyHost}proxy",
-      "uriVariables" : { },
-      "body" : "{\n  \"name\": \"get_recent_trades_list\",\n  \"apiKey\":\"${binance.key}\",\n  \"secret\":\"${binance.secret}\",\n  \"symbol\": \"${symbol}\",\n  \"side\": \"${side}\",\n  \"timeMaped\":true,\n  \"limit\":1000\n}",
-      "method" : "POST",
-      "headers" : { },
-      "headersFlat" : "",
-      "key" : {
-        "lv" : "not_specify",
-        "key" : "recentOrders"
-      }
-    }, {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "HORt3eoZKjII",
-      "name" : "CalcPeak",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "flowUid" : "PeakFinder5",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "tsdbQuery",
-        "val" : "NONE"
-      }, {
-        "key" : "peakMaxWaitSeconds",
-        "val" : "3"
-      }, {
-        "key" : "symbol",
-        "val" : "${symbol}"
-      }, {
-        "key" : "timeValMap",
-        "val" : "!javascript===\nconst info = ${recentOrders};\nconst side = '${side}';\n\nfunction fetch(){\n    return side == 'BUY' ? info.buy.timeValMap :  info.sell.timeValMap;\n}\nfetch();"
-      }, {
-        "key" : "baseVal",
-        "val" : "${ma15m.val}"
-      } ],
-      "outputReflects" : [ {
-        "srcKey" : "ans",
-        "toKey" : {
-          "lv" : "run_flow",
-          "key" : "peakInfo"
-        }
-      } ]
-    }, {
-      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
-      "uid" : "ABJrMFaqlE8d",
-      "name" : "InitVars",
-      "tryErrorble" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "flatData" : [ {
-        "key" : "~orderRate",
-        "val" : "!javascript===\nconst rf = $bzk.g('%Bais.${symbol}.Fixed.120D.RF.MA15D_OrderRate');\nrf;"
-      } ]
-    } ],
-    "links" : [ {
-      "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "9CDUn4IFHhHD",
-      "name" : "BaseLine",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
-        "kind" : "NONE",
-        "next" : null,
-        "polyglot" : "js",
-        "code" : "const side ='${side}';\r\nconst baseLine = ${ma15m.val};\r\nconst lastv = ${peakInfo.last.val};\r\n\r\nfunction calc(){\r\n    return side == 'BUY' ? lastv >= baseLine : lastv <= baseLine;\r\n}\r\n\r\ncalc();"
-      },
-      "transition" : {
-        "toBox" : "",
-        "endTag" : "BaseBYE_${symbol} ${side}> B:${ma15m.val} L:${peakInfo.last.val} T:${trigger}",
-        "failEnd" : false,
-        "endResultKeys" : [ ],
-        "resultCode" : ""
-      }
-    }, {
-      "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "5TnlNO0U4Npj",
-      "name" : "direction",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
-        "kind" : "NONE",
-        "next" : null,
-        "polyglot" : "js",
-        "code" : "const side ='${side}';\r\nconst microD = '${peakInfo.micro.state}';\r\nconst macroD = '${peakInfo.macro.state}';\r\n\r\nfunction calc(){\r\n    if(macroD != macroD) return true;\r\n    if (side == 'BUY' && microD == 'FALL') return true;\r\n    if (side == 'SELL' && microD == 'RISE') return true;\r\n    return false;\r\n}\r\n\r\ncalc();"
-      },
-      "transition" : {
-        "toBox" : "",
-        "endTag" : "d_bye ${symbol} ${side} > mi:${peakInfo.micro.state} ma: ${peakInfo.macro.state} T:${trigger}",
-        "failEnd" : false,
-        "endResultKeys" : [ ],
-        "resultCode" : ""
-      }
-    } ],
-    "vars" : { },
-    "taskSort" : [ "ABJrMFaqlE8d", "Q9Ov6OSqN0n5", "N3uy8bAUKMM0", "HORt3eoZKjII", "9CDUn4IFHhHD", "5TnlNO0U4Npj" ],
-    "whileJudgment" : null,
-    "transition" : {
-      "toBox" : "htivUO7YKtyD",
-      "endTag" : null,
-      "failEnd" : false,
-      "endResultKeys" : [ ],
-      "resultCode" : ""
-    }
-  }, {
-    "clazz" : "net.bzk.flow.model.Box",
     "uid" : "htivUO7YKtyD",
     "name" : "Box",
     "actions" : [ {
@@ -149,6 +11,7 @@
       "uid" : "3upPLAHw95l6",
       "name" : "GetPostionInfo",
       "tryErrorble" : false,
+      "enable" : false,
       "devBoxVars" : { },
       "devFlowVars" : { },
       "url" : "${binance.proxyHost}proxy",
@@ -166,6 +29,7 @@
       "uid" : "OcPQy555y0Gn",
       "name" : "cancel_by_filter",
       "tryErrorble" : false,
+      "enable" : false,
       "devBoxVars" : {
         "symbol" : "EOS",
         "posInfo" : [ {
@@ -225,6 +89,7 @@
       "uid" : "OcPQySOCy0Gn",
       "name" : "PostOrder",
       "tryErrorble" : false,
+      "enable" : true,
       "devBoxVars" : { },
       "devFlowVars" : { },
       "url" : "${binance.proxyHost}proxy",
@@ -242,6 +107,7 @@
       "uid" : "fzgczwZFFaF2",
       "name" : "NotifyMail",
       "tryErrorble" : true,
+      "enable" : false,
       "devBoxVars" : { },
       "devFlowVars" : { },
       "smtpHost" : "\"smtp.gmail.com\"",
@@ -256,11 +122,12 @@
       "uid" : "3H1IkGkleZp5",
       "name" : "GenBody",
       "tryErrorble" : false,
+      "enable" : true,
       "devBoxVars" : { },
       "devFlowVars" : { },
       "flatData" : [ {
         "key" : "body",
-        "val" : "!javascript===\nconst side ='${side}';\nconst investedRate = ${investedRate};\nconst orderRate = ${orderRate};\nconst finalInvestedRate = investedRate + (0.05 * orderRate[side].investRate );\n\nlet pd = {\n    \"symbol\": \"${symbol}\",\n    \"investedRate\": finalInvestedRate,\n    \"apiKey\": \"${binance.key}\",\n    \"secret\": \"${binance.secret}\",\n    \"selled\": side == 'SELL',\n    \"name\": \"post_order\",\n    \"guardRange\": ${guardRange},\n    \"currentMove\": ${currentMove}\n};\npd;"
+        "val" : "!javascript===\nconst side ='${side}';\nconst quote = ${quote};\n\nlet pd = {\n    \"symbol\": \"${symbol}\",\n    \"investedRate\": ${oneInvestedRate},\n    \"apiKey\": \"${binance.key}\",\n    \"secret\": \"${binance.secret}\",\n    \"selled\": side == 'SELL',\n    \"name\": \"post_order\",\n    \"guardRange\": ${guardRange},\n    \"currentMove\": ${currentMove}\n};\npd;"
       }, {
         "key" : "body.tags",
         "val" : "${tags}"
@@ -270,6 +137,7 @@
       "uid" : "iD0dtfzuxhXl",
       "name" : "RecordTSDB",
       "tryErrorble" : false,
+      "enable" : true,
       "devBoxVars" : { },
       "devFlowVars" : { },
       "url" : "${finProxyUrl}/proxy/tsdb/insert/multiple",
@@ -282,18 +150,47 @@
         "lv" : "not_specify",
         "key" : "tsdbPosted"
       }
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
+      "uid" : "R8kJWNNwM3H0",
+      "name" : "LoopVars",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flatData" : [ {
+        "key" : "quote",
+        "val" : "!javascript===\nconst quoteBase = ${quoteBase};\nconst quoteSize = ${quoteSize};\nconst idx = ${idx};\nconst quoteRange = ${quoteRange};\nconst dr = (quoteRange / quoteSize) * idx;\nconst quote = quoteBase*(1 + dr ) ;\nquote;"
+      }, {
+        "key" : "idx",
+        "val" : "!javascript===\n${idx}+1;"
+      }, {
+        "key" : "oneInvestedRate",
+        "val" : "!javascript===\nconst rate= ${investedRate};\nconst quotes = ${quotes}\nconst sr = rate/quotes.length;\nsr;"
+      } ]
     } ],
     "links" : [ ],
-    "vars" : { },
-    "taskSort" : [ "3upPLAHw95l6", "OcPQy555y0Gn", "fzgczwZFFaF2", "3H1IkGkleZp5", "OcPQySOCy0Gn", "iD0dtfzuxhXl" ],
-    "whileJudgment" : null,
+    "vars" : {
+      "idx" : 0,
+      "quotes" : [ ]
+    },
+    "taskSort" : [ "R8kJWNNwM3H0", "3upPLAHw95l6", "OcPQy555y0Gn", "fzgczwZFFaF2", "3H1IkGkleZp5", "OcPQySOCy0Gn", "iD0dtfzuxhXl" ],
+    "whileJudgment" : {
+      "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
+      "kind" : "NONE",
+      "next" : null,
+      "left" : "${idx}",
+      "right" : "${quoteSize};\n",
+      "type" : "lessthan"
+    },
     "transition" : {
       "toBox" : "",
       "endTag" : "${symbol} ${side} ${trigger}",
       "failEnd" : false,
       "endResultKeys" : [ ],
       "resultCode" : ""
-    }
+    },
+    "minLogLv" : "DEBUG"
   } ],
   "varCfgNames" : [ "binance.json", "mail.json", "fin-proxy.json" ],
   "vars" : {
@@ -306,9 +203,9 @@
   },
   "entry" : {
     "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
-    "boxUid" : "5ONyW8KpDZA0",
+    "boxUid" : "htivUO7YKtyD",
     "autoRegister" : false,
-    "requiredKeys" : [ "side", "symbol", "investedRate", "guardRange", "currentMove", "tags", "trigger" ],
+    "requiredKeys" : [ "side", "symbol", "investedRate", "guardRange", "currentMove", "tags", "trigger", "quoteSize", "quoteBase", "quoteRange" ],
     "outputKeys" : [ ]
   },
   "logEncryptKey" : "1234567890123456",
