@@ -180,6 +180,7 @@ public class BoxRuner {
     }
 
     private boolean runLink(Link l) {
+        if(!l.isEnable()) return false;
         if (checkConditioner(l.getCondition())) {
             if (!endFlow(l.getTransition())) {
                 transitBox(l.getTransition());

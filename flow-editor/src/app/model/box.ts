@@ -144,6 +144,11 @@ export class Link extends BzkObj {
   })
   @Type(() => Transition)
   public transition = new Transition();
+  @PropInfo({
+    title: 'enable',
+    type: PropType.Boolean,
+  })
+  public enable = true;
 
   public static gen(): Link {
     const l = new Link();

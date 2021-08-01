@@ -11,6 +11,7 @@
       "uid" : "VBcwBUuoBz8z",
       "name" : "LoopGen",
       "tryErrorble" : false,
+      "enable" : true,
       "devBoxVars" : { },
       "devFlowVars" : { },
       "flatData" : [ {
@@ -25,9 +26,10 @@
       "uid" : "uCYOwWdhTX61",
       "name" : "DoBuyOrSell",
       "tryErrorble" : true,
+      "enable" : true,
       "devBoxVars" : { },
       "devFlowVars" : { },
-      "flowUid" : "LlXZCvcaZsK8",
+      "flowUid" : "C06bTWXsMh7D",
       "asynced" : false,
       "inputData" : [ {
         "key" : "symbol",
@@ -54,7 +56,8 @@
       "failEnd" : false,
       "endResultKeys" : [ ],
       "resultCode" : ""
-    }
+    },
+    "minLogLv" : "DEBUG"
   } ],
   "varCfgNames" : [ "crypto-symbol.json" ],
   "vars" : { },

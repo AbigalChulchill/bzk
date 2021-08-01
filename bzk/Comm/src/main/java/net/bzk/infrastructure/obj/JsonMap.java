@@ -25,6 +25,7 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
 
 	public static ObjectMapper jsonMapper = new ObjectMapper();
 	private String pathDot = ".";
+	private static final String ALL_SELECT = "__ALL__";
 
 	public JsonMap() {
 		super();
@@ -137,6 +138,7 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
 			return ca.accept(this, path);
 		}
 		Map jm = this;
+		if (StringUtils.equals(path,ALL_SELECT)) return jm;
 		int i = 0;
 
 		while (i < ps.length - 1) {

@@ -160,7 +160,7 @@
       "devFlowVars" : { },
       "flatData" : [ {
         "key" : "quote",
-        "val" : "!javascript===\nconst quoteBase = ${quoteBase};\nconst quoteSize = ${quoteSize};\nconst idx = ${idx};\nconst quoteRange = ${quoteRange};\nconst dr = (quoteRange / quoteSize) * idx;\nconst quote = quoteBase*(1 + dr ) ;\nquote;"
+        "val" : "!javascript===\nconst side = \"${side}\";\nconst quoteBase = ${quoteBase};\nconst quoteSize = ${quoteSize};\nconst idx = ${idx};\nconst quoteRange = ${quoteRange};\nconst rate = calcRate();\nconst dr = (rate / quoteSize) * idx;\nconst quote = quoteBase*(1 + dr ) ;\n\nfunction calcRate(){\n    return side == \"SELL\" ? -1 * quoteRange : quoteRange;\n}\n\nquote;"
       }, {
         "key" : "idx",
         "val" : "!javascript===\n${idx}+1;"
