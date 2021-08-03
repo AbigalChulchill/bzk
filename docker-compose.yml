@@ -7,6 +7,7 @@ services:
         dockerfile: bzkflow/Dockerfile
     ports: 
       - "9202:8080"
+      - "7091:7091"
     depends_on:
       - "db" 
   editor-web:
