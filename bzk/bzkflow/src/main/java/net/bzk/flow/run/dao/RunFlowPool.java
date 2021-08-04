@@ -74,6 +74,7 @@ public class RunFlowPool {
 		ar.setFlowUid(r.getModel().getUid());
 		ar.setFlowRunUid(info.getUid());
 		ar.setInfo(info);
+		ar.setState(info.getState());
 		archiveRunDao.save(ar);
 		map.remove(r.getInfo().getUid());
 	}

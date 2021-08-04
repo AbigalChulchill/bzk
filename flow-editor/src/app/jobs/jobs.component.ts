@@ -32,7 +32,6 @@ export class JobsComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
 
   public FlowState = FlowState;
-  public flowPoolInfos = new Array<FlowPoolInfo>();
   public archiveRunInfosMap = new Map<string, Array<RunInfo>>()
   public savedFlows: Array<Job>;
   // panelOpenState = false;
@@ -68,7 +67,6 @@ export class JobsComponent implements OnInit, AfterViewInit {
   private async reload(): Promise<void> {
     const t = this.loading.show();
     this.savedFlows = await this.jobClient.listAll();
-    this.flowPoolInfos = await this.flowClient.listFlowPoolInfo().toPromise();
     for (const sf of this.savedFlows) {
       this.loadArchiveRunInfos(sf);
     }
@@ -88,28 +86,24 @@ export class JobsComponent implements OnInit, AfterViewInit {
   }
 
   private async loadArchiveRunInfos(sf: Job): Promise<void> {
-    let ris:Array<RunInfo> = await this.flowClient.listArchiveRunInfo(sf.uid).toPromise();
-    let fpi = this.getPoolInfo(sf);
-    for(const r of ris){
-      fpi.runInfos.push(r);
-    }
-    this.reflesh(-1);
+    // let ris:Array<RunInfo> = await this.flowClient.listArchiveRunInfo(sf.uid).toPromise();
+    // let fpi = this.getPoolInfo(sf);
+    // for(const r of ris){
+    //   fpi.runInfos.push(r);
+    // }
+    // this.reflesh(-1);
   }
 
-  public getPoolInfo(sf: Job): FlowPoolInfo {
-    return this.flowPoolInfos.find(fp => fp.flow.uid === sf.uid);
-  }
+
 
   public getAllRunCount(sf: Job): number {
-    const ri = this.flowPoolInfos.find(fp => fp.flow.uid === sf.uid);
-    if (!ri) return 0;
-    return ri.runInfos.length;
+
+    return 0;
   }
 
   public getStateCount(sf: Job, st: FlowState): number {
-    const ri = this.flowPoolInfos.find(fp => fp.flow.uid === sf.uid);
-    if (!ri) return 0;
-    return ri.runInfos.filter(r => r.state === st).length;
+
+    return 0;
   }
 
   public async forceRemovePool(uid: string): Promise<void> {
@@ -144,12 +138,10 @@ export class JobsComponent implements OnInit, AfterViewInit {
     const ans = new Row();
     ans.id = sf.uid;
     ans.name = sf.model.name;
-    const fr = this.getPoolInfo(sf);
 
-    ans.enable = fr != null;
-    if (!fr || fr.runInfos.length <= 0) return ans;
-    const lri = fr.runInfos[fr.runInfos.length - 1];
-    ans.lastState = lri.state;
+
+    ans.enable = false;
+    ans.lastState = 'TODO';
     return ans;
   }
 

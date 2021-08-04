@@ -8,8 +8,10 @@ import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.transaction.Transactional;
 
+import net.bzk.flow.dto.JobRunInfo;
 import net.bzk.flow.enums.Enums;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,6 +43,8 @@ public class JobsService {
     private JobsDao dao;
     @Inject
     private ObjectMapper mapper;
+
+    private Provider<JobRunInfoGetter> jobRunInfoGetterProvider;
 
     @PostConstruct
     public void loadInitData() {
@@ -92,6 +96,11 @@ public class JobsService {
     public void remove(String uid) {
         var e = dao.findById(uid).get();
         dao.delete(e);
+    }
+
+    @Transactional
+    public JobRunInfo getInfo(String uid) {
+        return jobRunInfoGetterProvider.get().init(uid).fetch();
     }
 
     public class InitFlowEvent extends ApplicationEvent {

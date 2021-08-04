@@ -35,8 +35,7 @@ public class RunFlowService implements ApplicationListener<InitFlowEvent> {
 	private RunBoxDao boxDao;
 	@Inject
 	private JobsDao jobsDao;
-	@Inject
-	private JobsDao jobDao;
+
 	@Value("${init.data.autoegister}")
 	private boolean autoegister;
 
@@ -46,7 +45,7 @@ public class RunFlowService implements ApplicationListener<InitFlowEvent> {
 	}
 
 	public void registerDepends(String uid) {
-		var sfs = jobDao.listDepends(uid);
+		var sfs = jobsDao.listDepends(uid);
 		List<Flow> fs = sfs.stream().map(sf -> sf.getModel()).collect(Collectors.toList());
 		fs.forEach(this::register);
 	}

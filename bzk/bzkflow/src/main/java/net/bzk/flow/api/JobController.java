@@ -7,6 +7,7 @@ import java.util.stream.StreamSupport;
 
 import javax.inject.Inject;
 
+import net.bzk.flow.dto.JobRunInfo;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
@@ -70,6 +71,13 @@ public class JobController {
 	@RequestMapping(value = "new", method = RequestMethod.POST)
 	public Job save() throws IOException {
 		return service.save(modelBuilder.init().getModel(),true);
+	}
+
+	@ResponseStatus(HttpStatus.OK)
+	@ResponseBody
+	@RequestMapping(value = "{uid}/info", method = RequestMethod.POST)
+	public JobRunInfo info(String uid){
+		return service.getInfo(uid);
 	}
 	
 	
