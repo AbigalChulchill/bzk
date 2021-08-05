@@ -54,7 +54,7 @@ public class JobController {
 	
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(value = "{uid}", method = RequestMethod.DELETE)
-	public void remove(String uid) {
+	public void remove(@PathVariable String uid) {
 		service.remove(uid);
 	}
 	
@@ -75,8 +75,8 @@ public class JobController {
 
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
-	@RequestMapping(value = "{uid}/info", method = RequestMethod.POST)
-	public JobRunInfo info(String uid){
+	@RequestMapping(value = "{uid}/info", method = RequestMethod.GET)
+	public JobRunInfo info(@PathVariable String uid){
 		return service.getInfo(uid);
 	}
 	

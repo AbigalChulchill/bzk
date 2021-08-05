@@ -43,7 +43,7 @@ public class JobsService {
     private JobsDao dao;
     @Inject
     private ObjectMapper mapper;
-
+    @Inject
     private Provider<JobRunInfoGetter> jobRunInfoGetterProvider;
 
     @PostConstruct

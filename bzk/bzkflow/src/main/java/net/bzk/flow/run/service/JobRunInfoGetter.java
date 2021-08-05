@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
+import java.util.Comparator;
 
 @Service
 @Scope("prototype")
@@ -29,17 +30,33 @@ public class JobRunInfoGetter {
     }
 
     JobRunInfo fetch() {
+        result.setUid(uid);
         result.setEnable(isEnable());
         int all = collectStateCount();
-        result.set
+        result.setAllCount(all);
+        result.setLastState(getLastState());
         return result;
+    }
+
+    private FlowRuner.State getLastState() {
+        var lfro = runPoolDao
+                .getPool(uid)
+                .listRunInfos(false)
+                .stream()
+                .sorted((r1, r2) -> -1 * r1.getStartAt().compareTo(r2.getStartAt()))
+                .findFirst();
+        if (lfro.isPresent()) return lfro.get().getState();
+        var laste = archiveRunDao.findTopByFlowUidOrderByCreateAtDesc(uid);
+        return laste.isPresent() ? laste.get().getState() : null;
+
     }
 
     private int collectStateCount() {
         int all = 0;
+        var cmap = result.getStateCounts();
         for (var st : FlowRuner.State.values()) {
             int c = getStateCount(st);
-            int orgc = result.getStateCounts().get(st);
+            int orgc = cmap.containsKey(st) ? cmap.get(st) : 0;
             result.getStateCounts().put(st, orgc + c);
             all += c;
         }
