@@ -1,7 +1,5 @@
 package net.bzk.infrastructure.tscurve;
 
-import org.springframework.stereotype.Service;
-
 import java.util.*;
 
 public class TsCurveFunc {
@@ -10,8 +8,8 @@ public class TsCurveFunc {
     private TsCurveFunc() {
     }
 
-    public PeakFinder.Result findPeak(Map<String, Double> rm, double baseVal, double peakMaxWaitSeconds, double macroAmplitudeRate) {
-        PeakFinder pf = new PeakFinder(rm, baseVal, peakMaxWaitSeconds, macroAmplitudeRate);
+    public TsPeakFinder.Result findPeak(Map<String, Double> rm, double baseVal, double peakMaxWaitSeconds, double macroAmplitudeRate) {
+        TsPeakFinder pf = new TsPeakFinder(rm, baseVal, peakMaxWaitSeconds, macroAmplitudeRate);
         return pf.calc();
     }
 

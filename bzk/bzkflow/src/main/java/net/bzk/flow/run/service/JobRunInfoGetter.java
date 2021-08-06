@@ -50,8 +50,8 @@ public class JobRunInfoGetter {
                 .sorted((r1, r2) -> -1 * r1.getStartAt().compareTo(r2.getStartAt()))
                 .findFirst();
         if (lfro.isPresent()) return lfro.get();
-        var laste = archiveRunDao.findTopByFlowUidOrderByCreateAtDesc(uid);
-        return laste.isPresent() ? laste.get().getInfo() : null;
+        var last = archiveRunDao.findTopByFlowUidOrderByCreateAtDesc(uid);
+        return last.isPresent() ? last.get().getInfo() : null;
 
     }
 

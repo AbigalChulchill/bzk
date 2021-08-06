@@ -12,7 +12,7 @@ import net.bzk.infrastructure.tscurve.TsCurveUtils.Point;
 import net.bzk.infrastructure.tscurve.TsCurveUtils.Direction;
 
 
-public class PeakFinder extends TsCurveFunc.TsCurve {
+public class TsPeakFinder extends TsCurveFunc.TsCurve {
 
     public enum PointType {
         MINED, MAXED, NONE
@@ -50,7 +50,7 @@ public class PeakFinder extends TsCurveFunc.TsCurve {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    private static class TrendInfo {
+    public static class TrendInfo {
         private Direction state;
         private Map<Double, Point> maxList;
         private Map<Double, Point> minList;
@@ -69,7 +69,7 @@ public class PeakFinder extends TsCurveFunc.TsCurve {
     private final MacroAmplitudeFilter macroAmplitudeFilter = new MacroAmplitudeFilter();
 
 
-    public PeakFinder(Map<String, Double> rm, double baseVal, double peakMaxWaitSeconds, double macroAmplitudeRate) {
+    public TsPeakFinder(Map<String, Double> rm, double baseVal, double peakMaxWaitSeconds, double macroAmplitudeRate) {
         super(rm);
         this.baseVal = baseVal;
         this.peakMaxWaitSeconds = peakMaxWaitSeconds;
