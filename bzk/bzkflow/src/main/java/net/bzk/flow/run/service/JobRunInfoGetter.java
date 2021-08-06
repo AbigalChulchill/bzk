@@ -34,20 +34,24 @@ public class JobRunInfoGetter {
         result.setEnable(isEnable());
         int all = collectStateCount();
         result.setAllCount(all);
-        result.setLastState(getLastState());
+        var last = getLast();
+        if(last == null) return result;
+        result.setLastState(last.getState());
+        result.setLastStartAt(last.getStartAt());
         return result;
     }
 
-    private FlowRuner.State getLastState() {
-        var lfro = runPoolDao
-                .getPool(uid)
+    private FlowRuner.RunInfo getLast() {
+        var pool = runPoolDao.getPool(uid);
+        if (pool == null) return null;
+        var lfro = pool
                 .listRunInfos(false)
                 .stream()
                 .sorted((r1, r2) -> -1 * r1.getStartAt().compareTo(r2.getStartAt()))
                 .findFirst();
-        if (lfro.isPresent()) return lfro.get().getState();
+        if (lfro.isPresent()) return lfro.get();
         var laste = archiveRunDao.findTopByFlowUidOrderByCreateAtDesc(uid);
-        return laste.isPresent() ? laste.get().getState() : null;
+        return laste.isPresent() ? laste.get().getInfo() : null;
 
     }
 

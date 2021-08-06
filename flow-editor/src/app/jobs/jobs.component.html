@@ -99,7 +99,7 @@
 
     <ng-container matColumnDef="lastTriggerAt">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> lastTriggerAt </th>
-      <td mat-cell *matCellDef="let row" > {{row.lastTriggerAt}} </td>
+      <td mat-cell *matCellDef="let row" > {{row.lastTriggerAt | date:'yyyy/MM/dd hh:mm:ss' }} </td>
     </ng-container>
 
     <ng-container matColumnDef="triggerInfo">

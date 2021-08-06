@@ -3,6 +3,7 @@ package net.bzk.flow.dto;
 import lombok.Data;
 import net.bzk.flow.run.flow.FlowRuner;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,5 +14,6 @@ public class JobRunInfo {
     private FlowRuner.State lastState;
     private String uid;
     private boolean enable;
+    private Date lastStartAt;
 
 }

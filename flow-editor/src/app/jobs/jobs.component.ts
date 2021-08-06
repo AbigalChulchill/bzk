@@ -14,6 +14,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { Job } from '../model/job';
+import { JobRunInfo } from '../dto/job-dto';
+import { plainToClass } from 'class-transformer';
 
 
 
@@ -32,7 +34,7 @@ export class JobsComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
 
   public FlowState = FlowState;
-  public archiveRunInfosMap = new Map<string, Array<RunInfo>>()
+  public archiveRunInfosMap = new Map<string, JobRunInfo>()
   public savedFlows: Array<Job>;
   // panelOpenState = false;
   constructor(
@@ -86,24 +88,26 @@ export class JobsComponent implements OnInit, AfterViewInit {
   }
 
   private async loadArchiveRunInfos(sf: Job): Promise<void> {
-    // let ris:Array<RunInfo> = await this.flowClient.listArchiveRunInfo(sf.uid).toPromise();
-    // let fpi = this.getPoolInfo(sf);
-    // for(const r of ris){
-    //   fpi.runInfos.push(r);
-    // }
-    // this.reflesh(-1);
+    let ris: JobRunInfo = await this.jobClient.getInfo(sf.uid).toPromise();
+    this.archiveRunInfosMap.set(sf.uid,ris);
+    this.reflesh(-1);
   }
 
-
+  private getJobRunInfo(sf: Job):JobRunInfo{
+    if( this.archiveRunInfosMap.has(sf.uid)){
+      let o = this.archiveRunInfosMap.get(sf.uid);
+      const ans = plainToClass(JobRunInfo, o);
+      return ans;
+    }
+    return new JobRunInfo();
+  }
 
   public getAllRunCount(sf: Job): number {
-
-    return 0;
+    return this.getJobRunInfo(sf).allCount;
   }
 
   public getStateCount(sf: Job, st: FlowState): number {
-
-    return 0;
+    return this.getJobRunInfo(sf).getStateCount(st);
   }
 
   public async forceRemovePool(uid: string): Promise<void> {
@@ -138,10 +142,9 @@ export class JobsComponent implements OnInit, AfterViewInit {
     const ans = new Row();
     ans.id = sf.uid;
     ans.name = sf.model.name;
-
-
-    ans.enable = false;
-    ans.lastState = 'TODO';
+    ans.lastTriggerAt = this.getJobRunInfo(sf).lastStartAt;
+    ans.enable = this.getJobRunInfo(sf).enable;
+    ans.lastState = this.getJobRunInfo(sf).lastState;
     return ans;
   }
 
@@ -152,7 +155,7 @@ export class Row {
   public id: string;
   public name: string;
   public lastState: string;
-  public lastTriggerAt: string;
+  public lastTriggerAt: Date;
   public enable: boolean;
 
 

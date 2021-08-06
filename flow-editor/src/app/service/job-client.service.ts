@@ -1,3 +1,4 @@
+import { Polyglot } from './../model/pojo/enums';
 import { Job } from './../model/job';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -7,6 +8,7 @@ import { Constant } from '../infrastructure/constant';
 import { Flow } from '../model/flow';
 import { BzkUtils } from '../utils/bzk-utils';
 import { CommUtils } from '../utils/comm-utils';
+import { JobRunInfo } from '../dto/job-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -46,8 +48,12 @@ export class JobClientService {
     return ans;
   }
 
-  public  createNewOne(): Observable<Job> {
-    return this.httpClient.post<Job>(environment.apiHost + JobClientService.URL_PREFIX + 'new',null);
+  public createNewOne(): Observable<Job> {
+    return this.httpClient.post<Job>(environment.apiHost + JobClientService.URL_PREFIX + 'new', null);
+  }
+
+  public getInfo(uid: string): Observable<JobRunInfo> {
+    return this.httpClient.get<JobRunInfo>(environment.apiHost + JobClientService.URL_PREFIX + uid + '/info');
   }
 
 }
