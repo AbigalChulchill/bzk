@@ -16,7 +16,7 @@ public class TsPeakPos {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class IGRate{
+    public static class IGRate {
         private float investRate;
         private float guardRate;
     }
@@ -82,20 +82,57 @@ public class TsPeakPos {
         throw new BzkRuntimeException("calcInvestRate not support " + state + " v:" + lastV);
     }
 
-//    private float calcMiddleGuardRate() {
-//        double s = Math.abs(lastV) - halfH;
-//        let p = s / halfH;
-//        return Math.pow(0.5, p);
-//    }
+    private float calcMiddleGuardRate() {
+        double s = Math.abs(lastV) - halfH;
+        double p = (s / halfH);
+        return (float) Math.pow(0.5, p);
+    }
 
-//    function calcLongGroudRate() {
-//        let absl = Math.abs(lastV);
-//        let p = absl / h;
-//        return Math.pow(0.5, p);
-//    }
-//
-//    public Result calc() {
-//
-//    }
+    private float calcLongGroudRate() {
+        double absl = Math.abs(lastV);
+        double p = absl / h;
+        return (float) Math.pow(0.5, p);
+    }
+
+
+    private float calcGroudRate(TsEnums.Side sb) {
+        switch (pos) {
+            case A:
+                return sb == TsEnums.Side.BUY ? calcMiddleGuardRate() : calcLongGroudRate();
+            case B:
+                return sb == TsEnums.Side.BUY ? calcMiddleGuardRate() : 0;
+            case C:
+                return sb == TsEnums.Side.BUY ? calcMiddleGuardRate() : 0;
+            case D:
+                return sb == TsEnums.Side.BUY ? calcMiddleGuardRate() : calcLongGroudRate();
+            case E:
+                return sb == TsEnums.Side.BUY ? calcLongGroudRate() : calcMiddleGuardRate();
+            case F:
+                return sb == TsEnums.Side.BUY ? 0 : calcMiddleGuardRate();
+            case G:
+                return sb == TsEnums.Side.BUY ? 0 : calcMiddleGuardRate();
+            case H:
+                return sb == TsEnums.Side.BUY ? calcLongGroudRate() : calcMiddleGuardRate();
+        }
+        throw new BzkRuntimeException("not support " + state + " v:" + lastV + "POS:" + pos);
+    }
+
+
+    public Result calc() {
+        return Result.builder()
+                .buy(
+                        IGRate.builder()
+                                .investRate(calcInvestRate(TsEnums.Side.BUY))
+                                .guardRate(calcGroudRate(TsEnums.Side.BUY))
+                                .build()
+                )
+                .sell(
+                        IGRate.builder()
+                                .investRate(calcInvestRate(TsEnums.Side.SELL))
+                                .guardRate(calcGroudRate(TsEnums.Side.SELL))
+                                .build()
+                )
+
+    }
 
 }
