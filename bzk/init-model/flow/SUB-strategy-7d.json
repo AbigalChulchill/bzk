@@ -214,7 +214,7 @@
         "val" : "!javascript===\r\nconst exPrice = ${exPrice};\r\nconst nearPrice = ${minmax.near.val} + ${mean7d.val};\r\nconst dp = Math.abs( exPrice - nearPrice);\r\nconst ans= dp/nearPrice;\r\nans;"
       }, {
         "key" : "nearPrice ",
-        "val" : "const nearPrice = ${minmax.near.val} + ${mean7d.val};\r\nnearPrice;"
+        "val" : "!javascript===\nconst nearPrice = ${minmax.near.val} + ${mean7d.val};\nnearPrice;"
       } ]
     } ],
     "links" : [ {
