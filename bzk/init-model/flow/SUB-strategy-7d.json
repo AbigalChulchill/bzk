@@ -212,6 +212,9 @@
       }, {
         "key" : "curMoveRate",
         "val" : "!javascript===\r\nconst exPrice = ${exPrice};\r\nconst nearPrice = ${minmax.near.val} + ${mean7d.val};\r\nconst dp = Math.abs( exPrice - nearPrice);\r\nconst ans= dp/nearPrice;\r\nans;"
+      }, {
+        "key" : "nearPrice ",
+        "val" : "const nearPrice = ${minmax.near.val} + ${mean7d.val};\r\nnearPrice;"
       } ]
     } ],
     "links" : [ {
@@ -292,7 +295,7 @@
         "kind" : "NONE",
         "next" : null,
         "polyglot" : "js",
-        "code" : "const toSellOrBuy='${toSellOrBuy}';\r\nconst exPrice = ${exPrice};\r\nconst nearPrice = ${minmax.near.val};\r\n\r\nfunction calc(){\r\n    if(toSellOrBuy == 'SELL'){\r\n        return exPrice > nearPrice;\r\n    }else{\r\n        return exPrice < nearPrice;\r\n    }\r\n}\r\ncalc();"
+        "code" : "const toSellOrBuy='${toSellOrBuy}';\r\nconst exPrice = ${exPrice};\r\nconst nearPrice = ${nearPrice};\r\n\r\nfunction calc(){\r\n    if(toSellOrBuy == 'SELL'){\r\n        return exPrice > nearPrice;\r\n    }else{\r\n        return exPrice < nearPrice;\r\n    }\r\n}\r\ncalc();"
       },
       "transition" : {
         "toBox" : "",

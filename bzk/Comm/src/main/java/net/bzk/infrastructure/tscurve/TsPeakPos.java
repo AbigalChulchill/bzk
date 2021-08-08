@@ -82,20 +82,20 @@ public class TsPeakPos {
         throw new BzkRuntimeException("calcInvestRate not support " + state + " v:" + lastV);
     }
 
-    private float calcMiddleGuardRate() {
-        double s = Math.abs(lastV) - halfH;
-        let p = s / halfH;
-        return Math.pow(0.5, p);
-    }
+//    private float calcMiddleGuardRate() {
+//        double s = Math.abs(lastV) - halfH;
+//        let p = s / halfH;
+//        return Math.pow(0.5, p);
+//    }
 
-    function calcLongGroudRate() {
-        let absl = Math.abs(lastV);
-        let p = absl / h;
-        return Math.pow(0.5, p);
-    }
-
-    public Result calc() {
-
-    }
+//    function calcLongGroudRate() {
+//        let absl = Math.abs(lastV);
+//        let p = absl / h;
+//        return Math.pow(0.5, p);
+//    }
+//
+//    public Result calc() {
+//
+//    }
 
 }
