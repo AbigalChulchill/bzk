@@ -340,7 +340,7 @@
       "endTag" : null,
       "failEnd" : false,
       "endResultKeys" : [ ],
-      "resultCode" : "!javascript===\nconst side = ${toSellOrBuy};\nconst ans = {\n    side : side,\n    tag : \"MIN_MAX\"\n};\nans;"
+      "resultCode" : "!javascript===\nconst side = '${toSellOrBuy}';\nconst ans = {\n    side : side,\n    tag : \"MIN_MAX\"\n};\nans;"
     },
     "minLogLv" : "DEBUG"
   } ],
