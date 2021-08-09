@@ -180,7 +180,7 @@
       "kind" : "NONE",
       "next" : null,
       "left" : "${idx}",
-      "right" : "${quoteSize};\n",
+      "right" : "${quoteSize}\n",
       "type" : "lessthan"
     },
     "transition" : {
