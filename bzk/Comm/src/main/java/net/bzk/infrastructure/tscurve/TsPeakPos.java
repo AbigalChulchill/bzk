@@ -132,6 +132,11 @@ public class TsPeakPos {
                                 .guardRate(calcGroudRate(TsEnums.Side.SELL))
                                 .build()
                 )
+                .pos(pos)
+                .h(h)
+                .lastV(lastV)
+                .state(state)
+                .build();
 
     }
 
