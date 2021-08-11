@@ -10,10 +10,15 @@ import java.util.Map;
 @Data
 public class JobRunInfo {
     private int allCount;
+    private int runCount;
+    private int archiveCount;
     private Map<FlowRuner.State, Integer> stateCounts = new HashMap<>();
     private FlowRuner.State lastState;
     private String uid;
+    private String name;
     private boolean enable;
     private Date lastStartAt;
+
+    TODO sha1 saved model and run model
 
 }

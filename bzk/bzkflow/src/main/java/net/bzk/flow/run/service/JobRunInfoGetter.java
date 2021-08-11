@@ -1,6 +1,7 @@
 package net.bzk.flow.run.service;
 
 import net.bzk.flow.dto.JobRunInfo;
+import net.bzk.flow.model.Job;
 import net.bzk.flow.run.dao.ArchiveRunDao;
 import net.bzk.flow.run.dao.JobsDao;
 import net.bzk.flow.run.dao.RunFlowPoolDao;
@@ -9,7 +10,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
-import java.util.Comparator;
 
 @Service
 @Scope("prototype")
@@ -21,23 +21,25 @@ public class JobRunInfoGetter {
     @Inject
     private ArchiveRunDao archiveRunDao;
 
+    private Job job;
     private String uid;
     private JobRunInfo result = new JobRunInfo();
 
     JobRunInfoGetter init(String uid) {
         this.uid = uid;
+        this.job = dao.findById(uid).get();
         return this;
     }
 
     JobRunInfo fetch() {
         result.setUid(uid);
         result.setEnable(isEnable());
-        int all = collectStateCount();
-        result.setAllCount(all);
+        setupCount();
         var last = getLast();
-        if(last == null) return result;
+        if (last == null) return result;
         result.setLastState(last.getState());
         result.setLastStartAt(last.getStartAt());
+        result.setName(job.getModel().getName());
         return result;
     }
 
@@ -55,24 +57,28 @@ public class JobRunInfoGetter {
 
     }
 
-    private int collectStateCount() {
-        int all = 0;
+    private void setupCount() {
+        int all = 0, runc = 0, archivec = 0;
         var cmap = result.getStateCounts();
         for (var st : FlowRuner.State.values()) {
-            int c = getStateCount(st);
+            int rc = getRunStateCount(st);
+            int ac = getArchiveStateCount(st);
+            int sumc = rc + ac;
             int orgc = cmap.containsKey(st) ? cmap.get(st) : 0;
-            result.getStateCounts().put(st, orgc + c);
-            all += c;
+            result.getStateCounts().put(st, orgc + sumc);
+            all += sumc;
+            runc += rc;
+            archivec += ac;
         }
-        return all;
+        result.setArchiveCount(archivec);
+        result.setRunCount(runc);
+        result.setAllCount(all);
     }
 
-    private int getStateCount(FlowRuner.State state) {
-        int ans = 0;
-        long ai = archiveRunDao.countByFlowUidAndState(uid, state);
-        if (ai > 0) ans += ai;
-        if (result.isEnable()) ans += getRunStateCount(state);
-        return ans;
+
+    private int getArchiveStateCount(FlowRuner.State state) {
+        return (int) (long) archiveRunDao.countByFlowUidAndState(uid, state);
+
     }
 
     private boolean isEnable() {
