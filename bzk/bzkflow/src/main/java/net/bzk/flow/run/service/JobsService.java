@@ -83,6 +83,7 @@ public class JobsService {
     @Transactional
     public Job save(Flow f, boolean saveFile) throws IOException {
         var sfo = dao.findById(f.getUid());
+        f.setVersion(f.getVersion() + 1);
         Job sf = sfo.orElse(Job.gen(f));
         sf.setModel(f);
         if (saveBackInited && saveFile) {

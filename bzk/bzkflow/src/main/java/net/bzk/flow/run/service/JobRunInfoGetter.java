@@ -73,6 +73,8 @@ public class JobRunInfoGetter {
         result.setArchiveCount(archivec);
         result.setRunCount(runc);
         result.setAllCount(all);
+        result.setJobVersion(job.getModel().getVersion());
+        result.setRunVersion(runPoolDao.getPool(uid).getModel().getVersion());
     }
 
 

@@ -19,6 +19,7 @@ public class JobRunInfo {
     private boolean enable;
     private Date lastStartAt;
 
-    TODO sha1 saved model and run model
+    private int runVersion;
+    private int jobVersion;
 
 }
