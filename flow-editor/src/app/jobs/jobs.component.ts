@@ -88,16 +88,14 @@ export class JobsComponent implements OnInit, AfterViewInit {
   }
 
   private async loadArchiveRunInfos(sf: Job): Promise<void> {
-    let ris: JobRunInfo = await this.jobClient.getInfo(sf.uid).toPromise();
+    let ris: JobRunInfo = await this.jobClient.getInfo(sf.uid);
     this.archiveRunInfosMap.set(sf.uid,ris);
     this.reflesh(-1);
   }
 
   private getJobRunInfo(sf: Job):JobRunInfo{
     if( this.archiveRunInfosMap.has(sf.uid)){
-      let o = this.archiveRunInfosMap.get(sf.uid);
-      const ans = plainToClass(JobRunInfo, o);
-      return ans;
+      return this.archiveRunInfosMap.get(sf.uid);
     }
     return new JobRunInfo();
   }

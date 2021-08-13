@@ -36,10 +36,11 @@ public class JobRunInfoGetter {
         result.setEnable(isEnable());
         setupCount();
         var last = getLast();
-        if (last == null) return result;
-        result.setLastState(last.getState());
-        result.setLastStartAt(last.getStartAt());
         result.setName(job.getModel().getName());
+        if (last != null) {
+            result.setLastState(last.getState());
+            result.setLastStartAt(last.getStartAt());
+        }
         return result;
     }
 
@@ -74,7 +75,7 @@ public class JobRunInfoGetter {
         result.setRunCount(runc);
         result.setAllCount(all);
         result.setJobVersion(job.getModel().getVersion());
-        result.setRunVersion(runPoolDao.getPool(uid).getModel().getVersion());
+        if (isEnable()) result.setRunVersion(runPoolDao.getPool(uid).getModel().getVersion());
     }
 
 
@@ -88,8 +89,9 @@ public class JobRunInfoGetter {
     }
 
     private int getRunStateCount(FlowRuner.State state) {
-        return (int) runPoolDao
-                .getPool(uid)
+        var p = runPoolDao.getPool(uid);
+        if (p == null) return 0;
+        return (int) p
                 .listRunInfos(false)
                 .stream()
                 .filter(r -> r.getState() == state)

@@ -1,3 +1,8 @@
+<div class="alert alert-info" role="alert">
+  {{jobRunInfo.name}} <span *ngIf=" jobRunInfo.isShowRunVersion()" class="badge badge-secondary"> {{jobRunInfo.runVersion}} ➤</span> <span
+    class="badge badge-primary">{{jobRunInfo.jobVersion}}</span>
+</div>
+
 <div>
   <mat-label>Filter</mat-label>
   <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia" #input>
@@ -42,8 +47,8 @@
           <a type="button" class="badge badge-primary button"
             [routerLink]="['/',{ outlets: {primary:['job',uid,'log',row.runUid] , sidebar: null } }]"><i
               class="fas fa-terminal"></i></a>
-          <a type="button" href="javascript:void(0)" class="ml-1 badge badge-primary button" (click)="dialogService.openJsonViewer(ReadJsonProvide.gen(row.endResult))"
-            ><i class="fas fa-poll-h"></i></a>
+          <a type="button" href="javascript:void(0)" class="ml-1 badge badge-primary button"
+            (click)="dialogService.openJsonViewer(ReadJsonProvide.gen(row.endResult))"><i class="fas fa-poll-h"></i></a>
         </span>
 
       </td>

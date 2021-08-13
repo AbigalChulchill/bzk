@@ -1,3 +1,4 @@
+import { async } from '@angular/core/testing';
 import { Polyglot } from './../model/pojo/enums';
 import { Job } from './../model/job';
 import { HttpClient } from '@angular/common/http';
@@ -9,6 +10,7 @@ import { Flow } from '../model/flow';
 import { BzkUtils } from '../utils/bzk-utils';
 import { CommUtils } from '../utils/comm-utils';
 import { JobRunInfo } from '../dto/job-dto';
+import { plainToClass } from 'class-transformer';
 
 @Injectable({
   providedIn: 'root'
@@ -52,8 +54,11 @@ export class JobClientService {
     return this.httpClient.post<Job>(environment.apiHost + JobClientService.URL_PREFIX + 'new', null);
   }
 
-  public getInfo(uid: string): Observable<JobRunInfo> {
-    return this.httpClient.get<JobRunInfo>(environment.apiHost + JobClientService.URL_PREFIX + uid + '/info');
+  public async getInfo(uid: string): Promise<JobRunInfo> {
+    const o = await this.httpClient.get<JobRunInfo>(environment.apiHost + JobClientService.URL_PREFIX + uid + '/info').toPromise();
+    const ans = plainToClass(JobRunInfo, o);
+    return ans;
+
   }
 
 }
