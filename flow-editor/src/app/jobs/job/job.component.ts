@@ -1,3 +1,4 @@
+import { async } from '@angular/core/testing';
 import { JobClientService } from './../../service/job-client.service';
 import { DialogService } from './../../uikit/dialog.service';
 import { UrlParamsService } from './../../service/url-params.service';
@@ -50,7 +51,7 @@ export class JobComponent implements OnInit, AfterViewInit {
 
   async ngOnInit(): Promise<void> {
     this.uid = this.route.snapshot.paramMap.get('uid');
-    this.jobRunInfo = await this.jobClient.getInfo(this.uid);
+
     await this.reflesh();
   }
 
@@ -65,6 +66,7 @@ export class JobComponent implements OnInit, AfterViewInit {
 
   public async reflesh(): Promise<void> {
     const t = this.loading.show();
+    this.jobRunInfo = await this.jobClient.getInfo(this.uid);
     try {
       this.flowPoolInfo = await this.flowClient.getFlowPoolInfo(this.uid).toPromise();
       this.dataSource.data = this.genRows();
@@ -95,6 +97,12 @@ export class JobComponent implements OnInit, AfterViewInit {
     } catch (ex) {
     }
     return ans;
+  }
+
+  public async reloadPoolModel(): Promise<void>{
+    this.loading.show();
+    await this.flowClient.reloadPool(this.uid).toPromise();
+    this.reflesh();
   }
 
 }

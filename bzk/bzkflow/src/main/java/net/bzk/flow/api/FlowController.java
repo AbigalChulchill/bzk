@@ -103,9 +103,16 @@ public class FlowController {
 	}
 
 	@ResponseStatus(HttpStatus.OK)
+	@ResponseBody
 	@RequestMapping(value = "{uid}/run", method = RequestMethod.POST, params = "type=manual")
 	public RunInfo runManual(@PathVariable String uid) {
 		return runFlowService.runManual(uid).getInfo();
+	}
+
+	@ResponseStatus(HttpStatus.OK)
+	@RequestMapping(value = "pool/{uid}/reload", method = RequestMethod.POST)
+	public void reloadPool(@PathVariable String uid){
+		 runFlowService.reloadPool(uid);
 	}
 
 }

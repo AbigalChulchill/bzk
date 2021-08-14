@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import lombok.Setter;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,7 @@ import net.bzk.flow.run.flow.FlowRuner.RunInfo;
 public class RunFlowPool {
 
 	@Getter
+	@Setter
 	private Flow model;
 	@Inject
 	private RunFlowDao runFlowDao;

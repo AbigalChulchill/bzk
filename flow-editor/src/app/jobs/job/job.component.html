@@ -1,6 +1,7 @@
 <div class="alert alert-info" role="alert">
-  {{jobRunInfo.name}} <span *ngIf=" jobRunInfo.isShowRunVersion()" class="badge badge-secondary"> {{jobRunInfo.runVersion}} ➤</span> <span
-    class="badge badge-primary">{{jobRunInfo.jobVersion}}</span>
+  {{jobRunInfo.name}} <span *ngIf=" jobRunInfo.isShowRunVersion()" class="badge badge-secondary">
+    {{jobRunInfo.runVersion}} ➤</span> <span class="ml-1 badge badge-primary">{{jobRunInfo.jobVersion}}</span>
+    <button *ngIf=" jobRunInfo.isShowRunVersion()" (click)="reloadPoolModel()" class="badge badge-warning  ml-2"><i class="fas fa-sync-alt"></i></button>
 </div>
 
 <div>

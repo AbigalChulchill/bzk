@@ -58,5 +58,9 @@ export class FlowClientService {
     return this.httpClient.post<void>(environment.apiHost + FlowClientService.URL_PREFIX + 'pool/' + uid + '/remove?type=force', null);
   }
 
+  public reloadPool(uid: string): Observable<void> {
+    return this.httpClient.post<void>(environment.apiHost + FlowClientService.URL_PREFIX + 'pool/' + uid + '/reload', null);
+  }
+
 
 }
