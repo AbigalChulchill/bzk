@@ -1,6 +1,7 @@
 package net.bzk.flow.dto;
 
 import lombok.Data;
+import net.bzk.flow.model.Flow;
 import net.bzk.flow.run.flow.FlowRuner;
 
 import java.util.Date;
@@ -21,5 +22,7 @@ public class JobRunInfo {
 
     private int runVersion;
     private int jobVersion;
+
+    private Flow model;
 
 }

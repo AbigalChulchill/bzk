@@ -75,6 +75,7 @@ public class JobRunInfoGetter {
         result.setRunCount(runc);
         result.setAllCount(all);
         result.setJobVersion(job.getModel().getVersion());
+        result.setModel(job.getModel());
         if (isEnable()) result.setRunVersion(runPoolDao.getPool(uid).getModel().getVersion());
     }
 

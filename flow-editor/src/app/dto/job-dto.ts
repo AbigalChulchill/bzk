@@ -1,3 +1,4 @@
+import { Flow } from "../model/flow";
 import { FlowState } from "./flow-pool-info";
 
 export class JobRunInfo {
@@ -11,6 +12,7 @@ export class JobRunInfo {
   public name: string;
   public runVersion: number;
   public jobVersion: number;
+  public model: Flow;
 
   public getStateCount(st: FlowState): number {
     if (!this.stateCounts) return 0;

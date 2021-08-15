@@ -57,6 +57,7 @@ export class JobClientService {
   public async getInfo(uid: string): Promise<JobRunInfo> {
     const o = await this.httpClient.get<JobRunInfo>(environment.apiHost + JobClientService.URL_PREFIX + uid + '/info').toPromise();
     const ans = plainToClass(JobRunInfo, o);
+    ans.model = BzkUtils.fitClzz(Flow, ans.model);
     return ans;
 
   }
