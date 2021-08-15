@@ -30,7 +30,7 @@ export class JobComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
   public uid = '';
   public flowPoolInfo: FlowPoolInfo;
-  public jobRunInfo: JobRunInfo;
+  public jobRunInfo=new  JobRunInfo();
   private archiveRunInfos = new Array<RunInfo>();
 
   constructor(
@@ -79,7 +79,7 @@ export class JobComponent implements OnInit, AfterViewInit {
 
   private genRows(): Array<Row> {
     const ans = new Array<Row>();
-    if (this.flowPoolInfo || this.flowPoolInfo.runInfos) {
+    if (this.flowPoolInfo && this.flowPoolInfo.runInfos) {
       for (const ri of this.flowPoolInfo.runInfos) {
         ans.push(this.genRow(ri));
       }

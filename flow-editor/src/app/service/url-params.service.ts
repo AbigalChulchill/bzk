@@ -8,7 +8,7 @@ import { ListLogType } from './run-log-client.service';
 export class UrlParamsService {
 
   public path: string;
-  private route:ActivatedRoute;
+  private route: ActivatedRoute;
 
   constructor(
     private router: Router
@@ -64,7 +64,11 @@ export class UrlParamsService {
   }
 
   public genRunLogUrl(jonUid: string, queryUid: string, lt: ListLogType): string {
-      return `/job/${jonUid}/log/${queryUid}?listType=${lt}`;
+    return `/job/${jonUid}/log/${queryUid}?listType=${lt}`;
+  }
+
+  public genJobUrl(jonUid: string,): string {
+    return `/job/${jonUid}`;
   }
 
 }

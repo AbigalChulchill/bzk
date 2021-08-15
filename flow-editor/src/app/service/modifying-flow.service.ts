@@ -111,10 +111,10 @@ export class ModifyingFlowService {
     await this.flowClient.registerFlowByUid(this.modelobs.getModel().uid).toPromise();
   }
 
-  public async testFlow(): Promise<void> {
+  public async runManual(): Promise<void> {
     if (!this.modelobs.getModel()) { throw new Error('null the model'); }
     await this.updateRemote()
-    const resp= await this.flowClient.testFlow(this.modelobs.getModel().uid).toPromise();
+    const resp= await this.flowClient.runManual(this.modelobs.getModel().uid).toPromise();
     this.dialogService.openRunLoag(true,resp.uid, ListLogType.runflow);
   }
 

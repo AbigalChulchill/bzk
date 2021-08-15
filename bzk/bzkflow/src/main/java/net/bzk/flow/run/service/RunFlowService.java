@@ -5,6 +5,8 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import net.bzk.flow.model.Action;
+import net.bzk.flow.run.dao.*;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,10 +17,6 @@ import org.springframework.stereotype.Service;
 import net.bzk.flow.api.dto.FlowPoolInfo;
 import net.bzk.flow.model.Flow;
 import net.bzk.flow.model.Flow.ActionFindInfo;
-import net.bzk.flow.run.dao.JobsDao;
-import net.bzk.flow.run.dao.RunBoxDao;
-import net.bzk.flow.run.dao.RunFlowDao;
-import net.bzk.flow.run.dao.RunFlowPoolDao;
 import net.bzk.flow.run.flow.BoxRuner;
 import net.bzk.flow.run.flow.FlowRuner;
 import net.bzk.flow.run.flow.FlowRuner.RunInfo;
@@ -35,6 +33,8 @@ public class RunFlowService implements ApplicationListener<InitFlowEvent> {
     private RunBoxDao boxDao;
     @Inject
     private JobsDao jobsDao;
+    @Inject
+    private ArchiveRunDao archiveRunDao;
 
     @Value("${init.data.autoegister}")
     private boolean autoegister;
@@ -50,22 +50,8 @@ public class RunFlowService implements ApplicationListener<InitFlowEvent> {
         fs.forEach(this::register);
     }
 
-    public RunInfo test(String entryUid, List<Flow> fs) {
-        Flow ef = fs.stream().filter(f -> StringUtils.equals(f.getUid(), entryUid)).findFirst().get();
-        fs.remove(ef);
-        fs.forEach(f -> {
-            runPoolDao.create(f);
-        });
-        var fr = dao.create(ef, r -> {
-        });
-        fr.run();
-        fs.forEach(f -> {
-            runPoolDao.forceRemove(f.getUid());
-        });
-        return fr.getInfo();
-    }
-
     public FlowRuner runManual(String uid) {
+        registerDepends(uid);
         var p = runPoolDao.getPool(uid);
         return p.createAndStart();
     }
@@ -76,8 +62,8 @@ public class RunFlowService implements ApplicationListener<InitFlowEvent> {
     }
 
     public List<RunInfo> listArchiveRunInfo(String uid) {
-        var p = runPoolDao.getPool(uid);
-        return p.listArchiveRunInfo();
+        return archiveRunDao.findByFlowUid(uid).stream().map(ar -> ar.getInfo())
+                .collect(Collectors.toList());
     }
 
     public FlowPoolInfo getFlowPoolInfo(String uid) {
@@ -93,6 +79,10 @@ public class RunFlowService implements ApplicationListener<InitFlowEvent> {
         Flow flow = jobsDao.findById(flowUid).get().getModel();
         String uid = RandomStringUtils.randomAlphanumeric(64);
         ActionFindInfo afi = flow.getAction(actionUid);
+        if (afi.getAction() instanceof Action.SubFlowAction) {
+            Action.SubFlowAction sfa = (Action.SubFlowAction) afi.getAction();
+            registerDepends(sfa.getFlowUid());
+        }
         flow.setUid(uid);
         flow.setVars(afi.getAction().getDevFlowVars());
         FlowRuner fr = dao.create(flow, r -> {

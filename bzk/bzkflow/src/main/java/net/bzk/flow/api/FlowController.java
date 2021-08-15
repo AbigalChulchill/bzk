@@ -95,15 +95,6 @@ public class FlowController {
 
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
-	@RequestMapping(value = "{uid}/test", method = RequestMethod.POST)
-	public RunInfo testFlow(@PathVariable String uid) {
-		var sfs = jobsDao.listDepends(uid);
-		List<Flow> fs = sfs.stream().map(sf -> sf.getModel()).collect(Collectors.toList());
-		return runFlowService.test(uid, fs);
-	}
-
-	@ResponseStatus(HttpStatus.OK)
-	@ResponseBody
 	@RequestMapping(value = "{uid}/run", method = RequestMethod.POST, params = "type=manual")
 	public RunInfo runManual(@PathVariable String uid) {
 		return runFlowService.runManual(uid).getInfo();

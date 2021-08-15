@@ -61,7 +61,11 @@ export class DialogService {
     const cbc: RunLogComponent = df.componentInstance;
     cbc.listType = type;
     cbc.queryUid = uid;
+  }
 
+  public openJob(jobUid: string): void {
+    const u = this.urlParams.genJobUrl(jobUid);
+    window.open(u, "_blank");
   }
 
   // cdk-overlay-1

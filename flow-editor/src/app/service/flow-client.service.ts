@@ -38,10 +38,6 @@ export class FlowClientService {
     return this.httpClient.post<RunInfo>(environment.apiHost + FlowClientService.URL_PREFIX + `${fuid}/run?type=manual`, null);
   }
 
-  public testFlow(eUid: string): Observable<RunInfo> {
-    return this.httpClient.post<RunInfo>(environment.apiHost + FlowClientService.URL_PREFIX + `${eUid}/test`, null);
-  }
-
   public listFlowPoolInfo(): Observable<Array<FlowPoolInfo>> {
     return this.httpClient.get<Array<FlowPoolInfo>>(environment.apiHost + FlowClientService.URL_PREFIX);
   }

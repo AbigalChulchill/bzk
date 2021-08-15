@@ -53,12 +53,17 @@ export class FlowDesignMenuService {
     });
   }
 
-  public testRun():void{
-    this.modifyingFlow.testFlow();
+  public runManual():void{
+    this.modifyingFlow.runManual();
     this.toast.twinkle({
       title: 'RUN!',
       msg: 'test submmited'
     });
+  }
+
+  public showLog():void{
+    const m= this.modifyingFlow.modelobs.getModel();
+    this.dialog.openJob(m.uid);
   }
 
   private async waitLoad(task: () => Promise<void>): Promise<void> {

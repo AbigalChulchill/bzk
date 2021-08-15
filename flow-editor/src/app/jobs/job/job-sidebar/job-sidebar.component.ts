@@ -6,6 +6,8 @@ import { FlowPoolInfo } from 'src/app/dto/flow-pool-info';
 import { FlowClientService } from 'src/app/service/flow-client.service';
 import { UrlParamsService } from 'src/app/service/url-params.service';
 import { ModifyingFlowService } from 'src/app/service/modifying-flow.service';
+import { JobRunInfo } from 'src/app/dto/job-dto';
+import { JobClientService } from 'src/app/service/job-client.service';
 
 @Component({
   selector: 'app-job-sidebar',
@@ -15,12 +17,13 @@ import { ModifyingFlowService } from 'src/app/service/modifying-flow.service';
 export class JobSidebarComponent implements OnInit {
 
   public uid = '';
-  public flowPoolInfo: FlowPoolInfo;
+  public jobRunInfo=new  JobRunInfo();
 
   constructor(
     public urlParam: UrlParamsService,
     private route: ActivatedRoute,
     private flowClient: FlowClientService,
+    private jobClient: JobClientService,
     private loading: LoadingService,
     public modifyingFlow: ModifyingFlowService,
   ) { }
@@ -34,7 +37,7 @@ export class JobSidebarComponent implements OnInit {
     const t = this.loading.show();
     await a();
     try {
-      this.flowPoolInfo = await this.flowClient.getFlowPoolInfo(this.uid).toPromise();
+      this.jobRunInfo = await  this.jobClient.getInfo(this.uid);
     } catch (e) {
 
     }
@@ -42,7 +45,7 @@ export class JobSidebarComponent implements OnInit {
   }
 
   public isEnable(): boolean {
-    return this.flowPoolInfo != null;
+    return this.jobRunInfo.enable;
   }
 
   public runManual(): void {
