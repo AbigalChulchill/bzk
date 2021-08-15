@@ -166,7 +166,7 @@
         "val" : "!javascript===\n${idx}+1;"
       }, {
         "key" : "oneInvestedRate",
-        "val" : "!javascript===\nconst rate= ${investedRate};\nconst quotes = ${quotes}\nconst sr = rate/quotes.length;\nsr;"
+        "val" : "!javascript===\nconst rate= ${investedRate};\nconst sr = rate/${quoteSize};\nsr;"
       } ]
     } ],
     "links" : [ ],
@@ -208,11 +208,11 @@
     "requiredKeys" : [ "side", "symbol", "investedRate", "guardRange", "currentMove", "tags", "trigger", "quoteSize", "quoteBase", "quoteRange" ],
     "outputKeys" : [ ]
   },
-  "logEncryptKey" : "1234567890123456",
   "threadCfg" : {
     "corePoolSize" : 10,
     "maximumPoolSize" : 50,
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
-  }
+  },
+  "version" : 2
 }
