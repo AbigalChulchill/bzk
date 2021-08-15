@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router, NavigationEnd, ActivatedRoute, ParamMap } from '@angular/router';
+import { ListLogType } from './run-log-client.service';
 
 @Injectable({
   providedIn: 'root'
@@ -7,11 +8,10 @@ import { Router, NavigationEnd, ActivatedRoute, ParamMap } from '@angular/router
 export class UrlParamsService {
 
   public path: string;
-
+  private route:ActivatedRoute;
 
   constructor(
-    private router: Router,
-    private route: ActivatedRoute
+    private router: Router
   ) {
 
     router.events.forEach((event) => {
@@ -19,6 +19,7 @@ export class UrlParamsService {
         console.log('NavigationEnd:' + event);
         this.path = event.url;
         console.log('this.path:' + this.path);
+        this.route = router.routerState.root.firstChild;
       }
     });
 
@@ -48,6 +49,22 @@ export class UrlParamsService {
 
   public hasGitToken(): boolean {
     return this.params().has('token');
+  }
+
+  public getQueryUid(): string {
+    return this.route.snapshot.paramMap.get('queryUid');
+  }
+
+  public getListType(): ListLogType {
+    const key = 'listType';
+    if (this.route.snapshot.queryParamMap.has(key)) {
+      return this.route.snapshot.queryParamMap.get(key) as ListLogType;
+    }
+    return ListLogType.runflow;
+  }
+
+  public genRunLogUrl(jonUid: string, queryUid: string, lt: ListLogType): string {
+      return `/job/${jonUid}/log/${queryUid}?listType=${lt}`;
   }
 
 }

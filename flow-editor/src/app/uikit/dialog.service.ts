@@ -1,3 +1,4 @@
+import { UrlParamsService } from 'src/app/service/url-params.service';
 import { RunLogComponent } from './../run-log/run-log.component';
 import { CloudBackupListComponent } from './cloud-backup-list/cloud-backup-list.component';
 import { TextProvide } from './../infrastructure/meta';
@@ -18,7 +19,8 @@ export class DialogService {
   private dialogRef: MatDialogRef<any>;
 
   constructor(
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private urlParams: UrlParamsService
   ) { }
 
   public open(dialogC: any): MatDialogRef<any> {
@@ -47,7 +49,12 @@ export class DialogService {
     cbc.onImportDoneAction = impCB;
   }
 
-  public openRunLoag(uid: string, type: ListLogType): void {
+  public openRunLoag(newTab: boolean, uid: string, type: ListLogType): void {
+    if (newTab) {
+      const u = this.urlParams.genRunLogUrl(null, uid, type);
+      window.open(u, "_blank");
+      return;
+    }
     const cfg = new MatDialogConfig();
     cfg.minHeight = 500;
     const df = this.dialog.open(RunLogComponent, cfg);

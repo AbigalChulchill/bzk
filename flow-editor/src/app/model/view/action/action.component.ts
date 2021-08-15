@@ -66,7 +66,7 @@ export class ActionComponent implements OnInit, ClazzExComponent {
   }
 
   public onOpenLogDialog(): void {
-    this.dialogService.openRunLoag(this.action.uid, ListLogType.action);
+    this.dialogService.openRunLoag(true,this.action.uid, ListLogType.action);
   }
 
 

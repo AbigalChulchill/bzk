@@ -469,6 +469,10 @@ export class MailAction extends Action {
 
 }
 
+@PropClazz({
+  title: 'SysAction',
+  exView: 'ActionComponent'
+})
 @OTypeClass({
   clazz: 'net.bzk.flow.model.Action$SysAction'
 })
@@ -486,7 +490,10 @@ export class SysAction extends Action {
   public data ='{}';
 }
 
-
+@PropClazz({
+  title: 'EventAction',
+  exView: 'ActionComponent'
+})
 @OTypeClass({
   clazz: 'net.bzk.flow.model.Action$EventAction'
 })

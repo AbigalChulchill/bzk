@@ -115,7 +115,7 @@ export class ModifyingFlowService {
     if (!this.modelobs.getModel()) { throw new Error('null the model'); }
     await this.updateRemote()
     const resp= await this.flowClient.testFlow(this.modelobs.getModel().uid).toPromise();
-    this.dialogService.openRunLoag(resp.uid, ListLogType.runflow);
+    this.dialogService.openRunLoag(true,resp.uid, ListLogType.runflow);
   }
 
 
