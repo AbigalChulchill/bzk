@@ -82,7 +82,7 @@ public class RunFlowService implements ApplicationListener<InitFlowEvent> {
 
     public FlowPoolInfo getFlowPoolInfo(String uid) {
         var p = runPoolDao.getPool(uid);
-        return new FlowPoolInfo(p.getModel(), p.listRunInfos(true));
+        return new FlowPoolInfo(p.getModel(), p.listRunInfos(false));
     }
 
     public void forceRemove(String fuid) {

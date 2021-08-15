@@ -31,6 +31,7 @@ export class JobComponent implements OnInit, AfterViewInit {
   public uid = '';
   public flowPoolInfo: FlowPoolInfo;
   public jobRunInfo: JobRunInfo;
+  private archiveRunInfos = new Array<RunInfo>();
 
   constructor(
     private loading: LoadingService,
@@ -67,19 +68,23 @@ export class JobComponent implements OnInit, AfterViewInit {
   public async reflesh(): Promise<void> {
     const t = this.loading.show();
     this.jobRunInfo = await this.jobClient.getInfo(this.uid);
-    try {
+    this.archiveRunInfos = await this.flowClient.listArchiveRunInfo(this.uid).toPromise();
+    if (this.jobRunInfo.enable) {
       this.flowPoolInfo = await this.flowClient.getFlowPoolInfo(this.uid).toPromise();
-      this.dataSource.data = this.genRows();
-    } catch (e) {
-
     }
+
+    this.dataSource.data = this.genRows();
     this.loading.dismiss(t);
   }
 
   private genRows(): Array<Row> {
     const ans = new Array<Row>();
-    if (!this.flowPoolInfo || !this.flowPoolInfo.runInfos) return ans;
-    for (const ri of this.flowPoolInfo.runInfos) {
+    if (this.flowPoolInfo || this.flowPoolInfo.runInfos) {
+      for (const ri of this.flowPoolInfo.runInfos) {
+        ans.push(this.genRow(ri));
+      }
+    }
+    for (const ri of this.archiveRunInfos) {
       ans.push(this.genRow(ri));
     }
     return ans;
@@ -99,7 +104,7 @@ export class JobComponent implements OnInit, AfterViewInit {
     return ans;
   }
 
-  public async reloadPoolModel(): Promise<void>{
+  public async reloadPoolModel(): Promise<void> {
     this.loading.show();
     await this.flowClient.reloadPool(this.uid).toPromise();
     this.reflesh();

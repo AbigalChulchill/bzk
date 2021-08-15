@@ -16,7 +16,7 @@ export class RunLogComponent implements OnInit {
   public showType = ShowType.Vars;
   public listType = ListLogType.runflow;
   public queryUid = '';
-  public jobUid = ''
+  // public jobUid = ''
   public list = new Array<RunLog>();
   public runState: RunState = null;
 
@@ -29,9 +29,6 @@ export class RunLogComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     if (StringUtils.isBlank(this.queryUid)) {
       this.queryUid = this.route.snapshot.paramMap.get('runFlowUid');
-    }
-    if (StringUtils.isBlank(this.jobUid)) {
-      this.jobUid = this.route.snapshot.paramMap.get('uid');
     }
     this.reflesh();
   }
