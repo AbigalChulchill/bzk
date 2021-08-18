@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 import javax.transaction.NotSupportedException;
+import javax.transaction.Transactional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Scope;
@@ -38,6 +39,7 @@ public class SysActionCall extends ActionCall<SysAction> {
 		}
 		throw new NotSupportedException("this "+func+" not suport!");
 	}
+
 
 	private void deleteLogs(Map<String, ?> m) {
 		Date date = Date.from(Instant.parse(m.get("date").toString()));
