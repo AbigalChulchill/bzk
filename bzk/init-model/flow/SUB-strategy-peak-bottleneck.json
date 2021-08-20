@@ -155,12 +155,11 @@
   "varCfgNames" : [ ],
   "vars" : { },
   "entry" : {
-    "clazz" : "net.bzk.flow.model.Entry$FixedRateEntry",
+    "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
     "boxUid" : "MINMAX52of8",
     "autoRegister" : false,
-    "period" : -1,
-    "unit" : "SECONDS",
-    "initialDelay" : 2
+    "requiredKeys" : [ "__ALL__" ],
+    "outputKeys" : [ ]
   },
   "threadCfg" : {
     "corePoolSize" : 10,
@@ -168,5 +167,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 2
+  "version" : 4
 }

@@ -103,20 +103,19 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
 		}
 	}
 
-	/**
-	 * @param exp {@link "https://github.com/json-path/JsonPath"}
-	 * @return
-	 */
-	public Object findByJsonPath(String exp) {
-		return JsonUtils.findByJsonPath(this, exp);
-	}
 
 	public Object getByPath(String path) {
+		if (StringUtils.equals(path,ALL_SELECT)) return this;
 		return findByPath(path, false, (jm, k) -> jm.get(k));
 	}
 
 	@SuppressWarnings("unchecked")
 	public void putByPath(String path, Object o) {
+		if (StringUtils.equals(path,ALL_SELECT)) {
+			if(!(o instanceof Map)) throw new BzkRuntimeException(o +"is not map");
+			this.putAll((Map<? extends String, ?>) o);
+			return;
+		}
 		findByPath(path, true, (jm, k) -> {
 			try {
 				if(o == null) {
@@ -138,15 +137,11 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
 			return ca.accept(this, path);
 		}
 		Map jm = this;
-		if (StringUtils.equals(path,ALL_SELECT)) return jm;
 		int i = 0;
 
 		while (i < ps.length - 1) {
 			if (createPath && (!jm.containsKey(ps[i]) || jm.get(ps[i]) == null)) {
 				jm.put(ps[i], new JsonMap());
-			}
-			if (isJsonPathExp(ps[i])) {
-				return findByJsonPath(ps, i, jm);
 			}
 			if (jm == null)
 				return null;
@@ -157,22 +152,6 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
 		if (jm == null)
 			return null;
 		return ca.accept(jm, ps[i]);
-	}
-
-	private Object findByJsonPath(String[] ps, int sti, Map jm) {
-		String orgQ = "";
-		for (int i = sti; i < ps.length; i++) {
-			if (i != sti)
-				orgQ += pathDot;
-			orgQ += ps[i];
-		}
-		return JsonUtils.findByJsonPath(jm, orgQ);
-	}
-
-	private boolean isJsonPathExp(String path) {
-		if (StringUtils.isBlank(path))
-			return false;
-		return path.startsWith("$");
 	}
 
 	@FunctionalInterface
@@ -220,7 +199,6 @@ public class JsonMap extends ConcurrentHashMap<String, Object> {
 			ans.putAll((Map) o);
 			return ans;
 		}
-//		return mapper.map(o, JsonMap.class);
 		return ObjUtils.convertByJson(o, JsonMap.class);
 	}
 

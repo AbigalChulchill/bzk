@@ -147,10 +147,10 @@
       "enable" : true,
       "devBoxVars" : { },
       "devFlowVars" : { },
-      "flowUid" : "fdz6bWtmfHPV",
+      "flowUid" : "SSPBbWtmfHPV",
       "asynced" : false,
       "inputData" : [ {
-        "key" : "data",
+        "key" : "__ALL__",
         "val" : "${~__ALL__}"
       } ],
       "outputReflects" : [ ]
@@ -183,5 +183,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 3
+  "version" : 8
 }

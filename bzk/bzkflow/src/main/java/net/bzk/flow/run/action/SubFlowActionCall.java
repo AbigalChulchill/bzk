@@ -76,7 +76,7 @@ public class SubFlowActionCall extends ActionCall<SubFlowAction> {
         for (var kp : kvs) {
             Object rv = getPolyglotEngine().parseScriptbleText(kp.getVal(), Object.class);
             var kinfo = VarLv.checkLvByPrefix(kp.getKey());
-            fr.getVars().put(kinfo.getKey(), rv);
+            fr.getVars().putByPath(kinfo.getKey(),rv);
         }
     }
 
