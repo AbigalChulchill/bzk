@@ -45,7 +45,7 @@
           "lv" : "not_specify",
           "key" : "__ALL__"
         } ],
-        "resultCode" : "TimeOver12H"
+        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"TimeOver12H\"\n}"
       },
       "enable" : true
     }, {
@@ -68,7 +68,7 @@
           "lv" : "not_specify",
           "key" : "__ALL__"
         } ],
-        "resultCode" : "P_TH"
+        "resultCode" : "{\r\n  \"ordered\": false,\r\n  \"breakName\": \"P_TH\"\r\n}"
       },
       "enable" : true
     }, {
@@ -91,7 +91,7 @@
           "lv" : "not_specify",
           "key" : "__ALL__"
         } ],
-        "resultCode" : "TimeLess30m"
+        "resultCode" : "{\r\n  \"ordered\": false,\r\n  \"breakName\": \"TimeLess30m\"\r\n}"
       },
       "enable" : true
     }, {
@@ -113,7 +113,7 @@
           "lv" : "not_specify",
           "key" : "__ALL__"
         } ],
-        "resultCode" : "OverMinOrMax"
+        "resultCode" : "{\r\n  \"ordered\": false,\r\n  \"breakName\": \"OverMinOrMax\"\r\n}"
       },
       "enable" : true
     }, {
@@ -136,7 +136,7 @@
           "lv" : "not_specify",
           "key" : "__ALL__"
         } ],
-        "resultCode" : "ValueChangeOver"
+        "resultCode" : "{\r\n  \"ordered\": false,\r\n  \"breakName\": \"ValueChangeOver\"\r\n}"
       },
       "enable" : true
     } ],
@@ -149,6 +149,65 @@
       "failEnd" : false,
       "endResultKeys" : [ ],
       "resultCode" : "!javascript===\nconst side = '${toSellOrBuy}';\nconst ans = {\n    side : side,\n    tag : \"MIN_MAX\"\n};\nans;"
+    },
+    "minLogLv" : "DEBUG"
+  }, {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "iQ07yoOBfiPS",
+    "name" : "CallOrder",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "3gcfLj4AEmmZ",
+      "name" : "ORDER",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flowUid" : "02eQyaMwyojZ",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "side",
+        "val" : "${__pk_result.side}"
+      }, {
+        "key" : "symbol",
+        "val" : "${symbol}"
+      }, {
+        "key" : "investedRate",
+        "val" : "0.005"
+      }, {
+        "key" : "guardRange",
+        "val" : "0.005"
+      }, {
+        "key" : "currentMove",
+        "val" : "0"
+      }, {
+        "key" : "tags",
+        "val" : "[\"${__pk_result.tag}\"]"
+      }, {
+        "key" : "trigger",
+        "val" : "${__pk_result.tag}"
+      }, {
+        "key" : "quoteSize",
+        "val" : "5"
+      }, {
+        "key" : "quoteBase",
+        "val" : "!javascript===\nconst dp = ${minmax.near.val};\nconst mean = ${mean7d.val};\nconst ans = mean + dp;\nans;"
+      }, {
+        "key" : "quoteRange",
+        "val" : "0.03"
+      } ],
+      "outputReflects" : [ ]
+    } ],
+    "links" : [ ],
+    "vars" : { },
+    "taskSort" : [ "3gcfLj4AEmmZ" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "END",
+      "failEnd" : false,
+      "endResultKeys" : [ ],
+      "resultCode" : ""
     },
     "minLogLv" : "DEBUG"
   } ],
@@ -167,5 +226,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 4
+  "version" : 8
 }

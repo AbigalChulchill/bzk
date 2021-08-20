@@ -122,9 +122,7 @@
       } ]
     } ],
     "links" : [ ],
-    "vars" : {
-      "symbol" : "BTC"
-    },
+    "vars" : { },
     "taskSort" : [ "vfG3Fh5HNVce", "TvxsY0dT0Zrd", "IeJ9bGECoNPn", "i9QUdvKOUXPY", "0eatfgv9HoEq" ],
     "whileJudgment" : null,
     "transition" : {
@@ -153,15 +151,40 @@
         "key" : "__ALL__",
         "val" : "${~__ALL__}"
       } ],
-      "outputReflects" : [ ]
+      "outputReflects" : [ {
+        "srcKey" : "__pk_result",
+        "toKey" : {
+          "lv" : "not_specify",
+          "key" : "pkResult"
+        }
+      } ]
     } ],
-    "links" : [ ],
+    "links" : [ {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "Tssxw9Yo5Ded",
+      "name" : "Break-1",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
+        "kind" : "NONE",
+        "next" : null,
+        "polyglot" : "js",
+        "code" : "${pkResult.ordered}"
+      },
+      "transition" : {
+        "toBox" : "",
+        "endTag" : "${symbol} MIN_MAX Ordered",
+        "failEnd" : false,
+        "endResultKeys" : [ ],
+        "resultCode" : ""
+      },
+      "enable" : true
+    } ],
     "vars" : { },
-    "taskSort" : [ "rst8GpNpDvu9" ],
+    "taskSort" : [ "rst8GpNpDvu9", "Tssxw9Yo5Ded" ],
     "whileJudgment" : null,
     "transition" : {
-      "toBox" : "iQ07yoOBfiPS",
-      "endTag" : null,
+      "toBox" : "",
+      "endTag" : "${symbol} NOT Ordered",
       "failEnd" : false,
       "endResultKeys" : [ ],
       "resultCode" : "!javascript===\nconst side = '${toSellOrBuy}';\nconst ans = {\n    side : side,\n    tag : \"MIN_MAX\"\n};\nans;"
@@ -169,7 +192,9 @@
     "minLogLv" : "DEBUG"
   } ],
   "varCfgNames" : [ "binance.json" ],
-  "vars" : { },
+  "vars" : {
+    "symbol" : "BTC"
+  },
   "entry" : {
     "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
     "boxUid" : "2yrIrBRsEZHo",
@@ -183,5 +208,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 8
+  "version" : 13
 }
