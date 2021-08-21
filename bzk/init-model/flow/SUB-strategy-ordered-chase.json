@@ -1,0 +1,61 @@
+{
+  "clazz" : "net.bzk.flow.model.Flow",
+  "uid" : "n4SorLlIyBtx",
+  "name" : "SUB-strategy-ordered-chase",
+  "boxs" : [ {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "ipoBMfL5ITYO",
+    "name" : "Box",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "GrYYvxqKYqvV",
+      "name" : "GetFILLEDOrder",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : {
+        "symbol" : "BTC"
+      },
+      "url" : "${binance.proxyHost}proxy",
+      "uriVariables" : { },
+      "body" : "!javascript===\r\nvar start = new Date();\r\nstart.setHours(start.getHours()-8);\r\nvar body= {\r\n    \"name\": \"get_all_orders\",\r\n    \"apiKey\":\"${binance.key}\",\r\n    \"secret\":\"${binance.secret}\",\r\n    \"symbol\": \"${symbol}\",\r\n    \"status\":\"FILLED\",\r\n    \"orderType\":\"LIMIT\",\r\n    \"updateStartAt\":start.toISOString()\r\n};\r\nbody;",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : "FILLEDInfo"
+      }
+    } ],
+    "links" : [ ],
+    "vars" : { },
+    "taskSort" : [ "GrYYvxqKYqvV" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "TODO Why",
+      "failEnd" : false,
+      "endResultKeys" : [ ],
+      "resultCode" : ""
+    },
+    "minLogLv" : "DEBUG"
+  } ],
+  "varCfgNames" : [ "binance.json" ],
+  "vars" : {
+    "symbol" : "BTC"
+  },
+  "entry" : {
+    "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
+    "boxUid" : "ipoBMfL5ITYO",
+    "autoRegister" : false,
+    "requiredKeys" : [ ],
+    "outputKeys" : [ ]
+  },
+  "threadCfg" : {
+    "corePoolSize" : 10,
+    "maximumPoolSize" : 50,
+    "keepAliveTime" : 500,
+    "aliveUnit" : "MINUTES"
+  },
+  "version" : 4
+}
