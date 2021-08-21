@@ -11,6 +11,7 @@
       "uid" : "SeLyuTfm6Sj5",
       "name" : "PostAPIBuy",
       "tryErrorble" : true,
+      "enable" : true,
       "devBoxVars" : { },
       "devFlowVars" : { },
       "url" : "${binance.proxyHost}proxy",
@@ -28,6 +29,7 @@
       "uid" : "MchPyIhpKH9G",
       "name" : "LoopIdx",
       "tryErrorble" : false,
+      "enable" : true,
       "devBoxVars" : { },
       "devFlowVars" : { },
       "flatData" : [ {
@@ -42,11 +44,12 @@
       "uid" : "GxsPPJaDxutP",
       "name" : "PostAPISell",
       "tryErrorble" : true,
+      "enable" : true,
       "devBoxVars" : { },
       "devFlowVars" : { },
       "url" : "${binance.proxyHost}proxy",
       "uriVariables" : { },
-      "body" : "{\n    \"name\": \"profit/cut\",\n    \"apiKey\":\"${binance.key}\",\n    \"secret\":\"${binance.secret}\",\n    \"profitRate\": 0.1,\n    \"topRate\": 0.886,\n    \"bottomRate\":-0.01,\n    \"cutCount\": 5,\n    \"stepMoveOnRate\":0.0002,\n    \"symbol\":\"${curSBL}\",\n    \"positionSide\":\"SHORT\"\n}",
+      "body" : "{\n    \"name\": \"profit/cut\",\n    \"apiKey\":\"${binance.key}\",\n    \"secret\":\"${binance.secret}\",\n    \"profitRate\": 0.1,\n    \"topRate\": 0.886,\n    \"bottomRate\":-0.001,\n    \"cutCount\": 5,\n    \"stepMoveOnRate\":0.0002,\n    \"symbol\":\"${curSBL}\",\n    \"positionSide\":\"SHORT\"\n}",
       "method" : "POST",
       "headers" : { },
       "headersFlat" : "",
@@ -74,7 +77,8 @@
       "failEnd" : false,
       "endResultKeys" : [ ],
       "resultCode" : ""
-    }
+    },
+    "minLogLv" : "DEBUG"
   } ],
   "varCfgNames" : [ "binance.json", "crypto-symbol.json" ],
   "vars" : { },
@@ -86,11 +90,11 @@
     "unit" : "SECONDS",
     "initialDelay" : 0
   },
-  "logEncryptKey" : "1234567890123456",
   "threadCfg" : {
     "corePoolSize" : 10,
     "maximumPoolSize" : 50,
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
-  }
+  },
+  "version" : 2
 }
