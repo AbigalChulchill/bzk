@@ -5,7 +5,7 @@
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
     "uid" : "MINMAX52of8",
-    "name" : "MIN_MAX",
+    "name" : "MINMAX",
     "actions" : [ {
       "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
       "uid" : "POnGmKqao8p1",
@@ -148,7 +148,7 @@
       "endTag" : null,
       "failEnd" : false,
       "endResultKeys" : [ ],
-      "resultCode" : "!javascript===\nconst side = '${toSellOrBuy}';\nconst ans = {\n    side : side,\n    tag : \"MIN_MAX\"\n};\nans;"
+      "resultCode" : "!javascript===\nconst side = '${toSellOrBuy}';\nconst ans = {\n    side : side,\n    tag : \"MINMAX\"\n};\nans;"
     },
     "minLogLv" : "DEBUG"
   }, {
@@ -226,5 +226,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 8
+  "version" : 10
 }
