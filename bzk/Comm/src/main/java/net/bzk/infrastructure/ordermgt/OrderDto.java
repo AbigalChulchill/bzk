@@ -1,5 +1,6 @@
 package net.bzk.infrastructure.ordermgt;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import java.time.ZonedDateTime;
@@ -29,7 +30,12 @@ public class OrderDto {
     private String activatePrice = null;
     private String priceRate = null;
     private String closePosition = null;
-    private ZonedDateTime updateAt;
+    private String updateAt;
+
+    @JsonIgnore
+    public ZonedDateTime parseUpdateAt(){
+        return java.time.ZonedDateTime.parse(updateAt);
+    }
 
     public static class OrderDtoList extends ArrayList<OrderDto> {
     }

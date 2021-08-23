@@ -3,6 +3,7 @@ package net.bzk.infrastructure.ordermgt;
 import lombok.Data;
 import net.bzk.infrastructure.JsonUtils;
 import net.bzk.infrastructure.tscurve.TsCurveFunc;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpMethod;
 
 import java.time.ZonedDateTime;
@@ -42,21 +43,21 @@ public class OrderUtils {
     }
 
 
-    public OrderSubtotal filter(List<Object> oods, Map ftm) {
-        OrderFilter ft = JsonUtils.toByJson(ftm,OrderFilter.class);
-        OrderDto.OrderDtoList l = JsonUtils.toByJson(oods, OrderDto.OrderDtoList.class);
+    public OrderSubtotal filter(String oods, String ftjson) {
+        OrderFilter ft = JsonUtils.loadByJson(ftjson, OrderFilter.class);
+        OrderDto.OrderDtoList l = JsonUtils.loadByJson(oods, OrderDto.OrderDtoList.class);
         OrderSubtotal ans = new OrderSubtotal();
         ans.setGroup(ft.getGroup());
         for (OrderDto ods : l) {
-            if (ft.getOrderType() != null && ods.getType() != ft.getOrderType()) continue;
-            if (ft.getNotOrderType() != null && ods.getType() == ft.getNotOrderType()) continue;
-            if (ft.getSide() != null && ods.getSide() != ft.getSide()) continue;
-            if (ft.getSymbol() != null && ft.getSymbol() != ods.getSymbol()) continue;
-            if (ft.getStatus() != null && ft.getStatus() != ods.getStatus()) continue;
+            if (ft.getOrderType() != null && !StringUtils.equals(ods.getType() , ft.getOrderType()) ) continue;
+            if (ft.getNotOrderType() != null &&  StringUtils.equals(ods.getType() , ft.getNotOrderType()) ) continue;
+            if (ft.getSide() != null && !StringUtils.equals(ods.getSide() , ft.getSide()) ) continue;
+            if (ft.getSymbol() != null &&  !StringUtils.equals (ft.getSymbol() , ods.getSymbol())) continue;
+            if (ft.getStatus() != null && !StringUtils.equals(ft.getStatus() , ods.getStatus()) ) continue;
             if (ft.getTags() != null && !containsTags(ods.getClientOrderId(), ft.getTags())) continue;
             if (ft.getUntags() != null && containsTags(ods.getClientOrderId(), ft.getUntags())) continue;
-            if (ft.getUpdateStartTime() != null && ods.getUpdateAt().isBefore(ft.getUpdateStartTime())) continue;
-            if (ft.getUpdateEndTime() != null && ods.getUpdateAt().isAfter(ft.getUpdateEndTime())) continue;
+            if (ft.getUpdateStartTime() != null && ods.parseUpdateAt().isBefore(ft.parseUpdateStartTime())) continue;
+            if (ft.getUpdateEndTime() != null && ods.parseUpdateAt().isAfter(ft.parseUpdateEndTime())) continue;
             ans.getOrders().add(ods);
         }
         ans.subtotal();

@@ -1,5 +1,6 @@
 package net.bzk.infrastructure.ordermgt;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import java.time.ZonedDateTime;
@@ -14,7 +15,17 @@ public class OrderFilter {
     private String orderType ;
     private String notOrderType ;
     private String status ;
-    private ZonedDateTime updateStartTime ;
-    private ZonedDateTime updateEndTime ;
+    private String updateStartTime ;
+    private String updateEndTime ;
     private String group;
+
+    @JsonIgnore
+    public ZonedDateTime parseUpdateStartTime(){
+        return java.time.ZonedDateTime.parse(updateStartTime);
+    }
+
+    @JsonIgnore
+    public ZonedDateTime parseUpdateEndTime(){
+        return java.time.ZonedDateTime.parse(updateEndTime);
+    }
 }

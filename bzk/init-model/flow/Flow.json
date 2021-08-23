@@ -1,0 +1,135 @@
+{
+  "clazz" : "net.bzk.flow.model.Flow",
+  "uid" : "8Ap5Cxj1XBfZ",
+  "name" : "Flow",
+  "boxs" : [ {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "gFPbBJdB5XVI",
+    "name" : "Box",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
+      "uid" : "i2wzDpMCQETH",
+      "name" : "InitVars",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flatData" : [ {
+        "key" : "~startAt",
+        "val" : "!javascript===\nvar start = new Date();\nstart.setHours(start.getHours()-58);\nstart.toISOString();"
+      } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "7034UDUvhTRM",
+      "name" : "FILLED_Order",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "url" : "${binance.proxyHost}proxy",
+      "uriVariables" : { },
+      "body" : "{\n    \"name\": \"get_all_orders\",\n    \"apiKey\":\"${binance.key}\",\n    \"secret\":\"${binance.secret}\",\n    \"symbol\": \"${symbol}\",\n    \"status\":\"FILLED\",\n    \"updateStartAt\":\"${startAt}\"\n}",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "run_flow",
+        "key" : "FILLEDOds"
+      }
+    } ],
+    "links" : [ ],
+    "vars" : { },
+    "taskSort" : [ "i2wzDpMCQETH", "7034UDUvhTRM" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "NufahYgV2o0m",
+      "endTag" : null,
+      "failEnd" : false,
+      "endResultKeys" : [ ],
+      "resultCode" : ""
+    },
+    "minLogLv" : "DEBUG"
+  }, {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "NufahYgV2o0m",
+    "name" : "SellBuyCheck",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
+      "uid" : "EAKffnIzMHDK",
+      "name" : "1-InitVars",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flatData" : [ {
+        "key" : "side",
+        "val" : "!javascript===\nconst sbs = ${sides};\nconst idx = ${idx};\nconst sb = sbs[idx];\nsb;"
+      }, {
+        "key" : "idx",
+        "val" : "!javascript===\n${idx}+1;"
+      }, {
+        "key" : "stopSide",
+        "val" : "!javascript===\nconst side = $bzk.g('side');\nfunction calc(){\n    return side == \"SELL\" ? \"BUY\":\"SELL\";\n}\n\ncalc();"
+      } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
+      "uid" : "f4gcjbnJoW2O",
+      "name" : "Group-1",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "flatData" : [ {
+        "key" : "~limitNoChaseOds",
+        "val" : "!javascript===\nconst ft = {\n    untags:[\"chase\"],\n    side:\"${side}\",\n    orderType:\"LIMIT\"\n};\nconst ftJons = JSON.stringify(ft);\nconst ods = ${FILLEDOds.orders};\nconst odsJson = JSON.stringify(ods);\nconst ans = $orderUtils.filter(odsJson,ftJons);\nans;"
+      }, {
+        "key" : "~limitOds",
+        "val" : "!javascript===\nconst ft = {\n    side:\"${side}\",\n    orderType:\"LIMIT\"\n};\nconst ftJons = JSON.stringify(ft);\nconst ods = ${FILLEDOds.orders};\nconst odsJson = JSON.stringify(ods);\nconst ans = $orderUtils.filter(odsJson,ftJons);\nans;"
+      }, {
+        "key" : "stopOds",
+        "val" : "!javascript===\nconst ft = {\n    side:\"${stopSide}\",\n    orderType:\"STOP_MARKET\"\n};\nconst ftJons = JSON.stringify(ft);\nconst ods = ${FILLEDOds.orders};\nconst odsJson = JSON.stringify(ods);\nconst ans = $orderUtils.filter(odsJson,ftJons);\nans;"
+      } ]
+    } ],
+    "links" : [ ],
+    "vars" : {
+      "sides" : [ "BUY", "SELL" ],
+      "idx" : 0
+    },
+    "taskSort" : [ "EAKffnIzMHDK", "f4gcjbnJoW2O" ],
+    "whileJudgment" : {
+      "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
+      "kind" : "NONE",
+      "next" : null,
+      "left" : "${idx}",
+      "right" : "!javascript===\nconst sbs = ${sides};\nconst len= sbs.length;\nlen;",
+      "type" : "lessthan"
+    },
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "END",
+      "failEnd" : false,
+      "endResultKeys" : [ ],
+      "resultCode" : ""
+    },
+    "minLogLv" : "DEBUG"
+  } ],
+  "varCfgNames" : [ "binance.json" ],
+  "vars" : {
+    "symbol" : "BTC"
+  },
+  "entry" : {
+    "clazz" : "net.bzk.flow.model.Entry$FixedRateEntry",
+    "boxUid" : "gFPbBJdB5XVI",
+    "autoRegister" : false,
+    "period" : -1,
+    "unit" : "SECONDS",
+    "initialDelay" : 2
+  },
+  "threadCfg" : {
+    "corePoolSize" : 10,
+    "maximumPoolSize" : 50,
+    "keepAliveTime" : 500,
+    "aliveUnit" : "MINUTES"
+  },
+  "version" : 15
+}
