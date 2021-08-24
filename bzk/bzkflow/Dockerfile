@@ -18,7 +18,7 @@ FROM ghcr.io/graalvm/graalvm-ce:java11-20.3.1
 #VOLUME $GRADLE_USER_HOME
 
 # EXPOSE 8080
-EXPOSE 8080 7091
+EXPOSE 8080 
 
 RUN mkdir /app
 

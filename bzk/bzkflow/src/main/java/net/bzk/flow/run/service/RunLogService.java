@@ -6,6 +6,7 @@ import javax.inject.Inject;
 
 import lombok.extern.slf4j.Slf4j;
 import net.bzk.flow.enums.Enums;
+import net.bzk.flow.model.Action;
 import net.bzk.infrastructure.JsonUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -86,8 +87,17 @@ public class RunLogService {
         Enums.LogLv llv = ans.getLogLv();
         BoxRuner br = runBoxDao.getByUid(u.getRunBoxUid());
         Box b = br.getModel();
+        Enums.LogLv amLv = getActionLogLv(b,u.getActionUid());
+        if(amLv!=Enums.LogLv.NONE) return llv.getLv() >= amLv.getLv();
         Enums.LogLv bmLv = b.getMinLogLv();
         return llv.getLv() >= bmLv.getLv();
+    }
+
+    private Enums.LogLv getActionLogLv(Box b,String actionUid){
+        var ao = b.findAction(actionUid);
+        if(ao.isEmpty()) return Enums.LogLv.NONE;
+        Action a = ao.get();
+        return a.getMinLogLv();
     }
 
     public RunLog genLog(Uids u) {

@@ -3,7 +3,7 @@ import { BzkUtils } from './../utils/bzk-utils';
 import { OTypeClass } from '../utils/bzk-utils';
 import { PropClazz, PropEnums, PropInfo, PropType } from '../utils/prop-utils';
 import { BzkObj } from './bzk-obj';
-import { DataType, Polyglot, VarLv, ConvertMethod } from './pojo/enums';
+import { DataType, Polyglot, VarLv, ConvertMethod, LogLv } from './pojo/enums';
 import { ModelUpdateAdapter } from './service/model-update-adapter';
 import { CommUtils } from '../utils/comm-utils';
 import { Constant } from '../infrastructure/constant';
@@ -46,6 +46,13 @@ export class Action extends BzkObj {
     customViewFolded: true
   })
   public devFlowVars = {};
+
+  @PropInfo({
+    title: 'minLogLv',
+    type: PropType.Enum
+  })
+  @PropEnums(Object.keys(LogLv))
+  public minLogLv = LogLv.NONE;
 
   public listVarKey(): Array<string> {
     const ans = new Array<string>();

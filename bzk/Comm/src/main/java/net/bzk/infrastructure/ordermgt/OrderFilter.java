@@ -14,6 +14,7 @@ public class OrderFilter {
     private List<String>  untags ;
     private String orderType ;
     private String notOrderType ;
+    private String origType;
     private String status ;
     private String updateStartTime ;
     private String updateEndTime ;

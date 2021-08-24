@@ -49,6 +49,7 @@ public class OrderUtils {
         OrderSubtotal ans = new OrderSubtotal();
         ans.setGroup(ft.getGroup());
         for (OrderDto ods : l) {
+            if (ft.getOrigType() != null && !StringUtils.equals(ods.getOrigType() , ft.getOrigType()) ) continue;
             if (ft.getOrderType() != null && !StringUtils.equals(ods.getType() , ft.getOrderType()) ) continue;
             if (ft.getNotOrderType() != null &&  StringUtils.equals(ods.getType() , ft.getNotOrderType()) ) continue;
             if (ft.getSide() != null && !StringUtils.equals(ods.getSide() , ft.getSide()) ) continue;

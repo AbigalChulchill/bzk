@@ -32,6 +32,7 @@ public class Action extends BzkObj {
 
     private VarMap devBoxVars = new VarMap();
     private VarMap devFlowVars = new VarMap();
+    private Enums.LogLv minLogLv = Enums.LogLv.NONE;
 
     @JsonIgnore
     public String getErrorVarKey() {

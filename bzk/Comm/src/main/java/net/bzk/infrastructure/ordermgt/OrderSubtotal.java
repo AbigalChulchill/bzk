@@ -11,6 +11,7 @@ import java.util.*;
 public class OrderSubtotal {
     private Date lastAt;
     private float executedQty;
+    private float avgPrice;
     private String group;
     private Map<String, OrderSubtotal> groupMap = new HashMap<>();
     private List<OrderDto> orders = new ArrayList<>();
@@ -18,7 +19,9 @@ public class OrderSubtotal {
     public void subtotal() {
         if (orders.size() <= 0) return;
         orders.sort((a, b) -> b.getUpdateAt().compareTo(a.getUpdateAt()));
-        executedQty = (Float) orders.stream().map(o -> o.getExecutedQty()).reduce(0f, (a, b) -> a + b);
+        executedQty =  orders.stream().map(o -> o.getExecutedQty()).reduce(0f, (a, b) -> a + b);
+        float sumPrice = orders.stream().map(o -> o.getAvgPrice()*o.getExecutedQty()).reduce(0f, (a, b) -> a + b);
+        avgPrice = sumPrice / executedQty;
         if (StringUtils.isBlank(group)) return;
         try {
             setupGroup();
