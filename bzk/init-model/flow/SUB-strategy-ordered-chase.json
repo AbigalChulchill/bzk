@@ -1,200 +1,158 @@
 {
   "clazz" : "net.bzk.flow.model.Flow",
-  "uid" : "n4SorLlIyBtx",
+  "uid" : "8Ap5Cxj1XBfZ",
   "name" : "SUB-strategy-ordered-chase",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
-    "uid" : "gy4j3GUOGPme",
-    "name" : "Main_TO_DO",
+    "uid" : "gFPbBJdB5XVI",
+    "name" : "Start",
     "actions" : [ {
       "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
-      "uid" : "NY1STz6PxngK",
-      "name" : "1InitVars",
-      "tryErrorble" : false,
-      "enable" : true,
-      "devBoxVars" : {
-        "__pk_result" : "SELL"
-      },
-      "devFlowVars" : {
-        "LIMITinfo" : {
-          "lastAt" : "2021-08-22T08:16:51.009000+00:00",
-          "executedQty" : 65.87000000000009,
-          "group" : "side",
-          "groupMap" : {
-            "BUY" : {
-              "lastAt" : "2021-08-22T08:16:51.009000+00:00",
-              "executedQty" : 32.56999999999999,
-              "orders" : [ {
-                "clientOrderId" : "_BMUK-stop_",
-                "cumQuote" : 0,
-                "executedQty" : 0,
-                "orderId" : 34340968180,
-                "origQty" : 1.15,
-                "price" : 0,
-                "reduceOnly" : true,
-                "side" : "BUY",
-                "status" : "NEW",
-                "stopPrice" : 456.57,
-                "symbol" : "BNBUSDT",
-                "timeInForce" : "GTC",
-                "type" : "STOP_MARKET",
-                "updateTime" : 1629620211009,
-                "workingType" : "CONTRACT_PRICE",
-                "avgPrice" : 0,
-                "origType" : "STOP_MARKET",
-                "positionSide" : "SHORT",
-                "activatePrice" : null,
-                "priceRate" : null,
-                "closePosition" : false,
-                "updateAt" : "2021-08-22T08:16:51.009000+00:00"
-              }, {
-                "clientOrderId" : "_I6mk-stop_",
-                "cumQuote" : 0,
-                "executedQty" : 0,
-                "orderId" : 34340784276,
-                "origQty" : 1.15,
-                "price" : 0,
-                "reduceOnly" : true,
-                "side" : "BUY",
-                "status" : "CANCELED",
-                "stopPrice" : 458.36,
-                "symbol" : "BNBUSDT",
-                "timeInForce" : "GTC",
-                "type" : "STOP_MARKET",
-                "updateTime" : 1629620210166,
-                "workingType" : "CONTRACT_PRICE",
-                "avgPrice" : 0,
-                "origType" : "STOP_MARKET",
-                "positionSide" : "SHORT",
-                "activatePrice" : null,
-                "priceRate" : null,
-                "closePosition" : false,
-                "updateAt" : "2021-08-22T08:16:50.166000+00:00"
-              }, {
-                "clientOrderId" : "_j2fz-stop_",
-                "cumQuote" : 0,
-                "executedQty" : 0,
-                "orderId" : 34340692926,
-                "origQty" : 1.15,
-                "price" : 0,
-                "reduceOnly" : true,
-                "side" : "BUY",
-                "status" : "CANCELED",
-                "stopPrice" : 457.44,
-                "symbol" : "BNBUSDT",
-                "timeInForce" : "GTC",
-                "type" : "STOP_MARKET",
-                "updateTime" : 1629619209116,
-                "workingType" : "CONTRACT_PRICE",
-                "avgPrice" : 0,
-                "origType" : "STOP_MARKET",
-                "positionSide" : "SHORT",
-                "activatePrice" : null,
-                "priceRate" : null,
-                "closePosition" : false,
-                "updateAt" : "2021-08-22T08:00:09.116000+00:00"
-              } ]
-            },
-            "SELL" : {
-              "lastAt" : "2021-08-22T07:23:25.719000+00:00",
-              "executedQty" : 33.300000000000004,
-              "orders" : [ {
-                "clientOrderId" : "_MIN_MAX-_GdXe_-g29N_",
-                "cumQuote" : 105.2641,
-                "executedQty" : 0.23,
-                "orderId" : 34327028564,
-                "origQty" : 0.23,
-                "price" : 457.67,
-                "reduceOnly" : false,
-                "side" : "SELL",
-                "status" : "FILLED",
-                "stopPrice" : 0,
-                "symbol" : "BNBUSDT",
-                "timeInForce" : "GTC",
-                "type" : "LIMIT",
-                "updateTime" : 1629617005719,
-                "workingType" : "CONTRACT_PRICE",
-                "avgPrice" : 457.67,
-                "origType" : "LIMIT",
-                "positionSide" : "SHORT",
-                "activatePrice" : null,
-                "priceRate" : null,
-                "closePosition" : false,
-                "updateAt" : "2021-08-22T07:23:25.719000+00:00"
-              }, {
-                "clientOrderId" : "_LRHl-MIN_MAX-_GnG0__",
-                "cumQuote" : 105.2641,
-                "executedQty" : 0.23,
-                "orderId" : 34327029033,
-                "origQty" : 0.23,
-                "price" : 457.67,
-                "reduceOnly" : false,
-                "side" : "SELL",
-                "status" : "FILLED",
-                "stopPrice" : 0,
-                "symbol" : "BNBUSDT",
-                "timeInForce" : "GTC",
-                "type" : "LIMIT",
-                "updateTime" : 1629617005719,
-                "workingType" : "CONTRACT_PRICE",
-                "avgPrice" : 457.67,
-                "origType" : "LIMIT",
-                "positionSide" : "SHORT",
-                "activatePrice" : null,
-                "priceRate" : null,
-                "closePosition" : false,
-                "updateAt" : "2021-08-22T07:23:25.719000+00:00"
-              }, {
-                "clientOrderId" : "_MIN_MAX-Vnak-_GyLB__",
-                "cumQuote" : 105.2641,
-                "executedQty" : 0.23,
-                "orderId" : 34327029307,
-                "origQty" : 0.23,
-                "price" : 457.67,
-                "reduceOnly" : false,
-                "side" : "SELL",
-                "status" : "FILLED",
-                "stopPrice" : 0,
-                "symbol" : "BNBUSDT",
-                "timeInForce" : "GTC",
-                "type" : "LIMIT",
-                "updateTime" : 1629617005719,
-                "workingType" : "CONTRACT_PRICE",
-                "avgPrice" : 457.67,
-                "origType" : "LIMIT",
-                "positionSide" : "SHORT",
-                "activatePrice" : null,
-                "priceRate" : null,
-                "closePosition" : false,
-                "updateAt" : "2021-08-22T07:23:25.719000+00:00"
-              } ]
-            }
-          }
-        }
-      },
-      "flatData" : [ {
-        "key" : "side",
-        "val" : "${__pk_result}"
-      }, {
-        "key" : "sideLIMITinfo",
-        "val" : "!javascript===\nvar side = $bzk.g('side');\n$bzk.g('LIMITinfo.groupMap.'+side);"
-      }, {
-        "key" : "sideSTOPinfo",
-        "val" : "!javascript===\nvar side = $bzk.g('side');\n$bzk.g('STOPinfo.groupMap.'+side);"
-      } ]
-    }, {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "DG4zntJfE3Az",
-      "name" : "",
+      "uid" : "i2wzDpMCQETH",
+      "name" : "InitVars",
       "tryErrorble" : false,
       "enable" : true,
       "devBoxVars" : { },
       "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flatData" : [ {
+        "key" : "~startAt",
+        "val" : "!javascript===\nvar start = new Date();\nstart.setHours(start.getHours()-108);\nstart.toISOString();"
+      } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "7034UDUvhTRM",
+      "name" : "FILLED_Order",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "url" : "${binance.proxyHost}proxy",
+      "uriVariables" : { },
+      "body" : "{\n    \"name\": \"get_all_orders\",\n    \"apiKey\":\"${binance.key}\",\n    \"secret\":\"${binance.secret}\",\n    \"symbol\": \"${symbol}\",\n    \"status\":\"FILLED\",\n    \"updateStartAt\":\"${startAt}\"\n}",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "run_flow",
+        "key" : "FILLEDOds"
+      }
+    } ],
+    "links" : [ ],
+    "vars" : { },
+    "taskSort" : [ "i2wzDpMCQETH", "7034UDUvhTRM" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "NufahYgV2o0m",
+      "endTag" : null,
+      "failEnd" : false,
+      "endResultKeys" : [ ],
+      "resultCode" : ""
+    },
+    "minLogLv" : "DEBUG"
+  }, {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "NufahYgV2o0m",
+    "name" : "SellBuyCheck",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
+      "uid" : "EAKffnIzMHDK",
+      "name" : "1-InitVars",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flatData" : [ {
+        "key" : "side",
+        "val" : "!javascript===\nconst sbs = ${sides};\nconst idx = ${idx};\nconst sb = sbs[idx];\nsb;"
+      }, {
+        "key" : "idx",
+        "val" : "!javascript===\n${idx}+1;"
+      }, {
+        "key" : "stopSide",
+        "val" : "!javascript===\nconst side = $bzk.g('side');\nfunction calc(){\n    return side == \"SELL\" ? \"BUY\":\"SELL\";\n}\n\ncalc();"
+      } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
+      "uid" : "f4gcjbnJoW2O",
+      "name" : "Group-1",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "ERROR",
+      "flatData" : [ {
+        "key" : "limitNoChaseOds",
+        "val" : "!javascript===\nconst ft = {\n    untags:[\"chase\"],\n    side:\"${side}\",\n    orderType:\"LIMIT\"\n};\nconst ftJons = JSON.stringify(ft);\nconst ods = ${FILLEDOds.orders};\nconst odsJson = JSON.stringify(ods);\nconst ans = $orderUtils.filter(odsJson,ftJons);\nans;"
+      }, {
+        "key" : "limitOds",
+        "val" : "!javascript===\nconst ft = {\n    side:\"${side}\",\n    orderType:\"LIMIT\"\n};\nconst ftJons = JSON.stringify(ft);\nconst ods = ${FILLEDOds.orders};\nconst odsJson = JSON.stringify(ods);\nconst ans = $orderUtils.filter(odsJson,ftJons);\nans;"
+      }, {
+        "key" : "stopOds",
+        "val" : "!javascript===\nconst ft = {\n    side:\"${stopSide}\",\n    origType:\"STOP_MARKET\"\n};\nconst ftJons = JSON.stringify(ft);\nconst ods = ${FILLEDOds.orders};\nconst odsJson = JSON.stringify(ods);\nconst ans = $orderUtils.filter(odsJson,ftJons);\nans;"
+      } ]
+    } ],
+    "links" : [ {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "pVqn3SJBXV7k",
+      "name" : "CanOrder",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
+        "kind" : "NONE",
+        "next" : null,
+        "polyglot" : "js",
+        "code" : "const originalQyt = ${limitNoChaseOds.executedQty};\r\nconst curOrderedQyt = ${limitOds.executedQty};\r\nconst stopQty = ${stopOds.executedQty};\r\nconst exchagePrice = ${exchangePrice};\r\nconst originalAvgPrice = ${limitNoChaseOds.avgPrice};\r\n\r\nfunction calc(){\r\n    if(originalQyt<=0) return false;\r\n    if(!checkOkPrice())return false;\r\n    const stopMaxQty = curOrderedQyt * (1-${thRate});\r\n    return stopQty < stopMaxQty;\r\n}\r\n\r\nfunction checkOkPrice(){\r\n    var r = exchagePrice/originalAvgPrice;\r\n    var dr = Math.abs( 1-r);\r\n    return dr<0.01;\r\n}\r\n\r\ncalc();"
+      },
+      "transition" : {
+        "toBox" : "jVukCWK0WxOi",
+        "endTag" : null,
+        "failEnd" : false,
+        "endResultKeys" : [ ],
+        "resultCode" : "${side}"
+      },
+      "enable" : true
+    } ],
+    "vars" : {
+      "sides" : [ "BUY", "SELL" ],
+      "idx" : 0
+    },
+    "taskSort" : [ "EAKffnIzMHDK", "f4gcjbnJoW2O", "pVqn3SJBXV7k" ],
+    "whileJudgment" : {
+      "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
+      "kind" : "NONE",
+      "next" : null,
+      "left" : "${idx}",
+      "right" : "!javascript===\nconst sbs = ${sides};\nconst len= sbs.length;\nlen;",
+      "type" : "lessthan"
+    },
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "${symbol} break",
+      "failEnd" : false,
+      "endResultKeys" : [ ],
+      "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"ChaseNO\"\n}"
+    },
+    "minLogLv" : "DEBUG"
+  }, {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "jVukCWK0WxOi",
+    "name" : "CallOrder",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "POv1MDCCaJ5K",
+      "name" : "Order",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
       "flowUid" : "02eQyaMwyojZ",
       "asynced" : false,
       "inputData" : [ {
         "key" : "side",
-        "val" : "${side}"
+        "val" : "${__pk_result}"
       }, {
         "key" : "symbol",
         "val" : "${symbol}"
@@ -215,209 +173,41 @@
         "val" : "chase"
       }, {
         "key" : "quoteSize",
-        "val" : "5"
+        "val" : "3"
       }, {
         "key" : "quoteBase",
-        "val" : "TODO"
+        "val" : "${exchangePrice}"
       }, {
         "key" : "quoteRange",
-        "val" : "TODO"
+        "val" : "0.03"
       } ],
       "outputReflects" : [ ]
     } ],
-    "links" : [ {
-      "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "XvcJlyX63Pp9",
-      "name" : "HasSideLimit",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
-        "kind" : "NONE",
-        "next" : null,
-        "left" : "${sideLIMITinfo.executedQty}",
-        "right" : "0",
-        "type" : "lessthan_equal"
-      },
-      "transition" : {
-        "toBox" : "",
-        "endTag" : null,
-        "failEnd" : false,
-        "endResultKeys" : [ ],
-        "resultCode" : "${side}"
-      },
-      "enable" : true
-    } ],
+    "links" : [ ],
     "vars" : { },
-    "taskSort" : [ "NY1STz6PxngK", "XvcJlyX63Pp9", "DG4zntJfE3Az" ],
+    "taskSort" : [ "POv1MDCCaJ5K" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
-      "endTag" : "END",
+      "endTag" : "${symbol} ${__pk_result}   ordered",
       "failEnd" : false,
       "endResultKeys" : [ ],
-      "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"EnoughOrder\"\n}"
-    },
-    "minLogLv" : "DEBUG"
-  }, {
-    "clazz" : "net.bzk.flow.model.Box",
-    "uid" : "ipoBMfL5ITYO",
-    "name" : "Box",
-    "actions" : [ {
-      "clazz" : "net.bzk.flow.model.HttpAction",
-      "uid" : "GrYYvxqKYqvV",
-      "name" : "LIMIT_Order_no_chase",
-      "tryErrorble" : false,
-      "enable" : true,
-      "devBoxVars" : { },
-      "devFlowVars" : {
-        "symbol" : "BTC",
-        "startAt" : "2021-08-21T23:28:07.008Z"
-      },
-      "url" : "${binance.proxyHost}proxy",
-      "uriVariables" : { },
-      "body" : "{\r\n    \"name\": \"get_all_orders\",\r\n    \"apiKey\":\"${binance.key}\",\r\n    \"secret\":\"${binance.secret}\",\r\n    \"symbol\": \"${symbol}\",\r\n    \"status\":\"FILLED\",\r\n    \"untag\":[\r\n        \"chase\"\r\n    ],\r\n    \"orderType\":\"LIMIT\",\r\n    \"updateStartAt\":\"${startAt}\",\r\n    \"group\":[\r\n        \"side\"\r\n    ]\r\n}\r\n",
-      "method" : "POST",
-      "headers" : { },
-      "headersFlat" : "",
-      "key" : {
-        "lv" : "run_flow",
-        "key" : "LIMITinfo"
-      }
-    }, {
-      "clazz" : "net.bzk.flow.model.HttpAction",
-      "uid" : "gqVxfLlPl2vP",
-      "name" : "STOP_Order",
-      "tryErrorble" : false,
-      "enable" : true,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "url" : "${binance.proxyHost}proxy",
-      "uriVariables" : { },
-      "body" : "{\n    \"name\": \"get_all_orders\",\n    \"apiKey\":\"${binance.key}\",\n    \"secret\":\"${binance.secret}\",\n    \"symbol\": \"${symbol}\",\n    \"status\":\"FILLED\",\n    \"orderType\":\"STOP_MARKET\",\n    \"updateStartAt\":\"${startAt}\",\n    \"group\":[\n        \"side\"\n    ]\n}",
-      "method" : "POST",
-      "headers" : { },
-      "headersFlat" : "",
-      "key" : {
-        "lv" : "run_flow",
-        "key" : "STOPinfo"
-      }
-    }, {
-      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
-      "uid" : "tC9k4h5pmXTJ",
-      "name" : "InitVars",
-      "tryErrorble" : false,
-      "enable" : true,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "flatData" : [ {
-        "key" : "~startAt",
-        "val" : "!javascript===\nvar start = new Date();\nstart.setHours(start.getHours()-8);\nstart.toISOString()\n\n"
-      } ]
-    }, {
-      "clazz" : "net.bzk.flow.model.Action$PolyglotAction",
-      "uid" : "rOwHZLxDqC43",
-      "name" : "SellOrBuy",
-      "tryErrorble" : false,
-      "enable" : true,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "code" : "const limitBUYQty = ${LIMITinfo.groupMap.BUY.executedQty};\r\nconst stopBUYQty =  ${STOPinfo.groupMap.SELL.executedQty};\r\nconst limitSELLQty = ${LIMITinfo.groupMap.SELL.executedQty};\r\nconst stopSELLQty =  ${STOPinfo.groupMap.BUY.executedQty};\r\nconst rate = 0.6;\r\nfunction isSell(){\r\n    if(!limitSELLQty) return false;\r\n    const rQty = limitSELLQty*rate;\r\n    return stopSELLQty>rQty;\r\n}\r\n\r\nfunction isBuy(){\r\n    if(!limitBUYQty) return false;\r\n    const rQty = limitBUYQty*rate;\r\n    return stopBUYQty>rQty;\r\n}\r\n\r\nfunction calc(){\r\n    const b = isBuy();\r\n    const s = isSell();\r\n    if (b && s) throw new Error('It`s imposible two is true');\r\n    if(!b && !s) return \"NO\";\r\n    return b ? \"BUY\" : \"SELL\";\r\n}\r\n\r\ncalc();",
-      "polyglot" : "js",
-      "resultLv" : "run_flow",
-      "resultKey" : "side"
-    }, {
-      "clazz" : "net.bzk.flow.model.Action$PolyglotAction",
-      "uid" : "zMbOXkWaUE6m",
-      "name" : "TODO_ALL_LIMIT_ORDER",
-      "tryErrorble" : false,
-      "enable" : true,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "code" : "",
-      "polyglot" : "python",
-      "resultLv" : "not_specify",
-      "resultKey" : ""
-    } ],
-    "links" : [ {
-      "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "VyqRg0VZ7mcs",
-      "name" : "HasLimit",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
-        "kind" : "NONE",
-        "next" : null,
-        "left" : "${STOPinfo.executedQty}",
-        "right" : "0",
-        "type" : "lessthan_equal"
-      },
-      "transition" : {
-        "toBox" : "",
-        "endTag" : "END",
-        "failEnd" : false,
-        "endResultKeys" : [ ],
-        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"HasLimit\"\n}"
-      },
-      "enable" : true
-    }, {
-      "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "MQDjpC7mSq4R",
-      "name" : "HasStop",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
-        "kind" : "NONE",
-        "next" : null,
-        "left" : "${LIMITinfo.executedQty}",
-        "right" : "0",
-        "type" : "equal"
-      },
-      "transition" : {
-        "toBox" : "",
-        "endTag" : "END",
-        "failEnd" : false,
-        "endResultKeys" : [ ],
-        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"HasStop\"\n}"
-      },
-      "enable" : true
-    }, {
-      "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "vDwFCntj7j86",
-      "name" : "EnoughLimit",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
-        "kind" : "NONE",
-        "next" : null,
-        "polyglot" : "js",
-        "code" : ""
-      },
-      "transition" : {
-        "toBox" : "",
-        "endTag" : "TODO Why End",
-        "failEnd" : false,
-        "endResultKeys" : [ ],
-        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"EnoughLimit\"\n}"
-      },
-      "enable" : true
-    } ],
-    "vars" : { },
-    "taskSort" : [ "tC9k4h5pmXTJ", "GrYYvxqKYqvV", "zMbOXkWaUE6m", "gqVxfLlPl2vP", "VyqRg0VZ7mcs", "MQDjpC7mSq4R", "rOwHZLxDqC43", "vDwFCntj7j86" ],
-    "whileJudgment" : null,
-    "transition" : {
-      "toBox" : "gy4j3GUOGPme",
-      "endTag" : null,
-      "failEnd" : false,
-      "endResultKeys" : [ ],
-      "resultCode" : ""
+      "resultCode" : "{\n  \"ordered\": true\n}"
     },
     "minLogLv" : "DEBUG"
   } ],
   "varCfgNames" : [ "binance.json" ],
   "vars" : {
-    "symbol" : "BTC"
+    "symbol" : "BTC",
+    "exchangePrice" : 10000,
+    "timeHourRage" : 200,
+    "thRate" : 0.4
   },
   "entry" : {
     "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
-    "boxUid" : "ipoBMfL5ITYO",
+    "boxUid" : "gFPbBJdB5XVI",
     "autoRegister" : false,
-    "requiredKeys" : [ ],
+    "requiredKeys" : [ "symbol", "thRate", "exchangePrice", "timeHourRage" ],
     "outputKeys" : [ ]
   },
   "threadCfg" : {
@@ -426,5 +216,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 21
+  "version" : 28
 }
