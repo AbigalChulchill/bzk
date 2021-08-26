@@ -14,6 +14,7 @@
       "enable" : false,
       "devBoxVars" : { },
       "devFlowVars" : { },
+      "minLogLv" : "NONE",
       "url" : "${binance.proxyHost}proxy",
       "uriVariables" : { },
       "body" : "{\r\n    \"name\":\"get_position\",\r\n    \"apiKey\": \"${binance.key}\",\r\n    \"secret\": \"${binance.secret}\",\r\n    \"symbol\": \"${symbol}\"\r\n}",
@@ -74,6 +75,7 @@
         } ]
       },
       "devFlowVars" : { },
+      "minLogLv" : "NONE",
       "url" : "${binance.proxyHost}proxy",
       "uriVariables" : { },
       "body" : "!javascript===\r\nconst payload= {\r\n  \"name\": \"cancel_by_filter\",\r\n  \"apiKey\": \"${binance.key}\",\r\n  \"secret\": \"${binance.secret}\",\r\n  \"symbol\": \"${symbol}\"\r\n};\r\n\r\nconst pinfolist = ${posInfo};\r\nlet amt = 0;\r\n\r\nfor (let p of pinfolist) {\r\n  amt += Math.abs(p.positionAmt);\r\n}\r\n\r\nif(amt>0){\r\n    payload['notOrderType']='STOP_MARKET';\r\n}\r\n\r\npayload;",
@@ -92,6 +94,7 @@
       "enable" : true,
       "devBoxVars" : { },
       "devFlowVars" : { },
+      "minLogLv" : "NONE",
       "url" : "${binance.proxyHost}proxy",
       "uriVariables" : { },
       "body" : "${body}",
@@ -110,6 +113,7 @@
       "enable" : false,
       "devBoxVars" : { },
       "devFlowVars" : { },
+      "minLogLv" : "NONE",
       "smtpHost" : "\"smtp.gmail.com\"",
       "smtpPort" : "465",
       "username" : "${gmail.username}",
@@ -125,9 +129,10 @@
       "enable" : true,
       "devBoxVars" : { },
       "devFlowVars" : { },
+      "minLogLv" : "NONE",
       "flatData" : [ {
         "key" : "body",
-        "val" : "!javascript===\nconst side ='${side}';\nconst quote = ${quote};\n\nlet pd = {\n    \"symbol\": \"${symbol}\",\n    \"investedRate\": ${oneInvestedRate},\n    \"apiKey\": \"${binance.key}\",\n    \"secret\": \"${binance.secret}\",\n    \"selled\": side == 'SELL',\n    \"name\": \"post_order\",\n    \"guardRange\": ${guardRange},\n    \"currentMove\": ${currentMove}\n};\npd;"
+        "val" : "!javascript===\nconst side ='${side}';\nconst quote = ${quote};\n\nlet pd = {\n    \"symbol\": \"${symbol}\",\n    \"investedRate\": ${oneInvestedRate},\n    \"apiKey\": \"${binance.key}\",\n    \"secret\": \"${binance.secret}\",\n    \"selled\": side == 'SELL',\n    \"name\": \"post_order\",\n    \"quote\":quote,\n    \"guardRange\": ${guardRange},\n    \"currentMove\": ${currentMove}\n};\npd;"
       }, {
         "key" : "body.tags",
         "val" : "${tags}"
@@ -140,6 +145,7 @@
       "enable" : true,
       "devBoxVars" : { },
       "devFlowVars" : { },
+      "minLogLv" : "NONE",
       "url" : "${finProxyUrl}/proxy/tsdb/insert/multiple",
       "uriVariables" : { },
       "body" : "!javascript===\n\nconst sbl = '${symbol}';\nconst side = '${side}';\nconst postResult = ${postResult};\nconst  now = new Date();\nconst nowiso = now.toISOString();\n\nlet ans = [];\n\nfunction genPointDto(fd,v){\n  const row = {\n      measurement : 'order-measurement',\n      tags:{\n        \"symbol\" : sbl,        \n        \"category\":'cryptocurrency',\n        \"source\":'binance',\n        \"side\":side,\n        \"trigger\":'${trigger}'\n      },\n      field: fd,\n      val:v,\n      time :nowiso\n  };\n  return row;\n}\n\nans.push(genPointDto('price',postResult.price));\nans.push(genPointDto('stopPrice',postResult.stopPrice));\nans.push(genPointDto('quantity',postResult.quantity));\n\nans;",
@@ -158,6 +164,7 @@
       "enable" : true,
       "devBoxVars" : { },
       "devFlowVars" : { },
+      "minLogLv" : "NONE",
       "flatData" : [ {
         "key" : "quote",
         "val" : "!javascript===\nconst side = \"${side}\";\nconst quoteBase = ${quoteBase};\nconst quoteSize = ${quoteSize};\nconst idx = ${idx};\nconst quoteRange = ${quoteRange};\nconst rate = calcRate();\nconst dr = (rate / quoteSize) * idx;\nconst quote = quoteBase*(1 + dr ) ;\n\nfunction calcRate(){\n    return side == \"SELL\" ? -1 * quoteRange : quoteRange;\n}\n\nquote;"
@@ -214,5 +221,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 2
+  "version" : 4
 }
