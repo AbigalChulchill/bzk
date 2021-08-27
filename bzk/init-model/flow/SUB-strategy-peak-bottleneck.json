@@ -14,6 +14,7 @@
       "enable" : true,
       "devBoxVars" : { },
       "devFlowVars" : { },
+      "minLogLv" : "NONE",
       "flatData" : [ {
         "key" : "toSellOrBuy",
         "val" : "!javascript===\r\nconst min = ${minmax.min};\r\nconst max = ${minmax.max};\r\n\r\nfunction calc(){\r\n    return min.dtime<max.dtime? \"BUY\" : \"SELL\";\r\n}\r\ncalc();"
@@ -139,9 +140,32 @@
         "resultCode" : "{\r\n  \"ordered\": false,\r\n  \"breakName\": \"ValueChangeOver\"\r\n}"
       },
       "enable" : true
+    }, {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "PlJ7nq3Ns0fN",
+      "name" : "NearFarLess5D",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
+        "kind" : "NONE",
+        "next" : null,
+        "left" : "!javascript===\nconst nearTime = ${minmax.near.dtime};\nconst farTime = ${minmax.far.dtime};\nconst dt = farTime - nearTime;\nconst dDay = dt / (60*60*24);\ndDay;\n",
+        "right" : "5",
+        "type" : "lessthan"
+      },
+      "transition" : {
+        "toBox" : "",
+        "endTag" : "${symbol} NearFarLess5D",
+        "failEnd" : false,
+        "endResultKeys" : [ {
+          "lv" : "not_specify",
+          "key" : "__ALL__"
+        } ],
+        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"NearFarLess5D\"\n}"
+      },
+      "enable" : true
     } ],
     "vars" : { },
-    "taskSort" : [ "POnGmKqao8p1", "uQEGkV35pjX8", "wbxiE4C90UxL", "fwsKgL8JiZnq", "6q7K82sD3xWo", "dgKXFR8jH8x5" ],
+    "taskSort" : [ "POnGmKqao8p1", "uQEGkV35pjX8", "wbxiE4C90UxL", "PlJ7nq3Ns0fN", "fwsKgL8JiZnq", "6q7K82sD3xWo", "dgKXFR8jH8x5" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "iQ07yoOBfiPS",
@@ -163,6 +187,7 @@
       "enable" : true,
       "devBoxVars" : { },
       "devFlowVars" : { },
+      "minLogLv" : "NONE",
       "flowUid" : "02eQyaMwyojZ",
       "asynced" : false,
       "inputData" : [ {
@@ -176,10 +201,10 @@
         "val" : "0.005"
       }, {
         "key" : "guardRange",
-        "val" : "0.005"
+        "val" : "0.008"
       }, {
         "key" : "currentMove",
-        "val" : "0"
+        "val" : "0.00086"
       }, {
         "key" : "tags",
         "val" : "[\"${__pk_result.tag}\"]"
@@ -204,7 +229,7 @@
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
-      "endTag" : "END",
+      "endTag" : "${symbo} ordered",
       "failEnd" : false,
       "endResultKeys" : [ ],
       "resultCode" : ""
@@ -226,5 +251,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 10
+  "version" : 12
 }

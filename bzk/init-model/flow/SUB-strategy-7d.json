@@ -4,64 +4,6 @@
   "name" : "SUB-strategy-7d",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
-    "uid" : "UdfFblT52of8",
-    "name" : "MIN_MAX",
-    "actions" : [ {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "rst8GpNpDvu9",
-      "name" : "CALL-1",
-      "tryErrorble" : false,
-      "enable" : true,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "flowUid" : "SSPBbWtmfHPV",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "__ALL__",
-        "val" : "${~__ALL__}"
-      } ],
-      "outputReflects" : [ {
-        "srcKey" : "__pk_result",
-        "toKey" : {
-          "lv" : "not_specify",
-          "key" : "pkResult"
-        }
-      } ]
-    } ],
-    "links" : [ {
-      "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "Tssxw9Yo5Ded",
-      "name" : "Break-1",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
-        "kind" : "NONE",
-        "next" : null,
-        "polyglot" : "js",
-        "code" : "${pkResult.ordered}"
-      },
-      "transition" : {
-        "toBox" : "",
-        "endTag" : "${symbol} MIN_MAX Ordered",
-        "failEnd" : false,
-        "endResultKeys" : [ ],
-        "resultCode" : ""
-      },
-      "enable" : true
-    } ],
-    "vars" : { },
-    "taskSort" : [ "rst8GpNpDvu9", "Tssxw9Yo5Ded" ],
-    "whileJudgment" : null,
-    "transition" : {
-      "toBox" : "",
-      "endTag" : "${symbol} NOT Ordered",
-      "failEnd" : false,
-      "endResultKeys" : [ ],
-      "resultCode" : "!javascript===\nconst side = '${toSellOrBuy}';\nconst ans = {\n    side : side,\n    tag : \"MIN_MAX\"\n};\nans;"
-    },
-    "minLogLv" : "DEBUG"
-  }, {
-    "clazz" : "net.bzk.flow.model.Box",
     "uid" : "2yrIrBRsEZHo",
     "name" : "PrepareData",
     "actions" : [ {
@@ -195,7 +137,7 @@
       "endResultKeys" : [ ],
       "resultCode" : ""
     },
-    "minLogLv" : "DEBUG"
+    "minLogLv" : "WARNING"
   }, {
     "clazz" : "net.bzk.flow.model.Box",
     "uid" : "vRRbwAqzG7RN",
@@ -263,6 +205,64 @@
       "resultCode" : ""
     },
     "minLogLv" : "DEBUG"
+  }, {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "UdfFblT52of8",
+    "name" : "MIN_MAX",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "rst8GpNpDvu9",
+      "name" : "CALL-1",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flowUid" : "SSPBbWtmfHPV",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "__ALL__",
+        "val" : "${~__ALL__}"
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "__pk_result",
+        "toKey" : {
+          "lv" : "not_specify",
+          "key" : "pkResult"
+        }
+      } ]
+    } ],
+    "links" : [ {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "Tssxw9Yo5Ded",
+      "name" : "Break-1",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
+        "kind" : "NONE",
+        "next" : null,
+        "polyglot" : "js",
+        "code" : "${pkResult.ordered}"
+      },
+      "transition" : {
+        "toBox" : "",
+        "endTag" : "${symbol} MIN_MAX Ordered",
+        "failEnd" : false,
+        "endResultKeys" : [ ],
+        "resultCode" : ""
+      },
+      "enable" : true
+    } ],
+    "vars" : { },
+    "taskSort" : [ "rst8GpNpDvu9", "Tssxw9Yo5Ded" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "${symbol} NOT Ordered",
+      "failEnd" : false,
+      "endResultKeys" : [ ],
+      "resultCode" : "!javascript===\nconst side = '${toSellOrBuy}';\nconst ans = {\n    side : side,\n    tag : \"MIN_MAX\"\n};\nans;"
+    },
+    "minLogLv" : "DEBUG"
   } ],
   "varCfgNames" : [ "binance.json" ],
   "vars" : {
@@ -281,5 +281,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 17
+  "version" : 19
 }
