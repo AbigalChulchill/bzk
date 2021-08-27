@@ -14,9 +14,10 @@
       "enable" : true,
       "devBoxVars" : { },
       "devFlowVars" : { },
+      "minLogLv" : "NONE",
       "url" : "${binance.proxyHost}proxy",
       "uriVariables" : { },
-      "body" : "{\n    \"name\": \"profit/cut\",\n    \"apiKey\":\"${binance.key}\",\n    \"secret\":\"${binance.secret}\",\n    \"profitRate\": 0.1,\n    \"topRate\": 0.886,\n    \"bottomRate\":-0.01,\n    \"cutCount\": 5,\n    \"stepMoveOnRate\":0.0002,\n    \"symbol\":\"${curSBL}\",\n    \"positionSide\":\"LONG\"\n}",
+      "body" : "{\n    \"name\": \"profit/cut\",\n    \"apiKey\":\"${binance.key}\",\n    \"secret\":\"${binance.secret}\",\n    \"profitRate\": 0.1,\n    \"topRate\": 0.886,\n    \"bottomRate\":-0.001,\n    \"cutCount\": 5,\n    \"stepMoveOnRate\":0.0002,\n    \"symbol\":\"${curSBL}\",\n    \"positionSide\":\"LONG\"\n}",
       "method" : "POST",
       "headers" : { },
       "headersFlat" : "",
@@ -32,6 +33,7 @@
       "enable" : true,
       "devBoxVars" : { },
       "devFlowVars" : { },
+      "minLogLv" : "NONE",
       "flatData" : [ {
         "key" : "curSBL",
         "val" : "!javascript===\nconst sbs = ${symbols};\nconst idx = ${symbolIdx};\nconst sb = sbs[idx];\nsb;"
@@ -47,6 +49,7 @@
       "enable" : true,
       "devBoxVars" : { },
       "devFlowVars" : { },
+      "minLogLv" : "NONE",
       "url" : "${binance.proxyHost}proxy",
       "uriVariables" : { },
       "body" : "{\n    \"name\": \"profit/cut\",\n    \"apiKey\":\"${binance.key}\",\n    \"secret\":\"${binance.secret}\",\n    \"profitRate\": 0.1,\n    \"topRate\": 0.886,\n    \"bottomRate\":-0.001,\n    \"cutCount\": 5,\n    \"stepMoveOnRate\":0.0002,\n    \"symbol\":\"${curSBL}\",\n    \"positionSide\":\"SHORT\"\n}",
@@ -96,5 +99,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 2
+  "version" : 4
 }
