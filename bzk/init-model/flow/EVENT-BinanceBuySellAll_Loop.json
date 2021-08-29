@@ -14,6 +14,7 @@
       "enable" : true,
       "devBoxVars" : { },
       "devFlowVars" : { },
+      "minLogLv" : "NONE",
       "flatData" : [ {
         "key" : "curSymbol",
         "val" : "!javascript===\nconst sbs = ${symbols};\nconst idx = ${symbolIdx};\nconst sb = sbs[idx];\nsb"
@@ -29,6 +30,7 @@
       "enable" : true,
       "devBoxVars" : { },
       "devFlowVars" : { },
+      "minLogLv" : "NONE",
       "flowUid" : "C06bTWXsMh7D",
       "asynced" : false,
       "inputData" : [ {
@@ -57,7 +59,7 @@
       "endResultKeys" : [ ],
       "resultCode" : ""
     },
-    "minLogLv" : "DEBUG"
+    "minLogLv" : "ERROR"
   } ],
   "varCfgNames" : [ "crypto-symbol.json" ],
   "vars" : { },
@@ -75,11 +77,11 @@
       "type" : "equal"
     }
   },
-  "logEncryptKey" : "1234567890123456",
   "threadCfg" : {
     "corePoolSize" : 10,
     "maximumPoolSize" : 50,
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
-  }
+  },
+  "version" : 2
 }
