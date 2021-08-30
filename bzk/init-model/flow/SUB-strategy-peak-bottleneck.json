@@ -219,7 +219,7 @@
         "val" : "!javascript===\nconst dp = ${minmax.near.val};\nconst mean = ${mean7d.val};\nconst ans = mean + dp;\nans;"
       }, {
         "key" : "quoteRange",
-        "val" : "0.03"
+        "val" : "0.05"
       } ],
       "outputReflects" : [ ]
     } ],
@@ -251,5 +251,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 12
+  "version" : 14
 }

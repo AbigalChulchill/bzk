@@ -201,12 +201,16 @@
   } ],
   "varCfgNames" : [ "binance.json", "mail.json", "fin-proxy.json" ],
   "vars" : {
-    "symbol" : "ETC",
+    "quoteRange" : 0.05,
+    "symbol" : "BTC",
+    "side" : "BUY",
     "investedRate" : 0.1,
-    "side" : "SELL",
-    "currentMove" : 0.6,
+    "quoteSize" : 5,
     "guardRange" : 0.05,
-    "trigger" : "NONE"
+    "currentMove" : 0.6,
+    "trigger" : "NONE",
+    "quoteBase" : 40955.8,
+    "tags" : [ "test" ]
   },
   "entry" : {
     "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
@@ -221,5 +225,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 4
+  "version" : 6
 }

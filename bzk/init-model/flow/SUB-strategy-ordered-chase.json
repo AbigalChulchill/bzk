@@ -4,51 +4,62 @@
   "name" : "SUB-strategy-ordered-chase",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
-    "uid" : "gFPbBJdB5XVI",
-    "name" : "Start",
+    "uid" : "jVukCWK0WxOi",
+    "name" : "CallOrder",
     "actions" : [ {
-      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
-      "uid" : "i2wzDpMCQETH",
-      "name" : "InitVars",
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "POv1MDCCaJ5K",
+      "name" : "Order",
       "tryErrorble" : false,
       "enable" : true,
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "flatData" : [ {
-        "key" : "~startAt",
-        "val" : "!javascript===\nvar start = new Date();\nstart.setHours(start.getHours()-108);\nstart.toISOString();"
-      } ]
-    }, {
-      "clazz" : "net.bzk.flow.model.HttpAction",
-      "uid" : "7034UDUvhTRM",
-      "name" : "FILLED_Order",
-      "tryErrorble" : false,
-      "enable" : true,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "url" : "${binance.proxyHost}proxy",
-      "uriVariables" : { },
-      "body" : "{\n    \"name\": \"get_all_orders\",\n    \"apiKey\":\"${binance.key}\",\n    \"secret\":\"${binance.secret}\",\n    \"symbol\": \"${symbol}\",\n    \"status\":\"FILLED\",\n    \"updateStartAt\":\"${startAt}\"\n}",
-      "method" : "POST",
-      "headers" : { },
-      "headersFlat" : "",
-      "key" : {
-        "lv" : "run_flow",
-        "key" : "FILLEDOds"
-      }
+      "flowUid" : "02eQyaMwyojZ",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "side",
+        "val" : "${__pk_result}"
+      }, {
+        "key" : "symbol",
+        "val" : "${symbol}"
+      }, {
+        "key" : "investedRate",
+        "val" : "0.005"
+      }, {
+        "key" : "guardRange",
+        "val" : "0.005"
+      }, {
+        "key" : "currentMove",
+        "val" : "0"
+      }, {
+        "key" : "tags",
+        "val" : "[\"chase\"]"
+      }, {
+        "key" : "trigger",
+        "val" : "chase"
+      }, {
+        "key" : "quoteSize",
+        "val" : "6"
+      }, {
+        "key" : "quoteBase",
+        "val" : "${exchangePrice}"
+      }, {
+        "key" : "quoteRange",
+        "val" : "0.05"
+      } ],
+      "outputReflects" : [ ]
     } ],
     "links" : [ ],
     "vars" : { },
-    "taskSort" : [ "i2wzDpMCQETH", "7034UDUvhTRM" ],
+    "taskSort" : [ "POv1MDCCaJ5K" ],
     "whileJudgment" : null,
     "transition" : {
-      "toBox" : "NufahYgV2o0m",
-      "endTag" : null,
+      "toBox" : "",
+      "endTag" : "${symbol} ${__pk_result}   ordered",
       "failEnd" : false,
       "endResultKeys" : [ ],
-      "resultCode" : ""
+      "resultCode" : "{\n  \"ordered\": true\n}"
     },
     "minLogLv" : "DEBUG"
   }, {
@@ -137,62 +148,51 @@
     "minLogLv" : "DEBUG"
   }, {
     "clazz" : "net.bzk.flow.model.Box",
-    "uid" : "jVukCWK0WxOi",
-    "name" : "CallOrder",
+    "uid" : "gFPbBJdB5XVI",
+    "name" : "Start",
     "actions" : [ {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "POv1MDCCaJ5K",
-      "name" : "Order",
+      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
+      "uid" : "i2wzDpMCQETH",
+      "name" : "InitVars",
       "tryErrorble" : false,
       "enable" : true,
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "flowUid" : "02eQyaMwyojZ",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "side",
-        "val" : "${__pk_result}"
-      }, {
-        "key" : "symbol",
-        "val" : "${symbol}"
-      }, {
-        "key" : "investedRate",
-        "val" : "0.005"
-      }, {
-        "key" : "guardRange",
-        "val" : "0.005"
-      }, {
-        "key" : "currentMove",
-        "val" : "0"
-      }, {
-        "key" : "tags",
-        "val" : "[\"chase\"]"
-      }, {
-        "key" : "trigger",
-        "val" : "chase"
-      }, {
-        "key" : "quoteSize",
-        "val" : "3"
-      }, {
-        "key" : "quoteBase",
-        "val" : "${exchangePrice}"
-      }, {
-        "key" : "quoteRange",
-        "val" : "0.03"
-      } ],
-      "outputReflects" : [ ]
+      "flatData" : [ {
+        "key" : "~startAt",
+        "val" : "!javascript===\nvar start = new Date();\nstart.setHours(start.getHours()-108);\nstart.toISOString();"
+      } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "7034UDUvhTRM",
+      "name" : "FILLED_Order",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "url" : "${binance.proxyHost}proxy",
+      "uriVariables" : { },
+      "body" : "{\n    \"name\": \"get_all_orders\",\n    \"apiKey\":\"${binance.key}\",\n    \"secret\":\"${binance.secret}\",\n    \"symbol\": \"${symbol}\",\n    \"status\":\"FILLED\",\n    \"updateStartAt\":\"${startAt}\"\n}",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "run_flow",
+        "key" : "FILLEDOds"
+      }
     } ],
     "links" : [ ],
     "vars" : { },
-    "taskSort" : [ "POv1MDCCaJ5K" ],
+    "taskSort" : [ "i2wzDpMCQETH", "7034UDUvhTRM" ],
     "whileJudgment" : null,
     "transition" : {
-      "toBox" : "",
-      "endTag" : "${symbol} ${__pk_result}   ordered",
+      "toBox" : "NufahYgV2o0m",
+      "endTag" : null,
       "failEnd" : false,
       "endResultKeys" : [ ],
-      "resultCode" : "{\n  \"ordered\": true\n}"
+      "resultCode" : ""
     },
     "minLogLv" : "DEBUG"
   } ],
@@ -216,5 +216,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 28
+  "version" : 30
 }
