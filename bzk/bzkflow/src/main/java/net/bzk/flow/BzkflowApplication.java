@@ -55,34 +55,34 @@ public class BzkflowApplication {
     }
 
 //
-//    @Bean
-//    CommandLineRunner init(DomainRepository domainRepository, RunLogDao ldao) {
-//
-//        return args -> {
-//
-//            Domain n = new Domain();
-//            n.setId(System.currentTimeMillis());
-//            n.setDomain("test.com");
-//            VarMap v = new VarMap();
-//            v.put("dd",123);
-//            n.setFlowVar(v);
-//            domainRepository.save(n);
-//
-//            Domain obj2 = domainRepository.findFirstByDomain("test.com");
-//            System.out.println(obj2);
-//
-//
-//            RunLog rl = new RunLog();
-//            rl.setUid(RandomConstant.randomUid(16));
-//            rl.setState(Enums.RunState .ActionCall);
-//            VarMap bmap = new VarMap();
-//            bmap.put("zzz",5);
-//            rl.setBoxVar(bmap);
-//            ldao.save(rl);
-//
-//
-//        };
-//
-//    }
+    @Bean
+    CommandLineRunner init(DomainRepository domainRepository, RunLogDao ldao) {
+
+        return args -> {
+
+            Domain n = new Domain();
+            n.setId(System.currentTimeMillis());
+            n.setDomain("test.com");
+            VarMap v = new VarMap();
+            v.put("dd",123);
+            n.setFlowVar(v);
+            domainRepository.save(n);
+
+            Domain obj2 = domainRepository.findFirstByDomain("test.com");
+            System.out.println(obj2);
+
+
+            RunLog rl = new RunLog();
+            rl.setUid(RandomConstant.randomUid(16));
+            rl.setState(Enums.RunState .ActionCall);
+            VarMap bmap = new VarMap();
+            bmap.put("zzz",5);
+            rl.setBoxVar(bmap);
+            ldao.save(rl);
+
+
+        };
+
+    }
 
 }
