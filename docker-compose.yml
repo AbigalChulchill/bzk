@@ -8,7 +8,8 @@ services:
     ports: 
       - "9202:8080"
     depends_on:
-      - "db" 
+      - "db"
+      - "mongodb"      
   editor-web:
     build: ./flow-editor
     ports: 
