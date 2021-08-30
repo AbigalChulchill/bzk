@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.bzk.flow.enums.Enums;
 import net.bzk.flow.model.Action;
 import net.bzk.infrastructure.JsonUtils;
+import net.bzk.infrastructure.RandomConstant;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -109,6 +110,7 @@ public class RunLogService {
         Box b = br.getModel();
         var ao = b.findAction(u.getActionUid());
         RunLog ans = new RunLog();
+        ans.setUid(RandomConstant.randomUid(16));
         ans.setFlowVar(fr.getVars());
         ans.setBoxVar(br.getVars());
         ans.setBoxName(b.getName());

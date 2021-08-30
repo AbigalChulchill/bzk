@@ -5,9 +5,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import net.bzk.flow.enums.Enums;
 import net.bzk.flow.model.Domain;
+import net.bzk.flow.model.RunLog;
 import net.bzk.flow.model.var.VarMap;
 import net.bzk.flow.run.dao.DomainRepository;
+import net.bzk.flow.run.dao.RunLogDao;
+import net.bzk.infrastructure.RandomConstant;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -52,7 +56,7 @@ public class BzkflowApplication {
 
 
     @Bean
-    CommandLineRunner init(DomainRepository domainRepository) {
+    CommandLineRunner init(DomainRepository domainRepository, RunLogDao ldao) {
 
         return args -> {
 
@@ -67,6 +71,14 @@ public class BzkflowApplication {
             Domain obj2 = domainRepository.findFirstByDomain("test.com");
             System.out.println(obj2);
 
+
+            RunLog rl = new RunLog();
+            rl.setUid(RandomConstant.randomUid(16));
+            rl.setState(Enums.RunState .ActionCall);
+            VarMap bmap = new VarMap();
+            bmap.put("zzz",5);
+            rl.setBoxVar(bmap);
+            ldao.save(rl);
 
 
         };

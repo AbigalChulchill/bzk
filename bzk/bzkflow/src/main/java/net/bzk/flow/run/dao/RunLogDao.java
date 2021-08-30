@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,7 +13,7 @@ import net.bzk.flow.model.RunLog;
 import javax.transaction.Transactional;
 
 @Repository
-public interface RunLogDao extends CrudRepository<RunLog, Long> {
+public interface RunLogDao extends MongoRepository<RunLog, String> {
 
     List<RunLog> findByRunFlowUidOrderByCreateAtAsc(String uid);
 

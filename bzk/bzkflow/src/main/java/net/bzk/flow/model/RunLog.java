@@ -22,18 +22,16 @@ import net.bzk.flow.dto.ConvertInfra;
 import net.bzk.flow.dto.ConvertInfra.VarMapConvert;
 import net.bzk.flow.enums.Enums;
 import net.bzk.flow.model.var.VarMap;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 @SuppressWarnings("serial")
 @Data
-@Entity
 @EntityListeners(CommService.class)
-@Table
+@Document(collection = "run_log")
 public class RunLog implements Serializable, CreateUpdateDate {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(nullable = false)
-    private long id;
+    private String uid;
 
     private String flowUid;
     private String runFlowUid;
@@ -42,25 +40,22 @@ public class RunLog implements Serializable, CreateUpdateDate {
     private String actionUid;
     private String runActionUid;
     private String refRunFlowUid;
-    @Column(nullable = true, columnDefinition = "TEXT")
+
     private String msg;
-    @Column(nullable = true, columnDefinition = "TEXT")
-    @Convert(converter = VarMapConvert.class)
+
     private VarMap flowVar;
-    @Column(nullable = true, columnDefinition = "TEXT")
-    @Convert(converter = VarMapConvert.class)
+
     private VarMap boxVar;
     private String boxName;
-    @Enumerated(EnumType.STRING)
+
     private Enums.RunState state;
-    @Enumerated(EnumType.STRING)
+
     private Enums.LogLv logLv = Enums.LogLv.DEBUG;
-    @Column(nullable = true, columnDefinition = "TEXT")
+
     private String exception;
-    @Column(nullable = true, columnDefinition = "TEXT")
+
     private String exceptionClazz;
-    @Column(nullable = true, columnDefinition = "TEXT")
-    @Convert(converter = ConvertInfra.MapConvert.class)
+
     private HashMap<String, Object> varVals;
     private String actionName;
 
