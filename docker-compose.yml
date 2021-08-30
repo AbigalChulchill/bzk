@@ -20,6 +20,15 @@ services:
        - POSTGRES_PASSWORD=root
     ports: 
       - "5432:5432"
+  mongodb:
+    image: mongo:3.4.2
+    environment:
+       - MONGO_INITDB_ROOT_USERNAME=root
+       - MONGO_INITDB_ROOT_PASSWORD=root
+       - MONGO_INITDB_DATABASE=bzklog       
+    ports: 
+      - "27017:27017"      
+   
   
         
         
