@@ -1,0 +1,69 @@
+{
+  "clazz" : "net.bzk.flow.model.Flow",
+  "uid" : "PWyjP6taCWXi",
+  "name" : "CRON-cancel-orders",
+  "boxs" : [ {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "ZbnGsX8FJhlq",
+    "name" : "Box",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$NodejsAction",
+      "uid" : "kd1e5ShqeXeN",
+      "name" : "Action",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "alwayCleanWorkDir" : false,
+      "code" : "console.log($bzk.init)",
+      "installs" : [ ],
+      "dependencies" : {
+        "moment" : "^2.26.0"
+      },
+      "devDependencies" : { }
+    } ],
+    "links" : [ {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "pc52kopUeoPy",
+      "name" : "TODOLink",
+      "condition" : null,
+      "transition" : {
+        "toBox" : "",
+        "endTag" : "TestEnd",
+        "failEnd" : false,
+        "endResultKeys" : [ ],
+        "resultCode" : ""
+      },
+      "enable" : true
+    } ],
+    "vars" : { },
+    "taskSort" : [ "kd1e5ShqeXeN", "pc52kopUeoPy" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "TODO Why",
+      "failEnd" : false,
+      "endResultKeys" : [ ],
+      "resultCode" : ""
+    },
+    "minLogLv" : "DEBUG"
+  } ],
+  "varCfgNames" : [ "binance.json" ],
+  "vars" : { },
+  "entry" : {
+    "clazz" : "net.bzk.flow.model.Entry$FixedRateEntry",
+    "boxUid" : "ZbnGsX8FJhlq",
+    "autoRegister" : false,
+    "period" : -1,
+    "unit" : "SECONDS",
+    "initialDelay" : 2
+  },
+  "threadCfg" : {
+    "corePoolSize" : 10,
+    "maximumPoolSize" : 50,
+    "keepAliveTime" : 500,
+    "aliveUnit" : "MINUTES"
+  },
+  "version" : 2
+}
