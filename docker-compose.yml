@@ -28,7 +28,12 @@ services:
        - MONGO_INITDB_ROOT_PASSWORD=root
        - MONGO_INITDB_DATABASE=bzklog       
     ports: 
-      - "27017:27017"      
+      - "27017:27017"   
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M      
    
   
         
