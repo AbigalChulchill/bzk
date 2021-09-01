@@ -135,7 +135,7 @@
         "val" : "!javascript===\nconst side ='${side}';\nconst quote = ${quote};\n\nlet pd = {\n    \"symbol\": \"${symbol}\",\n    \"investedRate\": ${oneInvestedRate},\n    \"apiKey\": \"${binance.key}\",\n    \"secret\": \"${binance.secret}\",\n    \"selled\": side == 'SELL',\n    \"name\": \"post_order\",\n    \"quote\":quote,\n    \"guardRange\": ${guardRange},\n    \"currentMove\": ${currentMove}\n};\npd;"
       }, {
         "key" : "body.tags",
-        "val" : "${tags}"
+        "val" : "!javascript===\nvar tags =  ${tags};\ntags.push(\"bot\");\ntags;"
       } ]
     }, {
       "clazz" : "net.bzk.flow.model.HttpAction",
@@ -225,5 +225,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 6
+  "version" : 8
 }

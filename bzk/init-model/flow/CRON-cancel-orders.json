@@ -7,38 +7,28 @@
     "uid" : "ZbnGsX8FJhlq",
     "name" : "Box",
     "actions" : [ {
-      "clazz" : "net.bzk.flow.model.Action$NodejsAction",
-      "uid" : "kd1e5ShqeXeN",
-      "name" : "Action",
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "CqZK2BeXJdkR",
+      "name" : "query_NEW",
       "tryErrorble" : false,
       "enable" : true,
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "alwayCleanWorkDir" : false,
-      "code" : "console.log($bzk.init)",
-      "installs" : [ ],
-      "dependencies" : {
-        "moment" : "^2.26.0"
-      },
-      "devDependencies" : { }
+      "url" : "${binance.proxyHost}proxy",
+      "uriVariables" : { },
+      "body" : "{\n    \"name\": \"get_all_orders\",\n    \"apiKey\":\"${binance.key}\",\n    \"secret\":\"${binance.secret}\",\n    \"symbol\": \"${symbol}\",\n    \"status\":\"FILLED\",\n    \"updateStartAt\":\"${startAt}\"\n}",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : ""
+      }
     } ],
-    "links" : [ {
-      "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "pc52kopUeoPy",
-      "name" : "TODOLink",
-      "condition" : null,
-      "transition" : {
-        "toBox" : "",
-        "endTag" : "TestEnd",
-        "failEnd" : false,
-        "endResultKeys" : [ ],
-        "resultCode" : ""
-      },
-      "enable" : true
-    } ],
+    "links" : [ ],
     "vars" : { },
-    "taskSort" : [ "kd1e5ShqeXeN", "pc52kopUeoPy" ],
+    "taskSort" : [ "CqZK2BeXJdkR" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
@@ -65,5 +55,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 2
+  "version" : 4
 }
