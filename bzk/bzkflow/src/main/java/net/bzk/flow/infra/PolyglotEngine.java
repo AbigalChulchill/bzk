@@ -37,10 +37,10 @@ public class PolyglotEngine {
 
         return PolyglotUtils.parseCode(polyglot, ifCode,
                 s -> logMsg(s),
-                s -> logWarn(s), genVarQueryer());
+                s -> logWarn(s), genCodeToolkit());
     }
 
-    public Map<String, Object> genVarQueryer() {
+    public Map<String, Object> genCodeToolkit() {
         TsCurveFunc tsFunc = TsCurveFunc.getInstance();
         Map<String, Object> ans = PolyglotUtils.genSingleMap(Enums.CodeMember.tsFunc.getCode(), tsFunc);
         ans.put(Enums.CodeMember.pe.getCode(), this);
@@ -68,8 +68,8 @@ public class PolyglotEngine {
         private RunLogService logUtils;
 
         @Override
-        public Map<String, Object> genVarQueryer() {
-            var ans = super.genVarQueryer();
+        public Map<String, Object> genCodeToolkit() {
+            var ans = super.genCodeToolkit();
             ans.putAll(genVarQueryerMap(varQueryer));
             return ans;
         }

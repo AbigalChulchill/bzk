@@ -4,6 +4,74 @@
   "name" : "SUB-strategy-ordered-chase",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "gFPbBJdB5XVI",
+    "name" : "Start",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
+      "uid" : "i2wzDpMCQETH",
+      "name" : "InitVars",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flatData" : [ {
+        "key" : "~startAt",
+        "val" : "!javascript===\nvar start = new Date();\nstart.setHours(start.getHours()-108);\nstart.toISOString();"
+      } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "7034UDUvhTRM",
+      "name" : "query",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "url" : "${binance.proxyHost}proxy",
+      "uriVariables" : { },
+      "body" : "{\n    \"name\": \"get_all_orders\",\n    \"apiKey\":\"${binance.key}\",\n    \"secret\":\"${binance.secret}\",\n    \"symbol\": \"${symbol}\",\n    \"updateStartAt\":\"${startAt}\"\n}",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : "ods"
+      }
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
+      "uid" : "i6chvyDn3dh3",
+      "name" : "Filter-1",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flatData" : [ {
+        "key" : "~FILLEDOds",
+        "val" : "!javascript===\nconst ft = {\n    status:\"FILLED\"\n};\nconst ftJons = JSON.stringify(ft);\nconst ods = ${ods.orders};\nconst odsJson = JSON.stringify(ods);\nconst ans = $orderUtils.filter(odsJson,ftJons);\nans;"
+      }, {
+        "key" : "~chaseOds",
+        "val" : "!javascript===\nconst ft = {\n    tags:['chase']\n};\nconst ftJons = JSON.stringify(ft);\nconst ods = ${ods.orders};\nconst odsJson = JSON.stringify(ods);\nconst ans = $orderUtils.filter(odsJson,ftJons);\nans;"
+      }, {
+        "key" : "~NEW_LIMITOds",
+        "val" : "!javascript===\nconst ft = {\n    status:'NEW',\n    orderType:'LIMIT'\n};\nconst ftJons = JSON.stringify(ft);\nconst ods = ${ods.orders};\nconst odsJson = JSON.stringify(ods);\nconst ans = $orderUtils.filter(odsJson,ftJons);\nans;"
+      } ]
+    } ],
+    "links" : [ ],
+    "vars" : { },
+    "taskSort" : [ "i2wzDpMCQETH", "7034UDUvhTRM", "i6chvyDn3dh3" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "NufahYgV2o0m",
+      "endTag" : null,
+      "failEnd" : false,
+      "endResultKeys" : [ ],
+      "resultCode" : ""
+    },
+    "minLogLv" : "DEBUG"
+  }, {
+    "clazz" : "net.bzk.flow.model.Box",
     "uid" : "NufahYgV2o0m",
     "name" : "SellBuyCheck",
     "actions" : [ {
@@ -54,7 +122,7 @@
         "kind" : "NONE",
         "next" : null,
         "polyglot" : "js",
-        "code" : "const originalQyt = ${limitNoChaseOds.executedQty};\r\nconst curOrderedQyt = ${limitOds.executedQty};\r\nconst stopQty = ${stopOds.executedQty};\r\nconst exchagePrice = ${exchangePrice};\r\nconst originalAvgPrice = ${limitNoChaseOds.avgPrice};\r\n\r\nfunction calc(){\r\n    if(originalQyt<=0) return false;\r\n    if(!checkLastStopAtOK()) return false;\r\n    if(!checkOkPrice())return false;\r\n    const stopMaxQty = curOrderedQyt * (1-${thRate});\r\n    return stopQty < stopMaxQty;\r\n}\r\n\r\nfunction checkLastStopAtOK(){\r\n    const lastOdAt =\"${chaseOds.lastAt}\";\r\n    const lastD = new Date(lastOdAt);\r\n    if(isNaN(lastD)) return false;\r\n    const now = new Date();\r\n    now.setSeconds(now.getSeconds() - 30*60); \r\n    console.log(now);\r\n    console.log(lastD);\r\n    return now>lastD;\r\n}\r\n\r\nfunction checkOkPrice(){\r\n    var r = exchagePrice/originalAvgPrice;\r\n    var dr = Math.abs( 1-r);\r\n    return dr<0.01;\r\n}\r\n\r\ncalc();"
+        "code" : "const originalQyt = ${limitNoChaseOds.executedQty};\r\nconst curOrderedQyt = ${limitOds.executedQty};\r\nconst stopQty = ${stopOds.executedQty};\r\nconst exchagePrice = ${exchangePrice};\r\nconst originalAvgPrice = ${limitNoChaseOds.avgPrice};\r\nconst limitNewQty = ${NEW_LIMITOds.executedQty};\r\n\r\nfunction check(){\r\n    if(limitNewQty>0) return 'HAS_LIMIT_NEW'\r\n    if(originalQyt<=0) return 'NO_NEED_CHASE';\r\n    if(!checkLastStopAtOK()) return 'ALREADY_CHASE';\r\n    if(!checkOkPrice())return 'PRICE_OVER_ANCHOR';\r\n    const stopMaxQty = curOrderedQyt * (1-${thRate});\r\n    return stopQty < stopMaxQty ? 'OK' : 'OVER_CLOSE_QTY' ;\r\n}\r\n\r\nfunction checkLastStopAtOK(){\r\n    const lastOdAt =\"${chaseOds.lastAt}\";\r\n    const lastD = new Date(lastOdAt);\r\n    if(isNaN(lastD)) return false;\r\n    const now = new Date();\r\n    now.setSeconds(now.getSeconds() - 30*60); \r\n    console.log(now);\r\n    console.log(lastD);\r\n    return now>lastD;\r\n}\r\n\r\nfunction checkOkPrice(){\r\n    var r = exchagePrice/originalAvgPrice;\r\n    var dr = Math.abs( 1-r);\r\n    return dr<0.01;\r\n}\r\n\r\nfunction calc(){\r\n    const checkAns = check();\r\n    const side = '${side}';\r\n    $bzk.put('~result.'+side,checkAns);\r\n    return checkAns == 'OK';\r\n}\r\n\r\ncalc();"
       },
       "transition" : {
         "toBox" : "jVukCWK0WxOi",
@@ -80,9 +148,12 @@
     },
     "transition" : {
       "toBox" : "",
-      "endTag" : "${symbol} break",
+      "endTag" : "${symbol}  break > SELL:${result.SELL} | BUY : ${result.BUY}",
       "failEnd" : false,
-      "endResultKeys" : [ ],
+      "endResultKeys" : [ {
+        "lv" : "not_specify",
+        "key" : "result"
+      } ],
       "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"ChaseNO\"\n}"
     },
     "minLogLv" : "DEBUG"
@@ -146,71 +217,6 @@
       "resultCode" : "{\n  \"ordered\": true\n}"
     },
     "minLogLv" : "DEBUG"
-  }, {
-    "clazz" : "net.bzk.flow.model.Box",
-    "uid" : "gFPbBJdB5XVI",
-    "name" : "Start",
-    "actions" : [ {
-      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
-      "uid" : "i2wzDpMCQETH",
-      "name" : "InitVars",
-      "tryErrorble" : false,
-      "enable" : true,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "flatData" : [ {
-        "key" : "~startAt",
-        "val" : "!javascript===\nvar start = new Date();\nstart.setHours(start.getHours()-108);\nstart.toISOString();"
-      } ]
-    }, {
-      "clazz" : "net.bzk.flow.model.HttpAction",
-      "uid" : "7034UDUvhTRM",
-      "name" : "query",
-      "tryErrorble" : false,
-      "enable" : true,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "url" : "${binance.proxyHost}proxy",
-      "uriVariables" : { },
-      "body" : "{\n    \"name\": \"get_all_orders\",\n    \"apiKey\":\"${binance.key}\",\n    \"secret\":\"${binance.secret}\",\n    \"symbol\": \"${symbol}\",\n    \"updateStartAt\":\"${startAt}\"\n}",
-      "method" : "POST",
-      "headers" : { },
-      "headersFlat" : "",
-      "key" : {
-        "lv" : "not_specify",
-        "key" : "ods"
-      }
-    }, {
-      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
-      "uid" : "i6chvyDn3dh3",
-      "name" : "Filter-1",
-      "tryErrorble" : false,
-      "enable" : true,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "flatData" : [ {
-        "key" : "~FILLEDOds",
-        "val" : "!javascript===\nconst ft = {\n    status:\"FILLED\"\n};\nconst ftJons = JSON.stringify(ft);\nconst ods = ${ods.orders};\nconst odsJson = JSON.stringify(ods);\nconst ans = $orderUtils.filter(odsJson,ftJons);\nans;"
-      }, {
-        "key" : "~chaseOds",
-        "val" : "!javascript===\nconst ft = {\n    tags:['chase']\n};\nconst ftJons = JSON.stringify(ft);\nconst ods = ${ods.orders};\nconst odsJson = JSON.stringify(ods);\nconst ans = $orderUtils.filter(odsJson,ftJons);\nans;"
-      } ]
-    } ],
-    "links" : [ ],
-    "vars" : { },
-    "taskSort" : [ "i2wzDpMCQETH", "7034UDUvhTRM", "i6chvyDn3dh3" ],
-    "whileJudgment" : null,
-    "transition" : {
-      "toBox" : "NufahYgV2o0m",
-      "endTag" : null,
-      "failEnd" : false,
-      "endResultKeys" : [ ],
-      "resultCode" : ""
-    },
-    "minLogLv" : "DEBUG"
   } ],
   "varCfgNames" : [ "binance.json" ],
   "vars" : {
@@ -232,5 +238,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 42
+  "version" : 45
 }

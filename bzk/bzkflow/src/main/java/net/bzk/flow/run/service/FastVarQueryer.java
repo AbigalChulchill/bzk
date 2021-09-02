@@ -5,6 +5,8 @@ import java.util.function.Function;
 
 import javax.inject.Inject;
 
+import net.bzk.flow.model.var.VarVal;
+import net.bzk.infrastructure.JsonUtils;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
@@ -44,6 +46,16 @@ public class FastVarQueryer implements Function<String, Object> {
         dq.setPoint(fs.getLv());
         dq.setUids(uids);
         return service.findByQuery(dq);
+    }
+
+    public void put(String path,String o){
+        Object v = JsonUtils.stringToValue(o);
+        VarKey fs = VarLv.checkLvByPrefix(path);
+        VarVal val = new VarVal();
+        val.setVal(v);
+        val.setKey(fs.getKey());
+        val.setLv(fs.getLv());
+        service.putVarVal(uids,val);
     }
 
 
