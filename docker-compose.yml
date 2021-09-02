@@ -33,7 +33,7 @@ services:
       resources:
         limits:
           cpus: '0.50'
-          memory: 1536M      
+          memory: 2048M      
    
   
         

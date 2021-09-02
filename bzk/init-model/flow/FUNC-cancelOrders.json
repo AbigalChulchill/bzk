@@ -22,6 +22,19 @@
         "moment" : "^2.26.0"
       },
       "devDependencies" : { }
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
+      "uid" : "cvbd92bcDOoc",
+      "name" : "InitVars",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flatData" : [ {
+        "key" : "postBody",
+        "val" : "!javascript===\n"
+      } ]
     } ],
     "links" : [ {
       "clazz" : "net.bzk.flow.model.Link",
@@ -38,7 +51,7 @@
       "enable" : true
     } ],
     "vars" : { },
-    "taskSort" : [ "botLohnT42Ui", "SVyldgAPtiGq" ],
+    "taskSort" : [ "cvbd92bcDOoc", "botLohnT42Ui", "SVyldgAPtiGq" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
