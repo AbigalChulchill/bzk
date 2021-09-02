@@ -4,6 +4,90 @@
   "name" : "SUB-strategy-ordered-chase",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "NufahYgV2o0m",
+    "name" : "SellBuyCheck",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
+      "uid" : "EAKffnIzMHDK",
+      "name" : "1-InitVars",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flatData" : [ {
+        "key" : "side",
+        "val" : "!javascript===\nconst sbs = ${sides};\nconst idx = ${idx};\nconst sb = sbs[idx];\nsb;"
+      }, {
+        "key" : "idx",
+        "val" : "!javascript===\n${idx}+1;"
+      }, {
+        "key" : "stopSide",
+        "val" : "!javascript===\nconst side = $bzk.g('side');\nfunction calc(){\n    return side == \"SELL\" ? \"BUY\":\"SELL\";\n}\n\ncalc();"
+      } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
+      "uid" : "f4gcjbnJoW2O",
+      "name" : "Group-1",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "ERROR",
+      "flatData" : [ {
+        "key" : "limitNoChaseOds",
+        "val" : "!javascript===\nconst ft = {\n    untags:[\"chase\"],\n    tags:[\"bot\"],\n    side:\"${side}\",\n    orderType:\"LIMIT\"\n};\nconst ftJons = JSON.stringify(ft);\nconst ods = ${FILLEDOds.orders};\nconst odsJson = JSON.stringify(ods);\nconst ans = $orderUtils.filter(odsJson,ftJons);\nans;"
+      }, {
+        "key" : "limitOds",
+        "val" : "!javascript===\nconst ft = {\n    side:\"${side}\",\n    orderType:\"LIMIT\"\n};\nconst ftJons = JSON.stringify(ft);\nconst ods = ${FILLEDOds.orders};\nconst odsJson = JSON.stringify(ods);\nconst ans = $orderUtils.filter(odsJson,ftJons);\nans;"
+      }, {
+        "key" : "stopOds",
+        "val" : "!javascript===\nconst ft = {\n    side:\"${stopSide}\",\n    origType:\"STOP_MARKET\"\n};\nconst ftJons = JSON.stringify(ft);\nconst ods = ${FILLEDOds.orders};\nconst odsJson = JSON.stringify(ods);\nconst ans = $orderUtils.filter(odsJson,ftJons);\nans;"
+      } ]
+    } ],
+    "links" : [ {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "pVqn3SJBXV7k",
+      "name" : "CanOrder",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
+        "kind" : "NONE",
+        "next" : null,
+        "polyglot" : "js",
+        "code" : "const originalQyt = ${limitNoChaseOds.executedQty};\r\nconst curOrderedQyt = ${limitOds.executedQty};\r\nconst stopQty = ${stopOds.executedQty};\r\nconst exchagePrice = ${exchangePrice};\r\nconst originalAvgPrice = ${limitNoChaseOds.avgPrice};\r\n\r\nfunction calc(){\r\n    if(originalQyt<=0) return false;\r\n    if(!checkLastStopAtOK()) return false;\r\n    if(!checkOkPrice())return false;\r\n    const stopMaxQty = curOrderedQyt * (1-${thRate});\r\n    return stopQty < stopMaxQty;\r\n}\r\n\r\nfunction checkLastStopAtOK(){\r\n    const lastOdAt =\"${chaseOds.lastAt}\";\r\n    const lastD = new Date(lastOdAt);\r\n    if(isNaN(lastD)) return false;\r\n    const now = new Date();\r\n    now.setSeconds(now.getSeconds() - 30*60); \r\n    console.log(now);\r\n    console.log(lastD);\r\n    return now>lastD;\r\n}\r\n\r\nfunction checkOkPrice(){\r\n    var r = exchagePrice/originalAvgPrice;\r\n    var dr = Math.abs( 1-r);\r\n    return dr<0.01;\r\n}\r\n\r\ncalc();"
+      },
+      "transition" : {
+        "toBox" : "jVukCWK0WxOi",
+        "endTag" : null,
+        "failEnd" : false,
+        "endResultKeys" : [ ],
+        "resultCode" : "${side}"
+      },
+      "enable" : true
+    } ],
+    "vars" : {
+      "sides" : [ "BUY", "SELL" ],
+      "idx" : 0
+    },
+    "taskSort" : [ "EAKffnIzMHDK", "f4gcjbnJoW2O", "pVqn3SJBXV7k" ],
+    "whileJudgment" : {
+      "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
+      "kind" : "NONE",
+      "next" : null,
+      "left" : "${idx}",
+      "right" : "!javascript===\nconst sbs = ${sides};\nconst len= sbs.length;\nlen;",
+      "type" : "lessthan"
+    },
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "${symbol} break",
+      "failEnd" : false,
+      "endResultKeys" : [ ],
+      "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"ChaseNO\"\n}"
+    },
+    "minLogLv" : "DEBUG"
+  }, {
+    "clazz" : "net.bzk.flow.model.Box",
     "uid" : "jVukCWK0WxOi",
     "name" : "CallOrder",
     "actions" : [ {
@@ -127,90 +211,6 @@
       "resultCode" : ""
     },
     "minLogLv" : "DEBUG"
-  }, {
-    "clazz" : "net.bzk.flow.model.Box",
-    "uid" : "NufahYgV2o0m",
-    "name" : "SellBuyCheck",
-    "actions" : [ {
-      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
-      "uid" : "EAKffnIzMHDK",
-      "name" : "1-InitVars",
-      "tryErrorble" : false,
-      "enable" : true,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "flatData" : [ {
-        "key" : "side",
-        "val" : "!javascript===\nconst sbs = ${sides};\nconst idx = ${idx};\nconst sb = sbs[idx];\nsb;"
-      }, {
-        "key" : "idx",
-        "val" : "!javascript===\n${idx}+1;"
-      }, {
-        "key" : "stopSide",
-        "val" : "!javascript===\nconst side = $bzk.g('side');\nfunction calc(){\n    return side == \"SELL\" ? \"BUY\":\"SELL\";\n}\n\ncalc();"
-      } ]
-    }, {
-      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
-      "uid" : "f4gcjbnJoW2O",
-      "name" : "Group-1",
-      "tryErrorble" : false,
-      "enable" : true,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "minLogLv" : "ERROR",
-      "flatData" : [ {
-        "key" : "limitNoChaseOds",
-        "val" : "!javascript===\nconst ft = {\n    untags:[\"chase\"],\n    tags:[\"bot\"],\n    side:\"${side}\",\n    orderType:\"LIMIT\"\n};\nconst ftJons = JSON.stringify(ft);\nconst ods = ${FILLEDOds.orders};\nconst odsJson = JSON.stringify(ods);\nconst ans = $orderUtils.filter(odsJson,ftJons);\nans;"
-      }, {
-        "key" : "limitOds",
-        "val" : "!javascript===\nconst ft = {\n    side:\"${side}\",\n    orderType:\"LIMIT\"\n};\nconst ftJons = JSON.stringify(ft);\nconst ods = ${FILLEDOds.orders};\nconst odsJson = JSON.stringify(ods);\nconst ans = $orderUtils.filter(odsJson,ftJons);\nans;"
-      }, {
-        "key" : "stopOds",
-        "val" : "!javascript===\nconst ft = {\n    side:\"${stopSide}\",\n    origType:\"STOP_MARKET\"\n};\nconst ftJons = JSON.stringify(ft);\nconst ods = ${FILLEDOds.orders};\nconst odsJson = JSON.stringify(ods);\nconst ans = $orderUtils.filter(odsJson,ftJons);\nans;"
-      } ]
-    } ],
-    "links" : [ {
-      "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "pVqn3SJBXV7k",
-      "name" : "CanOrder",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
-        "kind" : "NONE",
-        "next" : null,
-        "polyglot" : "js",
-        "code" : "const originalQyt = ${limitNoChaseOds.executedQty};\r\nconst curOrderedQyt = ${limitOds.executedQty};\r\nconst stopQty = ${stopOds.executedQty};\r\nconst exchagePrice = ${exchangePrice};\r\nconst originalAvgPrice = ${limitNoChaseOds.avgPrice};\r\n\r\nfunction calc(){\r\n    if(originalQyt<=0) return false;\r\n    if(!checkLastStopAtOK()) return false;\r\n    if(!checkOkPrice())return false;\r\n    const stopMaxQty = curOrderedQyt * (1-${thRate});\r\n    return stopQty < stopMaxQty;\r\n}\r\n\r\nfunction checkLastStopAtOK(){\r\n    const lastOdAt =\"${chaseOds.lastAt}\";\r\n    const lastD = new Date(lastOdAt);\r\n    if(isNaN(lastD)) return false;\r\n    const now = new Date();\r\n    now.setSeconds(now.getSeconds() - 40*60); \r\n    console.log(now);\r\n    console.log(lastD);\r\n    return now>lastD;\r\n}\r\n\r\nfunction checkOkPrice(){\r\n    var r = exchagePrice/originalAvgPrice;\r\n    var dr = Math.abs( 1-r);\r\n    return dr<0.01;\r\n}\r\n\r\ncalc();"
-      },
-      "transition" : {
-        "toBox" : "jVukCWK0WxOi",
-        "endTag" : null,
-        "failEnd" : false,
-        "endResultKeys" : [ ],
-        "resultCode" : "${side}"
-      },
-      "enable" : true
-    } ],
-    "vars" : {
-      "sides" : [ "BUY", "SELL" ],
-      "idx" : 0
-    },
-    "taskSort" : [ "EAKffnIzMHDK", "f4gcjbnJoW2O", "pVqn3SJBXV7k" ],
-    "whileJudgment" : {
-      "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
-      "kind" : "NONE",
-      "next" : null,
-      "left" : "${idx}",
-      "right" : "!javascript===\nconst sbs = ${sides};\nconst len= sbs.length;\nlen;",
-      "type" : "lessthan"
-    },
-    "transition" : {
-      "toBox" : "",
-      "endTag" : "${symbol} break",
-      "failEnd" : false,
-      "endResultKeys" : [ ],
-      "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"ChaseNO\"\n}"
-    },
-    "minLogLv" : "DEBUG"
   } ],
   "varCfgNames" : [ "binance.json" ],
   "vars" : {
@@ -232,5 +232,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 40
+  "version" : 42
 }
