@@ -148,7 +148,7 @@
       "minLogLv" : "NONE",
       "url" : "${finProxyUrl}/proxy/tsdb/insert/multiple",
       "uriVariables" : { },
-      "body" : "!javascript===\n\nconst sbl = '${symbol}';\nconst side = '${side}';\nconst postResult = ${postResult};\nconst  now = new Date();\nconst nowiso = now.toISOString();\n\nlet ans = [];\n\nfunction genPointDto(fd,v){\n  const row = {\n      measurement : 'order-measurement',\n      tags:{\n        \"symbol\" : sbl,        \n        \"category\":'cryptocurrency',\n        \"source\":'binance',\n        \"side\":side,\n        \"trigger\":'${trigger}'\n      },\n      field: fd,\n      val:v,\n      time :nowiso\n  };\n  return row;\n}\n\nans.push(genPointDto('price',postResult.price));\nans.push(genPointDto('stopPrice',postResult.stopPrice));\nans.push(genPointDto('quantity',postResult.quantity));\n\nans;",
+      "body" : "!javascript===\n\nconst sbl = '${symbol}';\nconst side = '${side}';\nconst postResult = ${postResult};\nlet  now = new Date();\nnow.setSeconds(now.getSeconds() + ${idx}*60);\nconst nowiso = now.toISOString();\n\nlet ans = [];\n\nfunction genPointDto(fd,v){\n  const row = {\n      measurement : 'order-measurement',\n      tags:{\n        \"symbol\" : sbl,        \n        \"category\":'cryptocurrency',\n        \"source\":'binance',\n        \"side\":side,\n        \"trigger\":'${trigger}'\n      },\n      field: fd,\n      val:v,\n      time :nowiso\n  };\n  return row;\n}\n\nans.push(genPointDto('price',postResult.price));\nans.push(genPointDto('stopPrice',postResult.stopPrice));\nans.push(genPointDto('quantity',postResult.quantity));\n\nans;",
       "method" : "POST",
       "headers" : { },
       "headersFlat" : "{}",
@@ -202,14 +202,14 @@
   "varCfgNames" : [ "binance.json", "mail.json", "fin-proxy.json" ],
   "vars" : {
     "quoteRange" : 0.05,
-    "symbol" : "BTC",
+    "symbol" : "EOS",
     "side" : "BUY",
     "investedRate" : 0.1,
-    "quoteSize" : 5,
+    "quoteSize" : 4,
     "guardRange" : 0.05,
     "currentMove" : 0.6,
     "trigger" : "NONE",
-    "quoteBase" : 40955.8,
+    "quoteBase" : 4,
     "tags" : [ "test" ]
   },
   "entry" : {
@@ -225,5 +225,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 8
+  "version" : 15
 }
