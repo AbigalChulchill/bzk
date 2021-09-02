@@ -1,0 +1,97 @@
+{
+  "clazz" : "net.bzk.flow.model.Flow",
+  "uid" : "7fDTbOFBwVkP",
+  "name" : "FUNC-cancelOrders",
+  "boxs" : [ {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "PF6LVYDiB9nt",
+    "name" : "Box",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$NodejsAction",
+      "uid" : "botLohnT42Ui",
+      "name" : "Action",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "alwayCleanWorkDir" : false,
+      "code" : "console.log($bzk.init)",
+      "installs" : [ ],
+      "dependencies" : {
+        "moment" : "^2.26.0"
+      },
+      "devDependencies" : { }
+    } ],
+    "links" : [ {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "SVyldgAPtiGq",
+      "name" : "TODOLink",
+      "condition" : null,
+      "transition" : {
+        "toBox" : "",
+        "endTag" : "TestEnd",
+        "failEnd" : false,
+        "endResultKeys" : [ ],
+        "resultCode" : ""
+      },
+      "enable" : true
+    } ],
+    "vars" : { },
+    "taskSort" : [ "botLohnT42Ui", "SVyldgAPtiGq" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "TODO Why",
+      "failEnd" : false,
+      "endResultKeys" : [ ],
+      "resultCode" : ""
+    },
+    "minLogLv" : "DEBUG"
+  } ],
+  "varCfgNames" : [ ],
+  "vars" : {
+    "orderSubtotal" : {
+      "lastAt" : "2021-09-02T12:05:08.820000+00:00",
+      "executedQty" : 104.7,
+      "orders" : [ {
+        "clientOrderId" : "_OxIx-stop_",
+        "cumQuote" : 562.5531,
+        "executedQty" : 104.7,
+        "orderId" : 12813905024,
+        "origQty" : 104.7,
+        "price" : 0,
+        "reduceOnly" : true,
+        "side" : "BUY",
+        "status" : "FILLED",
+        "stopPrice" : 5.372,
+        "symbol" : "EOSUSDT",
+        "timeInForce" : "GTC",
+        "type" : "MARKET",
+        "updateTime" : 1630584308820,
+        "workingType" : "CONTRACT_PRICE",
+        "avgPrice" : 5.373,
+        "origType" : "STOP_MARKET",
+        "positionSide" : "SHORT",
+        "activatePrice" : null,
+        "priceRate" : null,
+        "closePosition" : false,
+        "updateAt" : "2021-09-02T12:05:08.820000+00:00"
+      } ]
+    }
+  },
+  "entry" : {
+    "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
+    "boxUid" : "PF6LVYDiB9nt",
+    "autoRegister" : false,
+    "requiredKeys" : [ "orderSubtotal" ],
+    "outputKeys" : [ ]
+  },
+  "threadCfg" : {
+    "corePoolSize" : 10,
+    "maximumPoolSize" : 50,
+    "keepAliveTime" : 500,
+    "aliveUnit" : "MINUTES"
+  },
+  "version" : 2
+}

@@ -17,7 +17,26 @@
       "minLogLv" : "NONE",
       "url" : "${binance.proxyHost}proxy",
       "uriVariables" : { },
-      "body" : "{\n    \"name\": \"get_all_orders\",\n    \"apiKey\":\"${binance.key}\",\n    \"secret\":\"${binance.secret}\",\n    \"symbol\": \"${symbol}\",\n    \"status\":\"FILLED\",\n    \"updateStartAt\":\"${startAt}\"\n}",
+      "body" : "!javascript===\nvar start = new Date();\nstart.setSeconds(start.getSeconds() - 8*60*60);\nvar startAt = start.toISOString();\nvar body= {\n    \"name\": \"get_all_orders\",\n    \"apiKey\":\"${binance.key}\",\n    \"secret\":\"${binance.secret}\",\n    \"symbol\": \"${symbol}\",\n    \"status\":\"NEW\",\n    \"orderType\":\"LIMIT\",\n    \"updateEndAt\":\"${startAt}\"\n};\nbody;",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : ""
+      }
+    }, {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "1c3bQRj0toTL",
+      "name" : "",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "url" : "${binance.proxyHost}proxy",
+      "uriVariables" : { },
+      "body" : "{}",
       "method" : "POST",
       "headers" : { },
       "headersFlat" : "",
@@ -28,7 +47,7 @@
     } ],
     "links" : [ ],
     "vars" : { },
-    "taskSort" : [ "CqZK2BeXJdkR" ],
+    "taskSort" : [ "CqZK2BeXJdkR", "1c3bQRj0toTL" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
@@ -55,5 +74,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 4
+  "version" : 6
 }
