@@ -1,18 +1,6 @@
 package net.bzk.flow;
 
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-
-import net.bzk.flow.enums.Enums;
-import net.bzk.flow.model.Domain;
-import net.bzk.flow.model.RunLog;
-import net.bzk.flow.model.var.VarMap;
-import net.bzk.flow.run.dao.DomainRepository;
-import net.bzk.flow.run.dao.RunLogDao;
-import net.bzk.infrastructure.RandomConstant;
-import org.springframework.boot.CommandLineRunner;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -20,9 +8,18 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.mongodb.MongoDatabaseFactory;
+import org.springframework.data.mongodb.MongoDbFactory;
+import org.springframework.data.mongodb.core.convert.DbRefResolver;
+import org.springframework.data.mongodb.core.convert.DefaultDbRefResolver;
+import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
+import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 
 @Configuration
@@ -54,35 +51,12 @@ public class BzkflowApplication {
         return BzkFlowUtils.getFlowJsonMapper();
     }
 
-//
     @Bean
-    CommandLineRunner init(DomainRepository domainRepository, RunLogDao ldao) {
-
-        return args -> {
-
-            Domain n = new Domain();
-            n.setId(System.currentTimeMillis());
-            n.setDomain("test.com");
-            VarMap v = new VarMap();
-            v.put("dd",123);
-            n.setFlowVar(v);
-            domainRepository.save(n);
-
-            Domain obj2 = domainRepository.findFirstByDomain("test.com");
-            System.out.println(obj2);
-
-
-            RunLog rl = new RunLog();
-            rl.setUid(RandomConstant.randomUid(16));
-            rl.setState(Enums.RunState .ActionCall);
-            VarMap bmap = new VarMap();
-            bmap.put("zzz",5);
-            rl.setBoxVar(bmap);
-            ldao.save(rl);
-
-
-        };
-
+    public MappingMongoConverter mongoConverter(MongoDatabaseFactory mongoFactory, MongoMappingContext mongoMappingContext) throws Exception {
+        DbRefResolver dbRefResolver = new DefaultDbRefResolver(mongoFactory);
+        MappingMongoConverter mongoConverter = new MappingMongoConverter(dbRefResolver, mongoMappingContext);
+        mongoConverter.setMapKeyDotReplacement("-DOT");
+        return mongoConverter;
     }
 
 }
