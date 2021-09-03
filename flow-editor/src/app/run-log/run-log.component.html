@@ -33,6 +33,10 @@
     </div>
   </div>
 </nav>
+
+
+<ng-container [ngTemplateOutlet]="pagination" ></ng-container>
+
 <div class="content list-dev">
   <div class="listline" #listlineDom>
     <mat-accordion>
@@ -63,3 +67,32 @@
   </div>
 
 </div>
+
+<ng-container [ngTemplateOutlet]="pagination" ></ng-container>
+
+<ng-template #pagination>
+  <nav aria-label="Page navigation example">
+    <ul class="pagination">
+
+      <li class="page-item" [class.active] = "p === page" *ngFor="let p of pages" ><button (click)="onPageChange(p)" class="page-link" href="#">{{(p+1)}}</button></li>
+
+
+      <li class="page-item">
+        <div class="dropdown ">
+          <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            {{size}}
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+            <button (click)="onSizeChange(10)" class="dropdown-item" type="button">10</button>
+            <button (click)="onSizeChange(25)" class="dropdown-item" type="button">25</button>
+            <button (click)="onSizeChange(50)" class="dropdown-item" type="button">50</button>
+            <button (click)="onSizeChange(100)" class="dropdown-item" type="button">100</button>
+          </div>
+        </div>
+      </li>
+
+
+
+    </ul>
+  </nav>
+</ng-template>

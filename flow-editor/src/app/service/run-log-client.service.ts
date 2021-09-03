@@ -1,3 +1,4 @@
+import { PageDto } from './../dto/page-dto';
 import { RunLog } from './../model/run-log';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -21,8 +22,8 @@ export class RunLogClientService {
   ) { }
 
 
-  public list(uid:string,type:ListLogType): Observable<Array<RunLog>>{
-    return this.httpClient.get<Array<RunLog>>(environment.apiHost + RunLogClientService.URL_PREFIX + uid+'?type='+type );
+  public list(uid:string,type:ListLogType,page:number,size:number): Observable<PageDto<RunLog>>{
+    return this.httpClient.get<PageDto<RunLog>>(`${environment.apiHost}${RunLogClientService.URL_PREFIX}${uid}?type=${type}&page=${page}&size=${size}`);
   }
 
   // public listByRunFlowUid(uid:string): Observable<Array<RunLog>> {

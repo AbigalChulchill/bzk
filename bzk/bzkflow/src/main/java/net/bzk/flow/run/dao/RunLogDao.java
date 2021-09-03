@@ -3,6 +3,8 @@ package net.bzk.flow.run.dao;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.repository.CrudRepository;
@@ -15,9 +17,9 @@ import javax.transaction.Transactional;
 @Repository
 public interface RunLogDao extends MongoRepository<RunLog, String> {
 
-    List<RunLog> findByRunFlowUidOrderByCreateAtAsc(String uid);
+    Page<RunLog> findByRunFlowUidOrderByCreateAtAsc(String uid, Pageable pageable);
 
-    List<RunLog> findByActionUidOrderByCreateAtAsc(String uid);
+    Page<RunLog> findByActionUidOrderByCreateAtAsc(String uid,Pageable pageable);
 
     @Transactional
     @Modifying
