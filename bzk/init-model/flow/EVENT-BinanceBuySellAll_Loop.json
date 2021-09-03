@@ -20,7 +20,7 @@
         "val" : "!javascript===\nconst sbs = ${orderSymbols};\nconst idx = ${symbolIdx};\nconst sb = sbs[idx];\nsb"
       }, {
         "key" : "symbolIdx",
-        "val" : "!javascript===\n${symbolIdx}+1"
+        "val" : "!javascript===\n${orderSymbols}+1"
       } ]
     }, {
       "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
@@ -83,5 +83,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 5
+  "version" : 7
 }
