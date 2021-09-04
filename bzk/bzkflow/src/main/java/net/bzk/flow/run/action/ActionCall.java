@@ -13,7 +13,7 @@ import org.graalvm.polyglot.Value;
 import lombok.Data;
 import lombok.Getter;
 import net.bzk.flow.BzkFlowUtils;
-import net.bzk.flow.Constant;
+import net.bzk.flow.BzkConstant;
 import net.bzk.flow.infra.PolyglotEngine;
 import net.bzk.flow.model.Action;
 import net.bzk.flow.enums.VarLv;
@@ -49,7 +49,7 @@ public abstract class ActionCall<T extends Action> implements Callable<VarValSet
 	public ActionCall initBase(Uids _uids, T a) {
 		uids = _uids;
 		uids.actionUid = a.getUid();
-		uids.runActionUid = RandomStringUtils.randomAlphanumeric(Constant.RUN_UID_SIZE);
+		uids.runActionUid = RandomStringUtils.randomAlphanumeric(BzkConstant.RUN_UID_SIZE);
 		varQueryer.init(_uids);
 		polyglotEngine = PolyglotEngine.FlowPolyglotEngine.builder().logUtils(logUtils).varQueryer(varQueryer).build();
 		model = replaceModel(a);

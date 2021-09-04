@@ -24,7 +24,7 @@ export class RunLogComponent implements OnInit {
   public runState: RunState = null;
   public page = 0;
   public pages = new Array<number>();
-  public size = 10;
+  public size = 25;
 
   constructor(
     private runLogClient: RunLogClientService,

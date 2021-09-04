@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class TsContinuousDirection extends TsCurveFunc.TsCurve {
 
-    public enum Mode {
+    public static enum Mode {
         UNIFORM_SLOPE
     }
 

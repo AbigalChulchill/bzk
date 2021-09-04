@@ -8,86 +8,6 @@
     "name" : "Box",
     "actions" : [ {
       "clazz" : "net.bzk.flow.model.HttpAction",
-      "uid" : "3upPLAHw95l6",
-      "name" : "GetPostionInfo",
-      "tryErrorble" : false,
-      "enable" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "url" : "${binance.proxyHost}proxy",
-      "uriVariables" : { },
-      "body" : "{\r\n    \"name\":\"get_position\",\r\n    \"apiKey\": \"${binance.key}\",\r\n    \"secret\": \"${binance.secret}\",\r\n    \"symbol\": \"${symbol}\"\r\n}",
-      "method" : "POST",
-      "headers" : { },
-      "headersFlat" : "",
-      "key" : {
-        "lv" : "not_specify",
-        "key" : "posInfo"
-      }
-    }, {
-      "clazz" : "net.bzk.flow.model.HttpAction",
-      "uid" : "OcPQy555y0Gn",
-      "name" : "cancel_by_filter",
-      "tryErrorble" : false,
-      "enable" : false,
-      "devBoxVars" : {
-        "symbol" : "EOS",
-        "posInfo" : [ {
-          "entryPrice" : 0,
-          "isAutoAddMargin" : true,
-          "leverage" : 75,
-          "maxNotionalValue" : 10000,
-          "liquidationPrice" : 0,
-          "markPrice" : 6.41487051,
-          "positionAmt" : 0,
-          "symbol" : "EOSUSDT",
-          "unrealizedProfit" : 0,
-          "marginType" : "cross",
-          "isolatedMargin" : 0,
-          "positionSide" : "BOTH"
-        }, {
-          "entryPrice" : 0,
-          "isAutoAddMargin" : true,
-          "leverage" : 75,
-          "maxNotionalValue" : 10000,
-          "liquidationPrice" : 0,
-          "markPrice" : 6.41487051,
-          "positionAmt" : 0,
-          "symbol" : "EOSUSDT",
-          "unrealizedProfit" : 0,
-          "marginType" : "cross",
-          "isolatedMargin" : 0,
-          "positionSide" : "LONG"
-        }, {
-          "entryPrice" : 6.662,
-          "isAutoAddMargin" : true,
-          "leverage" : 75,
-          "maxNotionalValue" : 10000,
-          "liquidationPrice" : 6.70970429,
-          "markPrice" : 6.41487051,
-          "positionAmt" : -110.5,
-          "symbol" : "EOSUSDT",
-          "unrealizedProfit" : 27.30780864,
-          "marginType" : "cross",
-          "isolatedMargin" : 0,
-          "positionSide" : "SHORT"
-        } ]
-      },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "url" : "${binance.proxyHost}proxy",
-      "uriVariables" : { },
-      "body" : "!javascript===\r\nconst payload= {\r\n  \"name\": \"cancel_by_filter\",\r\n  \"apiKey\": \"${binance.key}\",\r\n  \"secret\": \"${binance.secret}\",\r\n  \"symbol\": \"${symbol}\"\r\n};\r\n\r\nconst pinfolist = ${posInfo};\r\nlet amt = 0;\r\n\r\nfor (let p of pinfolist) {\r\n  amt += Math.abs(p.positionAmt);\r\n}\r\n\r\nif(amt>0){\r\n    payload['notOrderType']='STOP_MARKET';\r\n}\r\n\r\npayload;",
-      "method" : "POST",
-      "headers" : { },
-      "headersFlat" : "",
-      "key" : {
-        "lv" : "not_specify",
-        "key" : "postResult"
-      }
-    }, {
-      "clazz" : "net.bzk.flow.model.HttpAction",
       "uid" : "OcPQySOCy0Gn",
       "name" : "PostOrder",
       "tryErrorble" : false,
@@ -181,7 +101,7 @@
       "idx" : 0,
       "quotes" : [ ]
     },
-    "taskSort" : [ "R8kJWNNwM3H0", "3upPLAHw95l6", "OcPQy555y0Gn", "fzgczwZFFaF2", "3H1IkGkleZp5", "OcPQySOCy0Gn", "iD0dtfzuxhXl" ],
+    "taskSort" : [ "R8kJWNNwM3H0", "fzgczwZFFaF2", "3H1IkGkleZp5", "OcPQySOCy0Gn", "iD0dtfzuxhXl" ],
     "whileJudgment" : {
       "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
       "kind" : "NONE",
@@ -225,5 +145,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 15
+  "version" : 17
 }

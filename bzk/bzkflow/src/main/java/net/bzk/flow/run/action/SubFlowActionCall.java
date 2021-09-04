@@ -7,7 +7,7 @@ import java.util.concurrent.ExecutorService;
 
 import javax.inject.Inject;
 
-import net.bzk.flow.Constant;
+import net.bzk.flow.BzkConstant;
 import net.bzk.flow.enums.Enums;
 import net.bzk.flow.run.flow.FlowRuner;
 import net.bzk.infrastructure.JsonUtils;
@@ -91,8 +91,8 @@ public class SubFlowActionCall extends ActionCall<SubFlowAction> {
             VarKeyReflect vkr = vkro.get();
             addVarVal(ans, vkr.getToKey().getLv(), vkr.getToKey().getKey(), vv.getValue());
         }
-        addVarVal(ans, VarLv.run_box, Constant.subStateKey(fr.getModel().getName()), fr.getInfo().getState());
-        addVarVal(ans, VarLv.run_box, Constant.subTagKey(fr.getModel().getName()), getEndTag(fr.getInfo()));
+        addVarVal(ans, VarLv.run_box, BzkConstant.subStateKey(fr.getModel().getName()), fr.getInfo().getState());
+        addVarVal(ans, VarLv.run_box, BzkConstant.subTagKey(fr.getModel().getName()), getEndTag(fr.getInfo()));
         return ans;
     }
 

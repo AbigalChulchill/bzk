@@ -21,7 +21,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import net.bzk.flow.Constant;
+import net.bzk.flow.BzkConstant;
 import net.bzk.flow.model.Action;
 import net.bzk.flow.model.Box;
 import net.bzk.flow.model.Condition;
@@ -72,7 +72,7 @@ public class BoxRuner {
     public BoxRuner init(Bundle b, Box m) {
         model = m;
         bundle = b;
-        uid = RandomStringUtils.randomAlphanumeric(Constant.RUN_UID_SIZE);
+        uid = RandomStringUtils.randomAlphanumeric(BzkConstant.RUN_UID_SIZE);
         vars = m.getVars();
         varQueryer.init(genUids());
         return this;
@@ -166,7 +166,7 @@ public class BoxRuner {
     private List<VarVal> listEndResult(Transition t) {
         List<VarVal> ans = t.getEndResultKeys().stream().map(this::getVarVal).collect(Collectors.toList());
         var pr = t.packResult(logUtils, varQueryer);
-        ans.add(VarVal.gen(VarLv.run_box, Constant.PACK_RESULT_KEY, pr));
+        ans.add(VarVal.gen(VarLv.run_box, BzkConstant.PACK_RESULT_KEY, pr));
         return ans;
     }
 

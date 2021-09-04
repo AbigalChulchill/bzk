@@ -3,7 +3,7 @@ package net.bzk.flow.infra;
 import java.util.Map;
 
 import lombok.extern.slf4j.Slf4j;
-import net.bzk.flow.Constant;
+import net.bzk.flow.BzkConstant;
 import net.bzk.flow.enums.Enums;
 import net.bzk.infrastructure.PolyglotUtils;
 import net.bzk.infrastructure.ordermgt.OrderUtils;
@@ -22,8 +22,8 @@ public class PolyglotEngine {
 
     public <R> R parseScriptbleText(String plain, Class<R> clz) {
         Object o = null;
-        if (plain.startsWith(Constant.SCRIPT_PREFIX)) {
-            plain = plain.replaceFirst(Constant.SCRIPT_PREFIX, "");
+        if (plain.startsWith(BzkConstant.SCRIPT_PREFIX)) {
+            plain = plain.replaceFirst(BzkConstant.SCRIPT_PREFIX, "");
             o = parseCode(Polyglot.js.toString(), plain);
         } else {
             o = JsonUtils.stringToValue(plain);
@@ -34,10 +34,15 @@ public class PolyglotEngine {
 
 
     public Object parseCode(String polyglot, String ifCode) {
-
-        return PolyglotUtils.parseCode(polyglot, ifCode,
+        boolean jsonRetruned = ifCode.startsWith(BzkConstant.SCRIPT_RETURN_JSON_PREFIX);
+        ifCode = ifCode.replaceFirst(BzkConstant.SCRIPT_RETURN_JSON_PREFIX, "");
+        Object ans = PolyglotUtils.parseCode(polyglot, ifCode,
                 s -> logMsg(s),
                 s -> logWarn(s), genCodeToolkit());
+        if (jsonRetruned) {
+            return JsonUtils.loadByJson((String) ans, Object.class);
+        }
+        return ans;
     }
 
     public Map<String, Object> genCodeToolkit() {

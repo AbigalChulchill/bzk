@@ -19,7 +19,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import net.bzk.flow.Constant;
+import net.bzk.flow.BzkConstant;
 import net.bzk.flow.model.Box;
 import net.bzk.flow.model.Flow;
 import net.bzk.flow.model.Transition;
@@ -57,7 +57,7 @@ public class FlowRuner implements Runnable {
     public FlowRuner init(Flow f, Consumer<FlowRuner> c) {
         callback = c;
         model = f;
-        info.uid = RandomStringUtils.randomAlphanumeric(Constant.RUN_UID_SIZE);
+        info.uid = RandomStringUtils.randomAlphanumeric(BzkConstant.RUN_UID_SIZE);
         initVar();
         return this;
     }

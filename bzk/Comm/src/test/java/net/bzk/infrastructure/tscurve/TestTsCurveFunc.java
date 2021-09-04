@@ -33,7 +33,7 @@ public class TestTsCurveFunc {
     @Test
     public void testConD(){
         Map map = loadMap(d90Data);
-        var ans = TsCurveFunc.getInstance().conD(map, TsContinuousDirection.Mode.UNIFORM_SLOPE,3);
+        var ans = TsCurveFunc.getInstance().conD(map, TsContinuousDirection.Mode.UNIFORM_SLOPE.toString(),3);
         System.out.println(ans);
     }
 
