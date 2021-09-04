@@ -21,6 +21,15 @@
       }, {
         "key" : "body.symbol",
         "val" : "${symbol}"
+      }, {
+        "key" : "body.name",
+        "val" : "cancel_order"
+      }, {
+        "key" : "body.apiKey",
+        "val" : "${binance.key}"
+      }, {
+        "key" : "body.secret",
+        "val" : "${binance.secret}"
       } ]
     }, {
       "clazz" : "net.bzk.flow.model.HttpAction",
@@ -160,5 +169,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 10
+  "version" : 12
 }
