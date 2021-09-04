@@ -79,7 +79,7 @@
         "next" : null,
         "left" : "${lessOds.executedQty}",
         "right" : "0",
-        "type" : "equal"
+        "type" : "greater"
       },
       "transition" : {
         "toBox" : "",
@@ -290,5 +290,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 22
+  "version" : 24
 }
