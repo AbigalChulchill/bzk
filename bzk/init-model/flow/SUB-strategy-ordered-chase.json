@@ -214,7 +214,7 @@
       "endTag" : "${symbol} ${__pk_result}   ordered",
       "failEnd" : false,
       "endResultKeys" : [ ],
-      "resultCode" : "{\n  \"ordered\": true\n}"
+      "resultCode" : "{\n  \"ordered\": true,\n  \"breakName\": \"NONE\"\n}"
     },
     "minLogLv" : "DEBUG"
   } ],
@@ -238,5 +238,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 45
+  "version" : 47
 }

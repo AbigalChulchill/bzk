@@ -59,7 +59,7 @@
       "endResultKeys" : [ ],
       "resultCode" : "!javascript===\nconst side = '${toSellOrBuy}';\nconst ans = {\n    side : side,\n    tag : \"MIN_MAX\"\n};\nans;"
     },
-    "minLogLv" : "WARNING"
+    "minLogLv" : "DEBUG"
   }, {
     "clazz" : "net.bzk.flow.model.Box",
     "uid" : "vRRbwAqzG7RN",
@@ -126,7 +126,7 @@
       "endResultKeys" : [ ],
       "resultCode" : ""
     },
-    "minLogLv" : "WARNING"
+    "minLogLv" : "DEBUG"
   }, {
     "clazz" : "net.bzk.flow.model.Box",
     "uid" : "2yrIrBRsEZHo",
@@ -281,5 +281,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 22
+  "version" : 24
 }

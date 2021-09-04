@@ -86,7 +86,7 @@
         "endTag" : "${symbol} ChechNoLimitOd",
         "failEnd" : false,
         "endResultKeys" : [ ],
-        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"P_TH\"\n}"
+        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"ChechNoLimitOd\"\n}"
       },
       "enable" : true
     } ],
@@ -98,7 +98,7 @@
       "endTag" : "${symbo} ordered",
       "failEnd" : false,
       "endResultKeys" : [ ],
-      "resultCode" : ""
+      "resultCode" : "{\n  \"ordered\": true,\n  \"breakName\": \"NONE\"\n}"
     },
     "minLogLv" : "DEBUG"
   }, {
@@ -290,5 +290,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 27
+  "version" : 29
 }
