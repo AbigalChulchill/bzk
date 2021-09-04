@@ -28,7 +28,7 @@
         "val" : "0.005"
       }, {
         "key" : "guardRange",
-        "val" : "0.008"
+        "val" : "0.02"
       }, {
         "key" : "currentMove",
         "val" : "0.00086"
@@ -290,5 +290,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 29
+  "version" : 30
 }
