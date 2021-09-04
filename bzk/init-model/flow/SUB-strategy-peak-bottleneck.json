@@ -128,24 +128,24 @@
     "links" : [ {
       "clazz" : "net.bzk.flow.model.Link",
       "uid" : "uQEGkV35pjX8",
-      "name" : "TimeOver12H",
+      "name" : "TimeOver24H",
       "condition" : {
         "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
         "kind" : "NONE",
         "next" : null,
         "left" : "${minmax.near.dtime}",
-        "right" : "!javascript===\n60*60*12;",
+        "right" : "!javascript===\n60*60*24;",
         "type" : "greater_equal"
       },
       "transition" : {
         "toBox" : "",
-        "endTag" : "${symbol} TimeOver12H",
+        "endTag" : "${symbol} TimeOver24H",
         "failEnd" : false,
         "endResultKeys" : [ {
           "lv" : "not_specify",
           "key" : "__ALL__"
         } ],
-        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"TimeOver12H\"\n}"
+        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"TimeOver24H\"\n}"
       },
       "enable" : true
     }, {
@@ -225,7 +225,7 @@
         "kind" : "NONE",
         "next" : null,
         "left" : "${curMoveRate}",
-        "right" : "0.012",
+        "right" : "0.02",
         "type" : "greater_equal"
       },
       "transition" : {
@@ -290,5 +290,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 24
+  "version" : 27
 }
