@@ -28,10 +28,10 @@ services:
        - MONGO_INITDB_ROOT_PASSWORD=root
        - MONGO_INITDB_DATABASE=bzklog 
     volumes:       
-      - ./:/etc/mongo    
+      - ./mongo:/etc/mongo    
     ports: 
       - "27017:27017"   
-    command: --config /etc/mongo/mongod.conf
+    command: --config /etc/mongo/mongod.conf 
    
   
         
