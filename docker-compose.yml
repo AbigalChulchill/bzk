@@ -26,14 +26,18 @@ services:
     environment:
        - MONGO_INITDB_ROOT_USERNAME=root
        - MONGO_INITDB_ROOT_PASSWORD=root
-       - MONGO_INITDB_DATABASE=bzklog       
+       - MONGO_INITDB_DATABASE=bzklog     
+    command:
+        - '--auth'
+        - '-f'
+        - './mongod.conf'   
     ports: 
       - "27017:27017"   
     deploy:
       resources:
         limits:
-          cpus: '1.50'
-          memory: 3096M      
+          cpus: '1.00'
+          memory: 2500M      
    
   
         
