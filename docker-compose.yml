@@ -31,7 +31,7 @@ services:
       - ./mongod.conf:/etc/mongod.conf    
     ports: 
       - "27017:27017"   
-    entrypoint: ["mongod","--config","/etc/mongod.conf"]
+    entrypoint: ["mongo","--config","/etc/mongod.conf"]
    
   
         
