@@ -26,16 +26,14 @@ services:
     environment:
        - MONGO_INITDB_ROOT_USERNAME=root
        - MONGO_INITDB_ROOT_PASSWORD=root
-       - MONGO_INITDB_DATABASE=bzklog     
-       - PUID=1000
-       - PGID=1000       
-    command: ["mongod","--config","/etc/mongod.conf"]
-    volumes:
-      - ./mongod.conf:/etc/mongod.conf
+       - MONGO_INITDB_DATABASE=bzklog       
     ports: 
       - "27017:27017"   
     deploy:
-      replicas: 1
+      resources:
+        limits:
+          cpus: '1.50'
+          memory: 3096M    
    
   
         
