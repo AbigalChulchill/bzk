@@ -30,14 +30,16 @@ services:
     command:
         - '--auth'
         - '-f'
-        - './mongod.conf'   
+        - '/etc/mongo.conf'
+    volumes:
+        - './mongod.conf:/etc/mongod.conf'
     ports: 
       - "27017:27017"   
     deploy:
       resources:
         limits:
           cpus: '1.00'
-          memory: 2500M      
+          memory: 2304M      
    
   
         
