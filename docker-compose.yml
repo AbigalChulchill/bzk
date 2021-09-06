@@ -22,15 +22,13 @@ services:
     ports: 
       - "5432:5432"
   mongodb:
-    image: mongo:3.4.2
+    image: mongo:4.1.13
     environment:
        - MONGO_INITDB_ROOT_USERNAME=root
        - MONGO_INITDB_ROOT_PASSWORD=root
        - MONGO_INITDB_DATABASE=bzklog     
     entrypoint: ["mongod","--config","/etc/mongod.conf"]
     volumes:
-      - /root/data/mongod:/root/data
-      - /root/logs/mongod:/root/logs
       - ./mongod.conf:/etc/mongod.conf
     ports: 
       - "27017:27017"   
