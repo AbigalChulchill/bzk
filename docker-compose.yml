@@ -27,7 +27,9 @@ services:
        - MONGO_INITDB_ROOT_USERNAME=root
        - MONGO_INITDB_ROOT_PASSWORD=root
        - MONGO_INITDB_DATABASE=bzklog     
-    entrypoint: ["mongod","--config","/etc/mongod.conf"]
+       - PUID=1000
+       - PGID=1000       
+    command: ["mongod","--config","/etc/mongod.conf"]
     volumes:
       - ./mongod.conf:/etc/mongod.conf
     ports: 
