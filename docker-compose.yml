@@ -29,14 +29,13 @@ services:
        - MONGO_INITDB_DATABASE=bzklog     
     entrypoint: ["mongod","--config","/etc/mongod.conf"]
     volumes:
-        - './mongod.conf:/etc/mongod.conf'
+      - /root/data/mongod:/root/data
+      - /root/logs/mongod:/root/logs
+      - ./mongod.conf:/etc/mongod.conf
     ports: 
       - "27017:27017"   
     deploy:
-      resources:
-        limits:
-          cpus: '1.00'
-          memory: 2304M      
+      replicas: 1
    
   
         
