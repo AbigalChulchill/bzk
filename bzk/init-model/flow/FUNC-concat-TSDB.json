@@ -1,0 +1,90 @@
+{
+  "clazz" : "net.bzk.flow.model.Flow",
+  "uid" : "lReXow3492HG",
+  "name" : "FUNC-concat-TSDB",
+  "boxs" : [ {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "DkbmGZOvv2F7",
+    "name" : "Box",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$NodejsAction",
+      "uid" : "kQf7eJ7Ibt88",
+      "name" : "Action",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "alwayCleanWorkDir" : false,
+      "code" : "console.log($bzk.init)",
+      "installs" : [ ],
+      "dependencies" : {
+        "moment" : "^2.26.0"
+      },
+      "devDependencies" : { }
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
+      "uid" : "oovQqJqy8kFe",
+      "name" : "Loop",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flatData" : [ {
+        "key" : "idx",
+        "val" : "!javascript===\n${idx}+1;"
+      } ]
+    } ],
+    "links" : [ {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "w9buPceIj69c",
+      "name" : "TODOLink",
+      "condition" : null,
+      "transition" : {
+        "toBox" : "",
+        "endTag" : "TestEnd",
+        "failEnd" : false,
+        "endResultKeys" : [ ],
+        "resultCode" : ""
+      },
+      "enable" : true
+    } ],
+    "vars" : {
+      "idx" : 1
+    },
+    "taskSort" : [ "oovQqJqy8kFe", "kQf7eJ7Ibt88", "w9buPceIj69c" ],
+    "whileJudgment" : {
+      "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
+      "kind" : "NONE",
+      "next" : null,
+      "left" : "!javascript===\nconst idx = ${idx};\nconst key = 'query-'+idx;\nconst q = $bzk.q(key);\n\nfunction isBlank(str) {\n    return (!str || /^\\s*$/.test(str));\n}\n\nisBlank(q);",
+      "right" : "0",
+      "type" : "equal"
+    },
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "TODO Why",
+      "failEnd" : false,
+      "endResultKeys" : [ ],
+      "resultCode" : ""
+    },
+    "minLogLv" : "DEBUG"
+  } ],
+  "varCfgNames" : [ ],
+  "vars" : { },
+  "entry" : {
+    "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
+    "boxUid" : "DkbmGZOvv2F7",
+    "autoRegister" : false,
+    "requiredKeys" : [ ],
+    "outputKeys" : [ ]
+  },
+  "threadCfg" : {
+    "corePoolSize" : 10,
+    "maximumPoolSize" : 50,
+    "keepAliveTime" : 500,
+    "aliveUnit" : "MINUTES"
+  },
+  "version" : 3
+}
