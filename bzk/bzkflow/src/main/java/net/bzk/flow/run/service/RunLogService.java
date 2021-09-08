@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.bzk.flow.enums.Enums;
 import net.bzk.flow.model.Action;
+import net.bzk.infrastructure.CommUtils;
 import net.bzk.infrastructure.JsonUtils;
 import net.bzk.infrastructure.RandomConstant;
 import org.springframework.stereotype.Service;
@@ -114,6 +115,7 @@ public class RunLogService {
         ans.setFlowVar(fr.getVars());
         ans.setBoxVar(br.getVars());
         ans.setBoxName(b.getName());
+        ans.setCreateAt(CommUtils.nowUtc0());
         if (ao.isPresent())
             ans.setActionName(ao.get().getName());
         return setupUids(ans, u);
