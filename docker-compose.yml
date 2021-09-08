@@ -31,8 +31,11 @@ services:
       - ./mongo:/etc/mongo    
     ports: 
       - "27017:27017"   
-    command: --config /etc/mongo/mongod.conf 
-   
+    command:  mongod --dbpath /data/db --port 27017 --config /etc/mongo/mongod.conf 
+    ulimits:
+      nofile:
+        soft: 20000
+        hard: 40000   
   
         
         
