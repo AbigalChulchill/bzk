@@ -20,7 +20,7 @@
         "val" : "!javascript===\n${idx}+1;"
       }, {
         "key" : "query",
-        "val" : "!javascript===\n${querys}[${idx}];"
+        "val" : "!javascript===\nconst array = ${querys};\nconst idx = ${idx};\narray[idx];"
       } ]
     }, {
       "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
@@ -56,15 +56,15 @@
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "code" : "let allVals = ${allVals}",
+      "code" : "\r\nlet allVals = ${allVals};\r\nlet vals = ${vals};\r\n\r\nfor (const [key, value] of Object.entries(allVals)) {\r\n  vals[key]=value;\r\n}\r\n\r\nvals",
       "polyglot" : "js",
       "resultLv" : "not_specify",
-      "resultKey" : ""
+      "resultKey" : "allVals"
     } ],
     "links" : [ ],
     "vars" : {
-      "allVals" : [ ],
-      "idx" : 1
+      "allVals" : { },
+      "idx" : 0
     },
     "taskSort" : [ "oovQqJqy8kFe", "RZvCk7RvcvcZ", "0gaeqzZkeJPb" ],
     "whileJudgment" : {
@@ -79,19 +79,24 @@
       "toBox" : "",
       "endTag" : "TODO Why",
       "failEnd" : false,
-      "endResultKeys" : [ ],
+      "endResultKeys" : [ {
+        "lv" : "not_specify",
+        "key" : "allVals"
+      } ],
       "resultCode" : ""
     },
     "minLogLv" : "DEBUG"
   } ],
   "varCfgNames" : [ ],
-  "vars" : { },
+  "vars" : {
+    "querys" : [ "from(bucket: \"quote\")\r\n  |> range(start: -1d )\r\n   |> filter(fn: (r) =>\r\n    r._measurement == \"realtime\" and\r\n    r.symbol == \"BTC\" and\r\n    r._field == \"price\"\r\n  )\r\n", "from(bucket: \"quote\")\r\n  |> range(stop: -1d,start: -2d )\r\n   |> filter(fn: (r) =>\r\n    r._measurement == \"realtime\" and\r\n    r.symbol == \"BTC\" and\r\n    r._field == \"price\"\r\n  )\r\n" ]
+  },
   "entry" : {
     "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
     "boxUid" : "DkbmGZOvv2F7",
     "autoRegister" : false,
-    "requiredKeys" : [ ],
-    "outputKeys" : [ ]
+    "requiredKeys" : [ "querys" ],
+    "outputKeys" : [ "allVals" ]
   },
   "threadCfg" : {
     "corePoolSize" : 10,
@@ -99,5 +104,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 6
+  "version" : 14
 }

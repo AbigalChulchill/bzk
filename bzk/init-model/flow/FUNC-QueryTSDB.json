@@ -11,8 +11,10 @@
       "uid" : "HIiIMXpt9MDo",
       "name" : "GenQueryBody",
       "tryErrorble" : false,
+      "enable" : true,
       "devBoxVars" : { },
       "devFlowVars" : { },
+      "minLogLv" : "NONE",
       "flatData" : [ {
         "key" : "queryBody.query",
         "val" : "${tsdbQuery}"
@@ -22,8 +24,10 @@
       "uid" : "dvmT4XVIVB5Z",
       "name" : "Request",
       "tryErrorble" : false,
+      "enable" : true,
       "devBoxVars" : { },
       "devFlowVars" : { },
+      "minLogLv" : "NONE",
       "url" : "${finProxyUrl}/proxy/tsdb",
       "uriVariables" : { },
       "body" : "${queryBody}",
@@ -39,8 +43,10 @@
       "uid" : "mwO7JgHLkhCE",
       "name" : "trim",
       "tryErrorble" : false,
+      "enable" : true,
       "devBoxVars" : { },
       "devFlowVars" : { },
+      "minLogLv" : "NONE",
       "syntax" : "$..values",
       "source" : {
         "lv" : "not_specify",
@@ -55,8 +61,10 @@
       "uid" : "Py7WIVmpPe2H",
       "name" : "trimValues",
       "tryErrorble" : false,
+      "enable" : true,
       "devBoxVars" : { },
       "devFlowVars" : { },
+      "minLogLv" : "NONE",
       "flatData" : [ {
         "key" : "trimValues",
         "val" : "!javascript===\nconst list= ${listValues};\nlist[0];"
@@ -66,8 +74,10 @@
       "uid" : "g41uJocNlH7d",
       "name" : "nearVal",
       "tryErrorble" : false,
+      "enable" : true,
       "devBoxVars" : { },
       "devFlowVars" : { },
+      "minLogLv" : "NONE",
       "flatData" : [ {
         "key" : "nearVal",
         "val" : "!javascript===\n\nconst rateTimeMap = ${trimValues};\nlet skipCount = ${skipCount};\n\nconst kv= getAllowKV(rateTimeMap);\n\n\nfunction getAllowKV(rMap){\n    keys= Object.keys(rMap);\n    keys = keys.reverse();\n    for(const key of keys){\n\n        if(skipCount>0){\n            skipCount--;\n            continue;\n        }\n\n        const v = rMap[key];\n        \n        if(v) {\n            return {\n                time : key,\n                val: v\n            }\n        }\n    }\n    throw new Error('not ok data');\n}\n\nkv;"
@@ -77,8 +87,10 @@
       "uid" : "pokWDrjTQ8z1",
       "name" : "CalcTime",
       "tryErrorble" : false,
+      "enable" : true,
       "devBoxVars" : { },
       "devFlowVars" : { },
+      "minLogLv" : "NONE",
       "code" : "const kv= ${nearVal};\r\n\r\nconst keyTime= Date.parse(kv.time);\r\nconst nowAt = nowUtc();\r\n\r\n const dts = (nowAt - keyTime)/(1000*60)  ;\r\n\r\nfunction nowUtc(){\r\n    var date = new Date(); \r\n    var now_utc =  Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(),\r\n    date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());\r\n    return new Date(now_utc);\r\n}\r\n\r\ndts;",
       "polyglot" : "js",
       "resultLv" : "not_specify",
@@ -102,7 +114,8 @@
         "failEnd" : true,
         "endResultKeys" : [ ],
         "resultCode" : ""
-      }
+      },
+      "enable" : true
     } ],
     "vars" : { },
     "taskSort" : [ "HIiIMXpt9MDo", "dvmT4XVIVB5Z", "mwO7JgHLkhCE", "Py7WIVmpPe2H", "g41uJocNlH7d", "pokWDrjTQ8z1", "pIrQbo1n4DYb" ],
@@ -120,7 +133,7 @@
       } ],
       "resultCode" : ""
     },
-    "minLogLv" : "WARNING"
+    "minLogLv" : "DEBUG"
   } ],
   "varCfgNames" : [ "fin-proxy.json" ],
   "vars" : {
@@ -134,11 +147,11 @@
     "requiredKeys" : [ "tsdbQuery", "vaildMins", "skipCount" ],
     "outputKeys" : [ "nearVal", "trimValues" ]
   },
-  "logEncryptKey" : "1234567890123456",
   "threadCfg" : {
     "corePoolSize" : 10,
     "maximumPoolSize" : 50,
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
-  }
+  },
+  "version" : 2
 }
