@@ -34,7 +34,6 @@ public class TsPeakFinder extends TsCurveFunc.TsCurve {
         private TrendInfo micro;
         private TrendInfo macro;
         private LastInfo last;
-
     }
 
     @Data
