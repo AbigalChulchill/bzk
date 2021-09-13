@@ -18,10 +18,6 @@ public class TsPeakFinder extends TsCurveFunc.TsCurve {
         MINED, MAXED, NONE
     }
 
-    public enum Dimension {
-        MACRO, MICRO
-    }
-
     @Data
     public static class MinMaxInfo {
         private List<Point> min = new ArrayList<>();
@@ -62,17 +58,19 @@ public class TsPeakFinder extends TsCurveFunc.TsCurve {
     }
 
 
-    private final double baseVal;
-    private final double peakMaxWaitSeconds;
-    private final double macroAmplitudeRate;
+//    private final double baseVal;
+//    private final double peakMaxWaitSeconds;
+//    private final double macroAmplitudeRate;
+    private  final  TsPeakDimension dimension;
     private final MacroAmplitudeFilter macroAmplitudeFilter = new MacroAmplitudeFilter();
 
 
-    public TsPeakFinder(Map<String, Double> rm, double baseVal, double peakMaxWaitSeconds, double macroAmplitudeRate) {
+    public TsPeakFinder(Map<String, Double> rm, TsPeakDimension tpd) {
         super(rm);
-        this.baseVal = baseVal;
-        this.peakMaxWaitSeconds = peakMaxWaitSeconds;
-        this.macroAmplitudeRate = macroAmplitudeRate;
+        this.dimension = tpd;
+//        this.baseVal = baseVal;
+//        this.peakMaxWaitSeconds = peakMaxWaitSeconds;
+//        this.macroAmplitudeRate = macroAmplitudeRate;
 
     }
 
@@ -80,14 +78,14 @@ public class TsPeakFinder extends TsCurveFunc.TsCurve {
     public Result calc() {
         Result ans = new Result();
         ans.setLast(LastInfo.builder().val(rMap.get(firstKey)).time(firstKey).build());
-        ans.setMacro(genTrendInfo(Dimension.MACRO, macroAmplitudeFilter));
-        ans.setMicro(genTrendInfo(Dimension.MICRO, null));
+        ans.setMacro(genTrendInfo(TsPeakDimension.Dimension.MACRO, macroAmplitudeFilter));
+        ans.setMicro(genTrendInfo(TsPeakDimension.Dimension.MICRO, null));
         return ans;
 
     }
 
 
-    private MinMaxInfo listMinMax(Dimension micro, Function<MinMaxInfo, MinMaxInfo> filter) {
+    private MinMaxInfo listMinMax(TsPeakDimension.Dimension micro, Function<MinMaxInfo, MinMaxInfo> filter) {
         var ans = new MinMaxInfo();
         for (int i = 0; i < keys.size(); i++) {
             PointType mmr = findMinOrMax(i, micro);
@@ -128,25 +126,18 @@ public class TsPeakFinder extends TsCurveFunc.TsCurve {
     }
 
     public double getValByKey(String key) {
-        return rMap.get(key) - baseVal;
+        return dimension.getValByKey(key);
     }
 
-    private boolean isBoundary(String curKey, int idx, Dimension micro, boolean forward) {
-        if (idx < 0) return true;
-        if (idx >= keys.size()) return true;
-        String nk = keys.get(idx);
-        double timeSize = Math.abs(TsCurveUtils.subtractKeySeconds(curKey, nk));
-        if (micro == Dimension.MICRO && timeSize > peakMaxWaitSeconds) return true;
-        if (micro == Dimension.MICRO) return false;
-        int nidx = forward ? idx - 1 : idx + 1;
-        if (nidx < 0) return true;
-        if (nidx >= keys.size()) return true;
-        double cv = getValByKey(keys.get(idx));
-        double nv = getValByKey(keys.get(nidx));
-        return nv * cv < 0;
+    private boolean isBoundary(String fromKey, int nowIdx, TsPeakDimension.Dimension micro, boolean forward) {
+        if (nowIdx < 0) return true;
+        if (nowIdx >= keys.size()) return true;
+        String nowKey = keys.get(nowIdx);
+        double fromNowTime = Math.abs(TsCurveUtils.subtractKeySeconds(fromKey, nowKey));
+        return dimension.isBoundary(fromKey,nowIdx,nowKey,fromNowTime,forward);
     }
 
-    private PointType findMinOrMax(int idx, Dimension micro) {
+    private PointType findMinOrMax(int idx, TsPeakDimension.Dimension micro) {
         int curIdx = idx;
         String curKey = keys.get(idx);
         double curv = getValByKey(curKey);
@@ -174,13 +165,13 @@ public class TsPeakFinder extends TsCurveFunc.TsCurve {
             }
         }
         if (maxed && mined) return PointType.NONE;
-        if (maxed && (micro == Dimension.MICRO || curv > 0)) return PointType.MAXED;
-        if (mined && (micro == Dimension.MICRO || curv < 0)) return PointType.MINED;
+        if (maxed && (micro == TsPeakDimension.Dimension.MICRO || curv > 0)) return PointType.MAXED;
+        if (mined && (micro == TsPeakDimension.Dimension.MICRO || curv < 0)) return PointType.MINED;
         return PointType.NONE;
     }
 
 
-    private TrendInfo genTrendInfo(Dimension micro, Function<MinMaxInfo, MinMaxInfo> filter) {
+    private TrendInfo genTrendInfo(TsPeakDimension.Dimension micro, Function<MinMaxInfo, MinMaxInfo> filter) {
         MinMaxInfo minMaxInfo = listMinMax(micro, filter);
         Point nearMax = getNearInfo(minMaxInfo.max);
         Point nearMin = getNearInfo(minMaxInfo.min);

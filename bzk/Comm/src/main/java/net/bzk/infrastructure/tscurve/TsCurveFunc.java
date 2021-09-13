@@ -1,5 +1,7 @@
 package net.bzk.infrastructure.tscurve;
 
+import lombok.Getter;
+
 import java.util.*;
 
 public class TsCurveFunc {
@@ -8,7 +10,8 @@ public class TsCurveFunc {
     private TsCurveFunc() {
     }
 
-    public TsPeakFinder.Result findPeak(Map<String, Double> rm, double baseVal, double peakMaxWaitSeconds, double macroAmplitudeRate) {
+    public TsPeakFinder.Result findPeak(Map<String, Double> rm,Map<String,Object> dimension, double baseVal, double peakMaxWaitSeconds, double macroAmplitudeRate) {
+        TsPeakDimension.Dimension d = TsPeakDimension.Dimension.valueOf( dimension.get("dimension").toString());
         TsPeakFinder pf = new TsPeakFinder(rm, baseVal, peakMaxWaitSeconds, macroAmplitudeRate);
         return pf.calc();
     }
@@ -29,8 +32,11 @@ public class TsCurveFunc {
     }
 
     public static class TsCurve {
+        @Getter
         protected final Map<String, Double> rMap;
+        @Getter
         protected final List<String> keys;
+        @Getter
         protected final String firstKey;
 
         public TsCurve(Map<String, Double> rMap) {
