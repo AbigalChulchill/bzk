@@ -44,7 +44,7 @@ public class TsPeakPos {
 
     public TsPeakPos(TsPeakFinder.Result pr) {
         rf = pr;
-        macro = rf.getMacro();
+        macro = rf.getTrendInfo();
         state = macro.getState();
         lastV = rf.getLast().getVal();
         h = getH();

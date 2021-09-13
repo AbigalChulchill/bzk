@@ -10,9 +10,10 @@ public class TsCurveFunc {
     private TsCurveFunc() {
     }
 
-    public TsPeakFinder.Result findPeak(Map<String, Double> rm,Map<String,Object> dimension, double baseVal, double peakMaxWaitSeconds, double macroAmplitudeRate) {
+    public TsPeakFinder.Result findPeak(Map<String, Double> rm,Map<String,Object> dimension) {
         TsPeakDimension.Dimension d = TsPeakDimension.Dimension.valueOf( dimension.get("dimension").toString());
-        TsPeakFinder pf = new TsPeakFinder(rm, baseVal, peakMaxWaitSeconds, macroAmplitudeRate);
+        TsPeakDimension dInstance = d.gen(dimension);
+        TsPeakFinder pf = new TsPeakFinder(rm, dInstance);
         return pf.calc();
     }
 

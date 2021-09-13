@@ -26,7 +26,11 @@ public class TestTsCurveFunc {
         double peakMaxWaitSeconds = 60 * 60 * 24 * 3;
         double macroAmplitudeRate = 0;
         Map map = loadMap(d90Data);
-        var ans = TsCurveFunc.getInstance().findPeak(map, 0, peakMaxWaitSeconds, macroAmplitudeRate);
+        TsPeakDimension.MacroDimension md = new TsPeakDimension.MacroDimension();
+        md.setPeakMaxWaitSeconds(peakMaxWaitSeconds);
+        md.setAmplitudeRate(macroAmplitudeRate);
+        Map mdsm = JsonUtils.toByJson(md,Map.class);
+        var ans = TsCurveFunc.getInstance().findPeak(map, mdsm);
         System.out.println(ans);
     }
 

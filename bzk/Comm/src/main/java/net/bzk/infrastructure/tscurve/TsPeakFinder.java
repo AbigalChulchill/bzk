@@ -4,12 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.*;
-import java.util.function.Function;
-
-import net.bzk.infrastructure.tscurve.TsCurveUtils.Point;
 import net.bzk.infrastructure.tscurve.TsCurveUtils.Direction;
+import net.bzk.infrastructure.tscurve.TsCurveUtils.Point;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 public class TsPeakFinder extends TsCurveFunc.TsCurve {
@@ -27,8 +28,7 @@ public class TsPeakFinder extends TsCurveFunc.TsCurve {
 
     @Data
     public static class Result {
-        private TrendInfo micro;
-        private TrendInfo macro;
+        private TrendInfo trendInfo;
         private LastInfo last;
     }
 
@@ -67,9 +67,7 @@ public class TsPeakFinder extends TsCurveFunc.TsCurve {
     public TsPeakFinder(Map<String, Double> rm, TsPeakDimension tpd) {
         super(rm);
         this.dimension = tpd;
-//        this.baseVal = baseVal;
-//        this.peakMaxWaitSeconds = peakMaxWaitSeconds;
-//        this.macroAmplitudeRate = macroAmplitudeRate;
+        this.dimension.setFinder(this);
 
     }
 
@@ -77,8 +75,7 @@ public class TsPeakFinder extends TsCurveFunc.TsCurve {
     public Result calc() {
         Result ans = new Result();
         ans.setLast(LastInfo.builder().val(rMap.get(firstKey)).time(firstKey).build());
-        ans.setMacro(genTrendInfo(TsPeakDimension.Dimension.MACRO, macroAmplitudeFilter));
-        ans.setMicro(genTrendInfo(TsPeakDimension.Dimension.MICRO, null));
+        ans.setTrendInfo(genTrendInfo());
         return ans;
 
     }
@@ -191,16 +188,10 @@ public class TsPeakFinder extends TsCurveFunc.TsCurve {
 
     }
 
-
-
     private Point getOtherNearPeak(Direction state, Point nearMax, Point nearMin) {
         if (nearMax != null && nearMax.getIdx() == 0) return nearMin;
         if (nearMin != null && nearMin.getIdx() == 0) return nearMax;
         return state == Direction.FALL ? nearMin : nearMax;
     }
-
-
-
-
 
 }

@@ -10,9 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 @Data
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 public abstract class TsPeakDimension {
 
     private double peakMaxWaitSeconds;
@@ -20,6 +18,7 @@ public abstract class TsPeakDimension {
     @JsonIgnore
     private TsPeakFinder finder;
 
+    @JsonIgnore
     public List<String> getKeys() {
         return finder.getKeys();
     }
@@ -75,7 +74,9 @@ public abstract class TsPeakDimension {
     @EqualsAndHashCode(callSuper = false)
     public static class MicroDimension extends TsPeakDimension {
 
-
+        public MicroDimension(){
+            setDimension(Dimension.MICRO);
+        }
 
         @Override
         protected TsPeakFinder.PointType checkMinMaxEx(boolean maxed, boolean mined, double fromVal) {
@@ -106,6 +107,9 @@ public abstract class TsPeakDimension {
         private double baseVal;
         private double amplitudeRate;
 
+        public MacroDimension(){
+            setDimension(Dimension.MACRO);
+        }
 
         @Override
         protected TsPeakFinder.PointType checkMinMaxEx(boolean maxed, boolean mined, double fromVal) {
