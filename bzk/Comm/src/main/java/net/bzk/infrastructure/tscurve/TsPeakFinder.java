@@ -62,7 +62,6 @@ public class TsPeakFinder extends TsCurveFunc.TsCurve {
 //    private final double peakMaxWaitSeconds;
 //    private final double macroAmplitudeRate;
     private  final  TsPeakDimension dimension;
-    private final MacroAmplitudeFilter macroAmplitudeFilter = new MacroAmplitudeFilter();
 
 
     public TsPeakFinder(Map<String, Double> rm, TsPeakDimension tpd) {
@@ -85,10 +84,10 @@ public class TsPeakFinder extends TsCurveFunc.TsCurve {
     }
 
 
-    private MinMaxInfo listMinMax(TsPeakDimension.Dimension micro, Function<MinMaxInfo, MinMaxInfo> filter) {
+    private MinMaxInfo listMinMax( ) {
         var ans = new MinMaxInfo();
         for (int i = 0; i < keys.size(); i++) {
-            PointType mmr = findMinOrMax(i, micro);
+            PointType mmr = findMinOrMax(i);
             Point info = genPoint(i);
             if (mmr == PointType.MINED) {
                 ans.min.add(info);
@@ -98,7 +97,7 @@ public class TsPeakFinder extends TsCurveFunc.TsCurve {
                 ans.all.add(info);
             }
         }
-        if (filter != null) ans = filter.apply(ans);
+        ans = dimension.filterAmplitude(ans);
         return ans;
     }
 
@@ -129,7 +128,7 @@ public class TsPeakFinder extends TsCurveFunc.TsCurve {
         return dimension.getValByKey(key);
     }
 
-    private boolean isBoundary(String fromKey, int nowIdx, TsPeakDimension.Dimension micro, boolean forward) {
+    private boolean isBoundary(String fromKey, int nowIdx, boolean forward) {
         if (nowIdx < 0) return true;
         if (nowIdx >= keys.size()) return true;
         String nowKey = keys.get(nowIdx);
@@ -137,49 +136,46 @@ public class TsPeakFinder extends TsCurveFunc.TsCurve {
         return dimension.isBoundary(fromKey,nowIdx,nowKey,fromNowTime,forward);
     }
 
-    private PointType findMinOrMax(int idx, TsPeakDimension.Dimension micro) {
-        int curIdx = idx;
-        String curKey = keys.get(idx);
-        double curv = getValByKey(curKey);
+    private PointType findMinOrMax(int idx) {
+        int fromIdx = idx;
+        String fromKey = keys.get(fromIdx);
+        double fromVal = getValByKey(fromKey);
         boolean maxed = true, mined = true;
         boolean forward = true;
         while (maxed || mined) {
             if (forward) idx--;
             else idx++;
 
-            if (isBoundary(curKey, idx, micro, forward)) {
+            if (isBoundary(fromKey, idx, forward)) {
                 if (forward) {
-                    idx = curIdx;
+                    idx = fromIdx;
                     forward = false;
                     continue;
                 }
 
                 break;
             }
-            double nv = getValByKey(keys.get(idx));
+            double nowVal = getValByKey(keys.get(idx));
             if (maxed) {
-                if (nv > curv) maxed = false;
+                if (nowVal > fromVal) maxed = false;
             }
             if (mined) {
-                if (nv < curv) mined = false;
+                if (nowVal < fromVal) mined = false;
             }
         }
-        if (maxed && mined) return PointType.NONE;
-        if (maxed && (micro == TsPeakDimension.Dimension.MICRO || curv > 0)) return PointType.MAXED;
-        if (mined && (micro == TsPeakDimension.Dimension.MICRO || curv < 0)) return PointType.MINED;
-        return PointType.NONE;
+        return dimension.checkMinMax(maxed,mined,fromVal);
     }
 
 
-    private TrendInfo genTrendInfo(TsPeakDimension.Dimension micro, Function<MinMaxInfo, MinMaxInfo> filter) {
-        MinMaxInfo minMaxInfo = listMinMax(micro, filter);
+    private TrendInfo genTrendInfo( ) {
+        MinMaxInfo minMaxInfo = listMinMax( );
         Point nearMax = getNearInfo(minMaxInfo.max);
         Point nearMin = getNearInfo(minMaxInfo.min);
         double maxNearTime = nearMax != null ? TsCurveUtils.subtractKeySeconds(firstKey, nearMax.getKey()) : Integer.MAX_VALUE;
         double minNearTime = nearMin != null ? TsCurveUtils.subtractKeySeconds(firstKey, nearMin.getKey()) : Integer.MAX_VALUE;
         System.out.println(nearMax);
         System.out.println(nearMin);
-        Direction state = calcState(maxNearTime, minNearTime);
+        Direction state = dimension. calcState(maxNearTime, minNearTime);
 
         System.out.println(state);
         return TrendInfo.builder()
@@ -195,13 +191,7 @@ public class TsPeakFinder extends TsCurveFunc.TsCurve {
 
     }
 
-    private Direction calcState(double maxNearTime, double minNearTime) {
-        if (maxNearTime < minNearTime) {
-            return maxNearTime > peakMaxWaitSeconds ? Direction.FALL : Direction.RISE;
-        } else {
-            return minNearTime > peakMaxWaitSeconds ? Direction.RISE : Direction.FALL;
-        }
-    }
+
 
     private Point getOtherNearPeak(Direction state, Point nearMax, Point nearMin) {
         if (nearMax != null && nearMax.getIdx() == 0) return nearMin;
@@ -210,78 +200,7 @@ public class TsPeakFinder extends TsCurveFunc.TsCurve {
     }
 
 
-    public class MacroAmplitudeFilter implements Function<MinMaxInfo, MinMaxInfo> {
 
-        @Override
-        public MinMaxInfo apply(MinMaxInfo iArrays) {
-            int sidx = 0;
-            while (sidx < iArrays.all.size()) {
-                var list = iArrays.all;
-                var rmList = listAmplitudeSmall(sidx, list);
-                for (var rmv : rmList) {
-                    removeByIdx(iArrays.all, rmv.getIdx());
-                    removeByIdx(iArrays.min, rmv.getIdx());
-                    removeByIdx(iArrays.max, rmv.getIdx());
-                }
-                sidx++;
-            }
-            return iArrays;
-        }
-
-        private void removeByIdx(List<Point> list, int idx) {
-            var po = list.stream().filter(p -> p.getIdx() == idx).findFirst();
-            if (po.isEmpty()) return;
-            list.remove(po.get());
-        }
-
-        private Point checkOveAmplitudeRate(List<Point> list, int fidx, double curV) {
-            double tv = Math.abs(list.get(fidx).getVal());
-            double r = tv / curV;
-            if (r > macroAmplitudeRate) {
-                return null;
-            }
-            return list.get(fidx);
-        }
-
-        private Point getRmLater(boolean later, int idx, int pidx, double curV, List<Point> list) {
-            if (!later) return null;
-            int fidx = idx + pidx;
-            if (fidx >= list.size()) {
-                return null;
-            }
-            return checkOveAmplitudeRate(list, fidx, curV);
-
-        }
-
-        private Point getRmForward(boolean forward, int idx, int pidx, double curV, List<Point> list) {
-            if (!forward) return null;
-            int fidx = idx - pidx;
-            if (fidx < 0) {
-                return null;
-            }
-            return checkOveAmplitudeRate(list, fidx, curV);
-        }
-
-        private List<Point> listAmplitudeSmall(int idx, List<Point> list) {
-            List<Point> ans = new ArrayList<>();
-            double curV = Math.abs(list.get(idx).getVal());
-            boolean forward = true, later = true;
-
-            for (int i = 1; i < list.size(); i++) {
-                Point fr = getRmForward(forward, idx, i, curV, list);
-                if (fr == null) forward = false;
-                Point lr = getRmLater(later, idx, i, curV, list);
-                if (lr == null) later = false;
-                if (fr != null) ans.add(fr);
-                if (lr != null) ans.add(lr);
-            }
-
-            return ans;
-
-
-        }
-
-    }
 
 
 }
