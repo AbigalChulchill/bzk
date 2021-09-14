@@ -1,6 +1,9 @@
 package net.bzk.infrastructure.tscurve;
 
 import lombok.Getter;
+import net.bzk.infrastructure.tscurve.peak.Dimension;
+import net.bzk.infrastructure.tscurve.peak.TsPeakDimension;
+import net.bzk.infrastructure.tscurve.peak.TsPeakFinder;
 
 import java.util.*;
 
@@ -10,10 +13,12 @@ public class TsCurveFunc {
     private TsCurveFunc() {
     }
 
-    public TsPeakFinder.Result findPeak(Map<String, Double> rm,Map<String,Object> dimension) {
-        TsPeakDimension.Dimension d = TsPeakDimension.Dimension.valueOf( dimension.get("dimension").toString());
-        TsPeakDimension dInstance = d.gen(dimension);
-        TsPeakFinder pf = new TsPeakFinder(rm, dInstance);
+    public TsPeakFinder.Result findPeak(Map<String, Double> rm, Map<String,Object> dimensionMap) {
+        Dimension d = Dimension.valueOf( dimensionMap.get("dimension").toString());
+        var dto = d.genDto(dimensionMap);
+        var logic = d.genLogic();
+        logic.setDto(dto);
+        TsPeakFinder pf = new TsPeakFinder(rm, logic);
         return pf.calc();
     }
 

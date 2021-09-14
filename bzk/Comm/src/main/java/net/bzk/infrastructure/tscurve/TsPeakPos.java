@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.bzk.infrastructure.ex.BzkRuntimeException;
+import net.bzk.infrastructure.tscurve.peak.TsPeakFinder;
 
 public class TsPeakPos {
 

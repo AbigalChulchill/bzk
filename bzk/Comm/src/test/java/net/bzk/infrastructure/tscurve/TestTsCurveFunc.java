@@ -2,14 +2,12 @@ package net.bzk.infrastructure.tscurve;
 
 import net.bzk.infrastructure.CommUtils;
 import net.bzk.infrastructure.JsonUtils;
-import net.bzk.infrastructure.PlaceholderUtils;
+import net.bzk.infrastructure.tscurve.peak.TsPeakDimension;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.Resource;
 
-import javax.inject.Inject;
-import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

@@ -1,24 +1,26 @@
-package net.bzk.infrastructure.tscurve;
+package net.bzk.infrastructure.tscurve.peak;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import net.bzk.infrastructure.JsonUtils;
+import net.bzk.infrastructure.tscurve.TsCurveUtils;
 import org.apache.commons.lang3.NotImplementedException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@Data
-@NoArgsConstructor
-public abstract class TsPeakDimension {
 
-    private double peakMaxWaitSeconds;
-    private Dimension dimension;
-    @JsonIgnore
-    private TsPeakFinder finder;
+public abstract class TsPeakDimension<T extends  DimensionDto> {
 
-    @JsonIgnore
+
+    @Setter
+    protected T dto;
+    @Setter
+    protected TsPeakFinder finder;
+
+
+
     public List<String> getKeys() {
         return finder.getKeys();
     }
@@ -36,9 +38,9 @@ public abstract class TsPeakDimension {
 
     public TsCurveUtils.Direction calcState(double maxNearTime, double minNearTime) {
         if (maxNearTime < minNearTime) {
-            return maxNearTime > peakMaxWaitSeconds ? TsCurveUtils.Direction.FALL : TsCurveUtils.Direction.RISE;
+            return maxNearTime >  dto.peakMaxWaitSeconds ? TsCurveUtils.Direction.FALL : TsCurveUtils.Direction.RISE;
         } else {
-            return minNearTime > peakMaxWaitSeconds ? TsCurveUtils.Direction.RISE : TsCurveUtils.Direction.FALL;
+            return minNearTime > dto.peakMaxWaitSeconds ? TsCurveUtils.Direction.RISE : TsCurveUtils.Direction.FALL;
         }
     }
 
@@ -50,33 +52,13 @@ public abstract class TsPeakDimension {
 
     public abstract boolean isBoundary(String fromKey, int nowIdx, String nowKey, double fromNowTime, boolean forward);
 
-    public enum Dimension {
-        MACRO, MICRO;
 
-        public Class<? extends TsPeakDimension> getMapClass() {
-            switch (this) {
-                case MACRO:
-                    return MacroDimension.class;
-                case MICRO:
-                    return MicroDimension.class;
-            }
-            throw new NotImplementedException(this + "not support");
-        }
-
-        public TsPeakDimension gen(Map<String, Object> m) {
-            var c = getMapClass();
-            return JsonUtils.toByJson(m, c);
-        }
-
-    }
 
     @Data
     @EqualsAndHashCode(callSuper = false)
-    public static class MicroDimension extends TsPeakDimension {
+    public static class MicroDimension extends TsPeakDimension<DimensionDto.MicroDimensionDto> {
 
-        public MicroDimension(){
-            setDimension(Dimension.MICRO);
-        }
+
 
         @Override
         protected TsPeakFinder.PointType checkMinMaxEx(boolean maxed, boolean mined, double fromVal) {
@@ -92,24 +74,20 @@ public abstract class TsPeakDimension {
 
         @Override
         public double getValByKey(String key) {
-            return getFinder().getRMap().get(key);
+            return finder.getRMap().get(key);
         }
 
         @Override
         public boolean isBoundary(String fromKey, int nowIdx, String nowKey, double fromNowTime, boolean forward) {
-            return fromNowTime > getPeakMaxWaitSeconds() ;
+            return fromNowTime > dto.peakMaxWaitSeconds ;
         }
     }
 
     @Data
     @EqualsAndHashCode(callSuper = false)
-    public static class MacroDimension extends TsPeakDimension {
-        private double baseVal;
-        private double amplitudeRate;
+    public static class MacroDimension extends TsPeakDimension<DimensionDto.MacroDimensionDto> {
 
-        public MacroDimension(){
-            setDimension(Dimension.MACRO);
-        }
+
 
         @Override
         protected TsPeakFinder.PointType checkMinMaxEx(boolean maxed, boolean mined, double fromVal) {
@@ -173,7 +151,7 @@ public abstract class TsPeakDimension {
         private TsCurveUtils.Point checkOveAmplitudeRate(List<TsCurveUtils.Point> list, int fidx, double curV) {
             double tv = Math.abs(list.get(fidx).getVal());
             double r = tv / curV;
-            if (r > amplitudeRate) {
+            if (r > dto.amplitudeRate) {
                 return null;
             }
             return list.get(fidx);
@@ -181,7 +159,7 @@ public abstract class TsPeakDimension {
 
         @Override
         public double getValByKey(String key) {
-            return getFinder().getRMap().get(key) - baseVal;
+            return finder.getRMap().get(key) - dto.baseVal;
         }
 
         @Override

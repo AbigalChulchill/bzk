@@ -1,9 +1,11 @@
-package net.bzk.infrastructure.tscurve;
+package net.bzk.infrastructure.tscurve.peak;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.bzk.infrastructure.tscurve.TsCurveFunc;
+import net.bzk.infrastructure.tscurve.TsCurveUtils;
 import net.bzk.infrastructure.tscurve.TsCurveUtils.Direction;
 import net.bzk.infrastructure.tscurve.TsCurveUtils.Point;
 
@@ -68,7 +70,6 @@ public class TsPeakFinder extends TsCurveFunc.TsCurve {
         super(rm);
         this.dimension = tpd;
         this.dimension.setFinder(this);
-
     }
 
 
