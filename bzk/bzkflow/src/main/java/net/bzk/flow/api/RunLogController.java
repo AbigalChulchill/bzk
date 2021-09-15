@@ -1,7 +1,6 @@
 package net.bzk.flow.api;
 
 import java.util.Date;
-import java.util.List;
 
 import javax.inject.Inject;
 

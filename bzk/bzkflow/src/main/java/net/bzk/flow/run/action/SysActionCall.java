@@ -6,10 +6,13 @@ import java.util.Map;
 
 import javax.inject.Inject;
 import javax.transaction.NotSupportedException;
-import javax.transaction.Transactional;
 
+import net.bzk.flow.model.RunLog;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Scope;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
@@ -43,7 +46,16 @@ public class SysActionCall extends ActionCall<SysAction> {
 
 	private void deleteLogs(Map<String, ?> m) {
 		Date date = Date.from(Instant.parse(m.get("date").toString()));
-		logDao.deleteByCreateAtBefore(date);
+//		logDao.deleteByCreateAtBefore(date);
+		Pageable pageable = PageRequest.of(0, 100);
+		Page<RunLog> logp = logDao.findByCreateAtBefore(date,pageable);
+		while(true) {
+			logDao.deleteAll(logp.getContent());
+			if (!logp.hasNext()) {
+				break;
+			}
+			pageable = logp.nextPageable();
+		}
 	}
 
 }
