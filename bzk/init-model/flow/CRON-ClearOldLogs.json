@@ -16,7 +16,7 @@
       "devFlowVars" : { },
       "minLogLv" : "NONE",
       "func" : "deleteLogs",
-      "data" : "!javascript===\nvar dat = new Date();\n\ndat.setSeconds(dat.getSeconds() - 0.5*60*60);\n\nd= {\n    \"date\":dat.toISOString()\n};\nd"
+      "data" : "!javascript===\nvar dat = new Date();\n\ndat.setSeconds(dat.getSeconds() - 1*60*60);\n\nd= {\n    \"date\":dat.toISOString()\n};\nd"
     } ],
     "links" : [ ],
     "vars" : { },
