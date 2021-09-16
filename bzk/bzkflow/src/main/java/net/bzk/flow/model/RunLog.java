@@ -3,11 +3,11 @@ package net.bzk.flow.model;
 import lombok.Data;
 import net.bzk.flow.enums.Enums;
 import net.bzk.flow.model.var.VarMap;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.IndexDirection;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import org.springframework.data.annotation.Id;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
