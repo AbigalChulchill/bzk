@@ -46,16 +46,16 @@ public class SysActionCall extends ActionCall<SysAction> {
 
 	private void deleteLogs(Map<String, ?> m) {
 		Date date = Date.from(Instant.parse(m.get("date").toString()));
-//		logDao.deleteByCreateAtBefore(date);
-		Pageable pageable = PageRequest.of(0, 100);
-		Page<RunLog> logp = logDao.findByCreateAtBefore(date,pageable);
-		while(true) {
-			logDao.deleteAll(logp.getContent());
-			if (!logp.hasNext()) {
-				break;
-			}
-			pageable = logp.nextPageable();
-		}
+		logDao.deleteByCreateAtBefore(date);
+//		Pageable pageable = PageRequest.of(0, 100);
+//		Page<RunLog> logp = logDao.findByCreateAtBefore(date,pageable);
+//		while(true) {
+//			logDao.deleteAll(logp.getContent());
+//			if (!logp.hasNext()) {
+//				break;
+//			}
+//			pageable = logp.nextPageable();
+//		}
 	}
 
 }
