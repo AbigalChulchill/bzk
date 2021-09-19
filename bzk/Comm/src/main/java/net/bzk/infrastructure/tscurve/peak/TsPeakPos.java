@@ -1,10 +1,13 @@
-package net.bzk.infrastructure.tscurve;
+package net.bzk.infrastructure.tscurve.peak;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.bzk.infrastructure.ex.BzkRuntimeException;
+import net.bzk.infrastructure.tscurve.TsCurveUtils;
+import net.bzk.infrastructure.tscurve.TsEnums;
+import net.bzk.infrastructure.tscurve.peak.TsPeakFinder;
 
 public class TsPeakPos {
 
@@ -44,7 +47,7 @@ public class TsPeakPos {
 
     public TsPeakPos(TsPeakFinder.Result pr) {
         rf = pr;
-        macro = rf.getMacro();
+        macro = rf.getTrendInfo();
         state = macro.getState();
         lastV = rf.getLast().getVal();
         h = getH();

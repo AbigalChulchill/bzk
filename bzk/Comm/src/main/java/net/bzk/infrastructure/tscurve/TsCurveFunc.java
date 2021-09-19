@@ -1,5 +1,11 @@
 package net.bzk.infrastructure.tscurve;
 
+import lombok.Getter;
+import net.bzk.infrastructure.JsonUtils;
+import net.bzk.infrastructure.tscurve.peak.Dimension;
+import net.bzk.infrastructure.tscurve.peak.TsPeakDimension;
+import net.bzk.infrastructure.tscurve.peak.TsPeakFinder;
+
 import java.util.*;
 
 public class TsCurveFunc {
@@ -8,8 +14,12 @@ public class TsCurveFunc {
     private TsCurveFunc() {
     }
 
-    public TsPeakFinder.Result findPeak(Map<String, Double> rm, double baseVal, double peakMaxWaitSeconds, double macroAmplitudeRate) {
-        TsPeakFinder pf = new TsPeakFinder(rm, baseVal, peakMaxWaitSeconds, macroAmplitudeRate);
+    public TsPeakFinder.Result findPeak(Map<String, Double> rm, Map<String, Object> dimensionMap) {
+        Dimension d = Dimension.valueOf(dimensionMap.get("dimension").toString());
+        var dto = d.genDto(dimensionMap);
+        var logic = d.genLogic();
+        logic.setDto(dto);
+        TsPeakFinder pf = new TsPeakFinder(rm, logic);
         return pf.calc();
     }
 
@@ -19,9 +29,15 @@ public class TsCurveFunc {
     }
 
     public TsContinuousDirection.Result conD(Map<String, Double> rm, String m, int thCount) {
-        TsContinuousDirection.Mode mode =TsContinuousDirection.Mode.valueOf(m);
+        TsContinuousDirection.Mode mode = TsContinuousDirection.Mode.valueOf(m);
         TsContinuousDirection tcd = new TsContinuousDirection(rm, mode, thCount);
         return tcd.calc();
+    }
+
+    public TsHowBig.Result findBigger(Map<String, Double> rm, String dtoJson) {
+        TsHowBig.Dto dto = JsonUtils.loadByJson(dtoJson, TsHowBig.Dto.class);
+        TsHowBig tb = new TsHowBig(rm, dto);
+        return tb.calc();
     }
 
     public static TsCurveFunc getInstance() {
@@ -29,8 +45,11 @@ public class TsCurveFunc {
     }
 
     public static class TsCurve {
+        @Getter
         protected final Map<String, Double> rMap;
+        @Getter
         protected final List<String> keys;
+        @Getter
         protected final String firstKey;
 
         public TsCurve(Map<String, Double> rMap) {
