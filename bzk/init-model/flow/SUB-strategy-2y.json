@@ -28,10 +28,20 @@
           "key" : ""
         }
       } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
+      "uid" : "Dfq0TAINMBq2",
+      "name" : "analyzeVars",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flatData" : [ ]
     } ],
     "links" : [ ],
     "vars" : { },
-    "taskSort" : [ "xHaqpw4loFKq" ],
+    "taskSort" : [ "xHaqpw4loFKq", "Dfq0TAINMBq2" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
@@ -59,5 +69,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 4
+  "version" : 6
 }
