@@ -44,6 +44,7 @@ public class TsHowBig extends TsCurveFunc.TsCurve {
         if(!started) throw new BzkRuntimeException("not find key in list : " + dto.targetKey);
         return Result.builder()
                 .time(TsCurveUtils.subtractKeySeconds(dto.targetKey, lastKey))
+                .endKey(lastKey)
                 .count(count)
                 .targetKey(dto.targetKey)
                 .build();
@@ -71,6 +72,7 @@ public class TsHowBig extends TsCurveFunc.TsCurve {
         private String targetKey;
         private double time;
         private int count;
+        private String endKey;
 
     }
 
