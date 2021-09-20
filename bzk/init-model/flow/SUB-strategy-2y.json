@@ -38,16 +38,35 @@
       "devFlowVars" : { },
       "minLogLv" : "NONE",
       "flatData" : [ {
-        "key" : "peaks",
+        "key" : "~peaks",
         "val" : "!javascript===\nconst peakMaxWaitSeconds = 60*60*1.5;\nconst dto = {\n    peakMaxWaitSeconds:60*60*1.5,\n    dimension:'MICRO'\n};\nconst mm = $tsFunc.findPeak(${y2Vals},dto);\nmm;"
       }, {
-        "key" : "bigger",
-        "val" : "!javascript===\nconst nearMaxKey = $bzk.g('$peaks.trendInfo.nearMax.key');\nconst dto = {\n    targetKey:nearMaxKey,\n    bigger:true\n};\nconst mm = $tsFunc.findBigger(${y2Vals},JSON.stringify(dto));\nmm;"
+        "key" : "~extremeInfo",
+        "val" : "!javascript===\nconst peakType = $bzk.g('$peaks.trendInfo.nearPeakType');\nconst peakQueryPath = '$peaks.trendInfo.'+ (peakType=='MAXED' ? 'nearMax' : 'nearMin' ) +'.key'\nconst nearPeakKey = $bzk.g(peakQueryPath);\n\nconst dto = {\n    targetKey:nearPeakKey,\n    bigger:peakType == 'MAXED' ? true : false\n};\nconst mm = $tsFunc.findBigger(${y2Vals},JSON.stringify(dto));\nmm;"
       } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "bdp2D8EmHQHn",
+      "name" : "BinanceQuote",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "url" : "${binance.proxyHost}proxy",
+      "uriVariables" : { },
+      "body" : "{\n    \"name\":\"get_recent_trades_list\",\n    \"apiKey\":\"${binance.key}\",\n    \"secret\":\"${binance.secret}\",\n    \"symbol\":\"${symbol}\",\n    \"limit\":1000,\n    \"timeMaped\":true\n}",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "run_flow",
+        "key" : "binanceQuote"
+      }
     } ],
     "links" : [ ],
     "vars" : { },
-    "taskSort" : [ "xHaqpw4loFKq", "Dfq0TAINMBq2" ],
+    "taskSort" : [ "xHaqpw4loFKq", "Dfq0TAINMBq2", "bdp2D8EmHQHn" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
@@ -58,7 +77,7 @@
     },
     "minLogLv" : "DEBUG"
   } ],
-  "varCfgNames" : [ ],
+  "varCfgNames" : [ "binance.json" ],
   "vars" : {
     "symbol" : "BTC"
   },
@@ -75,5 +94,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 11
+  "version" : 13
 }

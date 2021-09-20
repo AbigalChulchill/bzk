@@ -56,7 +56,7 @@ public class TsPeakFinder extends TsCurveFunc.TsCurve {
         private double minNearTime;
         private Point nearMax;
         private Point nearMin;
-        private Point nearPeak;
+        private PointType nearPeakType;
     }
 
 
@@ -185,14 +185,14 @@ public class TsPeakFinder extends TsCurveFunc.TsCurve {
                 .minNearTime(minNearTime)
                 .nearMax(nearMax)
                 .nearMin(nearMin)
-                .nearPeak(getOtherNearPeak(state, nearMax, nearMin)).build();
+                .nearPeakType(getOtherNearPeak(state, nearMax, nearMin)).build();
 
     }
 
-    private Point getOtherNearPeak(Direction state, Point nearMax, Point nearMin) {
-        if (nearMax != null && nearMax.getIdx() == 0) return nearMin;
-        if (nearMin != null && nearMin.getIdx() == 0) return nearMax;
-        return state == Direction.FALL ? nearMin : nearMax;
+    private PointType getOtherNearPeak(Direction state, Point nearMax, Point nearMin) {
+        if (nearMax != null && nearMax.getIdx() == 0) return  PointType.MINED;
+        if (nearMin != null && nearMin.getIdx() == 0) return  PointType.MAXED;
+        return state == Direction.FALL ? PointType.MINED : PointType.MAXED;
     }
 
 }

@@ -47,6 +47,7 @@ public class TsHowBig extends TsCurveFunc.TsCurve {
                 .endKey(lastKey)
                 .count(count)
                 .targetKey(dto.targetKey)
+                .bigger(dto.bigger)
                 .build();
     }
 
@@ -70,6 +71,7 @@ public class TsHowBig extends TsCurveFunc.TsCurve {
     @AllArgsConstructor
     public static class Result {
         private String targetKey;
+        private boolean bigger ;
         private double time;
         private int count;
         private String endKey;
