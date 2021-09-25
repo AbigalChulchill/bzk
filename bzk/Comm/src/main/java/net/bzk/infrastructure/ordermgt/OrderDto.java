@@ -2,6 +2,7 @@ package net.bzk.infrastructure.ordermgt;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import org.apache.commons.lang3.NotImplementedException;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ public class OrderDto {
     private boolean reduceOnly = false;
     private String side = null;
     private String status = null;
-    private String stopPrice = null;
+    private float stopPrice = 0.0f;
     private String symbol = "";
     private String timeInForce = null;
     private String type = null;
@@ -33,8 +34,16 @@ public class OrderDto {
     private String updateAt;
 
     @JsonIgnore
-    public ZonedDateTime parseUpdateAt(){
+    public ZonedDateTime parseUpdateAt() {
         return java.time.ZonedDateTime.parse(updateAt);
+    }
+
+    @JsonIgnore
+    public float optPrice() {
+        if (avgPrice > 0) return avgPrice;
+        if (price > 0) return price;
+        if (stopPrice > 0) return stopPrice;
+        throw new NotImplementedException("not support this order :" + orderId);
     }
 
     public static class OrderDtoList extends ArrayList<OrderDto> {

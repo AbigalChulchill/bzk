@@ -10,7 +10,7 @@ import java.util.*;
 @Data
 public class OrderSubtotal {
     private Date lastAt;
-    private float executedQty;
+    private float origQty;
     private float avgPrice;
     private String group;
     private Map<String, OrderSubtotal> groupMap = new HashMap<>();
@@ -19,9 +19,9 @@ public class OrderSubtotal {
     public void subtotal() {
         if (orders.size() <= 0) return;
         orders.sort((a, b) -> b.getUpdateAt().compareTo(a.getUpdateAt()));
-        executedQty =  orders.stream().map(o -> o.getExecutedQty()).reduce(0f, (a, b) -> a + b);
-        float sumPrice = orders.stream().map(o -> o.getAvgPrice()*o.getExecutedQty()).reduce(0f, (a, b) -> a + b);
-        avgPrice = sumPrice / executedQty;
+        origQty =  orders.stream().map(o -> o.getOrigQty()).reduce(0f, (a, b) -> a + b);
+        float sumPrice = orders.stream().map(o -> o.optPrice()*o.getOrigQty()).reduce(0f, (a, b) -> a + b);
+        avgPrice = sumPrice / origQty;
         if (StringUtils.isBlank(group)) return;
         try {
             setupGroup();
