@@ -39,7 +39,7 @@
       "minLogLv" : "NONE",
       "flatData" : [ {
         "key" : "~peaks",
-        "val" : "!javascript===\nconst peakMaxWaitSeconds = 60*60*1.5;\nconst dto = {\n    peakMaxWaitSeconds:60*60*1.5,\n    dimension:'MICRO'\n};\nconst mm = $tsFunc.findPeak(${y2Vals},dto);\nmm;"
+        "val" : "!javascript===\nconst peakMaxWaitSeconds = 60*60*3;\nconst dto = {\n    peakMaxWaitSeconds:peakMaxWaitSeconds,\n    dimension:'MICRO'\n};\nconst mm = $tsFunc.findPeak(${y2Vals},dto);\nmm;"
       }, {
         "key" : "~extremeInfo",
         "val" : "!javascript===\nconst peakType = $bzk.g('$peaks.trendInfo.nearPeakType');\nconst peakQueryPath = '$peaks.trendInfo.'+ (peakType=='MAXED' ? 'nearMax' : 'nearMin' ) +'.key'\nconst nearPeakKey = $bzk.g(peakQueryPath);\n\nconst dto = {\n    targetKey:nearPeakKey,\n    bigger:peakType == 'MAXED' ? true : false\n};\nconst mm = $tsFunc.findBigger(${y2Vals},JSON.stringify(dto));\nmm;"
@@ -69,8 +69,41 @@
     "taskSort" : [ "xHaqpw4loFKq", "Dfq0TAINMBq2", "bdp2D8EmHQHn" ],
     "whileJudgment" : null,
     "transition" : {
+      "toBox" : "hLZ3d8T7Vkot",
+      "endTag" : null,
+      "failEnd" : false,
+      "endResultKeys" : [ ],
+      "resultCode" : ""
+    },
+    "minLogLv" : "DEBUG"
+  }, {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "hLZ3d8T7Vkot",
+    "name" : "Strategy",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "vWD538GBmnZO",
+      "name" : "bottleneck",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flowUid" : "SSPBbWtmfHPV",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "__ALL__",
+        "val" : "${~__ALL__}"
+      } ],
+      "outputReflects" : [ ]
+    } ],
+    "links" : [ ],
+    "vars" : { },
+    "taskSort" : [ "vWD538GBmnZO" ],
+    "whileJudgment" : null,
+    "transition" : {
       "toBox" : "",
-      "endTag" : "TODO Why",
+      "endTag" : "END",
       "failEnd" : false,
       "endResultKeys" : [ ],
       "resultCode" : ""
@@ -94,5 +127,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 15
+  "version" : 18
 }

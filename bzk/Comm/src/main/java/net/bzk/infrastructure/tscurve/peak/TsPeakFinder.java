@@ -192,7 +192,7 @@ public class TsPeakFinder extends TsCurveFunc.TsCurve {
     private PointType getOtherNearPeak(Direction state, Point nearMax, Point nearMin) {
         if (nearMax != null && nearMax.getIdx() == 0) return  PointType.MINED;
         if (nearMin != null && nearMin.getIdx() == 0) return  PointType.MAXED;
-        return state == Direction.FALL ? PointType.MINED : PointType.MAXED;
+        return state == Direction.FALL ? PointType.MAXED : PointType.MINED;
     }
 
 }
