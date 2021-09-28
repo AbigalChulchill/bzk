@@ -31,7 +31,23 @@
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "flowUid" : "C06bTWXsMh7D",
+      "flowUid" : "iYEiFn0pKZCN",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "symbols",
+        "val" : "${curSymbol}"
+      } ],
+      "outputReflects" : [ ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "LWXYn43on07m",
+      "name" : "StopOrder",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flowUid" : "FwGMPiyJdlPl",
       "asynced" : false,
       "inputData" : [ {
         "key" : "symbol",
@@ -43,7 +59,7 @@
     "vars" : {
       "symbolIdx" : 0
     },
-    "taskSort" : [ "VBcwBUuoBz8z", "uCYOwWdhTX61" ],
+    "taskSort" : [ "VBcwBUuoBz8z", "uCYOwWdhTX61", "LWXYn43on07m" ],
     "whileJudgment" : {
       "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
       "kind" : "NONE",
@@ -83,5 +99,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 8
+  "version" : 12
 }

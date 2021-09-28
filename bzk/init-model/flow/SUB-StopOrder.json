@@ -1,0 +1,77 @@
+{
+  "clazz" : "net.bzk.flow.model.Flow",
+  "uid" : "FwGMPiyJdlPl",
+  "name" : "SUB-StopOrder",
+  "boxs" : [ {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "a4NkW28jdISd",
+    "name" : "Box",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "nmCu0fdfgf6S",
+      "name" : "PostLONG",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "url" : "${binance.proxyHost}proxy",
+      "uriVariables" : { },
+      "body" : "{\n    \"name\": \"position/stop/exec\",\n    \"apiKey\":\"${binance.key}\",\n    \"secret\":\"${binance.secret}\",\n    \"symbol\": \"${symbol}\",\n    \"positionSide\":\"LONG\",\n    \"tags\":[\"tkst\"],\n    \"stopLoss\":{\n        \"balanceRate\":0.1,\n        \"restopRate\":0.01\n    },\n    \"stopGuaranteed\":{\n        \"closeRate\":0.25\n    }\n}",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : "LONG_resp"
+      }
+    }, {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "U5ijIwhVXXzl",
+      "name" : "PostSHORT",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "url" : "${binance.proxyHost}proxy",
+      "uriVariables" : { },
+      "body" : "{\n    \"name\": \"position/stop/exec\",\n    \"apiKey\":\"${binance.key}\",\n    \"secret\":\"${binance.secret}\",\n    \"symbol\": \"${symbol}\",\n    \"positionSide\":\"SHORT\",\n    \"tags\":[\"tkst\"],\n    \"stopLoss\":{\n        \"balanceRate\":0.1,\n        \"restopRate\":0.01\n    },\n    \"stopGuaranteed\":{\n        \"closeRate\":0.25\n    }\n}",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : "SHORT_resp"
+      }
+    } ],
+    "links" : [ ],
+    "vars" : { },
+    "taskSort" : [ "nmCu0fdfgf6S", "U5ijIwhVXXzl" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "TODO Why",
+      "failEnd" : false,
+      "endResultKeys" : [ ],
+      "resultCode" : ""
+    },
+    "minLogLv" : "DEBUG"
+  } ],
+  "varCfgNames" : [ "binance.json" ],
+  "vars" : { },
+  "entry" : {
+    "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
+    "boxUid" : "a4NkW28jdISd",
+    "autoRegister" : false,
+    "requiredKeys" : [ "symbol" ],
+    "outputKeys" : [ ]
+  },
+  "threadCfg" : {
+    "corePoolSize" : 10,
+    "maximumPoolSize" : 50,
+    "keepAliveTime" : 500,
+    "aliveUnit" : "MINUTES"
+  },
+  "version" : 6
+}

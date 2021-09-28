@@ -85,7 +85,7 @@
     "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
     "boxUid" : "UQC5RZ3iJLB7",
     "autoRegister" : false,
-    "requiredKeys" : [ ],
+    "requiredKeys" : [ "symbol" ],
     "outputKeys" : [ ]
   },
   "threadCfg" : {
@@ -94,5 +94,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 13
+  "version" : 15
 }
