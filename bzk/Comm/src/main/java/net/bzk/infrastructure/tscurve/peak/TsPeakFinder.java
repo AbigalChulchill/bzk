@@ -56,14 +56,15 @@ public class TsPeakFinder extends TsCurveFunc.TsCurve {
         private double minNearTime;
         private Point nearMax;
         private Point nearMin;
+        private Point nearPeak;
         private PointType nearPeakType;
     }
 
 
-//    private final double baseVal;
+    //    private final double baseVal;
 //    private final double peakMaxWaitSeconds;
 //    private final double macroAmplitudeRate;
-    private  final  TsPeakDimension dimension;
+    private final TsPeakDimension dimension;
 
 
     public TsPeakFinder(Map<String, Double> rm, TsPeakDimension tpd) {
@@ -82,7 +83,7 @@ public class TsPeakFinder extends TsCurveFunc.TsCurve {
     }
 
 
-    private MinMaxInfo listMinMax( ) {
+    private MinMaxInfo listMinMax() {
         var ans = new MinMaxInfo();
         for (int i = 0; i < keys.size(); i++) {
             PointType mmr = findMinOrMax(i);
@@ -131,7 +132,7 @@ public class TsPeakFinder extends TsCurveFunc.TsCurve {
         if (nowIdx >= keys.size()) return true;
         String nowKey = keys.get(nowIdx);
         double fromNowTime = Math.abs(TsCurveUtils.subtractKeySeconds(fromKey, nowKey));
-        return dimension.isBoundary(fromKey,nowIdx,nowKey,fromNowTime,forward);
+        return dimension.isBoundary(fromKey, nowIdx, nowKey, fromNowTime, forward);
     }
 
     private PointType findMinOrMax(int idx) {
@@ -161,19 +162,21 @@ public class TsPeakFinder extends TsCurveFunc.TsCurve {
                 if (nowVal < fromVal) mined = false;
             }
         }
-        return dimension.checkMinMax(maxed,mined,fromVal);
+        return dimension.checkMinMax(maxed, mined, fromVal);
     }
 
 
-    private TrendInfo genTrendInfo( ) {
-        MinMaxInfo minMaxInfo = listMinMax( );
+    private TrendInfo genTrendInfo() {
+        MinMaxInfo minMaxInfo = listMinMax();
         Point nearMax = getNearInfo(minMaxInfo.max);
         Point nearMin = getNearInfo(minMaxInfo.min);
         double maxNearTime = nearMax != null ? TsCurveUtils.subtractKeySeconds(firstKey, nearMax.getKey()) : Integer.MAX_VALUE;
         double minNearTime = nearMin != null ? TsCurveUtils.subtractKeySeconds(firstKey, nearMin.getKey()) : Integer.MAX_VALUE;
         System.out.println(nearMax);
         System.out.println(nearMin);
-        Direction state = dimension. calcState(maxNearTime, minNearTime);
+        Direction state = dimension.calcState(maxNearTime, minNearTime);
+        var peakType = getOtherNearPeak(state, nearMax, nearMin);
+        Point nearPoint = peakType == PointType.MAXED ? nearMax : nearMin;
 
         System.out.println(state);
         return TrendInfo.builder()
@@ -185,13 +188,14 @@ public class TsPeakFinder extends TsCurveFunc.TsCurve {
                 .minNearTime(minNearTime)
                 .nearMax(nearMax)
                 .nearMin(nearMin)
-                .nearPeakType(getOtherNearPeak(state, nearMax, nearMin)).build();
+                .nearPeak(nearPoint)
+                .nearPeakType(peakType).build();
 
     }
 
     private PointType getOtherNearPeak(Direction state, Point nearMax, Point nearMin) {
-        if (nearMax != null && nearMax.getIdx() == 0) return  PointType.MINED;
-        if (nearMin != null && nearMin.getIdx() == 0) return  PointType.MAXED;
+        if (nearMax != null && nearMax.getIdx() == 0) return PointType.MINED;
+        if (nearMin != null && nearMin.getIdx() == 0) return PointType.MAXED;
         return state == Direction.FALL ? PointType.MAXED : PointType.MINED;
     }
 

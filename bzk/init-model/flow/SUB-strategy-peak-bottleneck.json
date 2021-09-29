@@ -116,13 +116,13 @@
       "minLogLv" : "NONE",
       "flatData" : [ {
         "key" : "toSellOrBuy",
-        "val" : "!javascript===\r\nconst min = ${minmax.min};\r\nconst max = ${minmax.max};\r\n\r\nfunction calc(){\r\n    return min.dtime<max.dtime? \"BUY\" : \"SELL\";\r\n}\r\ncalc();"
+        "val" : "!javascript===\r\nconst state = '${peaks.trendInfo.state}';\r\n\r\n\r\nfunction calc(){\r\n    return state == 'RISE' ? \"BUY\" : \"SELL\";\r\n}\r\ncalc();"
       }, {
         "key" : "curMoveRate",
-        "val" : "!javascript===\r\nconst exPrice = ${exPrice};\r\nconst nearPrice = ${minmax.near.val} + ${mean7d.val};\r\nconst dp = Math.abs( exPrice - nearPrice);\r\nconst ans= dp/nearPrice;\r\nans;"
+        "val" : "!javascript===\r\nconst exPrice = ${binanceQuote.all.avgPrice};\r\nconst nearPrice = ${peaks.last.val} ;\r\nconst dp = Math.abs( exPrice - nearPrice);\r\nconst ans= dp/nearPrice;\r\nans;"
       }, {
-        "key" : "nearPrice",
-        "val" : "!javascript===\nconst nearPrice = ${minmax.near.val} + ${mean7d.val};\nnearPrice;"
+        "key" : "nearPeakPrice",
+        "val" : "!javascript===\nconst nearPrice = ${peaks.nearPeak.val} \nnearPrice;"
       } ]
     } ],
     "links" : [ {
@@ -290,5 +290,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 30
+  "version" : 32
 }
