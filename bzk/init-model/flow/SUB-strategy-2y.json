@@ -11,7 +11,7 @@
       "uid" : "vWD538GBmnZO",
       "name" : "bottleneck",
       "tryErrorble" : false,
-      "enable" : false,
+      "enable" : true,
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
@@ -127,5 +127,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 20
+  "version" : 22
 }

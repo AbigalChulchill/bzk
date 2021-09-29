@@ -27,7 +27,7 @@ public class Enums {
     }
 
     public enum CodeMember {
-        bzk, tsFunc, pe , orderUtils;
+        bzk, tsFunc, pe , orderUtils,directionUtils;
 
         public String getCode() {
             return '$' + this.toString();

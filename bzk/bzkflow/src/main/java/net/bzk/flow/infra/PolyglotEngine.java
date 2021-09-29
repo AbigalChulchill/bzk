@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.bzk.flow.BzkConstant;
 import net.bzk.flow.enums.Enums;
 import net.bzk.infrastructure.PolyglotUtils;
+import net.bzk.infrastructure.ordermgt.DirectionUtils;
 import net.bzk.infrastructure.ordermgt.OrderUtils;
 import net.bzk.infrastructure.tscurve.TsCurveFunc;
 import org.springframework.http.HttpMethod;
@@ -50,6 +51,7 @@ public class PolyglotEngine {
         Map<String, Object> ans = PolyglotUtils.genSingleMap(Enums.CodeMember.tsFunc.getCode(), tsFunc);
         ans.put(Enums.CodeMember.pe.getCode(), this);
         ans.put(Enums.CodeMember.orderUtils.getCode(), OrderUtils.getInstance());
+        ans.put(Enums.CodeMember.directionUtils.getCode(), DirectionUtils.getInstance());
         return ans;
     }
 

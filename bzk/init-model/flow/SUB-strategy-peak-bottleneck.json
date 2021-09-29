@@ -115,86 +115,17 @@
       "devFlowVars" : { },
       "minLogLv" : "NONE",
       "flatData" : [ {
-        "key" : "toSellOrBuy",
-        "val" : "!javascript===\r\nconst state = '${peaks.trendInfo.state}';\r\n\r\n\r\nfunction calc(){\r\n    return state == 'RISE' ? \"BUY\" : \"SELL\";\r\n}\r\ncalc();"
+        "key" : "positionSide",
+        "val" : "!javascript===\r\nconst state = '${peaks.trendInfo.state}';\r\n\r\n\r\nfunction calc(){\r\n    return state == 'RISE' ? \"LONG\" : \"SHORT\";\r\n}\r\ncalc();"
       }, {
         "key" : "curMoveRate",
         "val" : "!javascript===\r\nconst exPrice = ${binanceQuote.all.avgPrice};\r\nconst nearPrice = ${peaks.last.val} ;\r\nconst dp = Math.abs( exPrice - nearPrice);\r\nconst ans= dp/nearPrice;\r\nans;"
       }, {
         "key" : "nearPeakPrice",
-        "val" : "!javascript===\nconst nearPrice = ${peaks.nearPeak.val} \nnearPrice;"
+        "val" : "!javascript===\nconst nearPrice = ${peaks.trendInfo.nearPeak.val};\nnearPrice;"
       } ]
     } ],
     "links" : [ {
-      "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "uQEGkV35pjX8",
-      "name" : "TimeOver24H",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
-        "kind" : "NONE",
-        "next" : null,
-        "left" : "${minmax.near.dtime}",
-        "right" : "!javascript===\n60*60*24;",
-        "type" : "greater_equal"
-      },
-      "transition" : {
-        "toBox" : "",
-        "endTag" : "${symbol} TimeOver24H",
-        "failEnd" : false,
-        "endResultKeys" : [ {
-          "lv" : "not_specify",
-          "key" : "__ALL__"
-        } ],
-        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"TimeOver24H\"\n}"
-      },
-      "enable" : true
-    }, {
-      "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "fwsKgL8JiZnq",
-      "name" : "P_TH",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
-        "kind" : "NONE",
-        "next" : null,
-        "left" : "!javascript===\nMath.abs( ${minmax.near.val});",
-        "right" : "!javascript===\r\nMath.abs( ${minmax.far.val}) * 0.8 ;",
-        "type" : "lessthan"
-      },
-      "transition" : {
-        "toBox" : "",
-        "endTag" : "${symbol} P_TH",
-        "failEnd" : false,
-        "endResultKeys" : [ {
-          "lv" : "not_specify",
-          "key" : "__ALL__"
-        } ],
-        "resultCode" : "{\r\n  \"ordered\": false,\r\n  \"breakName\": \"P_TH\"\r\n}"
-      },
-      "enable" : true
-    }, {
-      "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "wbxiE4C90UxL",
-      "name" : "TimeLess30m",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
-        "kind" : "NONE",
-        "next" : null,
-        "left" : "${minmax.near.dtime}",
-        "right" : "!javascript===\r\n60*30;",
-        "type" : "lessthan"
-      },
-      "transition" : {
-        "toBox" : "",
-        "endTag" : "${symbol} TimeLess30m",
-        "failEnd" : false,
-        "endResultKeys" : [ {
-          "lv" : "not_specify",
-          "key" : "__ALL__"
-        } ],
-        "resultCode" : "{\r\n  \"ordered\": false,\r\n  \"breakName\": \"TimeLess30m\"\r\n}"
-      },
-      "enable" : true
-    }, {
       "clazz" : "net.bzk.flow.model.Link",
       "uid" : "6q7K82sD3xWo",
       "name" : "OverMinOrMax",
@@ -203,7 +134,7 @@
         "kind" : "NONE",
         "next" : null,
         "polyglot" : "js",
-        "code" : "const toSellOrBuy='${toSellOrBuy}';\r\nconst exPrice = ${exPrice};\r\nconst nearPrice = ${exPrice};\r\n\r\nfunction calc(){\r\n    if(toSellOrBuy == 'SELL'){\r\n        return exPrice > nearPrice;\r\n    }else{\r\n        return exPrice < nearPrice;\r\n    }\r\n}\r\ncalc();"
+        "code" : "const positionSide='${positionSide}';\r\nconst exPrice = ${binanceQuote.all.lastPrice};\r\nconst nearPeakPrice = ${nearPeakPrice};\r\n\r\nconst vaildStoped = $directionUtils.isValidLimitPrice(positionSide,nearPeakPrice,exPrice);\r\n!vaildStoped;"
       },
       "transition" : {
         "toBox" : "",
@@ -219,14 +150,14 @@
     }, {
       "clazz" : "net.bzk.flow.model.Link",
       "uid" : "dgKXFR8jH8x5",
-      "name" : "ValueChangeOver",
+      "name" : "NotBigger",
       "condition" : {
         "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
         "kind" : "NONE",
         "next" : null,
-        "left" : "${curMoveRate}",
-        "right" : "0.02",
-        "type" : "greater_equal"
+        "left" : "!javascript===\nconst biggerTime = ${extremeInfo.time};\nconst biggerDay = biggerTime / (60*60*24*10);\nbiggerDay;",
+        "right" : "10",
+        "type" : "lessthan_equal"
       },
       "transition" : {
         "toBox" : "",
@@ -236,35 +167,12 @@
           "lv" : "not_specify",
           "key" : "__ALL__"
         } ],
-        "resultCode" : "{\r\n  \"ordered\": false,\r\n  \"breakName\": \"ValueChangeOver\"\r\n}"
-      },
-      "enable" : true
-    }, {
-      "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "PlJ7nq3Ns0fN",
-      "name" : "NearFarLess2HR",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
-        "kind" : "NONE",
-        "next" : null,
-        "left" : "!javascript===\nconst nearTime = ${minmax.near.dtime};\nconst farTime = ${minmax.far.dtime};\nconst dt = farTime - nearTime;\nconst dDay = dt / (60*60);\ndDay;\n",
-        "right" : "2",
-        "type" : "lessthan"
-      },
-      "transition" : {
-        "toBox" : "",
-        "endTag" : "${symbol} NearFarLess5D",
-        "failEnd" : false,
-        "endResultKeys" : [ {
-          "lv" : "not_specify",
-          "key" : "__ALL__"
-        } ],
-        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"NearFarLess5D\"\n}"
+        "resultCode" : "{\r\n  \"ordered\": false,\r\n  \"breakName\": \"NotBigger\"\r\n}"
       },
       "enable" : true
     } ],
     "vars" : { },
-    "taskSort" : [ "POnGmKqao8p1", "uQEGkV35pjX8", "wbxiE4C90UxL", "PlJ7nq3Ns0fN", "fwsKgL8JiZnq", "6q7K82sD3xWo", "dgKXFR8jH8x5" ],
+    "taskSort" : [ "POnGmKqao8p1", "6q7K82sD3xWo", "dgKXFR8jH8x5" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "iQ07yoOBfiPS",
@@ -290,5 +198,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 32
+  "version" : 41
 }
