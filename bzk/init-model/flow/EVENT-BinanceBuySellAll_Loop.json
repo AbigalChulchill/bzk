@@ -34,7 +34,7 @@
       "flowUid" : "iYEiFn0pKZCN",
       "asynced" : false,
       "inputData" : [ {
-        "key" : "symbols",
+        "key" : "symbol",
         "val" : "${curSymbol}"
       } ],
       "outputReflects" : [ ]
@@ -99,5 +99,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 12
+  "version" : 14
 }

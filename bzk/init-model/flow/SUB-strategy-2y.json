@@ -21,7 +21,13 @@
         "key" : "__ALL__",
         "val" : "${~__ALL__}"
       } ],
-      "outputReflects" : [ ]
+      "outputReflects" : [ {
+        "srcKey" : "__pk_result",
+        "toKey" : {
+          "lv" : "not_specify",
+          "key" : "call_resp"
+        }
+      } ]
     } ],
     "links" : [ ],
     "vars" : { },
@@ -29,9 +35,12 @@
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
-      "endTag" : "END",
+      "endTag" : "${symbol} ${call_resp}",
       "failEnd" : false,
-      "endResultKeys" : [ ],
+      "endResultKeys" : [ {
+        "lv" : "run_flow",
+        "key" : "__ALL__"
+      } ],
       "resultCode" : ""
     },
     "minLogLv" : "DEBUG"
@@ -127,5 +136,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 22
+  "version" : 25
 }
