@@ -18,35 +18,26 @@
       "flowUid" : "02eQyaMwyojZ",
       "asynced" : false,
       "inputData" : [ {
-        "key" : "side",
-        "val" : "${__pk_result.side}"
+        "key" : "positionSide",
+        "val" : "${positionSide}"
       }, {
         "key" : "symbol",
         "val" : "${symbol}"
       }, {
-        "key" : "investedRate",
-        "val" : "0.005"
-      }, {
-        "key" : "guardRange",
-        "val" : "0.02"
-      }, {
-        "key" : "currentMove",
-        "val" : "0.00086"
+        "key" : "withdrawAmountRate",
+        "val" : "0.06"
       }, {
         "key" : "tags",
-        "val" : "[\"${__pk_result.tag}\"]"
+        "val" : "[\"bneck\"]"
       }, {
         "key" : "trigger",
-        "val" : "${__pk_result.tag}"
+        "val" : "bottleneck"
       }, {
-        "key" : "quoteSize",
-        "val" : "5"
+        "key" : "size",
+        "val" : "6"
       }, {
-        "key" : "quoteBase",
-        "val" : "!javascript===\nconst dp = ${minmax.near.val};\nconst mean = ${mean7d.val};\nconst ans = mean + dp;\nans;"
-      }, {
-        "key" : "quoteRange",
-        "val" : "0.05"
+        "key" : "gapRate",
+        "val" : "0.0012"
       } ],
       "outputReflects" : [ ]
     }, {
@@ -115,7 +106,7 @@
       "devFlowVars" : { },
       "minLogLv" : "NONE",
       "flatData" : [ {
-        "key" : "positionSide",
+        "key" : "~positionSide",
         "val" : "!javascript===\r\nconst state = '${peaks.trendInfo.state}';\r\n\r\n\r\nfunction calc(){\r\n    return state == 'RISE' ? \"LONG\" : \"SHORT\";\r\n}\r\ncalc();"
       }, {
         "key" : "curMoveRate",
@@ -198,5 +189,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 41
+  "version" : 43
 }

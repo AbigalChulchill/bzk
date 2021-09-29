@@ -52,7 +52,7 @@
       "minLogLv" : "NONE",
       "flatData" : [ {
         "key" : "body",
-        "val" : "!javascript===\nconst side ='${side}';\nconst quote = ${quote};\n\nlet pd = {\n    \"symbol\": \"${symbol}\",\n    \"investedRate\": ${oneInvestedRate},\n    \"apiKey\": \"${binance.key}\",\n    \"secret\": \"${binance.secret}\",\n    \"selled\": side == 'SELL',\n    \"name\": \"post_order\",\n    \"quote\":quote,\n    \"guardRange\": ${guardRange},\n    \"currentMove\": ${currentMove}\n};\npd;"
+        "val" : " {\n    \"apiKey\": \"${binance.key}\",\n    \"secret\": \"${binance.secret}\",\n    \"name\": \"post_limit_order\",\n    \"symbol\": \"${symbol}\",\n    \"positionSide\": \"${positionSide}\",\n    \"withdrawAmountRate\": ${withdrawAmountRate},\n    \"gapRate\":${gapRate},\n    \"size\":${size}\n}\n"
       }, {
         "key" : "body.tags",
         "val" : "!javascript===\nvar tags =  ${tags};\ntags.push(\"bot\");\ntags;"
@@ -68,7 +68,7 @@
       "minLogLv" : "NONE",
       "url" : "${finProxyUrl}/proxy/tsdb/insert/multiple",
       "uriVariables" : { },
-      "body" : "!javascript===\n\nconst sbl = '${symbol}';\nconst side = '${side}';\nconst postResult = ${postResult};\nlet  now = new Date();\nnow.setSeconds(now.getSeconds() + ${idx}*60);\nconst nowiso = now.toISOString();\n\nlet ans = [];\n\nfunction genPointDto(fd,v){\n  const row = {\n      measurement : 'order-measurement',\n      tags:{\n        \"symbol\" : sbl,        \n        \"category\":'cryptocurrency',\n        \"source\":'binance',\n        \"side\":side,\n        \"trigger\":'${trigger}'\n      },\n      field: fd,\n      val:v,\n      time :nowiso\n  };\n  return row;\n}\n\nans.push(genPointDto('price',postResult.price));\nans.push(genPointDto('stopPrice',postResult.stopPrice));\nans.push(genPointDto('quantity',postResult.quantity));\n\nans;",
+      "body" : "!javascript===\n\nconst sbl = '${symbol}';\nconst positionSide = '${positionSide}';\nconst postResult = ${postResult};\n\n\nlet ans = [];\n\nfunction genPointDto(fd,v,idx){\n    let  now = new Date();\n    now.setSeconds(now.getSeconds() + idx*60);\n    const nowiso = now.toISOString();\n  const row = {\n      measurement : 'order-measurement',\n      tags:{\n        \"symbol\" : sbl,        \n        \"category\":'cryptocurrency',\n        \"source\":'binance',\n        \"positionSide\":positionSide,\n        \"trigger\":'${trigger}'\n      },\n      field: fd,\n      val:v,\n      time :nowiso\n  };\n  return row;\n}\n\n\n\nfor(let i=0;i<postResult.length;i++){\n    let od = postResult[i];\n    ans.push(genPointDto('price',postResult.price,i));\n    ans.push(genPointDto('quantity',postResult.origQty,i));\n}\n\nans;",
       "method" : "POST",
       "headers" : { },
       "headersFlat" : "{}",
@@ -76,40 +76,14 @@
         "lv" : "not_specify",
         "key" : "tsdbPosted"
       }
-    }, {
-      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
-      "uid" : "R8kJWNNwM3H0",
-      "name" : "LoopVars",
-      "tryErrorble" : false,
-      "enable" : true,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "flatData" : [ {
-        "key" : "quote",
-        "val" : "!javascript===\nconst side = \"${side}\";\nconst quoteBase = ${quoteBase};\nconst quoteSize = ${quoteSize};\nconst idx = ${idx};\nconst quoteRange = ${quoteRange};\nconst rate = calcRate();\nconst dr = (rate / quoteSize) * idx;\nconst quote = quoteBase*(1 + dr ) ;\n\nfunction calcRate(){\n    return side == \"SELL\" ? -1 * quoteRange : quoteRange;\n}\n\nquote;"
-      }, {
-        "key" : "idx",
-        "val" : "!javascript===\n${idx}+1;"
-      }, {
-        "key" : "oneInvestedRate",
-        "val" : "!javascript===\nconst rate= ${investedRate};\nconst sr = rate/${quoteSize};\nsr;"
-      } ]
     } ],
     "links" : [ ],
     "vars" : {
       "idx" : 0,
       "quotes" : [ ]
     },
-    "taskSort" : [ "R8kJWNNwM3H0", "fzgczwZFFaF2", "3H1IkGkleZp5", "OcPQySOCy0Gn", "iD0dtfzuxhXl" ],
-    "whileJudgment" : {
-      "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
-      "kind" : "NONE",
-      "next" : null,
-      "left" : "${idx}",
-      "right" : "${quoteSize}\n",
-      "type" : "lessthan"
-    },
+    "taskSort" : [ "fzgczwZFFaF2", "3H1IkGkleZp5", "OcPQySOCy0Gn", "iD0dtfzuxhXl" ],
+    "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
       "endTag" : "${symbol} ${side} ${trigger}",
@@ -121,22 +95,19 @@
   } ],
   "varCfgNames" : [ "binance.json", "mail.json", "fin-proxy.json" ],
   "vars" : {
-    "quoteRange" : 0.05,
-    "symbol" : "EOS",
-    "side" : "BUY",
-    "investedRate" : 0.1,
-    "quoteSize" : 4,
-    "guardRange" : 0.05,
-    "currentMove" : 0.6,
-    "trigger" : "NONE",
-    "quoteBase" : 4,
-    "tags" : [ "test" ]
+    "symbol" : "ETH",
+    "size" : 6,
+    "price" : 15,
+    "positionSide" : "LONG",
+    "withdrawAmountRate" : 0.005,
+    "gapRate" : 0.002,
+    "tags" : [ "shortTermBuy" ]
   },
   "entry" : {
     "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
     "boxUid" : "htivUO7YKtyD",
     "autoRegister" : false,
-    "requiredKeys" : [ "side", "symbol", "investedRate", "guardRange", "currentMove", "tags", "trigger", "quoteSize", "quoteBase", "quoteRange" ],
+    "requiredKeys" : [ "positionSide", "symbol", "withdrawAmountRate", "tags", "trigger", "size", "gapRate" ],
     "outputKeys" : [ ]
   },
   "threadCfg" : {
@@ -145,5 +116,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 17
+  "version" : 23
 }
