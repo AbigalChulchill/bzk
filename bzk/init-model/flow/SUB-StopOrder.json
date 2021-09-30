@@ -17,7 +17,7 @@
       "minLogLv" : "NONE",
       "url" : "${binance.proxyHost}proxy",
       "uriVariables" : { },
-      "body" : "{\n    \"name\": \"position/stop/exec\",\n    \"apiKey\":\"${binance.key}\",\n    \"secret\":\"${binance.secret}\",\n    \"symbol\": \"${symbol}\",\n    \"positionSide\":\"LONG\",\n    \"tags\":[\"tkst\"],\n    \"stopLoss\":{\n        \"balanceRate\":0.1,\n        \"restopRate\":0.01\n    },\n    \"stopGuaranteed\":{\n        \"closeRate\":0.25\n    }\n}",
+      "body" : "{\n    \"name\": \"position/stop/exec\",\n    \"apiKey\":\"${binance.key}\",\n    \"secret\":\"${binance.secret}\",\n    \"symbol\": \"${symbol}\",\n    \"positionSide\":\"LONG\",\n    \"tags\":[\"tkst\"],\n    \"stopLoss\":{\n        \"balanceRate\":0.1,\n        \"restopRate\":0.01\n    },\n    \"stopGuaranteed\":{\n        \"closeRate\":0.25,\n        \"thresholdRate\":1.002\n    }\n}",
       "method" : "POST",
       "headers" : { },
       "headersFlat" : "",
@@ -36,7 +36,7 @@
       "minLogLv" : "NONE",
       "url" : "${binance.proxyHost}proxy",
       "uriVariables" : { },
-      "body" : "{\n    \"name\": \"position/stop/exec\",\n    \"apiKey\":\"${binance.key}\",\n    \"secret\":\"${binance.secret}\",\n    \"symbol\": \"${symbol}\",\n    \"positionSide\":\"SHORT\",\n    \"tags\":[\"tkst\"],\n    \"stopLoss\":{\n        \"balanceRate\":0.1,\n        \"restopRate\":0.01\n    },\n    \"stopGuaranteed\":{\n        \"closeRate\":0.25\n    }\n}",
+      "body" : "{\n    \"name\": \"position/stop/exec\",\n    \"apiKey\":\"${binance.key}\",\n    \"secret\":\"${binance.secret}\",\n    \"symbol\": \"${symbol}\",\n    \"positionSide\":\"SHORT\",\n    \"tags\":[\"tkst\"],\n    \"stopLoss\":{\n        \"balanceRate\":0.1,\n        \"restopRate\":0.01\n    },\n    \"stopGuaranteed\":{\n        \"closeRate\":0.25,\n        \"thresholdRate\":1.002\n    }\n}",
       "method" : "POST",
       "headers" : { },
       "headersFlat" : "",
@@ -51,9 +51,15 @@
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
-      "endTag" : "TODO Why",
+      "endTag" : "${symbol}",
       "failEnd" : false,
-      "endResultKeys" : [ ],
+      "endResultKeys" : [ {
+        "lv" : "not_specify",
+        "key" : "LONG_resp"
+      }, {
+        "lv" : "not_specify",
+        "key" : "SHORT_resp"
+      } ],
       "resultCode" : ""
     },
     "minLogLv" : "DEBUG"
@@ -73,5 +79,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 6
+  "version" : 9
 }
