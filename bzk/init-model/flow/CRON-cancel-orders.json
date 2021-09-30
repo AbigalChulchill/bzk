@@ -107,7 +107,7 @@
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "code" : "!return-json===\r\nconst pos = ${position};\r\n\r\nconst longP = getPosBySide('LONG');\r\nconst shortP = getPosBySide('SHORT');\r\nconst stopLongOds = ${stopLongOds};\r\nconst stopShortOds = ${stopShortOds};\r\n\r\nlet ans = [];\r\nans.concat(checkOds(longP,stopLongOds));\r\nans.concat(checkOds(shortP,stopShortOds));\r\n\r\nfunction checkOds(p,ods){\r\n    if(p.positionAmt<=0) return [];\r\n    if(ods.executedQty<=0) return [];\r\n    return ods.orders;\r\n\r\n}\r\n\r\nfunction getPosBySide(pSide){\r\n    for (const p of pos) {\r\n        if(p.positionSide === pSide) return p;\r\n    }\r\n    throw new Error('not find '+pSide);\r\n}\r\n\r\nJSON.stringify(ans);",
+      "code" : "!return-json===\r\nconst pos = ${position};\r\n\r\nconst longP = getPosBySide('LONG');\r\nconst shortP = getPosBySide('SHORT');\r\nconst stopLongOds = ${stopLongOds};\r\nconst stopShortOds = ${stopShortOds};\r\n\r\nlet ans = [];\r\nans.concat(checkOds(longP,stopLongOds));\r\nans.concat(checkOds(shortP,stopShortOds));\r\n\r\nfunction checkOds(p,ods){\r\n    if(p.positionAmt>0) return [];\r\n    return ods.orders;\r\n}\r\n\r\nfunction getPosBySide(pSide){\r\n    for (const p of pos) {\r\n        if(p.positionSide === pSide) return p;\r\n    }\r\n    throw new Error('not find '+pSide);\r\n}\r\n\r\nJSON.stringify(ans);",
       "polyglot" : "js",
       "resultLv" : "not_specify",
       "resultKey" : "cancelOds"
@@ -185,5 +185,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 14
+  "version" : 16
 }
