@@ -4,96 +4,6 @@
   "name" : "SUB-strategy-peak-bottleneck",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
-    "uid" : "iQ07yoOBfiPS",
-    "name" : "CallOrder",
-    "actions" : [ {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "3gcfLj4AEmmZ",
-      "name" : "ORDER",
-      "tryErrorble" : false,
-      "enable" : true,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "flowUid" : "02eQyaMwyojZ",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "positionSide",
-        "val" : "${positionSide}"
-      }, {
-        "key" : "symbol",
-        "val" : "${symbol}"
-      }, {
-        "key" : "withdrawAmountRate",
-        "val" : "0.05"
-      }, {
-        "key" : "tags",
-        "val" : "[\"bneck\"]"
-      }, {
-        "key" : "trigger",
-        "val" : "bottleneck"
-      }, {
-        "key" : "size",
-        "val" : "6"
-      }, {
-        "key" : "gapRate",
-        "val" : "0.0012"
-      } ],
-      "outputReflects" : [ ]
-    }, {
-      "clazz" : "net.bzk.flow.model.HttpAction",
-      "uid" : "PsQBy93YXD9c",
-      "name" : "query_ods",
-      "tryErrorble" : false,
-      "enable" : true,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "url" : "${binance.proxyHost}proxy",
-      "uriVariables" : { },
-      "body" : "!javascript===\r\nvar start = new Date();\r\nstart.setSeconds(start.getSeconds() - 40*60);\r\nvar startAt = start.toISOString();\r\nvar body= {\r\n    \"name\": \"get_all_orders\",\r\n    \"apiKey\":\"${binance.key}\",\r\n    \"secret\":\"${binance.secret}\",\r\n    \"symbol\": \"${symbol}\",\r\n    \"updateStartAt\":startAt,\r\n    \"orderType\":\"LIMIT\",\r\n    \"side\":\"${__pk_result.side}\"\r\n};\r\nbody;",
-      "method" : "POST",
-      "headers" : { },
-      "headersFlat" : "",
-      "key" : {
-        "lv" : "not_specify",
-        "key" : "lessOds"
-      }
-    } ],
-    "links" : [ {
-      "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "ovgapaO520SD",
-      "name" : "ChechNoLimitOd",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
-        "kind" : "NONE",
-        "next" : null,
-        "left" : "${lessOds.executedQty}",
-        "right" : "0",
-        "type" : "greater"
-      },
-      "transition" : {
-        "toBox" : "",
-        "endTag" : "${symbol} ChechNoLimitOd",
-        "failEnd" : false,
-        "endResultKeys" : [ ],
-        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"ChechNoLimitOd\"\n}"
-      },
-      "enable" : true
-    } ],
-    "vars" : { },
-    "taskSort" : [ "PsQBy93YXD9c", "ovgapaO520SD", "3gcfLj4AEmmZ" ],
-    "whileJudgment" : null,
-    "transition" : {
-      "toBox" : "",
-      "endTag" : "${symbo} ordered",
-      "failEnd" : false,
-      "endResultKeys" : [ ],
-      "resultCode" : "{\n  \"ordered\": true,\n  \"breakName\": \"NONE\"\n}"
-    },
-    "minLogLv" : "DEBUG"
-  }, {
-    "clazz" : "net.bzk.flow.model.Box",
     "uid" : "MINMAX52of8",
     "name" : "MINMAX",
     "actions" : [ {
@@ -176,6 +86,96 @@
       "resultCode" : "!javascript===\nconst side = '${toSellOrBuy}';\nconst ans = {\n    side : side,\n    tag : \"MINMAX\"\n};\nans;"
     },
     "minLogLv" : "DEBUG"
+  }, {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "iQ07yoOBfiPS",
+    "name" : "CallOrder",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "3gcfLj4AEmmZ",
+      "name" : "ORDER",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flowUid" : "02eQyaMwyojZ",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "positionSide",
+        "val" : "${positionSide}"
+      }, {
+        "key" : "symbol",
+        "val" : "${symbol}"
+      }, {
+        "key" : "withdrawAmountRate",
+        "val" : "0.05"
+      }, {
+        "key" : "tags",
+        "val" : "[\"bneck\"]"
+      }, {
+        "key" : "trigger",
+        "val" : "bottleneck"
+      }, {
+        "key" : "size",
+        "val" : "6"
+      }, {
+        "key" : "gapRate",
+        "val" : "0.0012"
+      } ],
+      "outputReflects" : [ ]
+    }, {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "PsQBy93YXD9c",
+      "name" : "query_ods",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "url" : "${binance.proxyHost}proxy",
+      "uriVariables" : { },
+      "body" : "!javascript===\r\nvar start = new Date();\r\nstart.setSeconds(start.getSeconds() - 40*60);\r\nvar startAt = start.toISOString();\r\nvar body= {\r\n    \"name\": \"get_all_orders\",\r\n    \"apiKey\":\"${binance.key}\",\r\n    \"secret\":\"${binance.secret}\",\r\n    \"symbol\": \"${symbol}\",\r\n    \"updateStartAt\":startAt,\r\n    \"orderType\":\"LIMIT\",\r\n    \"side\":\"${__pk_result.side}\"\r\n};\r\nbody;",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : "lessOds"
+      }
+    } ],
+    "links" : [ {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "ovgapaO520SD",
+      "name" : "ChechNoLimitOd",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
+        "kind" : "NONE",
+        "next" : null,
+        "left" : "${lessOds.origQty}",
+        "right" : "0",
+        "type" : "greater"
+      },
+      "transition" : {
+        "toBox" : "",
+        "endTag" : "${symbol} ChechNoLimitOd",
+        "failEnd" : false,
+        "endResultKeys" : [ ],
+        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"ChechNoLimitOd\"\n}"
+      },
+      "enable" : true
+    } ],
+    "vars" : { },
+    "taskSort" : [ "PsQBy93YXD9c", "ovgapaO520SD", "3gcfLj4AEmmZ" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "${symbo} ordered",
+      "failEnd" : false,
+      "endResultKeys" : [ ],
+      "resultCode" : "{\n  \"ordered\": true,\n  \"breakName\": \"NONE\"\n}"
+    },
+    "minLogLv" : "DEBUG"
   } ],
   "varCfgNames" : [ "binance.json" ],
   "vars" : { },
@@ -192,5 +192,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 47
+  "version" : 48
 }
