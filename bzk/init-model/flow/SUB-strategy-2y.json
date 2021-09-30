@@ -35,11 +35,11 @@
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
-      "endTag" : "${symbol} ${call_resp}",
+      "endTag" : "${symbol} ordered:${call_resp.ordered} ${call_resp.breakName}",
       "failEnd" : false,
       "endResultKeys" : [ {
         "lv" : "run_flow",
-        "key" : "__ALL__"
+        "key" : "extremeInfo"
       } ],
       "resultCode" : ""
     },
@@ -136,5 +136,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 25
+  "version" : 26
 }
