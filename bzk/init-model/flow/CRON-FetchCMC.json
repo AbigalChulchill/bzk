@@ -15,7 +15,7 @@
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "url" : "!javascript===\r\n\r\nvar dat = new Date();\r\nvar nowIso = dat.toISOString();\r\ndat.setSeconds(dat.getSeconds() - 24*60*60);\r\nvar startIso = dat.toISOString();\r\n\r\nconst symbols = ${symbols};\r\nconst sblstr = symbols.join(',');\r\nconst url_temp ='https://pro-api.coinmarketcap.com/v1/cryptocurrency/ohlcv/historical?convert=USD&time_end='+nowIso+'&time_start='+startIso+'&symbol='+sblstr;\r\nurl_temp;",
+      "url" : "!javascript===\r\nvar dat = new Date();\r\nvar nowIso = dat.toISOString();\r\ndat.setSeconds(dat.getSeconds() - 2*24*60*60);\r\nvar startIso = dat.toISOString();\r\n\r\nconst symbols = ${symbols};\r\nconst sblstr = symbols.join(',');\r\nconst url_temp ='https://web-api.coinmarketcap.com/v1/cryptocurrency/ohlcv/historical?convert=USD&time_end='+nowIso+'&time_start='+startIso+'&symbol='+sblstr;\r\nurl_temp;",
       "uriVariables" : { },
       "body" : "{}",
       "method" : "GET",
@@ -23,7 +23,7 @@
       "headersFlat" : "{\"X-CMC_PRO_API_KEY\":\"${X-CMC_PRO_API_KEY}\"}",
       "key" : {
         "lv" : "not_specify",
-        "key" : "result"
+        "key" : "cmcResponse"
       }
     }, {
       "clazz" : "net.bzk.flow.model.Action$EventAction",
@@ -35,10 +35,41 @@
       "devFlowVars" : { },
       "minLogLv" : "NONE",
       "data" : "CronFetchCMC"
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$JSONPathAction",
+      "uid" : "Wo9WX1K0rNTv",
+      "name" : "ParseQuote",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "syntax" : "$.data.*",
+      "source" : {
+        "lv" : "not_specify",
+        "key" : "cmcResponse"
+      },
+      "target" : {
+        "lv" : "not_specify",
+        "key" : "quotes"
+      }
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$PolyglotAction",
+      "uid" : "P0OAGpTL69JZ",
+      "name" : "PackPayload",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "code" : "",
+      "polyglot" : "js",
+      "resultLv" : "not_specify",
+      "resultKey" : ""
     } ],
     "links" : [ ],
     "vars" : { },
-    "taskSort" : [ "Jj7CsxrbKdSm", "THy7T41cesZH" ],
+    "taskSort" : [ "Jj7CsxrbKdSm", "Wo9WX1K0rNTv", "P0OAGpTL69JZ", "THy7T41cesZH" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
@@ -49,7 +80,7 @@
     },
     "minLogLv" : "DEBUG"
   } ],
-  "varCfgNames" : [ "fin-proxy.json", "coinmarketcap.json" ],
+  "varCfgNames" : [ "fin-proxy.json", "coinmarketcap.json", "crypto-symbol.json" ],
   "vars" : { },
   "entry" : {
     "clazz" : "net.bzk.flow.model.Entry$FixedRateEntry",
@@ -65,5 +96,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 2
+  "version" : 10
 }
