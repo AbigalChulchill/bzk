@@ -37,7 +37,7 @@
         "val" : "6"
       }, {
         "key" : "gapRate",
-        "val" : "0.0012"
+        "val" : "0.012"
       } ],
       "outputReflects" : [ ]
     }, {
@@ -218,5 +218,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 53
+  "version" : 54
 }
