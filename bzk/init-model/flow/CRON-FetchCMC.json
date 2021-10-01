@@ -9,16 +9,18 @@
     "actions" : [ {
       "clazz" : "net.bzk.flow.model.HttpAction",
       "uid" : "Jj7CsxrbKdSm",
-      "name" : "RequestToFinProxy",
+      "name" : "ListQuote",
       "tryErrorble" : false,
+      "enable" : true,
       "devBoxVars" : { },
       "devFlowVars" : { },
-      "url" : "${finProxyUrl}/proxy/save/CMC/util_now/sync",
+      "minLogLv" : "NONE",
+      "url" : "!javascript===\r\n\r\nvar dat = new Date();\r\nvar nowIso = dat.toISOString();\r\ndat.setSeconds(dat.getSeconds() - 24*60*60);\r\nvar startIso = dat.toISOString();\r\n\r\nconst symbols = ${symbols};\r\nconst sblstr = symbols.join(',');\r\nconst url_temp ='https://pro-api.coinmarketcap.com/v1/cryptocurrency/ohlcv/historical?convert=USD&time_end='+nowIso+'&time_start='+startIso+'&symbol='+sblstr;\r\nurl_temp;",
       "uriVariables" : { },
       "body" : "{}",
-      "method" : "POST",
+      "method" : "GET",
       "headers" : { },
-      "headersFlat" : "{}",
+      "headersFlat" : "{\"X-CMC_PRO_API_KEY\":\"${X-CMC_PRO_API_KEY}\"}",
       "key" : {
         "lv" : "not_specify",
         "key" : "result"
@@ -28,8 +30,10 @@
       "uid" : "THy7T41cesZH",
       "name" : "Event",
       "tryErrorble" : false,
+      "enable" : true,
       "devBoxVars" : { },
       "devFlowVars" : { },
+      "minLogLv" : "NONE",
       "data" : "CronFetchCMC"
     } ],
     "links" : [ ],
@@ -42,9 +46,10 @@
       "failEnd" : false,
       "endResultKeys" : [ ],
       "resultCode" : ""
-    }
+    },
+    "minLogLv" : "DEBUG"
   } ],
-  "varCfgNames" : [ "fin-proxy.json" ],
+  "varCfgNames" : [ "fin-proxy.json", "coinmarketcap.json" ],
   "vars" : { },
   "entry" : {
     "clazz" : "net.bzk.flow.model.Entry$FixedRateEntry",
@@ -54,11 +59,11 @@
     "unit" : "HOURS",
     "initialDelay" : 0
   },
-  "logEncryptKey" : "1234567890123456",
   "threadCfg" : {
     "corePoolSize" : 10,
     "maximumPoolSize" : 50,
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
-  }
+  },
+  "version" : 2
 }
