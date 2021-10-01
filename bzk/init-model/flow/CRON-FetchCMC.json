@@ -20,7 +20,7 @@
       "body" : "{}",
       "method" : "GET",
       "headers" : { },
-      "headersFlat" : "{\"X-CMC_PRO_API_KEY\":\"${X-CMC_PRO_API_KEY}\"}",
+      "headersFlat" : "{}",
       "key" : {
         "lv" : "not_specify",
         "key" : "cmcResponse"
@@ -62,14 +62,33 @@
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "code" : "",
+      "code" : "const list= ${quotes};\nconst ans = [];\n\nfor (const q of list) {\n    open = q['quote']['USD']['open'];\n    ans.push(genPointDto('open',open,q));\n\n    high = q['quote']['USD']['high'];\n    ans.push(genPointDto('high',high,q));\n\n    low = q['quote']['USD']['low'];\n    ans.push(genPointDto('low',low,q));\n\n    close = q['quote']['USD']['close'];\n    ans.push(genPointDto('close',close,q));    \n\n    volume = q['quote']['USD']['volume'];\n    ans.push(genPointDto('volume',volume,q));       \n\n\n    market_cap = q['quote']['USD']['market_cap'];\n    ans.push(genPointDto('market_cap',market_cap,q));            \n\n\n}\n\n\n\nfunction genPointDto(fd,v,q){\n  const row = {\n      measurement : 'daily',\n      tags:{\n        symbol : q['symbol'],\n        name : q['name'],\n        category:'cryptocurrency',\n        source:'coinmarketcap'\n      },\n      valmean: fd,\n      val:v,\n      time :q['timestamp']\n  };\n  return row;\n}\n\nans;\n",
       "polyglot" : "js",
       "resultLv" : "not_specify",
-      "resultKey" : ""
+      "resultKey" : "packPayload"
+    }, {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "OFNh917ZZjFo",
+      "name" : "Submit",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "url" : "${finProxyUrl}/proxy/tsdb/insert/multiple",
+      "uriVariables" : { },
+      "body" : "${packPayload}",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : "insertDBResult"
+      }
     } ],
     "links" : [ ],
     "vars" : { },
-    "taskSort" : [ "Jj7CsxrbKdSm", "Wo9WX1K0rNTv", "P0OAGpTL69JZ", "THy7T41cesZH" ],
+    "taskSort" : [ "Jj7CsxrbKdSm", "Wo9WX1K0rNTv", "P0OAGpTL69JZ", "OFNh917ZZjFo", "THy7T41cesZH" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
