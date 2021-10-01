@@ -52,7 +52,7 @@
       "minLogLv" : "NONE",
       "flatData" : [ {
         "key" : "body",
-        "val" : " {\n    \"apiKey\": \"${binance.key}\",\n    \"secret\": \"${binance.secret}\",\n    \"name\": \"post_limit_order\",\n    \"symbol\": \"${symbol}\",\n    \"positionSide\": \"${positionSide}\",\n    \"withdrawAmountRate\": ${withdrawAmountRate},\n    \"gapRate\":${gapRate},\n    \"size\":${size}\n}\n"
+        "val" : " {\n    \"apiKey\": \"${binance.key}\",\n    \"secret\": \"${binance.secret}\",\n    \"name\": \"post_limit_order\",\n    \"symbol\": \"${symbol}\",\n    \"positionSide\": \"${positionSide}\",\n    \"withdrawAmountRate\": ${withdrawAmountRate},\n    \"gapRate\":${gapRate},\n    \"size\":${size},\n    \"price\":1500\n}\n"
       }, {
         "key" : "body.tags",
         "val" : "!javascript===\nvar tags =  ${tags};\ntags.push(\"bot\");\ntags;"
@@ -68,7 +68,7 @@
       "minLogLv" : "NONE",
       "url" : "${finProxyUrl}/proxy/tsdb/insert/multiple",
       "uriVariables" : { },
-      "body" : "!javascript===\n\nconst sbl = '${symbol}';\nconst positionSide = '${positionSide}';\nconst postResult = ${postResult};\n\n\nlet ans = [];\n\nfunction genPointDto(fd,v,idx){\n    let  now = new Date();\n    now.setSeconds(now.getSeconds() + idx*60);\n    const nowiso = now.toISOString();\n  const row = {\n      measurement : 'order-measurement',\n      tags:{\n        \"symbol\" : sbl,        \n        \"category\":'cryptocurrency',\n        \"source\":'binance',\n        \"positionSide\":positionSide,\n        \"trigger\":'${trigger}'\n      },\n      field: fd,\n      val:v,\n      time :nowiso\n  };\n  return row;\n}\n\n\n\nfor(let i=0;i<postResult.length;i++){\n    let od = postResult[i];\n    ans.push(genPointDto('price',postResult.price,i));\n    ans.push(genPointDto('quantity',postResult.origQty,i));\n}\n\nans;",
+      "body" : "!javascript===\n\nconst sbl = '${symbol}';\nconst positionSide = '${positionSide}';\nconst postResult = ${postResult};\n\n\nlet ans = [];\n\nfunction genPointDto(fd,v,idx){\n    let  now = new Date();\n    now.setSeconds(now.getSeconds() + idx*60);\n    const nowiso = now.toISOString();\n  const row = {\n      measurement : 'order-measurement',\n      tags:{\n        \"symbol\" : sbl,        \n        \"category\":'cryptocurrency',\n        \"source\":'binance',\n        \"positionSide\":positionSide,\n        \"trigger\":'${trigger}'\n      },\n      field: fd,\n      val:v,\n      time :nowiso\n  };\n  return row;\n}\n\n\n\nfor(let i=0;i<postResult.length;i++){\n    let od = postResult[i];\n    ans.push(genPointDto('price',od.price,i));\n    ans.push(genPointDto('quantity',od.origQty,i));\n}\n\nans;",
       "method" : "POST",
       "headers" : { },
       "headersFlat" : "{}",
@@ -86,7 +86,7 @@
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
-      "endTag" : "${symbol} ${side} ${trigger}",
+      "endTag" : "${symbol} ${positionSide} ${trigger}",
       "failEnd" : false,
       "endResultKeys" : [ ],
       "resultCode" : ""
@@ -96,8 +96,7 @@
   "varCfgNames" : [ "binance.json", "mail.json", "fin-proxy.json" ],
   "vars" : {
     "symbol" : "ETH",
-    "size" : 6,
-    "price" : 15,
+    "size" : 2,
     "positionSide" : "LONG",
     "withdrawAmountRate" : 0.005,
     "gapRate" : 0.002,
@@ -116,5 +115,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 23
+  "version" : 31
 }
