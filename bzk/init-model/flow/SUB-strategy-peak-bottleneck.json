@@ -37,7 +37,7 @@
         "val" : "6"
       }, {
         "key" : "gapRate",
-        "val" : "0.0012"
+        "val" : "0.012"
       } ],
       "outputReflects" : [ ]
     }, {
@@ -173,7 +173,7 @@
         "kind" : "NONE",
         "next" : null,
         "left" : "!javascript===\nconst exPrice = ${binanceQuote.all.lastPrice};\nconst nearPeakPrice = ${nearPeakPrice};\nconst ans = Math.abs( 1-(exPrice / nearPeakPrice));\nans;",
-        "right" : "0.012",
+        "right" : "0.0386",
         "type" : "greater"
       },
       "transition" : {
@@ -218,5 +218,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 50
+  "version" : 54
 }
