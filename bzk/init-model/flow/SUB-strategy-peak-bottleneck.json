@@ -46,12 +46,15 @@
       "name" : "query_ods",
       "tryErrorble" : false,
       "enable" : true,
-      "devBoxVars" : { },
+      "devBoxVars" : {
+        "symbol" : "BNB",
+        "positionSide" : "LONG"
+      },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
       "url" : "${binance.proxyHost}proxy",
       "uriVariables" : { },
-      "body" : "!javascript===\r\nvar start = new Date();\r\nstart.setSeconds(start.getSeconds() - 40*60);\r\nvar startAt = start.toISOString();\r\nvar body= {\r\n    \"name\": \"get_all_orders\",\r\n    \"apiKey\":\"${binance.key}\",\r\n    \"secret\":\"${binance.secret}\",\r\n    \"symbol\": \"${symbol}\",\r\n    \"updateStartAt\":startAt,\r\n    \"orderType\":\"LIMIT\",\r\n    \"side\":\"${__pk_result.side}\"\r\n};\r\nbody;",
+      "body" : "!javascript===\r\nvar positionSide = '${positionSide}';\r\nvar orderSide = $directionUtils.getLimitOrderSide(positionSide);\r\nvar start = new Date();\r\nstart.setSeconds(start.getSeconds() - 3*60*60);\r\nvar startAt = start.toISOString();\r\nvar body= {\r\n    \"name\": \"get_all_orders\",\r\n    \"apiKey\":\"${binance.key}\",\r\n    \"secret\":\"${binance.secret}\",\r\n    \"symbol\": \"${symbol}\",\r\n    \"updateStartAt\":startAt,\r\n    \"orderType\":\"LIMIT\",\r\n    \"side\":orderSide\r\n};\r\nbody;",
       "method" : "POST",
       "headers" : { },
       "headersFlat" : "",
@@ -218,5 +221,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 54
+  "version" : 61
 }

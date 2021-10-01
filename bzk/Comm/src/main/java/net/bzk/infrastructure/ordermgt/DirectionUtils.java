@@ -9,6 +9,10 @@ public class DirectionUtils {
         BOTH, LONG, SHORT, INVALID
     }
 
+    public static enum OrderSide {
+        BUY, SELL, INVALID
+    }
+
     private static final DirectionUtils instance = new DirectionUtils();
 
     private DirectionUtils() {
@@ -40,6 +44,16 @@ public class DirectionUtils {
                 return base < limit;
             case SHORT:
                 return base > limit;
+        }
+        throw new BzkRuntimeException("not support " + positionSide);
+    }
+
+    public OrderSide getLimitOrderSide(String positionSide) {
+        switch (PositionSide.valueOf(positionSide)) {
+            case LONG:
+                return OrderSide.BUY;
+            case SHORT:
+                return OrderSide.SELL;
         }
         throw new BzkRuntimeException("not support " + positionSide);
     }

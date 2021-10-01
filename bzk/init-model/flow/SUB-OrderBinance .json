@@ -52,7 +52,7 @@
       "minLogLv" : "NONE",
       "flatData" : [ {
         "key" : "body",
-        "val" : " {\n    \"apiKey\": \"${binance.key}\",\n    \"secret\": \"${binance.secret}\",\n    \"name\": \"post_limit_order\",\n    \"symbol\": \"${symbol}\",\n    \"positionSide\": \"${positionSide}\",\n    \"withdrawAmountRate\": ${withdrawAmountRate},\n    \"gapRate\":${gapRate},\n    \"size\":${size},\n    \"price\":1500\n}\n"
+        "val" : " {\n    \"apiKey\": \"${binance.key}\",\n    \"secret\": \"${binance.secret}\",\n    \"name\": \"post_limit_order\",\n    \"symbol\": \"${symbol}\",\n    \"positionSide\": \"${positionSide}\",\n    \"withdrawAmountRate\": ${withdrawAmountRate},\n    \"gapRate\":${gapRate},\n    \"size\":${size}\n}\n"
       }, {
         "key" : "body.tags",
         "val" : "!javascript===\nvar tags =  ${tags};\ntags.push(\"bot\");\ntags;"
@@ -115,5 +115,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 31
+  "version" : 33
 }
