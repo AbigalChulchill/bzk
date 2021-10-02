@@ -193,9 +193,28 @@
         "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"OverPeakTooMuch\"\n}"
       },
       "enable" : true
+    }, {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "Div2tmjgl8JG",
+      "name" : "CheckNoAllow",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
+        "kind" : "NONE",
+        "next" : null,
+        "polyglot" : "js",
+        "code" : "const allowSymbols = ${bottleneck};\r\nconst sbl = ${symbol};\r\n!allowSymbols.includes(sbl);"
+      },
+      "transition" : {
+        "toBox" : "",
+        "endTag" : "${symbol} NoAllow",
+        "failEnd" : false,
+        "endResultKeys" : [ ],
+        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"CheckNoAllow\"\n}"
+      },
+      "enable" : true
     } ],
     "vars" : { },
-    "taskSort" : [ "POnGmKqao8p1", "6q7K82sD3xWo", "dgKXFR8jH8x5", "6NprXSn7ndco" ],
+    "taskSort" : [ "Div2tmjgl8JG", "POnGmKqao8p1", "6q7K82sD3xWo", "dgKXFR8jH8x5", "6NprXSn7ndco" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "iQ07yoOBfiPS",
@@ -206,7 +225,7 @@
     },
     "minLogLv" : "DEBUG"
   } ],
-  "varCfgNames" : [ "binance.json" ],
+  "varCfgNames" : [ "binance.json", "crypto-symbol.json" ],
   "vars" : { },
   "entry" : {
     "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
@@ -221,5 +240,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 61
+  "version" : 63
 }
