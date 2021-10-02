@@ -60,13 +60,26 @@
       "polyglot" : "js",
       "resultLv" : "not_specify",
       "resultKey" : "allVals"
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
+      "uid" : "fYKJU1IB4PGV",
+      "name" : "Split",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flatData" : [ {
+        "key" : "~vals_${idx}",
+        "val" : "${vals}"
+      } ]
     } ],
     "links" : [ ],
     "vars" : {
       "allVals" : { },
       "idx" : 0
     },
-    "taskSort" : [ "oovQqJqy8kFe", "RZvCk7RvcvcZ", "0gaeqzZkeJPb" ],
+    "taskSort" : [ "oovQqJqy8kFe", "RZvCk7RvcvcZ", "0gaeqzZkeJPb", "fYKJU1IB4PGV" ],
     "whileJudgment" : {
       "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
       "kind" : "NONE",
@@ -104,5 +117,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 19
+  "version" : 22
 }
