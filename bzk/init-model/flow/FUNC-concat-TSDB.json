@@ -70,7 +70,7 @@
       "devFlowVars" : { },
       "minLogLv" : "NONE",
       "flatData" : [ {
-        "key" : "~vals_${idx}",
+        "key" : "$vals_${idx}",
         "val" : "${vals}"
       } ]
     } ],
@@ -95,6 +95,15 @@
       "endResultKeys" : [ {
         "lv" : "not_specify",
         "key" : "allVals"
+      }, {
+        "lv" : "not_specify",
+        "key" : "vals_1"
+      }, {
+        "lv" : "not_specify",
+        "key" : "vals_2"
+      }, {
+        "lv" : "not_specify",
+        "key" : "vals_3"
       } ],
       "resultCode" : ""
     },
@@ -109,7 +118,7 @@
     "boxUid" : "DkbmGZOvv2F7",
     "autoRegister" : false,
     "requiredKeys" : [ "querys" ],
-    "outputKeys" : [ "allVals" ]
+    "outputKeys" : [ "allVals", "vals_1", "vals_2", "vals_3" ]
   },
   "threadCfg" : {
     "corePoolSize" : 10,
@@ -117,5 +126,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 22
+  "version" : 28
 }
