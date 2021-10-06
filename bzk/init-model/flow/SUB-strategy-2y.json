@@ -55,7 +55,7 @@
       "minLogLv" : "NONE",
       "url" : "${binance.proxyHost}proxy",
       "uriVariables" : { },
-      "body" : "{\n    \"name\":\"get_recent_trades_list\",\n    \"apiKey\":\"${binance.key}\",\n    \"secret\":\"${binance.secret}\",\n    \"symbol\":\"${symbol}\",\n    \"limit\":1000,\n    \"timeMaped\":true\n}",
+      "body" : "{\n    \"name\":\"get_recent_trades_list\",\n    \"apiKey\":\"${binance.key}\",\n    \"secret\":\"${binance.secret}\",\n    \"symbol\":\"${symbol}\",\n    \"limit\":50,\n    \"timeMaped\":true\n}",
       "method" : "POST",
       "headers" : { },
       "headersFlat" : "",
@@ -136,5 +136,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 28
+  "version" : 30
 }

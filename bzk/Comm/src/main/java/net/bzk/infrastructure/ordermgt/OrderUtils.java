@@ -49,12 +49,13 @@ public class OrderUtils {
         OrderSubtotal ans = new OrderSubtotal();
         ans.setGroup(ft.getGroup());
         for (OrderDto ods : l) {
-            if (ft.getOrigType() != null && !StringUtils.equals(ods.getOrigType() , ft.getOrigType()) ) continue;
-            if (ft.getOrderType() != null && !StringUtils.equals(ods.getType() , ft.getOrderType()) ) continue;
-            if (ft.getNotOrderType() != null &&  StringUtils.equals(ods.getType() , ft.getNotOrderType()) ) continue;
-            if (ft.getSide() != null && !StringUtils.equals(ods.getSide() , ft.getSide()) ) continue;
-            if (ft.getSymbol() != null &&  !StringUtils.equals (ft.getSymbol() , ods.getSymbol())) continue;
-            if (ft.getStatus() != null && !StringUtils.equals(ft.getStatus() , ods.getStatus()) ) continue;
+            if (ft.getOrigType() != null && !StringUtils.equals(ods.getOrigType(), ft.getOrigType())) continue;
+            if (ft.getOrderType() != null && !StringUtils.equals(ods.getType(), ft.getOrderType())) continue;
+            if (ft.getNotOrderType() != null && StringUtils.equals(ods.getType(), ft.getNotOrderType())) continue;
+            if (ft.getSide() != null && !StringUtils.equals(ods.getSide(), ft.getSide())) continue;
+            if (ft.getPositionSide() != null && !StringUtils.equals(ods.getPositionSide(), ft.getPositionSide())) continue;
+            if (ft.getSymbol() != null && !StringUtils.equals(ft.getSymbol(), ods.getSymbol())) continue;
+            if (ft.getStatus() != null && !StringUtils.equals(ft.getStatus(), ods.getStatus())) continue;
             if (ft.getTags() != null && !containsTags(ods.getClientOrderId(), ft.getTags())) continue;
             if (ft.getUntags() != null && containsTags(ods.getClientOrderId(), ft.getUntags())) continue;
             if (ft.getUpdateStartTime() != null && ods.parseUpdateAt().isBefore(ft.parseUpdateStartTime())) continue;
@@ -63,6 +64,14 @@ public class OrderUtils {
         }
         ans.subtotal();
         return ans;
+    }
+
+    public double getPrice(Map orderMap) {
+        OrderDto dto = JsonUtils.toByJson(orderMap, OrderDto.class);
+        if (dto.getAvgPrice() > 0) return dto.getAvgPrice();
+        if (dto.getPrice() > 0) return dto.getPrice();
+        if (dto.getStopPrice() > 0) return dto.getStopPrice();
+        throw new NullPointerException(orderMap.toString());
     }
 
     public static OrderUtils getInstance() {

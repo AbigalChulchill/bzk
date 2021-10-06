@@ -9,7 +9,7 @@
     "actions" : [ {
       "clazz" : "net.bzk.flow.model.HttpAction",
       "uid" : "CqZK2BeXJdkR",
-      "name" : "get_NEW_LIMIT",
+      "name" : "get_NEW_",
       "tryErrorble" : false,
       "enable" : true,
       "devBoxVars" : { },
@@ -17,7 +17,7 @@
       "minLogLv" : "NONE",
       "url" : "${binance.proxyHost}proxy",
       "uriVariables" : { },
-      "body" : "!javascript===\nvar start = new Date();\nstart.setSeconds(start.getSeconds() - 2.5*60*60);\nvar startAt = start.toISOString();\nvar body= {\n    \"name\": \"get_all_orders\",\n    \"apiKey\":\"${binance.key}\",\n    \"secret\":\"${binance.secret}\",\n    \"symbol\": \"${symbol}\",\n    \"status\":\"NEW\",\n    \"orderType\":\"LIMIT\",\n    \"updateEndAt\":startAt\n};\nbody;",
+      "body" : "!javascript===\n// var start = new Date();\n// start.setSeconds(start.getSeconds() - 2.5*60*60);\n// var startAt = start.toISOString();\nvar body= {\n    \"name\": \"get_all_orders\",\n    \"apiKey\":\"${binance.key}\",\n    \"secret\":\"${binance.secret}\",\n    \"symbol\": \"${symbol}\",\n    \"status\":\"NEW\"\n};\nbody;",
       "method" : "POST",
       "headers" : { },
       "headersFlat" : "",
@@ -38,7 +38,7 @@
       "asynced" : false,
       "inputData" : [ {
         "key" : "orders",
-        "val" : "${result.orders}"
+        "val" : "${toDelOds}"
       }, {
         "key" : "symbol",
         "val" : "${symbol}"
@@ -64,25 +64,6 @@
         "key" : "position"
       }
     }, {
-      "clazz" : "net.bzk.flow.model.HttpAction",
-      "uid" : "Ui8GXk1VQyj0",
-      "name" : "get_STOP_NEW",
-      "tryErrorble" : false,
-      "enable" : true,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "url" : "${binance.proxyHost}proxy",
-      "uriVariables" : { },
-      "body" : "!javascript===\nvar start = new Date();\nstart.setSeconds(start.getSeconds() - 2.5*60*60);\nvar startAt = start.toISOString();\nvar body= {\n    \"name\": \"get_all_orders\",\n    \"apiKey\":\"${binance.key}\",\n    \"secret\":\"${binance.secret}\",\n    \"symbol\": \"${symbol}\",\n    \"status\":\"NEW\",\n    \"orderType\":\"STOP_MARKET\",\n    \"updateEndAt\":startAt\n};\nbody;",
-      "method" : "POST",
-      "headers" : { },
-      "headersFlat" : "",
-      "key" : {
-        "lv" : "not_specify",
-        "key" : "stopNewOds"
-      }
-    }, {
       "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
       "uid" : "w8eTa5RYg3u7",
       "name" : "Filiter",
@@ -93,43 +74,30 @@
       "minLogLv" : "NONE",
       "flatData" : [ {
         "key" : "stopLongOds",
-        "val" : "!javascript===\nconst ft = {\n    side:\"SELL\"\n};\nconst ftJons = JSON.stringify(ft);\nconst ods = ${stopNewOds.orders};\nconst odsJson = JSON.stringify(ods);\nconst ans = $orderUtils.filter(odsJson,ftJons);\nans;"
+        "val" : "!javascript===\nconst ft = {\n    positionSide:\"LONG\",\n    orderType:\"STOP_MARKET\"\n};\nconst ftJons = JSON.stringify(ft);\nconst ods = ${result.orders};\nconst odsJson = JSON.stringify(ods);\nconst ans = $orderUtils.filter(odsJson,ftJons);\nans;"
       }, {
         "key" : "stopShortOds",
-        "val" : "!javascript===\nconst ft = {\n    side:\"BUY\"\n};\nconst ftJons = JSON.stringify(ft);\nconst ods = ${stopNewOds.orders};\nconst odsJson = JSON.stringify(ods);\nconst ans = $orderUtils.filter(odsJson,ftJons);\nans;"
+        "val" : "!javascript===\nconst ft = {\n    positionSide:\"SHORT\",\n    orderType:\"STOP_MARKET\"\n};\nconst ftJons = JSON.stringify(ft);\nconst ods = ${result.orders};\nconst odsJson = JSON.stringify(ods);\nconst ans = $orderUtils.filter(odsJson,ftJons);\nans;"
+      }, {
+        "key" : "limitOds",
+        "val" : "!javascript===\r\nconst ft = {\r\n    orderType:\"LIMIT\"\r\n};\r\nconst ftJons = JSON.stringify(ft);\r\nconst ods = ${result.orders};\r\nconst odsJson = JSON.stringify(ods);\r\nconst ans = $orderUtils.filter(odsJson,ftJons);\r\nans;"
+      }, {
+        "key" : "takeProfitOds",
+        "val" : "!javascript===\nconst ft = {\n    orderType:\"TAKE_PROFIT_MARKET\"\n};\nconst ftJons = JSON.stringify(ft);\nconst ods = ${result.orders};\nconst odsJson = JSON.stringify(ods);\nconst ans = $orderUtils.filter(odsJson,ftJons);\nans;"
       } ]
     }, {
       "clazz" : "net.bzk.flow.model.Action$PolyglotAction",
       "uid" : "mI5kvjAUl9xe",
-      "name" : "collect",
+      "name" : "collect_stop",
       "tryErrorble" : false,
       "enable" : true,
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "code" : "!return-json===\r\nconst pos = ${position};\r\n\r\nconst longP = getPosBySide('LONG');\r\nconst shortP = getPosBySide('SHORT');\r\nconst stopLongOds = ${stopLongOds};\r\nconst stopShortOds = ${stopShortOds};\r\n\r\nlet ans = [];\r\nans.concat(checkOds(longP,stopLongOds));\r\nans.concat(checkOds(shortP,stopShortOds));\r\n\r\nfunction checkOds(p,ods){\r\n    if(p.positionAmt>0) return [];\r\n    return ods.orders;\r\n}\r\n\r\nfunction getPosBySide(pSide){\r\n    for (const p of pos) {\r\n        if(p.positionSide === pSide) return p;\r\n    }\r\n    throw new Error('not find '+pSide);\r\n}\r\n\r\nJSON.stringify(ans);",
+      "code" : "!return-json===\r\nlet ans = ${toDelOds};\r\nconst pos = ${position};\r\n\r\nconst longP = getPosBySide('LONG');\r\nconst shortP = getPosBySide('SHORT');\r\nconst stopLongOds = ${stopLongOds};\r\nconst stopShortOds = ${stopShortOds};\r\n\r\n\r\nans.concat(checkOds(longP,stopLongOds));\r\nans.concat(checkOds(shortP,stopShortOds));\r\n\r\nfunction checkOds(p,ods){\r\n    if(p.positionAmt>0) return [];\r\n    return ods.orders;\r\n}\r\n\r\nfunction getPosBySide(pSide){\r\n    for (const p of pos) {\r\n        if(p.positionSide === pSide) return p;\r\n    }\r\n    throw new Error('not find '+pSide);\r\n}\r\n\r\nJSON.stringify(ans);",
       "polyglot" : "js",
       "resultLv" : "not_specify",
       "resultKey" : "cancelOds"
-    }, {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "ae7q3TLguUHt",
-      "name" : "call-2",
-      "tryErrorble" : false,
-      "enable" : true,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "flowUid" : "7fDTbOFBwVkP",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "orders",
-        "val" : "${cancelOds}"
-      }, {
-        "key" : "symbol",
-        "val" : "${symbol}"
-      } ],
-      "outputReflects" : [ ]
     }, {
       "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
       "uid" : "QvboCjjxxF3d",
@@ -145,13 +113,48 @@
       }, {
         "key" : "symbolIdx",
         "val" : "!javascript===\n${symbolIdx}+1;"
+      }, {
+        "key" : "toDelOds",
+        "val" : "[]"
       } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$PolyglotAction",
+      "uid" : "aD6jPbJPZE3R",
+      "name" : "collect-takeProfitAndLimit",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "code" : "!return-json===\nlet toDelOds = ${toDelOds};\nconst lastPrice = ${binanceQuote.all.avgPrice};\nconst limitOds = ${limitOds.orders};\nconst takeProfitOds = ${takeProfitOds.orders};\n\n\nfunction addFilterOds(ods){\n    for (const od of ods) {\n        let odPrice = $orderUtils.getPrice(od);\n        let dp = Math.abs(odPrice - lastPrice);\n        let r = dp / lastPrice;\n       \n\n        let lastD = new Date(od.updateAt);\n        let checkAt = new Date();\n        checkAt.setSeconds(checkAt.getSeconds() - 9*60*60*24);\n         if (r>0.15 || lastD<checkAt ) {\n             toDelOds.push(od);\n         }\n      \n    }\n}\n\naddFilterOds(limitOds);\naddFilterOds(takeProfitOds);\n\nJSON.stringify(toDelOds);",
+      "polyglot" : "js",
+      "resultLv" : "not_specify",
+      "resultKey" : "toDelOds"
+    }, {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "9TkSb5GN94Km",
+      "name" : "BinanceQuote",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "url" : "${binance.proxyHost}proxy",
+      "uriVariables" : { },
+      "body" : "{\n    \"name\":\"get_recent_trades_list\",\n    \"apiKey\":\"${binance.key}\",\n    \"secret\":\"${binance.secret}\",\n    \"symbol\":\"${symbol}\",\n    \"limit\":100,\n    \"timeMaped\":false\n}",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : "binanceQuote"
+      }
     } ],
     "links" : [ ],
     "vars" : {
       "symbolIdx" : 0
     },
-    "taskSort" : [ "QvboCjjxxF3d", "CqZK2BeXJdkR", "xS9t93fuw2hH", "UUgNCLrtUbl3", "Ui8GXk1VQyj0", "w8eTa5RYg3u7", "mI5kvjAUl9xe", "ae7q3TLguUHt" ],
+    "taskSort" : [ "QvboCjjxxF3d", "CqZK2BeXJdkR", "9TkSb5GN94Km", "w8eTa5RYg3u7", "aD6jPbJPZE3R", "UUgNCLrtUbl3", "mI5kvjAUl9xe", "xS9t93fuw2hH" ],
     "whileJudgment" : {
       "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
       "kind" : "NONE",
@@ -185,5 +188,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 16
+  "version" : 23
 }

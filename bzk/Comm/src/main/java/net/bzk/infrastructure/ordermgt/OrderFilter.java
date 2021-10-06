@@ -9,6 +9,7 @@ import java.util.List;
 @Data
 public class OrderFilter {
     private String symbol = null;
+    private String positionSide = null;
     private String side = null;
     private List<String> tags ;
     private List<String>  untags ;
