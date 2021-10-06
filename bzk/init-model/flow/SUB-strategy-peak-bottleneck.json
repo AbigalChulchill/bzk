@@ -24,6 +24,9 @@
       }, {
         "key" : "nearPeakPrice",
         "val" : "!javascript===\nconst nearPrice = ${peaks.trendInfo.nearPeak.val};\nnearPrice;"
+      }, {
+        "key" : "m40PositionSide",
+        "val" : "!javascript===\r\nconst state = '${peaks40m.trendInfo.state}';\r\nfunction calc(){\r\n    return state == 'RISE' ? \"LONG\" : \"SHORT\";\r\n}\r\ncalc();\r\n\r\n"
       } ]
     } ],
     "links" : [ {
@@ -119,9 +122,36 @@
         "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"CheckNoAllow\"\n}"
       },
       "enable" : true
+    }, {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "2VHiSI5qfvzo",
+      "name" : "m40Andh4NotEq",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionTxt",
+        "kind" : "NONE",
+        "next" : null,
+        "left" : "${m40PositionSide}",
+        "right" : "${positionSide}",
+        "not" : true,
+        "type" : "equal"
+      },
+      "transition" : {
+        "toBox" : "",
+        "endTag" : "${symbol} ${positionSide} m40Andh4NotEq",
+        "failEnd" : false,
+        "endResultKeys" : [ {
+          "lv" : "run_flow",
+          "key" : "peaks"
+        }, {
+          "lv" : "not_specify",
+          "key" : "peaks40m"
+        } ],
+        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"m40Andh4NotEq\"\n}"
+      },
+      "enable" : true
     } ],
     "vars" : { },
-    "taskSort" : [ "Div2tmjgl8JG", "POnGmKqao8p1", "6q7K82sD3xWo", "dgKXFR8jH8x5", "6NprXSn7ndco" ],
+    "taskSort" : [ "Div2tmjgl8JG", "POnGmKqao8p1", "6q7K82sD3xWo", "dgKXFR8jH8x5", "6NprXSn7ndco", "2VHiSI5qfvzo" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "iQ07yoOBfiPS",
@@ -348,5 +378,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 71
+  "version" : 73
 }
