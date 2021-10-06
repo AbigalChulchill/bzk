@@ -26,22 +26,6 @@
         "key" : "postResult"
       }
     }, {
-      "clazz" : "net.bzk.flow.model.Action$MailAction",
-      "uid" : "fzgczwZFFaF2",
-      "name" : "NotifyMail",
-      "tryErrorble" : true,
-      "enable" : false,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "smtpHost" : "\"smtp.gmail.com\"",
-      "smtpPort" : "465",
-      "username" : "${gmail.username}",
-      "password" : "${gmail.password}",
-      "toMail" : "a29243004@gmail.com",
-      "subject" : "Order CMC",
-      "body" : "    name=\"post_order\" \\n\\r\n    investedRate=${investedRate} \\n\\r\n    guardRange=${guardRange} \\n\\r\n    quote=${postResult.quantity} \\n\\r\n    symbol=\"${symbol}\" \\n\\r\n    selled=${selled} \\n\\r"
-    }, {
       "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
       "uid" : "3H1IkGkleZp5",
       "name" : "GenBody",
@@ -52,7 +36,7 @@
       "minLogLv" : "NONE",
       "flatData" : [ {
         "key" : "body",
-        "val" : " {\n    \"apiKey\": \"${binance.key}\",\n    \"secret\": \"${binance.secret}\",\n    \"name\": \"post_limit_order\",\n    \"symbol\": \"${symbol}\",\n    \"positionSide\": \"${positionSide}\",\n    \"withdrawAmountRate\": ${withdrawAmountRate},\n    \"gapRate\":${gapRate},\n    \"size\":${size}\n}\n"
+        "val" : " {\n    \"apiKey\": \"${binance.key}\",\n    \"secret\": \"${binance.secret}\",\n    \"name\": \"order/post\",\n    \"strategy\":\"${strategy}\",\n    \"symbol\": \"${symbol}\",\n    \"positionSide\": \"${positionSide}\",\n    \"withdrawAmountRate\": ${withdrawAmountRate},\n    \"priceBuffRate\": ${priceBuffRate},\n    \"gapRate\":${gapRate},\n    \"size\":${size},\n    \"proportionalRate\":${proportionalRate}\n}\n"
       }, {
         "key" : "body.tags",
         "val" : "!javascript===\nvar tags =  ${tags};\ntags.push(\"bot\");\ntags;"
@@ -68,7 +52,7 @@
       "minLogLv" : "NONE",
       "url" : "${finProxyUrl}/proxy/tsdb/insert/multiple",
       "uriVariables" : { },
-      "body" : "!javascript===\n\nconst sbl = '${symbol}';\nconst positionSide = '${positionSide}';\nconst postResult = ${postResult};\n\n\nlet ans = [];\n\nfunction genPointDto(fd,v,idx){\n    let  now = new Date();\n    now.setSeconds(now.getSeconds() + idx*60);\n    const nowiso = now.toISOString();\n  const row = {\n      measurement : 'order-measurement',\n      tags:{\n        \"symbol\" : sbl,        \n        \"category\":'cryptocurrency',\n        \"source\":'binance',\n        \"positionSide\":positionSide,\n        \"trigger\":'${trigger}'\n      },\n      field: fd,\n      val:v,\n      time :nowiso\n  };\n  return row;\n}\n\n\n\nfor(let i=0;i<postResult.length;i++){\n    let od = postResult[i];\n    ans.push(genPointDto('price',od.price,i));\n    ans.push(genPointDto('quantity',od.origQty,i));\n}\n\nans;",
+      "body" : "!javascript===\n\nconst sbl = '${symbol}';\nconst positionSide = '${positionSide}';\nconst strategy = '${strategy}';\nconst postResult = ${postResult};\n\n\nlet ans = [];\n\nfunction genPointDto(fd,v,idx){\n    let  now = new Date();\n    now.setSeconds(now.getSeconds() + idx*60);\n    const nowiso = now.toISOString();\n  const row = {\n      measurement : 'order-measurement',\n      tags:{\n        \"symbol\" : sbl,        \n        \"category\":'cryptocurrency',\n        \"source\":'binance',\n        \"positionSide\":positionSide,\n        \"trigger\":'${trigger}',\n        \"strategy\":strategy\n      },\n      field: fd,\n      val:v,\n      time :nowiso\n  };\n  return row;\n}\n\n\n\nfor(let i=0;i<postResult.length;i++){\n    let od = postResult[i];\n    ans.push(genPointDto('price',od.price,i));\n    ans.push(genPointDto('quantity',od.origQty,i));\n}\n\nans;",
       "method" : "POST",
       "headers" : { },
       "headersFlat" : "{}",
@@ -82,7 +66,7 @@
       "idx" : 0,
       "quotes" : [ ]
     },
-    "taskSort" : [ "fzgczwZFFaF2", "3H1IkGkleZp5", "OcPQySOCy0Gn", "iD0dtfzuxhXl" ],
+    "taskSort" : [ "3H1IkGkleZp5", "OcPQySOCy0Gn", "iD0dtfzuxhXl" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
@@ -106,7 +90,7 @@
     "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
     "boxUid" : "htivUO7YKtyD",
     "autoRegister" : false,
-    "requiredKeys" : [ "positionSide", "symbol", "withdrawAmountRate", "tags", "trigger", "size", "gapRate" ],
+    "requiredKeys" : [ "positionSide", "symbol", "withdrawAmountRate", "tags", "trigger", "size", "gapRate", "priceBuffRate", "proportionalRate", "strategy", "positionRate" ],
     "outputKeys" : [ ]
   },
   "threadCfg" : {
@@ -115,5 +99,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 33
+  "version" : 36
 }
