@@ -4,6 +4,135 @@
   "name" : "SUB-strategy-peak-bottleneck",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "MINMAX52of8",
+    "name" : "MINMAX",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
+      "uid" : "POnGmKqao8p1",
+      "name" : "MM_InitVars",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flatData" : [ {
+        "key" : "~positionSide",
+        "val" : "!javascript===\r\nconst state = '${peaks.trendInfo.state}';\r\n\r\n\r\nfunction calc(){\r\n    return state == 'RISE' ? \"LONG\" : \"SHORT\";\r\n}\r\ncalc();"
+      }, {
+        "key" : "curMoveRate",
+        "val" : "!javascript===\r\nconst exPrice = ${binanceQuote.all.avgPrice};\r\nconst nearPrice = ${peaks.last.val} ;\r\nconst dp = Math.abs( exPrice - nearPrice);\r\nconst ans= dp/nearPrice;\r\nans;"
+      }, {
+        "key" : "nearPeakPrice",
+        "val" : "!javascript===\nconst nearPrice = ${peaks.trendInfo.nearPeak.val};\nnearPrice;"
+      } ]
+    } ],
+    "links" : [ {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "6q7K82sD3xWo",
+      "name" : "OverMinOrMax",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
+        "kind" : "NONE",
+        "next" : null,
+        "polyglot" : "js",
+        "code" : "const positionSide='${positionSide}';\r\nconst exPrice = ${binanceQuote.all.lastPrice};\r\nconst nearPeakPrice = ${nearPeakPrice};\r\n\r\nconst vaildStoped = $directionUtils.isValidLimitPrice(positionSide,nearPeakPrice,exPrice);\r\n!vaildStoped;"
+      },
+      "transition" : {
+        "toBox" : "",
+        "endTag" : "${symbol} OverMinOrMax",
+        "failEnd" : false,
+        "endResultKeys" : [ {
+          "lv" : "not_specify",
+          "key" : "__ALL__"
+        } ],
+        "resultCode" : "{\r\n  \"ordered\": false,\r\n  \"breakName\": \"OverMinOrMax\"\r\n}"
+      },
+      "enable" : true
+    }, {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "dgKXFR8jH8x5",
+      "name" : "NotBigger",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
+        "kind" : "NONE",
+        "next" : null,
+        "left" : "!javascript===\nconst biggerTime = ${extremeInfo.time};\nconst biggerDay = biggerTime / (60*60*24);\nbiggerDay;",
+        "right" : "11",
+        "type" : "lessthan_equal"
+      },
+      "transition" : {
+        "toBox" : "",
+        "endTag" : "${symbol} ${positionSide} NotBigger",
+        "failEnd" : false,
+        "endResultKeys" : [ {
+          "lv" : "not_specify",
+          "key" : "__ALL__"
+        }, {
+          "lv" : "not_specify",
+          "key" : "extremeInfo"
+        } ],
+        "resultCode" : "{\r\n  \"ordered\": false,\r\n  \"breakName\": \"NotBigger\"\r\n}"
+      },
+      "enable" : true
+    }, {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "6NprXSn7ndco",
+      "name" : "OverPeakTooMuch",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
+        "kind" : "NONE",
+        "next" : null,
+        "left" : "!javascript===\nconst exPrice = ${binanceQuote.all.lastPrice};\nconst nearPeakPrice = ${nearPeakPrice};\nconst ans = Math.abs( 1-(exPrice / nearPeakPrice));\nans;",
+        "right" : "0.0386",
+        "type" : "greater"
+      },
+      "transition" : {
+        "toBox" : "",
+        "endTag" : "${symbol} ${positionSide} OverPeakTooMuch",
+        "failEnd" : false,
+        "endResultKeys" : [ {
+          "lv" : "not_specify",
+          "key" : "binanceQuote.all.lastPrice"
+        }, {
+          "lv" : "not_specify",
+          "key" : "nearPeakPrice"
+        } ],
+        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"OverPeakTooMuch\"\n}"
+      },
+      "enable" : true
+    }, {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "Div2tmjgl8JG",
+      "name" : "CheckNoAllow",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
+        "kind" : "NONE",
+        "next" : null,
+        "polyglot" : "js",
+        "code" : "const allowSymbols = ${bottleneck};\r\nconst sbl = '${symbol}';\r\n!allowSymbols.includes(sbl);"
+      },
+      "transition" : {
+        "toBox" : "",
+        "endTag" : "${symbol} NoAllow",
+        "failEnd" : false,
+        "endResultKeys" : [ ],
+        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"CheckNoAllow\"\n}"
+      },
+      "enable" : true
+    } ],
+    "vars" : { },
+    "taskSort" : [ "Div2tmjgl8JG", "POnGmKqao8p1", "6q7K82sD3xWo", "dgKXFR8jH8x5", "6NprXSn7ndco" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "iQ07yoOBfiPS",
+      "endTag" : null,
+      "failEnd" : false,
+      "endResultKeys" : [ ],
+      "resultCode" : "!javascript===\nconst side = '${toSellOrBuy}';\nconst ans = {\n    side : side,\n    tag : \"MINMAX\"\n};\nans;"
+    },
+    "minLogLv" : "DEBUG"
+  }, {
+    "clazz" : "net.bzk.flow.model.Box",
     "uid" : "iQ07yoOBfiPS",
     "name" : "CallOrderLIMIT",
     "actions" : [ {
@@ -185,10 +314,10 @@
       },
       "transition" : {
         "toBox" : "",
-        "endTag" : "END",
+        "endTag" : "${symbol} ${positionSide} LIMIT:${__pk_result.ordered} profit:false",
         "failEnd" : false,
         "endResultKeys" : [ ],
-        "resultCode" : ""
+        "resultCode" : "{\n  \"limit\": ${__pk_result},\n  \"takeProfit\":{\n      \"ordered\":false,\n      \"breakName\":\"ChechNoTakeProfit\"\n  }\n}"
       },
       "enable" : true
     } ],
@@ -197,139 +326,10 @@
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
-      "endTag" : "END",
+      "endTag" : "${symbol} ${positionSide} LIMIT:${__pk_result.ordered} profit:true",
       "failEnd" : false,
       "endResultKeys" : [ ],
-      "resultCode" : ""
-    },
-    "minLogLv" : "DEBUG"
-  }, {
-    "clazz" : "net.bzk.flow.model.Box",
-    "uid" : "MINMAX52of8",
-    "name" : "MINMAX",
-    "actions" : [ {
-      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
-      "uid" : "POnGmKqao8p1",
-      "name" : "MM_InitVars",
-      "tryErrorble" : false,
-      "enable" : true,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "flatData" : [ {
-        "key" : "~positionSide",
-        "val" : "!javascript===\r\nconst state = '${peaks.trendInfo.state}';\r\n\r\n\r\nfunction calc(){\r\n    return state == 'RISE' ? \"LONG\" : \"SHORT\";\r\n}\r\ncalc();"
-      }, {
-        "key" : "curMoveRate",
-        "val" : "!javascript===\r\nconst exPrice = ${binanceQuote.all.avgPrice};\r\nconst nearPrice = ${peaks.last.val} ;\r\nconst dp = Math.abs( exPrice - nearPrice);\r\nconst ans= dp/nearPrice;\r\nans;"
-      }, {
-        "key" : "nearPeakPrice",
-        "val" : "!javascript===\nconst nearPrice = ${peaks.trendInfo.nearPeak.val};\nnearPrice;"
-      } ]
-    } ],
-    "links" : [ {
-      "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "6q7K82sD3xWo",
-      "name" : "OverMinOrMax",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
-        "kind" : "NONE",
-        "next" : null,
-        "polyglot" : "js",
-        "code" : "const positionSide='${positionSide}';\r\nconst exPrice = ${binanceQuote.all.lastPrice};\r\nconst nearPeakPrice = ${nearPeakPrice};\r\n\r\nconst vaildStoped = $directionUtils.isValidLimitPrice(positionSide,nearPeakPrice,exPrice);\r\n!vaildStoped;"
-      },
-      "transition" : {
-        "toBox" : "",
-        "endTag" : "${symbol} OverMinOrMax",
-        "failEnd" : false,
-        "endResultKeys" : [ {
-          "lv" : "not_specify",
-          "key" : "__ALL__"
-        } ],
-        "resultCode" : "{\r\n  \"ordered\": false,\r\n  \"breakName\": \"OverMinOrMax\"\r\n}"
-      },
-      "enable" : true
-    }, {
-      "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "dgKXFR8jH8x5",
-      "name" : "NotBigger",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
-        "kind" : "NONE",
-        "next" : null,
-        "left" : "!javascript===\nconst biggerTime = ${extremeInfo.time};\nconst biggerDay = biggerTime / (60*60*24);\nbiggerDay;",
-        "right" : "11",
-        "type" : "lessthan_equal"
-      },
-      "transition" : {
-        "toBox" : "",
-        "endTag" : "${symbol} ${positionSide} NotBigger",
-        "failEnd" : false,
-        "endResultKeys" : [ {
-          "lv" : "not_specify",
-          "key" : "__ALL__"
-        }, {
-          "lv" : "not_specify",
-          "key" : "extremeInfo"
-        } ],
-        "resultCode" : "{\r\n  \"ordered\": false,\r\n  \"breakName\": \"NotBigger\"\r\n}"
-      },
-      "enable" : true
-    }, {
-      "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "6NprXSn7ndco",
-      "name" : "OverPeakTooMuch",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
-        "kind" : "NONE",
-        "next" : null,
-        "left" : "!javascript===\nconst exPrice = ${binanceQuote.all.lastPrice};\nconst nearPeakPrice = ${nearPeakPrice};\nconst ans = Math.abs( 1-(exPrice / nearPeakPrice));\nans;",
-        "right" : "0.0386",
-        "type" : "greater"
-      },
-      "transition" : {
-        "toBox" : "",
-        "endTag" : "${symbol} ${positionSide} OverPeakTooMuch",
-        "failEnd" : false,
-        "endResultKeys" : [ {
-          "lv" : "not_specify",
-          "key" : "binanceQuote.all.lastPrice"
-        }, {
-          "lv" : "not_specify",
-          "key" : "nearPeakPrice"
-        } ],
-        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"OverPeakTooMuch\"\n}"
-      },
-      "enable" : true
-    }, {
-      "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "Div2tmjgl8JG",
-      "name" : "CheckNoAllow",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
-        "kind" : "NONE",
-        "next" : null,
-        "polyglot" : "js",
-        "code" : "const allowSymbols = ${bottleneck};\r\nconst sbl = '${symbol}';\r\n!allowSymbols.includes(sbl);"
-      },
-      "transition" : {
-        "toBox" : "",
-        "endTag" : "${symbol} NoAllow",
-        "failEnd" : false,
-        "endResultKeys" : [ ],
-        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"CheckNoAllow\"\n}"
-      },
-      "enable" : true
-    } ],
-    "vars" : { },
-    "taskSort" : [ "Div2tmjgl8JG", "POnGmKqao8p1", "6q7K82sD3xWo", "dgKXFR8jH8x5", "6NprXSn7ndco" ],
-    "whileJudgment" : null,
-    "transition" : {
-      "toBox" : "iQ07yoOBfiPS",
-      "endTag" : null,
-      "failEnd" : false,
-      "endResultKeys" : [ ],
-      "resultCode" : "!javascript===\nconst side = '${toSellOrBuy}';\nconst ans = {\n    side : side,\n    tag : \"MINMAX\"\n};\nans;"
+      "resultCode" : "{\r\n  \"limit\": ${__pk_result},\r\n  \"takeProfit\":{\r\n      \"ordered\":true\r\n  }\r\n}"
     },
     "minLogLv" : "DEBUG"
   } ],
@@ -348,5 +348,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 69
+  "version" : 71
 }
