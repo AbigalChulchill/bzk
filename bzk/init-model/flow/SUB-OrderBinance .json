@@ -70,9 +70,12 @@
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
-      "endTag" : "${symbol} ${positionSide} ${trigger}",
+      "endTag" : "${symbol} ${positionSide} ${strategy} ${trigger}",
       "failEnd" : false,
-      "endResultKeys" : [ ],
+      "endResultKeys" : [ {
+        "lv" : "not_specify",
+        "key" : "body"
+      } ],
       "resultCode" : ""
     },
     "minLogLv" : "DEBUG"
@@ -99,5 +102,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 36
+  "version" : 38
 }
