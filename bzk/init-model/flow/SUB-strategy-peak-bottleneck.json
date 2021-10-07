@@ -163,6 +163,105 @@
     "minLogLv" : "DEBUG"
   }, {
     "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "y09CvF3tt03P",
+    "name" : "CallOrderProfit",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "yAfJwV3nc7b9",
+      "name" : "query_take_profit_ods",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "url" : "${binance.proxyHost}proxy",
+      "uriVariables" : { },
+      "body" : "!javascript===\nvar positionSide = '${positionSide}';\n// var orderSide = $directionUtils.getLimitOrderSide(positionSide);\n//var start = new Date();\n//start.setSeconds(start.getSeconds() - 3*60*60);\n//var startAt = start.toISOString();\nvar body= {\n    \"name\": \"get_all_orders\",\n    \"apiKey\":\"${binance.key}\",\n    \"secret\":\"${binance.secret}\",\n    \"symbol\": \"${symbol}\",\n    \"status\":\"NEW\",\n    \"orderType\":\"TAKE_PROFIT_MARKET\",\n    \"positionSide\":positionSide\n};\nbody;",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : "lessOds"
+      }
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "tWrAJcQR5WgW",
+      "name" : "ORDER_TAKE_PROFIT",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flowUid" : "02eQyaMwyojZ",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "positionSide",
+        "val" : "${positionSide}"
+      }, {
+        "key" : "symbol",
+        "val" : "${symbol}"
+      }, {
+        "key" : "tags",
+        "val" : "[\"bneck\"]"
+      }, {
+        "key" : "trigger",
+        "val" : "bottleneck"
+      }, {
+        "key" : "size",
+        "val" : "5"
+      }, {
+        "key" : "gapRate",
+        "val" : "0.01"
+      }, {
+        "key" : "priceBuffRate",
+        "val" : "1.0035"
+      }, {
+        "key" : "proportionalRate",
+        "val" : "1.3"
+      }, {
+        "key" : "strategy",
+        "val" : "TAKE_PROFIT"
+      }, {
+        "key" : "positionRate",
+        "val" : "0.3"
+      } ],
+      "outputReflects" : [ ]
+    } ],
+    "links" : [ {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "nJw0imQ8HFYq",
+      "name" : "ChechNoTakeProfit",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
+        "kind" : "NONE",
+        "next" : null,
+        "left" : "${lessOds.origQty}",
+        "right" : "0",
+        "type" : "greater"
+      },
+      "transition" : {
+        "toBox" : "",
+        "endTag" : "${symbol} ${positionSide} LIMIT:${__pk_result.ordered} profit:false",
+        "failEnd" : false,
+        "endResultKeys" : [ ],
+        "resultCode" : "{\n  \"limit\": ${__pk_result},\n  \"takeProfit\":{\n      \"ordered\":false,\n      \"breakName\":\"ChechNoTakeProfit\"\n  }\n}"
+      },
+      "enable" : true
+    } ],
+    "vars" : { },
+    "taskSort" : [ "yAfJwV3nc7b9", "nJw0imQ8HFYq", "tWrAJcQR5WgW" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "${symbol} ${positionSide} LIMIT:${__pk_result.ordered} profit:true",
+      "failEnd" : false,
+      "endResultKeys" : [ ],
+      "resultCode" : "{\r\n  \"limit\": ${__pk_result},\r\n  \"takeProfit\":{\r\n      \"ordered\":true\r\n  }\r\n}"
+    },
+    "minLogLv" : "DEBUG"
+  }, {
+    "clazz" : "net.bzk.flow.model.Box",
     "uid" : "iQ07yoOBfiPS",
     "name" : "CallOrderLIMIT",
     "actions" : [ {
@@ -263,105 +362,6 @@
       "resultCode" : "{\n  \"ordered\": true,\n  \"breakName\": \"NONE\"\n}"
     },
     "minLogLv" : "DEBUG"
-  }, {
-    "clazz" : "net.bzk.flow.model.Box",
-    "uid" : "y09CvF3tt03P",
-    "name" : "CallOrderProfit",
-    "actions" : [ {
-      "clazz" : "net.bzk.flow.model.HttpAction",
-      "uid" : "yAfJwV3nc7b9",
-      "name" : "query_take_profit_ods",
-      "tryErrorble" : false,
-      "enable" : true,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "url" : "${binance.proxyHost}proxy",
-      "uriVariables" : { },
-      "body" : "!javascript===\nvar positionSide = '${positionSide}';\n// var orderSide = $directionUtils.getLimitOrderSide(positionSide);\n//var start = new Date();\n//start.setSeconds(start.getSeconds() - 3*60*60);\n//var startAt = start.toISOString();\nvar body= {\n    \"name\": \"get_all_orders\",\n    \"apiKey\":\"${binance.key}\",\n    \"secret\":\"${binance.secret}\",\n    \"symbol\": \"${symbol}\",\n    \"status\":\"NEW\",\n    \"orderType\":\"LIMIT\",\n    \"positionSide\":positionSide\n};\nbody;",
-      "method" : "POST",
-      "headers" : { },
-      "headersFlat" : "",
-      "key" : {
-        "lv" : "not_specify",
-        "key" : "lessOds"
-      }
-    }, {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "tWrAJcQR5WgW",
-      "name" : "ORDER_TAKE_PROFIT",
-      "tryErrorble" : false,
-      "enable" : true,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "flowUid" : "02eQyaMwyojZ",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "positionSide",
-        "val" : "${positionSide}"
-      }, {
-        "key" : "symbol",
-        "val" : "${symbol}"
-      }, {
-        "key" : "tags",
-        "val" : "[\"bneck\"]"
-      }, {
-        "key" : "trigger",
-        "val" : "bottleneck"
-      }, {
-        "key" : "size",
-        "val" : "5"
-      }, {
-        "key" : "gapRate",
-        "val" : "0.01"
-      }, {
-        "key" : "priceBuffRate",
-        "val" : "1.0035"
-      }, {
-        "key" : "proportionalRate",
-        "val" : "1.3"
-      }, {
-        "key" : "strategy",
-        "val" : "TAKE_PROFIT"
-      }, {
-        "key" : "positionRate",
-        "val" : "0.3"
-      } ],
-      "outputReflects" : [ ]
-    } ],
-    "links" : [ {
-      "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "nJw0imQ8HFYq",
-      "name" : "ChechNoTakeProfit",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
-        "kind" : "NONE",
-        "next" : null,
-        "left" : "${lessOds.origQty}",
-        "right" : "0",
-        "type" : "greater"
-      },
-      "transition" : {
-        "toBox" : "",
-        "endTag" : "${symbol} ${positionSide} LIMIT:${__pk_result.ordered} profit:false",
-        "failEnd" : false,
-        "endResultKeys" : [ ],
-        "resultCode" : "{\n  \"limit\": ${__pk_result},\n  \"takeProfit\":{\n      \"ordered\":false,\n      \"breakName\":\"ChechNoTakeProfit\"\n  }\n}"
-      },
-      "enable" : true
-    } ],
-    "vars" : { },
-    "taskSort" : [ "yAfJwV3nc7b9", "nJw0imQ8HFYq", "tWrAJcQR5WgW" ],
-    "whileJudgment" : null,
-    "transition" : {
-      "toBox" : "",
-      "endTag" : "${symbol} ${positionSide} LIMIT:${__pk_result.ordered} profit:true",
-      "failEnd" : false,
-      "endResultKeys" : [ ],
-      "resultCode" : "{\r\n  \"limit\": ${__pk_result},\r\n  \"takeProfit\":{\r\n      \"ordered\":true\r\n  }\r\n}"
-    },
-    "minLogLv" : "DEBUG"
   } ],
   "varCfgNames" : [ "binance.json", "crypto-symbol.json" ],
   "vars" : { },
@@ -378,5 +378,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 73
+  "version" : 75
 }
