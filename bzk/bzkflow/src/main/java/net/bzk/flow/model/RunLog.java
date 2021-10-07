@@ -49,7 +49,7 @@ public class RunLog implements Serializable {
     private HashMap<String, Object> varVals;
     private String actionName;
 
-    @Indexed(name = "create_at_index", direction = IndexDirection.DESCENDING,expireAfterSeconds=3600)
+    @Indexed(name = "create_at_index", direction = IndexDirection.DESCENDING)
     private Date createAt;
 
 }
