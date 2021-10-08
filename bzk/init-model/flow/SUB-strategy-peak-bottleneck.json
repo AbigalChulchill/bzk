@@ -197,7 +197,7 @@
       "asynced" : false,
       "inputData" : [ {
         "key" : "positionSide",
-        "val" : "${positionSide}"
+        "val" : "!javascript===\nconst positionSide = '${positionSide}';\nfunction calc(){\n    return positionSide == 'LONG' ? 'SHORT' : 'LONG';\n}\ncalc();"
       }, {
         "key" : "symbol",
         "val" : "${symbol}"
@@ -378,5 +378,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 75
+  "version" : 77
 }
