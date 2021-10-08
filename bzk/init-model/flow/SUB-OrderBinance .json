@@ -36,7 +36,7 @@
       "minLogLv" : "NONE",
       "flatData" : [ {
         "key" : "body",
-        "val" : " {\n    \"apiKey\": \"${binance.key}\",\n    \"secret\": \"${binance.secret}\",\n    \"name\": \"order/post\",\n    \"strategy\":\"${strategy}\",\n    \"symbol\": \"${symbol}\",\n    \"positionSide\": \"${positionSide}\",\n    \"withdrawAmountRate\": ${withdrawAmountRate},\n    \"priceBuffRate\": ${priceBuffRate},\n    \"gapRate\":${gapRate},\n    \"size\":${size},\n    \"proportionalRate\":${proportionalRate}\n}\n"
+        "val" : " {\n    \"apiKey\": \"${binance.key}\",\n    \"secret\": \"${binance.secret}\",\n    \"name\": \"order/post\",\n    \"strategy\":\"${strategy}\",\n    \"symbol\": \"${symbol}\",\n    \"positionSide\": \"${positionSide}\",\n    \"withdrawAmountRate\": ${withdrawAmountRate},\n    \"positionRate\":${positionRate},\n    \"priceBuffRate\": ${priceBuffRate},\n    \"gapRate\":${gapRate},\n    \"size\":${size},\n    \"proportionalRate\":${proportionalRate}\n}\n"
       }, {
         "key" : "body.tags",
         "val" : "!javascript===\nvar tags =  ${tags};\ntags.push(\"bot\");\ntags;"
@@ -102,5 +102,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 38
+  "version" : 40
 }
