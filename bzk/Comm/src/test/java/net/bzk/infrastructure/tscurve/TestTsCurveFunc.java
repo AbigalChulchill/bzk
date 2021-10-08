@@ -23,6 +23,9 @@ public class TestTsCurveFunc {
     @Value("classpath:tscurve/serial-test-data-20210928-20190930.json")
     private Resource y2Data;
 
+    @Value("classpath:tscurve/serial-test-data-bais-20211006-20191107.json")
+    private Resource biasY1Data;
+
     @Test
     public void testPeakFinder() {
 
@@ -32,15 +35,15 @@ public class TestTsCurveFunc {
         DimensionDto.MacroDimensionDto md = new DimensionDto.MacroDimensionDto();
         md.setPeakMaxWaitSeconds(peakMaxWaitSeconds);
         md.setAmplitudeRate(macroAmplitudeRate);
-        Map mdsm = JsonUtils.toByJson(md,Map.class);
+        Map mdsm = JsonUtils.toByJson(md, Map.class);
         var ans = TsCurveFunc.getInstance().findPeak(map, mdsm);
         System.out.println(ans);
-        var mFirst= ans.getTrendInfo().getNearMax();
+        var mFirst = ans.getTrendInfo().getNearMax();
         TsHowBig.Dto dto = TsHowBig.Dto.builder()
                 .bigger(true)
                 .targetKey(mFirst.getKey())
                 .build();
-        var bAns = TsCurveFunc.getInstance().findBigger(map,JsonUtils.toJson(dto));
+        var bAns = TsCurveFunc.getInstance().findBigger(map, JsonUtils.toJson(dto));
         System.out.println(bAns);
 
     }
@@ -48,31 +51,46 @@ public class TestTsCurveFunc {
     @Test
     public void test2YPeakFinder() {
 
-        double peakMaxWaitSeconds = 60 * 60  * 1.5;
+        double peakMaxWaitSeconds = 60 * 60 * 1.5;
         Map map = loadMap(y2Data);
         DimensionDto.MicroDimensionDto md = new DimensionDto.MicroDimensionDto();
         md.setPeakMaxWaitSeconds(peakMaxWaitSeconds);
-        Map mdsm = JsonUtils.toByJson(md,Map.class);
+        Map mdsm = JsonUtils.toByJson(md, Map.class);
         var ans = TsCurveFunc.getInstance().findPeak(map, mdsm);
         System.out.println(ans);
-        var mFirst= ans.getTrendInfo().getNearMin();
+        var mFirst = ans.getTrendInfo().getNearMin();
         TsHowBig.Dto dto = TsHowBig.Dto.builder()
                 .bigger(ans.getTrendInfo().getNearPeakType() == TsPeakFinder.PointType.MAXED)
                 .targetKey(mFirst.getKey())
                 .build();
-        var bAns = TsCurveFunc.getInstance().findBigger(map,JsonUtils.toJson(dto));
+        var bAns = TsCurveFunc.getInstance().findBigger(map, JsonUtils.toJson(dto));
         System.out.println(bAns);
 
     }
 
     @Test
-    public void testConD(){
+    public void testY1BiasPeakFinder() {
+
+        double peakMaxWaitSeconds = 60 * 60 * 24 * 4;
+        Map map = loadMap(biasY1Data);
+        DimensionDto.MacroDimensionDto md = new DimensionDto.MacroDimensionDto();
+        md.setPeakMaxWaitSeconds(peakMaxWaitSeconds);
+        md.setAmplitudeRate(0.1);
+        Map mdsm = JsonUtils.toByJson(md, Map.class);
+        var ans = TsCurveFunc.getInstance().findPeak(map, mdsm);
+
+        System.out.println(ans);
+
+    }
+
+    @Test
+    public void testConD() {
         Map map = loadMap(d90Data);
-        var ans = TsCurveFunc.getInstance().conD(map, TsContinuousDirection.Mode.UNIFORM_SLOPE.toString(),3);
+        var ans = TsCurveFunc.getInstance().conD(map, TsContinuousDirection.Mode.UNIFORM_SLOPE.toString(), 3);
         System.out.println(ans);
     }
 
-    private Map  loadMap(Resource r){
+    private Map loadMap(Resource r) {
         final String str = CommUtils.loadBy(r);
         System.out.println(str);
         Map map = JsonUtils.loadByJson(str, Map.class);
