@@ -15,28 +15,28 @@ public class TsPeakCycle {
         this.trendInfo = trendInfo;
     }
 
-    public Result calc(){
+    public Result calc() {
         return Result.builder()
-                .avgPeriod(calcAvgPeriod())
+                .avgRadius(calcAvgRadius())
                 .build();
 
     }
 
-    private double calcAvgPeriod() {
+    private double calcAvgRadius() {
         var all = trendInfo.getAllList();
         List<Double> timeKeys = new ArrayList<>(all.keySet());
-        timeKeys.sort((a,b)->  Double.compare(a,b));
+        timeKeys.sort((a, b) -> Double.compare(a, b));
         double sum = 0;
         double count = 0;
         double lastKey = 0;
-        for(Double t : timeKeys){
+        for (Double t : timeKeys) {
             if (t == 0) continue;
             double dt = t - lastKey;
             lastKey = t;
             sum += dt;
             count++;
         }
-        return 0;
+        return sum / count;
     }
 
     @Data
@@ -44,6 +44,6 @@ public class TsPeakCycle {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Result {
-        private double avgPeriod;
+        private double avgRadius;
     }
 }

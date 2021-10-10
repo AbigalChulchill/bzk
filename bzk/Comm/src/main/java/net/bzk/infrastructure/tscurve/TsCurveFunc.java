@@ -3,6 +3,7 @@ package net.bzk.infrastructure.tscurve;
 import lombok.Getter;
 import net.bzk.infrastructure.JsonUtils;
 import net.bzk.infrastructure.tscurve.peak.Dimension;
+import net.bzk.infrastructure.tscurve.peak.TsPeakCycle;
 import net.bzk.infrastructure.tscurve.peak.TsPeakDimension;
 import net.bzk.infrastructure.tscurve.peak.TsPeakFinder;
 
@@ -38,6 +39,12 @@ public class TsCurveFunc {
         TsHowBig.Dto dto = JsonUtils.loadByJson(dtoJson, TsHowBig.Dto.class);
         TsHowBig tb = new TsHowBig(rm, dto);
         return tb.calc();
+    }
+
+    public TsPeakCycle.Result calcCycle(String tendInfo) {
+        TsPeakFinder.TrendInfo ti = JsonUtils.loadByJson(tendInfo, TsPeakFinder.TrendInfo.class);
+        TsPeakCycle tc = new TsPeakCycle(ti);
+        return tc.calc();
     }
 
     public static TsCurveFunc getInstance() {

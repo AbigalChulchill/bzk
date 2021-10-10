@@ -81,6 +81,11 @@ public class TestTsCurveFunc {
 
         System.out.println(ans);
 
+        var cResult = TsCurveFunc.getInstance().calcCycle( JsonUtils.toJson( ans.getTrendInfo()));
+        System.out.println(cResult);
+        double d =  cResult.getAvgRadius() / (60*60*24);
+        System.out.println(d);
+
     }
 
     @Test
