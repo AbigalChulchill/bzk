@@ -12,14 +12,12 @@ import java.util.Map;
 public class TsHowBig extends TsCurveFunc.TsCurve {
 
 
-    private Dto dto;
 
-    public TsHowBig(Map<String, Double> rMap, Dto d) {
+    public TsHowBig(Map<String, Double> rMap) {
         super(rMap);
-        dto = d;
     }
 
-    public Result calc() {
+    public Result calc( Dto dto) {
         boolean started = false;
         double targetVal = Integer.MIN_VALUE;
         int count = 0;
@@ -29,11 +27,11 @@ public class TsHowBig extends TsCurveFunc.TsCurve {
             if (!started) {
                 if (StringUtils.equals(key, dto.targetKey)) {
                     started = true;
-                    targetVal = getAdjustVal(i);
+                    targetVal = getAdjustVal(dto,i);
                 }
                 continue;
             }
-            double curV = getAdjustVal(i);
+            double curV = getAdjustVal(dto,i);
             count++;
             lastKey = key;
             if(curV > targetVal){
@@ -51,7 +49,7 @@ public class TsHowBig extends TsCurveFunc.TsCurve {
                 .build();
     }
 
-    private double getAdjustVal(int i){
+    private double getAdjustVal(Dto dto,int i){
         double curV = getV(i);
         return curV * (dto.bigger ? 1 : -1);
     }

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.bzk.infrastructure.tscurve.TsCurveUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +25,7 @@ public class TsPeakCycle {
 
     private double calcAvgRadius() {
         var all = trendInfo.getAllList();
-        List<Double> timeKeys = new ArrayList<>(all.keySet());
-        timeKeys.sort((a, b) -> Double.compare(a, b));
+        List<Double> timeKeys = TsCurveUtils.sortTimeKeys(all.keySet());
         double sum = 0;
         double count = 0;
         double lastKey = 0;

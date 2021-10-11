@@ -37,8 +37,8 @@ public class TsCurveFunc {
 
     public TsHowBig.Result findBigger(Map<String, Double> rm, String dtoJson) {
         TsHowBig.Dto dto = JsonUtils.loadByJson(dtoJson, TsHowBig.Dto.class);
-        TsHowBig tb = new TsHowBig(rm, dto);
-        return tb.calc();
+        TsHowBig tb = new TsHowBig(rm);
+        return tb.calc(dto);
     }
 
     public TsPeakCycle.Result calcCycle(String tendInfo) {
