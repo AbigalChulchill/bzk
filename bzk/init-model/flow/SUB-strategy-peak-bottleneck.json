@@ -4,6 +4,108 @@
   "name" : "SUB-strategy-peak-bottleneck",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "iQ07yoOBfiPS",
+    "name" : "CallOrderLIMIT",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "3gcfLj4AEmmZ",
+      "name" : "ORDER_LIMIT",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flowUid" : "02eQyaMwyojZ",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "positionSide",
+        "val" : "${positionSide}"
+      }, {
+        "key" : "symbol",
+        "val" : "${symbol}"
+      }, {
+        "key" : "withdrawAmountRate",
+        "val" : "0.05"
+      }, {
+        "key" : "tags",
+        "val" : "[\"bneck\"]"
+      }, {
+        "key" : "trigger",
+        "val" : "bottleneck"
+      }, {
+        "key" : "size",
+        "val" : "6"
+      }, {
+        "key" : "gapRate",
+        "val" : "0.01"
+      }, {
+        "key" : "priceBuffRate",
+        "val" : "1.005"
+      }, {
+        "key" : "proportionalRate",
+        "val" : "1.3"
+      }, {
+        "key" : "strategy",
+        "val" : "LIMIT"
+      } ],
+      "outputReflects" : [ ]
+    }, {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "PsQBy93YXD9c",
+      "name" : "query_limit_ods",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : {
+        "symbol" : "BNB",
+        "positionSide" : "LONG"
+      },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "url" : "${binance.proxyHost}proxy",
+      "uriVariables" : { },
+      "body" : "!javascript===\r\nvar positionSide = '${positionSide}';\r\n// var orderSide = $directionUtils.getLimitOrderSide(positionSide);\r\n//var start = new Date();\r\n//start.setSeconds(start.getSeconds() - 3*60*60);\r\n//var startAt = start.toISOString();\r\nvar body= {\r\n    \"name\": \"get_all_orders\",\r\n    \"apiKey\":\"${binance.key}\",\r\n    \"secret\":\"${binance.secret}\",\r\n    \"symbol\": \"${symbol}\",\r\n    \"status\":\"NEW\",\r\n    \"orderType\":\"LIMIT\",\r\n    \"positionSide\":positionSide\r\n};\r\nbody;",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : "lessOds"
+      }
+    } ],
+    "links" : [ {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "ovgapaO520SD",
+      "name" : "ChechNoLimitOd",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
+        "kind" : "NONE",
+        "next" : null,
+        "left" : "${lessOds.origQty}",
+        "right" : "0",
+        "type" : "greater"
+      },
+      "transition" : {
+        "toBox" : "y09CvF3tt03P",
+        "endTag" : null,
+        "failEnd" : false,
+        "endResultKeys" : [ ],
+        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"ChechNoLimitOd\"\n}"
+      },
+      "enable" : true
+    } ],
+    "vars" : { },
+    "taskSort" : [ "PsQBy93YXD9c", "ovgapaO520SD", "3gcfLj4AEmmZ" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "y09CvF3tt03P",
+      "endTag" : null,
+      "failEnd" : false,
+      "endResultKeys" : [ ],
+      "resultCode" : "{\n  \"ordered\": true,\n  \"breakName\": \"NONE\"\n}"
+    },
+    "minLogLv" : "DEBUG"
+  }, {
+    "clazz" : "net.bzk.flow.model.Box",
     "uid" : "MINMAX52of8",
     "name" : "MINMAX",
     "actions" : [ {
@@ -28,8 +130,8 @@
         "key" : "m40PositionSide",
         "val" : "!javascript===\r\nconst state = '${peaks40m.trendInfo.state}';\r\nfunction calc(){\r\n    return state == 'RISE' ? \"LONG\" : \"SHORT\";\r\n}\r\ncalc();\r\n\r\n"
       }, {
-        "key" : "extremeInfo",
-        "val" : "!javascript===\n\nvar end = new Date();\n\nend.setSeconds(end.getSeconds() - 2*60*60*24)\nconst extremeList = ${extremeList};\n\nfunction c\n\n"
+        "key" : "~extremeInfo",
+        "val" : "!javascript===\nconst threshold = 60*60*24*11;\nlet end = new Date();\nend.setSeconds(end.getSeconds() - 2*60*60*24);\nconst extremeList = ${extremeList};\n\nfunction findNear(){\n    for (const p of extremeList) {\n        if(isNotOldPeak(p) && isOverThreshold(p) ){\n            return p;\n        }\n    }\n    return 'NONE';\n}\n\nfunction isNotOldPeak(p){\n    const d = new Date(p.targetKey);\n    return d>end;\n}\n\nfunction isOverThreshold(p){\n    let time= p.time;\n    return time > threshold;\n\n}\n\nfindNear();\n"
       } ]
     } ],
     "links" : [ {
@@ -59,12 +161,13 @@
       "uid" : "dgKXFR8jH8x5",
       "name" : "NotBigger",
       "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
+        "clazz" : "net.bzk.flow.model.Condition$ConditionTxt",
         "kind" : "NONE",
         "next" : null,
-        "left" : "!javascript===\nconst biggerTime = ${extremeInfo.time};\nconst biggerDay = biggerTime / (60*60*24);\nbiggerDay;",
-        "right" : "11",
-        "type" : "lessthan_equal"
+        "left" : "${extremeInfo}",
+        "right" : "NONE",
+        "not" : false,
+        "type" : "equal"
       },
       "transition" : {
         "toBox" : "",
@@ -76,6 +179,9 @@
         }, {
           "lv" : "not_specify",
           "key" : "extremeInfo"
+        }, {
+          "lv" : "run_flow",
+          "key" : "extremeList"
         } ],
         "resultCode" : "{\r\n  \"ordered\": false,\r\n  \"breakName\": \"NotBigger\"\r\n}"
       },
@@ -154,7 +260,7 @@
       "enable" : true
     } ],
     "vars" : { },
-    "taskSort" : [ "Div2tmjgl8JG", "POnGmKqao8p1", "6q7K82sD3xWo", "dgKXFR8jH8x5", "6NprXSn7ndco", "2VHiSI5qfvzo" ],
+    "taskSort" : [ "Div2tmjgl8JG", "POnGmKqao8p1", "dgKXFR8jH8x5", "6q7K82sD3xWo", "6NprXSn7ndco", "2VHiSI5qfvzo" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "iQ07yoOBfiPS",
@@ -162,108 +268,6 @@
       "failEnd" : false,
       "endResultKeys" : [ ],
       "resultCode" : "!javascript===\nconst side = '${toSellOrBuy}';\nconst ans = {\n    side : side,\n    tag : \"MINMAX\"\n};\nans;"
-    },
-    "minLogLv" : "DEBUG"
-  }, {
-    "clazz" : "net.bzk.flow.model.Box",
-    "uid" : "iQ07yoOBfiPS",
-    "name" : "CallOrderLIMIT",
-    "actions" : [ {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "3gcfLj4AEmmZ",
-      "name" : "ORDER_LIMIT",
-      "tryErrorble" : false,
-      "enable" : true,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "flowUid" : "02eQyaMwyojZ",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "positionSide",
-        "val" : "${positionSide}"
-      }, {
-        "key" : "symbol",
-        "val" : "${symbol}"
-      }, {
-        "key" : "withdrawAmountRate",
-        "val" : "0.05"
-      }, {
-        "key" : "tags",
-        "val" : "[\"bneck\"]"
-      }, {
-        "key" : "trigger",
-        "val" : "bottleneck"
-      }, {
-        "key" : "size",
-        "val" : "6"
-      }, {
-        "key" : "gapRate",
-        "val" : "0.012"
-      }, {
-        "key" : "priceBuffRate",
-        "val" : "1.005"
-      }, {
-        "key" : "proportionalRate",
-        "val" : "1.3"
-      }, {
-        "key" : "strategy",
-        "val" : "LIMIT"
-      } ],
-      "outputReflects" : [ ]
-    }, {
-      "clazz" : "net.bzk.flow.model.HttpAction",
-      "uid" : "PsQBy93YXD9c",
-      "name" : "query_limit_ods",
-      "tryErrorble" : false,
-      "enable" : true,
-      "devBoxVars" : {
-        "symbol" : "BNB",
-        "positionSide" : "LONG"
-      },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "url" : "${binance.proxyHost}proxy",
-      "uriVariables" : { },
-      "body" : "!javascript===\r\nvar positionSide = '${positionSide}';\r\n// var orderSide = $directionUtils.getLimitOrderSide(positionSide);\r\n//var start = new Date();\r\n//start.setSeconds(start.getSeconds() - 3*60*60);\r\n//var startAt = start.toISOString();\r\nvar body= {\r\n    \"name\": \"get_all_orders\",\r\n    \"apiKey\":\"${binance.key}\",\r\n    \"secret\":\"${binance.secret}\",\r\n    \"symbol\": \"${symbol}\",\r\n    \"status\":\"NEW\",\r\n    \"orderType\":\"LIMIT\",\r\n    \"positionSide\":positionSide\r\n};\r\nbody;",
-      "method" : "POST",
-      "headers" : { },
-      "headersFlat" : "",
-      "key" : {
-        "lv" : "not_specify",
-        "key" : "lessOds"
-      }
-    } ],
-    "links" : [ {
-      "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "ovgapaO520SD",
-      "name" : "ChechNoLimitOd",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
-        "kind" : "NONE",
-        "next" : null,
-        "left" : "${lessOds.origQty}",
-        "right" : "0",
-        "type" : "greater"
-      },
-      "transition" : {
-        "toBox" : "y09CvF3tt03P",
-        "endTag" : null,
-        "failEnd" : false,
-        "endResultKeys" : [ ],
-        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"ChechNoLimitOd\"\n}"
-      },
-      "enable" : true
-    } ],
-    "vars" : { },
-    "taskSort" : [ "PsQBy93YXD9c", "ovgapaO520SD", "3gcfLj4AEmmZ" ],
-    "whileJudgment" : null,
-    "transition" : {
-      "toBox" : "y09CvF3tt03P",
-      "endTag" : null,
-      "failEnd" : false,
-      "endResultKeys" : [ ],
-      "resultCode" : "{\n  \"ordered\": true,\n  \"breakName\": \"NONE\"\n}"
     },
     "minLogLv" : "DEBUG"
   }, {
@@ -381,5 +385,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 79
+  "version" : 86
 }
