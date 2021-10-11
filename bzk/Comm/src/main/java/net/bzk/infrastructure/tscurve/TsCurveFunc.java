@@ -4,7 +4,6 @@ import lombok.Getter;
 import net.bzk.infrastructure.JsonUtils;
 import net.bzk.infrastructure.tscurve.peak.Dimension;
 import net.bzk.infrastructure.tscurve.peak.TsPeakCycle;
-import net.bzk.infrastructure.tscurve.peak.TsPeakDimension;
 import net.bzk.infrastructure.tscurve.peak.TsPeakFinder;
 
 import java.util.*;
@@ -40,6 +39,22 @@ public class TsCurveFunc {
         TsHowBig tb = new TsHowBig(rm);
         return tb.calc(dto);
     }
+
+    public List<TsHowBig.Result> listBigger(Map<String, Double> rm, boolean bigger, String atPointMap) {
+        List<TsHowBig.Result> ans = new ArrayList<>();
+        TsHowBig tb = new TsHowBig(rm);
+        TsPeakFinder.AtPointMap apMap = JsonUtils.loadByJson(atPointMap, TsPeakFinder.AtPointMap.class);
+        List<Double> keys = TsCurveUtils.sortTimeKeys(apMap.keySet());
+        for (var k : keys) {
+            TsCurveUtils.Point p = apMap.get(k);
+            ans.add(tb.calc(TsHowBig.Dto.builder()
+                    .bigger(bigger)
+                    .targetKey(p.getKey())
+                    .build()));
+        }
+        return ans;
+    }
+
 
     public TsPeakCycle.Result calcCycle(String tendInfo) {
         TsPeakFinder.TrendInfo ti = JsonUtils.loadByJson(tendInfo, TsPeakFinder.TrendInfo.class);

@@ -4,48 +4,6 @@
   "name" : "SUB-strategy-2y",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
-    "uid" : "hLZ3d8T7Vkot",
-    "name" : "Strategy",
-    "actions" : [ {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "vWD538GBmnZO",
-      "name" : "bottleneck",
-      "tryErrorble" : false,
-      "enable" : true,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "flowUid" : "SSPBbWtmfHPV",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "__ALL__",
-        "val" : "${~__ALL__}"
-      } ],
-      "outputReflects" : [ {
-        "srcKey" : "__pk_result",
-        "toKey" : {
-          "lv" : "not_specify",
-          "key" : "call_resp"
-        }
-      } ]
-    } ],
-    "links" : [ ],
-    "vars" : { },
-    "taskSort" : [ "vWD538GBmnZO" ],
-    "whileJudgment" : null,
-    "transition" : {
-      "toBox" : "",
-      "endTag" : "${symbol} ordered:${call_resp.ordered} ${call_resp.breakName}",
-      "failEnd" : false,
-      "endResultKeys" : [ {
-        "lv" : "run_flow",
-        "key" : "extremeInfo"
-      } ],
-      "resultCode" : ""
-    },
-    "minLogLv" : "DEBUG"
-  }, {
-    "clazz" : "net.bzk.flow.model.Box",
     "uid" : "UQC5RZ3iJLB7",
     "name" : "Box",
     "actions" : [ {
@@ -89,7 +47,7 @@
         "key" : "~peaks",
         "val" : "!javascript===\nconst peakMaxWaitSeconds = 60*60*4;\nconst dto = {\n    peakMaxWaitSeconds:peakMaxWaitSeconds,\n    dimension:'MICRO'\n};\nconst mm = $tsFunc.findPeak(${y2Vals},dto);\nmm;"
       }, {
-        "key" : "~extremeInfo",
+        "key" : "~nearPeakExtreme",
         "val" : "!javascript===\nconst peakType = $bzk.g('$peaks.trendInfo.nearPeakType');\nconst peakQueryPath = '$peaks.trendInfo.'+ (peakType=='MAXED' ? 'nearMax' : 'nearMin' ) +'.key'\nconst nearPeakKey = $bzk.g(peakQueryPath);\n\nconst dto = {\n    targetKey:nearPeakKey,\n    bigger:peakType == 'MAXED' ? true : false\n};\nconst mm = $tsFunc.findBigger(${y2Vals},JSON.stringify(dto));\nmm;"
       }, {
         "key" : "~peaks40m",
@@ -114,16 +72,71 @@
         "lv" : "run_flow",
         "key" : "binanceQuote"
       }
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
+      "uid" : "VwJUU1q94IA2",
+      "name" : "analyzeVars-2",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flatData" : [ {
+        "key" : "~extremeList",
+        "val" : "!javascript===\nconst trendInfo = ${peaks.trendInfo};\nconst state = trendInfo.state;\nconst ans = $tsFunc.listBigger(${y2Vals},isBigger(),JSON.stringify(getPeakList()));\n\nfunction getPeakList(){\n    return state == 'RISE' ? trendInfo.minList : trendInfo.maxList;\n}\n\n\nfunction isBigger(){\n    return state == 'RISE' ? false : true;\n}\n\nans;\n"
+      } ]
     } ],
     "links" : [ ],
     "vars" : { },
-    "taskSort" : [ "xHaqpw4loFKq", "Dfq0TAINMBq2", "bdp2D8EmHQHn" ],
+    "taskSort" : [ "xHaqpw4loFKq", "Dfq0TAINMBq2", "VwJUU1q94IA2", "bdp2D8EmHQHn" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "hLZ3d8T7Vkot",
       "endTag" : null,
       "failEnd" : false,
       "endResultKeys" : [ ],
+      "resultCode" : ""
+    },
+    "minLogLv" : "DEBUG"
+  }, {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "hLZ3d8T7Vkot",
+    "name" : "Strategy",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "vWD538GBmnZO",
+      "name" : "bottleneck",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flowUid" : "SSPBbWtmfHPV",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "__ALL__",
+        "val" : "${~__ALL__}"
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "__pk_result",
+        "toKey" : {
+          "lv" : "not_specify",
+          "key" : "call_resp"
+        }
+      } ]
+    } ],
+    "links" : [ ],
+    "vars" : { },
+    "taskSort" : [ "vWD538GBmnZO" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "${symbol} ordered:${call_resp.ordered} ${call_resp.breakName}",
+      "failEnd" : false,
+      "endResultKeys" : [ {
+        "lv" : "run_flow",
+        "key" : "extremeInfo"
+      } ],
       "resultCode" : ""
     },
     "minLogLv" : "DEBUG"
@@ -145,5 +158,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 38
+  "version" : 43
 }

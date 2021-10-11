@@ -43,15 +43,17 @@ public class TsPeakFinder extends TsCurveFunc.TsCurve {
         private double val;
     }
 
+    public static class AtPointMap extends HashMap<Double,Point>{}
+
     @Data
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
     public static class TrendInfo {
         private Direction state;
-        private Map<Double, Point> maxList;
-        private Map<Double, Point> minList;
-        private Map<Double, Point> allList;
+        private AtPointMap maxList;
+        private AtPointMap minList;
+        private AtPointMap allList;
         private double maxNearTime;
         private double minNearTime;
         private Point nearMax;
@@ -61,9 +63,6 @@ public class TsPeakFinder extends TsCurveFunc.TsCurve {
     }
 
 
-    //    private final double baseVal;
-//    private final double peakMaxWaitSeconds;
-//    private final double macroAmplitudeRate;
     private final TsPeakDimension dimension;
 
 
@@ -115,8 +114,8 @@ public class TsPeakFinder extends TsCurveFunc.TsCurve {
 
     }
 
-    private Map<Double, Point> mapInfos(List<Point> listi) {
-        Map<Double, Point> ans = new HashMap<>();
+    private AtPointMap mapInfos(List<Point> listi) {
+        AtPointMap ans = new AtPointMap();
         for (var e : listi) {
             ans.put(e.getDtime(), e);
         }

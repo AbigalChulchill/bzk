@@ -7,17 +7,17 @@ import lombok.NoArgsConstructor;
 import net.bzk.infrastructure.ex.BzkRuntimeException;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 public class TsHowBig extends TsCurveFunc.TsCurve {
-
 
 
     public TsHowBig(Map<String, Double> rMap) {
         super(rMap);
     }
 
-    public Result calc( Dto dto) {
+    public Result calc(Dto dto) {
         boolean started = false;
         double targetVal = Integer.MIN_VALUE;
         int count = 0;
@@ -27,19 +27,19 @@ public class TsHowBig extends TsCurveFunc.TsCurve {
             if (!started) {
                 if (StringUtils.equals(key, dto.targetKey)) {
                     started = true;
-                    targetVal = getAdjustVal(dto,i);
+                    targetVal = getAdjustVal(dto, i);
                 }
                 continue;
             }
-            double curV = getAdjustVal(dto,i);
+            double curV = getAdjustVal(dto, i);
             count++;
             lastKey = key;
-            if(curV > targetVal){
+            if (curV > targetVal) {
                 break;
             }
 
         }
-        if(!started) throw new BzkRuntimeException("not find key in list : " + dto.targetKey);
+        if (!started) throw new BzkRuntimeException("not find key in list : " + dto.targetKey);
         return Result.builder()
                 .time(TsCurveUtils.subtractKeySeconds(dto.targetKey, lastKey))
                 .endKey(lastKey)
@@ -49,7 +49,7 @@ public class TsHowBig extends TsCurveFunc.TsCurve {
                 .build();
     }
 
-    private double getAdjustVal(Dto dto,int i){
+    private double getAdjustVal(Dto dto, int i) {
         double curV = getV(i);
         return curV * (dto.bigger ? 1 : -1);
     }
@@ -60,7 +60,10 @@ public class TsHowBig extends TsCurveFunc.TsCurve {
     @AllArgsConstructor
     public static class Dto {
         private String targetKey;
-        private boolean bigger ;
+        private boolean bigger;
+    }
+
+    public static class DtoList extends ArrayList<Dto> {
     }
 
     @Data
@@ -69,7 +72,7 @@ public class TsHowBig extends TsCurveFunc.TsCurve {
     @AllArgsConstructor
     public static class Result {
         private String targetKey;
-        private boolean bigger ;
+        private boolean bigger;
         private double time;
         private int count;
         private String endKey;
