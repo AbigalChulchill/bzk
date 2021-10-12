@@ -41,10 +41,9 @@ public class TsCurveFunc {
         return tb.calc(dto);
     }
 
-    public TsTrendPeakFilter.Result filterPeak(Map<String, Double> rMap, String infoJson, double shelfLife, double persistTime) {
-        TsPeakFinder.TrendInfo info = JsonUtils.loadByJson(infoJson, TsPeakFinder.TrendInfo.class);
-        TsTrendPeakFilter tf = new TsTrendPeakFilter(rMap, info);
-        return tf.calc(shelfLife, persistTime);
+    public TsTrendPeakFilter.Result filterPeak(Map<String, Double> rMap, boolean bigger, double shelfLife, double persistTime) {
+        TsTrendPeakFilter tf = new TsTrendPeakFilter(rMap);
+        return tf.calc(bigger, shelfLife, persistTime);
     }
 
 
