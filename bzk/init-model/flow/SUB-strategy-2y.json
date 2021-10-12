@@ -66,7 +66,7 @@
       "outputReflects" : [ {
         "srcKey" : "allVals",
         "toKey" : {
-          "lv" : "not_specify",
+          "lv" : "run_flow",
           "key" : "y2Vals"
         }
       }, {
@@ -114,23 +114,10 @@
         "lv" : "run_flow",
         "key" : "binanceQuote"
       }
-    }, {
-      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
-      "uid" : "VwJUU1q94IA2",
-      "name" : "analyzeVars-2",
-      "tryErrorble" : false,
-      "enable" : true,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "flatData" : [ {
-        "key" : "~extremeList",
-        "val" : "!javascript===\nconst trendInfo = ${peaks.trendInfo};\nconst state = trendInfo.state;\nconst ans = $tsFunc.listBigger(${y2Vals},isBigger(),JSON.stringify(getPeakList()));\n\nfunction getPeakList(){\n    return state == 'RISE' ? trendInfo.minList : trendInfo.maxList;\n}\n\n\nfunction isBigger(){\n    return state == 'RISE' ? false : true;\n}\n\nans;\n"
-      } ]
     } ],
     "links" : [ ],
     "vars" : { },
-    "taskSort" : [ "xHaqpw4loFKq", "Dfq0TAINMBq2", "VwJUU1q94IA2", "bdp2D8EmHQHn" ],
+    "taskSort" : [ "xHaqpw4loFKq", "Dfq0TAINMBq2", "bdp2D8EmHQHn" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "hLZ3d8T7Vkot",
@@ -158,5 +145,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 50
+  "version" : 52
 }
