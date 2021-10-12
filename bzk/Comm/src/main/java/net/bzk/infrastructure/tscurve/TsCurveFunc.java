@@ -5,6 +5,7 @@ import net.bzk.infrastructure.JsonUtils;
 import net.bzk.infrastructure.tscurve.peak.Dimension;
 import net.bzk.infrastructure.tscurve.peak.TsPeakCycle;
 import net.bzk.infrastructure.tscurve.peak.TsPeakFinder;
+import net.bzk.infrastructure.tscurve.peak.TsTrendPeakFilter;
 
 import java.util.*;
 
@@ -40,19 +41,10 @@ public class TsCurveFunc {
         return tb.calc(dto);
     }
 
-    public List<TsHowBig.Result> listBigger(Map<String, Double> rm, boolean bigger, String atPointMap) {
-        List<TsHowBig.Result> ans = new ArrayList<>();
-        TsHowBig tb = new TsHowBig(rm);
-        TsPeakFinder.AtPointMap apMap = JsonUtils.loadByJson(atPointMap, TsPeakFinder.AtPointMap.class);
-        List<Double> keys = TsCurveUtils.sortTimeKeys(apMap.keySet());
-        for (var k : keys) {
-            TsCurveUtils.Point p = apMap.get(k);
-            ans.add(tb.calc(TsHowBig.Dto.builder()
-                    .bigger(bigger)
-                    .targetKey(p.getKey())
-                    .build()));
-        }
-        return ans;
+    public TsTrendPeakFilter.Result filterPeak(Map<String, Double> rMap, String infoJson, double shelfLife, double persistTime) {
+        TsPeakFinder.TrendInfo info = JsonUtils.loadByJson(infoJson, TsPeakFinder.TrendInfo.class);
+        TsTrendPeakFilter tf = new TsTrendPeakFilter(rMap, info);
+        return tf.calc(shelfLife, persistTime);
     }
 
 
