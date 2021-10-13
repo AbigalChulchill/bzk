@@ -33,6 +33,12 @@
           "lv" : "run_sys",
           "key" : "d30Bais.${symbol}"
         }
+      }, {
+        "srcKey" : "trimValues",
+        "toKey" : {
+          "lv" : "not_specify",
+          "key" : "bias30DMap"
+        }
       } ]
     }, {
       "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
@@ -78,12 +84,44 @@
           "key" : "lastQuote.${symbol}"
         }
       } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
+      "uid" : "n0HoYnCgSPvI",
+      "name" : "InjectSysVars",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flatData" : [ {
+        "key" : "d30Bais.${symbol}",
+        "val" : "!javascript===\nconst key = '%d30Bais.${symbol}';\n$bzk.g(key);"
+      }, {
+        "key" : "lastQuote.${symbol}",
+        "val" : "!javascript===\r\nconst key = '%lastQuote.${symbol}';\r\n$bzk.g(key);"
+      }, {
+        "key" : "d30Cycle.${symbol}",
+        "val" : "!javascript===\r\nconst key = '%d30Cycle.${symbol}';\r\n$bzk.g(key);"
+      } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
+      "uid" : "WeHLLoaB5Ybw",
+      "name" : "analyze",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flatData" : [ {
+        "key" : "%d30Cycle.${symbol}",
+        "val" : "!javascript===\nlet dto = {\n    peakMaxWaitSeconds:60*60*24*4,\n    dimension:'MACRO',\n    amplitudeRate:0.1\n};\nconst mm = $tsFunc.findPeak(${bias30DMap},dto);\nconst trendInfo = mm['trendInfo'];\n// const ans = $tsFunc.calcCycle(JSON.stringify(mm.trendInfo));\n\ntrendInfo;"
+      } ]
     } ],
     "links" : [ ],
     "vars" : {
       "symbolIdx" : 0
     },
-    "taskSort" : [ "nVwT8uOGqLIQ", "rY7TvGnZwOea", "59IVt362bqIn" ],
+    "taskSort" : [ "nVwT8uOGqLIQ", "rY7TvGnZwOea", "59IVt362bqIn", "WeHLLoaB5Ybw", "n0HoYnCgSPvI" ],
     "whileJudgment" : {
       "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
       "kind" : "NONE",
@@ -123,5 +161,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 2
+  "version" : 14
 }

@@ -10,7 +10,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.Resource;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -81,9 +84,13 @@ public class TestTsCurveFunc {
 
         System.out.println(ans);
 
-        var cResult = TsCurveFunc.getInstance().calcCycle( JsonUtils.toJson( ans.getTrendInfo()));
+        var keys = TsCurveUtils.sortTimeKeys(ans.getTrendInfo().getAllList().keySet());
+        List<TsCurveUtils.Point> ps = keys.stream().map(k -> ans.getTrendInfo().getAllList().get(k)).collect(Collectors.toList());
+        System.out.println(ps);
+
+        var cResult = TsCurveFunc.getInstance().calcCycle(JsonUtils.toJson(ans.getTrendInfo()));
         System.out.println(cResult);
-        double d =  cResult.getAvgRadius() / (60*60*24);
+        double d = cResult.getAvgRadius() / (60 * 60 * 24);
         System.out.println(d);
 
     }
