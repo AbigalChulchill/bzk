@@ -114,7 +114,7 @@
       "minLogLv" : "NONE",
       "flatData" : [ {
         "key" : "%d30Cycle.${symbol}",
-        "val" : "!javascript===\nlet dto = {\n    peakMaxWaitSeconds:60*60*24*4,\n    dimension:'MACRO',\n    amplitudeRate:0.1\n};\nconst mm = $tsFunc.findPeak(${bias30DMap},dto);\nconst trendInfo = mm['trendInfo'];\n// const ans = $tsFunc.calcCycle(JSON.stringify(mm.trendInfo));\n\ntrendInfo;"
+        "val" : "!javascript===\nlet dto = {\n    peakMaxWaitSeconds:60*60*24*4,\n    dimension:'MACRO',\n    amplitudeRate:0.1\n};\nconst mm = $tsFunc.findPeak(${bias30DMap},dto);\nconst trendInfo = mm.getTrendInfo();\n\n$tsFunc.calcCycle($pe.toJson(trendInfo));"
       } ]
     } ],
     "links" : [ ],
@@ -161,5 +161,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 14
+  "version" : 20
 }

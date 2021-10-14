@@ -55,6 +55,10 @@ public class PolyglotEngine {
         return ans;
     }
 
+    public String toJson(Object o) {
+        return JsonUtils.toJson(o);
+    }
+
     public void logMsg(String s) {
         log.info(s);
     }
