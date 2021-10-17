@@ -10,8 +10,11 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import lombok.Getter;
@@ -39,6 +42,9 @@ public class RunFlowPool {
 	private ThreadPoolExecutor threadPool;
 	@Inject
 	private ArchiveRunDao archiveRunDao;
+
+	@Value("${flow.archive.show.max.count}")
+	private int maxArchiveFlowCount;
 
 	private Map<String, FlowRuner> map = new ConcurrentHashMap<>();
 	private Entryer entryer;
@@ -103,7 +109,8 @@ public class RunFlowPool {
 	}
 
 	public List<RunInfo> listArchiveRunInfo() {
-		return archiveRunDao.findByFlowUid(model.getUid()).stream().map(ar -> ar.getInfo())
+		Pageable paging = PageRequest.of(0, maxArchiveFlowCount);
+		return archiveRunDao.findByFlowUid(model.getUid(),paging).stream().map(ar -> ar.getInfo())
 				.collect(Collectors.toList());
 	}
 
