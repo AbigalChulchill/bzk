@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.EventListener;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import net.bzk.flow.api.dto.FlowPoolInfo;
@@ -57,18 +58,18 @@ public class RunFlowService implements ApplicationListener<InitFlowEvent> {
     }
 
     public List<FlowPoolInfo> listFlowPoolInfo() {
-        return runPoolDao.listPools().stream().map(p -> new FlowPoolInfo(p.getModel(), p.listRunInfos(false)))
+        return runPoolDao.listPools().stream().map(p -> new FlowPoolInfo(p.getModel(), p.listRunInfos()))
                 .collect(Collectors.toList());
     }
 
-    public List<RunInfo> listArchiveRunInfo(String uid) {
-        return archiveRunDao.findByFlowUid(uid).stream().map(ar -> ar.getInfo())
+    public List<RunInfo> listArchiveRunInfo(String uid, Pageable pageable) {
+        return archiveRunDao.findByFlowUid(uid,pageable).stream().map(ar -> ar.getInfo())
                 .collect(Collectors.toList());
     }
 
     public FlowPoolInfo getFlowPoolInfo(String uid) {
         var p = runPoolDao.getPool(uid);
-        return new FlowPoolInfo(p.getModel(), p.listRunInfos(false));
+        return new FlowPoolInfo(p.getModel(), p.listRunInfos());
     }
 
     public void forceRemove(String fuid) {

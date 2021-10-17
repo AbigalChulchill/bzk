@@ -48,7 +48,7 @@ public class JobRunInfoGetter {
         var pool = runPoolDao.getPool(uid);
         if (pool == null) return null;
         var lfro = pool
-                .listRunInfos(false)
+                .listRunInfos()
                 .stream()
                 .sorted((r1, r2) -> -1 * r1.getStartAt().compareTo(r2.getStartAt()))
                 .findFirst();
@@ -93,7 +93,7 @@ public class JobRunInfoGetter {
         var p = runPoolDao.getPool(uid);
         if (p == null) return 0;
         return (int) p
-                .listRunInfos(false)
+                .listRunInfos()
                 .stream()
                 .filter(r -> r.getState() == state)
                 .count();

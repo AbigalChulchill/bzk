@@ -15,7 +15,7 @@ public class TsBreakthrough {
     }
 
     public Result calc(TsPeakFinder.TrendInfo info){
-
+        return null;
     }
 
     public static enum Kind{

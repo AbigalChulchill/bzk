@@ -5,6 +5,9 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
@@ -38,6 +41,9 @@ public class FlowController {
 	private RunFlowService runFlowService;
 	@Inject
 	private JobsDao jobsDao;
+
+	@Value("${flow.archive.show.max.count}")
+	private int maxArchiveFlowCount;
 
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
@@ -76,7 +82,8 @@ public class FlowController {
 	@ResponseBody
 	@RequestMapping(value = "archive/runinfo/{uid}", method = RequestMethod.GET)
 	public List<RunInfo> listArchiveRunInfo(@PathVariable String uid) {
-		return runFlowService.listArchiveRunInfo(uid);
+		Pageable paging = PageRequest.of(0, maxArchiveFlowCount);
+		return runFlowService.listArchiveRunInfo(uid,paging);
 	}
 
 	@ResponseStatus(HttpStatus.OK)

@@ -100,19 +100,11 @@ public class RunFlowPool {
 		entryer.schedule(() -> createAndStart());
 	}
 
-	public List<RunInfo> listRunInfos(boolean includeArchive) {
+	public List<RunInfo> listRunInfos() {
 		List<RunInfo> ans = map.values().stream().map(FlowRuner::getInfo).collect(Collectors.toList());
-		if (includeArchive) {
-			ans.addAll(listArchiveRunInfo());
-		}
 		return ans;
 	}
 
-	public List<RunInfo> listArchiveRunInfo() {
-		Pageable paging = PageRequest.of(0, maxArchiveFlowCount);
-		return archiveRunDao.findByFlowUid(model.getUid(),paging).stream().map(ar -> ar.getInfo())
-				.collect(Collectors.toList());
-	}
 
 	public void forceCancelAll() {
 		entryer.unregister();
