@@ -126,7 +126,7 @@
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "code" : "!return-json===\nlet toDelOds = ${toDelOds};\nconst lastPrice = ${binanceQuote.all.avgPrice};\nconst limitOds = ${limitOds.orders};\nconst takeProfitOds = ${takeProfitOds.orders};\n\n\nfunction addFilterOds(ods){\n    for (const od of ods) {\n        let odPrice = $orderUtils.getPrice(od);\n        let dp = Math.abs(odPrice - lastPrice);\n        let r = dp / lastPrice;\n       \n\n        let lastD = new Date(od.updateAt);\n        let checkAt = new Date();\n        checkAt.setSeconds(checkAt.getSeconds() - 9*60*60*24);\n         if (r>0.08 || lastD<checkAt ) {\n             toDelOds.push(od);\n         }\n      \n    }\n}\n\naddFilterOds(limitOds);\naddFilterOds(takeProfitOds);\n\nJSON.stringify(toDelOds);",
+      "code" : "!return-json===\nlet toDelOds = ${toDelOds};\nconst lastPrice = ${binanceQuote.all.avgPrice};\nconst limitOds = ${limitOds.orders};\nconst takeProfitOds = ${takeProfitOds.orders};\n\n\nfunction addFilterOds(ods){\n    for (const od of ods) {\n        let odPrice = $orderUtils.getPrice(od);\n        let dp = Math.abs(odPrice - lastPrice);\n        let r = dp / lastPrice;\n       \n\n        let lastD = new Date(od.updateAt);\n        let checkAt = new Date();\n        checkAt.setSeconds(checkAt.getSeconds() - 60*60*15);\n         if (r>0.08 || lastD<checkAt ) {\n             toDelOds.push(od);\n         }\n      \n    }\n}\n\naddFilterOds(limitOds);\naddFilterOds(takeProfitOds);\n\nJSON.stringify(toDelOds);",
       "polyglot" : "js",
       "resultLv" : "not_specify",
       "resultKey" : "toDelOds"
@@ -188,5 +188,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 32
+  "version" : 34
 }
