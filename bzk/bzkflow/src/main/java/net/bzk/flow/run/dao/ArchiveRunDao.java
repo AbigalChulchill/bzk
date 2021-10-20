@@ -13,7 +13,7 @@ public interface ArchiveRunDao extends CrudRepository<ArchiveRun, String> {
 	
 //	List<ArchiveRun> findByFlowUid(String uid);
 
-	Page<ArchiveRun> findByFlowUid(String uid, Pageable pageable);
+	Page<ArchiveRun> findByFlowUidOrderByCreateAtDesc(String uid, Pageable pageable);
 
 	Long countByFlowUidAndState(String flowUid, FlowRuner.State state);
 

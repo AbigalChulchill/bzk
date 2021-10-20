@@ -8,10 +8,8 @@ import javax.inject.Inject;
 import net.bzk.flow.model.Action;
 import net.bzk.flow.run.dao.*;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
-import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -63,7 +61,7 @@ public class RunFlowService implements ApplicationListener<InitFlowEvent> {
     }
 
     public List<RunInfo> listArchiveRunInfo(String uid, Pageable pageable) {
-        return archiveRunDao.findByFlowUid(uid,pageable).stream().map(ar -> ar.getInfo())
+        return archiveRunDao.findByFlowUidOrderByCreateAtDesc(uid,pageable).stream().map(ar -> ar.getInfo())
                 .collect(Collectors.toList());
     }
 
