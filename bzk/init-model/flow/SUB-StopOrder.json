@@ -36,7 +36,7 @@
       "minLogLv" : "NONE",
       "url" : "${binance.proxyHost}proxy",
       "uriVariables" : { },
-      "body" : "{\n    \"name\": \"position/stop/exec\",\n    \"apiKey\":\"${binance.key}\",\n    \"secret\":\"${binance.secret}\",\n    \"symbol\": \"${symbol}\",\n    \"positionSide\":\"SHORT\",\n    \"tags\":[\"tkst\"],\n    \"stopLoss\":{\n        \"balanceRate\":0.2,\n        \"restopRate\":0.01,\n        \"clearRate\":0.68\n    },\n    \"stopGuaranteed\":{\n        \"closeRate\":0.25,\n        \"thresholdRate\":1.002\n    }\n}",
+      "body" : "{\n    \"name\": \"position/stop/exec\",\n    \"apiKey\":\"${binance.key}\",\n    \"secret\":\"${binance.secret}\",\n    \"symbol\": \"${symbol}\",\n    \"positionSide\":\"SHORT\",\n    \"tags\":[\"tkst\"],\n    \"stopLoss\":{\n        \"balanceRate\":0.08,\n        \"restopRate\":0.01,\n        \"clearRate\":0.68\n    },\n    \"stopGuaranteed\":{\n        \"closeRate\":0.25,\n        \"thresholdRate\":1.002\n    }\n}",
       "method" : "POST",
       "headers" : { },
       "headersFlat" : "",
@@ -79,5 +79,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 12
+  "version" : 13
 }
