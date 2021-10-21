@@ -52,7 +52,7 @@
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "code" : "const minAmount=50;\r\nconst rowAmount = 200;\r\nconst list= ${fundHistory};\r\nlet mx = Math.max.apply(Math, list);\r\nlet mn = Math.min.apply(Math, list);\r\nmn*=1.05;\r\nmx*=1.05;\r\nmn = (mx+mn)/4;\r\nconst dr = mx-mn;\r\n\r\nlet cusd = ${balance};\r\ncusd=cusd-minAmount;\r\nlet spcount = Math.floor( cusd /rowAmount);\r\nlet rp = dr/spcount;\r\n\r\n\r\nconst batchList = [];\r\n\r\nfor(let i=0;i<spcount;i++){\r\n    const b = {\r\n        rate: mn+ ((i+1) *rp),\r\n        day: i+2,\r\n        amount:rowAmount \r\n    };\r\n    batchList.push(b);\r\n}\r\nconst lasta = cusd +minAmount - (spcount*rowAmount);\r\nbatchList.push({\r\n        rate: mx,\r\n        day: 5,\r\n        amount:lasta,\r\n});\r\n\r\n\r\n\r\nbatchList;\r\n",
+      "code" : "const minAmount=50;\r\nconst rowAmount = 100;\r\nconst list= ${fundHistory};\r\nlet mx = Math.max.apply(Math, list);\r\nlet mn = Math.min.apply(Math, list);\r\nmn*=1.05;\r\nmx*=1.05;\r\nmn = (mx+mn)*0.288;\r\nconst dr = mx-mn;\r\n\r\nlet cusd = ${balance};\r\ncusd=cusd-minAmount;\r\nlet spcount = Math.floor( cusd /rowAmount);\r\nlet rp = dr/spcount;\r\n\r\n\r\nconst batchList = [];\r\n\r\nfor(let i=0;i<spcount;i++){\r\n    const b = {\r\n        rate: mn+ ((i+1) *rp),\r\n        day: i+2,\r\n        amount:rowAmount \r\n    };\r\n    batchList.push(b);\r\n}\r\nconst lasta = cusd +minAmount - (spcount*rowAmount);\r\nbatchList.push({\r\n        rate: mx,\r\n        day: 5,\r\n        amount:lasta,\r\n});\r\n\r\n\r\n\r\nbatchList;\r\n",
       "polyglot" : "js",
       "resultLv" : "not_specify",
       "resultKey" : "bfx.fund.strategy"
@@ -90,5 +90,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 5
+  "version" : 7
 }
