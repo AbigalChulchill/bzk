@@ -125,7 +125,7 @@
         "val" : "!javascript===\nconst nearPrice = ${peaks.trendInfo.nearPeak.val};\nnearPrice;"
       }, {
         "key" : "~extremeInfo",
-        "val" : "!javascript===\nconst shelfLife =  4*60*60*24;\nconst persistTime = ${cycleInfo.avgRadius} * 1.8 ;\nconst bigger = '${peaks.trendInfo.state}' == 'FALL';\n\n$tsFunc.filterPeak(${y2Vals},bigger,shelfLife,persistTime);\n"
+        "val" : "!javascript===\nconst shelfLife =  5*60*60*24;\nconst persistTime = ${cycleInfo.avgRadius} * 1.8 ;\nconst bigger = '${peaks.trendInfo.state}' == 'FALL';\n\n$tsFunc.filterPeak(${y2Vals},bigger,shelfLife,persistTime);\n"
       } ]
     }, {
       "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
@@ -365,5 +365,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 106
+  "version" : 108
 }
