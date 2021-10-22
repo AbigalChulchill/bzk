@@ -29,7 +29,7 @@ public class OTypeDeserializer<T extends OType> extends StdDeserializer<T> {
 			TreeNode clzn = tn.get("clazz");
 			String className = clzn.toString().replace("\"", "");
 			Class tc = Class.forName(className);
-			System.out.println("deserialize:" + tn.toString()+" className:"+tc);
+//			System.out.println("deserialize:" + tn.toString()+" className:"+tc);
 			T ans = (T) mapper.readValue(tn.toString(), tc);
 			return ans;
 		} catch (ClassNotFoundException e) {
