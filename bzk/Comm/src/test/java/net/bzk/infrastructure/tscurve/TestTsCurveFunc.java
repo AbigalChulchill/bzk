@@ -22,12 +22,17 @@ public class TestTsCurveFunc {
 
     @Value("classpath:tscurve/serial-test-data-90d.json")
     private Resource d90Data;
-
     @Value("classpath:tscurve/serial-test-data-20210928-20190930.json")
     private Resource y2Data;
-
     @Value("classpath:tscurve/serial-test-data-bais-20211006-20191107.json")
     private Resource biasY1Data;
+
+    /*
+     * from(bucket: \"quote\")\r\n  |> range(start: 2020-10-29T15:34:30Z, stop:2021-10-29T15:34:30Z)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"daily\" and\r\n    r.valmean == \"open\" and\r\n    r.symbol == \"BTC\"\r\n  )
+     */
+    @Value("classpath:tscurve/serial-test-data-bais-2020-10-29T15-34-30Z_2021-10-29T15-34-30Z.json")
+    private Resource y1Data;
+
 
     @Test
     public void testPeakFinder() {
@@ -69,6 +74,21 @@ public class TestTsCurveFunc {
         var bAns = TsCurveFunc.getInstance().findBigger(map, JsonUtils.toJson(dto));
         System.out.println(bAns);
 
+    }
+
+    @Test
+    public void test1YPeakFinder() {
+
+        double peakMaxWaitSeconds = 60 * 60 * 24 * 3.5;
+        Map map = loadMap(y1Data);
+        DimensionDto.MicroDimensionDto md = new DimensionDto.MicroDimensionDto();
+        md.setPeakMaxWaitSeconds(peakMaxWaitSeconds);
+        Map mdsm = JsonUtils.toByJson(md, Map.class);
+        var ans = TsCurveFunc.getInstance().findPeak(map, mdsm);
+        System.out.println(ans);
+        var allmap = ans.getTrendInfo().getAllList();
+        var sortPoints = TsCurveUtils.sortPoints(allmap);
+        System.out.println(sortPoints);
     }
 
     @Test

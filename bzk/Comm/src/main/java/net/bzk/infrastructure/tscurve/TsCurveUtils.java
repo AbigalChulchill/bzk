@@ -4,12 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.bzk.infrastructure.tscurve.peak.TsPeakFinder;
 
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class TsCurveUtils {
 
@@ -43,6 +45,11 @@ public class TsCurveUtils {
         List<Double> timeKeys = new ArrayList<>(keys);
         timeKeys.sort((a, b) -> Double.compare(a, b));
         return timeKeys;
+    }
+
+    public static List<Point> sortPoints(TsPeakFinder.AtPointMap apm) {
+        var sortKeys = sortTimeKeys(apm.keySet());
+        return sortKeys.stream().map(k -> apm.get(k)).collect(Collectors.toList());
     }
 
 
