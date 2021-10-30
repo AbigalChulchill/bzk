@@ -69,10 +69,23 @@
         "lv" : "run_flow",
         "key" : "binanceQuote"
       }
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
+      "uid" : "afqbSMjT5kKT",
+      "name" : "Sortout",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flatData" : [ {
+        "key" : "~extremeInfo",
+        "val" : "!javascript===\nconst shelfLife =  5*60*60*24;\nconst persistTime = ${cycleInfo.avgRadius} * 1.8 ;\nconst bigger = '${peaks40m.trendInfo.state}' == 'FALL';\n\n$tsFunc.filterPeak(${y2Vals},bigger,shelfLife,persistTime);\n"
+      } ]
     } ],
     "links" : [ ],
     "vars" : { },
-    "taskSort" : [ "xHaqpw4loFKq", "Dfq0TAINMBq2", "bdp2D8EmHQHn" ],
+    "taskSort" : [ "xHaqpw4loFKq", "Dfq0TAINMBq2", "bdp2D8EmHQHn", "afqbSMjT5kKT" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "hLZ3d8T7Vkot",
@@ -142,5 +155,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 59
+  "version" : 61
 }
