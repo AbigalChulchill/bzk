@@ -15,7 +15,7 @@
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "url" : "${binance.proxyHost}proxy",
+      "url" : "${finExManageApiUrl}",
       "uriVariables" : { },
       "body" : "${body}",
       "method" : "POST",
@@ -36,7 +36,7 @@
       "minLogLv" : "NONE",
       "flatData" : [ {
         "key" : "body",
-        "val" : " {\n    \"apiKey\": \"${binance.key}\",\n    \"secret\": \"${binance.secret}\",\n    \"name\": \"order/post\",\n    \"strategy\":\"${strategy}\",\n    \"symbol\": \"${symbol}\",\n    \"positionSide\": \"${positionSide}\",\n    \"withdrawAmountRate\": ${withdrawAmountRate},\n    \"positionRate\":${positionRate},\n    \"priceBuffRate\": ${priceBuffRate},\n    \"gapRate\":${gapRate},\n    \"size\":${size},\n    \"proportionalRate\":${proportionalRate}\n}\n"
+        "val" : " {\n    \"__bzk_api_key\": \"${finExManageApiKey}\",\n    \"exchange\": \"binance\",\n    \"name\": \"order/post\",\n    \"strategy\":\"${strategy}\",\n    \"symbol\": \"${symbol}\",\n    \"positionSide\": \"${positionSide}\",\n    \"withdrawAmountRate\": ${withdrawAmountRate},\n    \"positionRate\":${positionRate},\n    \"priceBuffRate\": ${priceBuffRate},\n    \"gapRate\":${gapRate},\n    \"size\":${size},\n    \"proportionalRate\":${proportionalRate}\n}\n"
       }, {
         "key" : "body.tags",
         "val" : "!javascript===\nvar tags =  ${tags};\ntags.push(\"bot\");\ntags;"
@@ -80,12 +80,15 @@
     },
     "minLogLv" : "DEBUG"
   } ],
-  "varCfgNames" : [ "binance.json", "mail.json", "fin-proxy.json" ],
+  "varCfgNames" : [ "binance.json", "mail.json", "fin-proxy.json", "fin-exchange-manage.json" ],
   "vars" : {
     "symbol" : "ETH",
     "size" : 2,
     "positionSide" : "LONG",
     "withdrawAmountRate" : 0.005,
+    "priceBuffRate" : 1.9,
+    "strategy" : "LIMIT",
+    "proportionalRate" : 1.2,
     "gapRate" : 0.002,
     "tags" : [ "shortTermBuy" ]
   },
@@ -102,5 +105,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 40
+  "version" : 45
 }
