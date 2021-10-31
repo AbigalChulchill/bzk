@@ -22,8 +22,8 @@
       "devFlowVars" : { },
       "minLogLv" : "NONE",
       "flatData" : [ {
-        "key" : "body.ids",
-        "val" : "!javascript===\nlet ods = ${orders};\nlet ans= [];\nfor (const od of ods) {\n  ans.push(od.orderId+\"\");\n}\nans;"
+        "key" : "body.origClientOrderIdList",
+        "val" : "!javascript===\nlet ods = ${orders};\nlet ans= [];\nfor (const od of ods) {\n  ans.push(od.clientOrderId+\"\");\n}\nans;"
       }, {
         "key" : "body.symbol",
         "val" : "${symbol}"
@@ -175,5 +175,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 18
+  "version" : 20
 }
