@@ -7,20 +7,28 @@
     "uid" : "V3hRVYlXQi8n",
     "name" : "Box",
     "actions" : [ {
-      "clazz" : "net.bzk.flow.model.Action$SysAction",
-      "uid" : "1KYMdWhqspA0",
-      "name" : "deleteLogs",
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "V4n8lARxLx88",
+      "name" : "Call_API_realtime",
       "tryErrorble" : false,
       "enable" : true,
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "func" : "deleteLogs",
-      "data" : "!javascript===\nvar dat = new Date();\n\ndat.setSeconds(dat.getSeconds() - 2*60*60);\n\nd= {\n    \"date\":dat.toISOString()\n};\nd"
+      "url" : "${finProxyUrl}/proxy/tsdb/delete",
+      "uriVariables" : { },
+      "body" : "!javascript===\r\n\r\nlet stop = new Date();\r\n\r\nstop.setSeconds(stop.getSeconds() - 24*60*60*30*9);\r\nvar stopiso = stop.toISOString();\r\n\r\nconst ans = {\r\n    \"stop\":stopiso,\r\n    \"predicate\":\"_measurement=\\\"realtime\\\"\"\r\n};\r\nans;",
+      "method" : "DELETE",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : "realtime_resp"
+      }
     } ],
     "links" : [ ],
     "vars" : { },
-    "taskSort" : [ "1KYMdWhqspA0" ],
+    "taskSort" : [ "V4n8lARxLx88" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
@@ -31,13 +39,13 @@
     },
     "minLogLv" : "DEBUG"
   } ],
-  "varCfgNames" : [ ],
+  "varCfgNames" : [ "fin-proxy.json" ],
   "vars" : { },
   "entry" : {
     "clazz" : "net.bzk.flow.model.Entry$FixedRateEntry",
     "boxUid" : "V3hRVYlXQi8n",
     "autoRegister" : false,
-    "period" : 1,
+    "period" : 8,
     "unit" : "HOURS",
     "initialDelay" : 0
   },
@@ -47,5 +55,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 21
+  "version" : 25
 }
