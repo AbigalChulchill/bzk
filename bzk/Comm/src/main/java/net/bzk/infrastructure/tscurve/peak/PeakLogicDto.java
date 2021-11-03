@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 public class PeakLogicDto {
 
     double peakMaxWaitSeconds;
-    PeakLogicType dimension;
+    PeakLogicType logicType;
 
     @Data
     @EqualsAndHashCode(callSuper = false)
@@ -17,7 +17,7 @@ public class PeakLogicDto {
         double amplitudeRate;
 
         public MacroPeakLogicDto() {
-            setDimension(PeakLogicType.MACRO);
+            setLogicType(PeakLogicType.MACRO);
         }
 
     }
@@ -28,7 +28,7 @@ public class PeakLogicDto {
 
 
         public MicroPeakLogicDto() {
-            setDimension(PeakLogicType.MICRO);
+            setLogicType(PeakLogicType.MICRO);
         }
 
     }

@@ -63,13 +63,13 @@ public class TsPeakFinder extends TsCurveFunc.TsCurve {
     }
 
 
-    private final TsPeakDimension dimension;
+    private final TsPeakLogic peakLogic;
 
 
-    public TsPeakFinder(Map<String, Double> rm, TsPeakDimension tpd) {
+    public TsPeakFinder(Map<String, Double> rm, TsPeakLogic tpd) {
         super(rm);
-        this.dimension = tpd;
-        this.dimension.setFinder(this);
+        this.peakLogic = tpd;
+        this.peakLogic.setFinder(this);
     }
 
 
@@ -95,7 +95,7 @@ public class TsPeakFinder extends TsCurveFunc.TsCurve {
                 ans.all.add(info);
             }
         }
-        ans = dimension.filterAmplitude(ans);
+        ans = peakLogic.filterAmplitude(ans);
         return ans;
     }
 
@@ -123,7 +123,7 @@ public class TsPeakFinder extends TsCurveFunc.TsCurve {
     }
 
     public double getValByKey(String key) {
-        return dimension.getValByKey(key);
+        return peakLogic.getValByKey(key);
     }
 
     private boolean isBoundary(String fromKey, int nowIdx, boolean forward) {
@@ -131,7 +131,7 @@ public class TsPeakFinder extends TsCurveFunc.TsCurve {
         if (nowIdx >= keys.size()) return true;
         String nowKey = keys.get(nowIdx);
         double fromNowTime = Math.abs(TsCurveUtils.subtractKeySeconds(fromKey, nowKey));
-        return dimension.isBoundary(fromKey, nowIdx, nowKey, fromNowTime, forward);
+        return peakLogic.isBoundary(fromKey, nowIdx, nowKey, fromNowTime, forward);
     }
 
     private PointType findMinOrMax(int idx) {
@@ -161,7 +161,7 @@ public class TsPeakFinder extends TsCurveFunc.TsCurve {
                 if (nowVal < fromVal) mined = false;
             }
         }
-        return dimension.checkMinMax(maxed, mined, fromVal);
+        return peakLogic.checkMinMax(maxed, mined, fromVal);
     }
 
 
@@ -173,7 +173,7 @@ public class TsPeakFinder extends TsCurveFunc.TsCurve {
         double minNearTime = nearMin != null ? TsCurveUtils.subtractKeySeconds(firstKey, nearMin.getKey()) : Integer.MAX_VALUE;
         System.out.println(nearMax);
         System.out.println(nearMin);
-        Direction state = dimension.calcState(maxNearTime, minNearTime);
+        Direction state = peakLogic.calcState(maxNearTime, minNearTime);
         var peakType = getOtherNearPeak(state, nearMax, nearMin);
         Point nearPoint = peakType == PointType.MAXED ? nearMax : nearMin;
 

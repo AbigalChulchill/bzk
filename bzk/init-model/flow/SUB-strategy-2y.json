@@ -45,10 +45,10 @@
       "minLogLv" : "NONE",
       "flatData" : [ {
         "key" : "~peaks40m",
-        "val" : "!javascript===\nconst peakMaxWaitSeconds = 60*40;\nconst dto = {\n    peakMaxWaitSeconds:peakMaxWaitSeconds,\n    dimension:'MICRO'\n};\nconst mm = $tsFunc.findPeak(${h24Vals},dto);\nmm;"
+        "val" : "!javascript===\nconst peakMaxWaitSeconds = 60*40;\nconst dto = {\n    peakMaxWaitSeconds:peakMaxWaitSeconds,\n    logicType:'MICRO'\n};\nconst mm = $tsFunc.findPeak(${h24Vals},dto);\nmm;"
       }, {
         "key" : "~peaks25d",
-        "val" : "!javascript===\nconst peakMaxWaitSeconds = 60*60*24*2.5;\nconst dto = {\n    peakMaxWaitSeconds:peakMaxWaitSeconds,\n    dimension:'MICRO'\n};\nconst mm = $tsFunc.findPeak(${y2Vals},dto);\nmm;"
+        "val" : "!javascript===\nconst peakMaxWaitSeconds = 60*60*24*2.5;\nconst dto = {\n    peakMaxWaitSeconds:peakMaxWaitSeconds,\n    logicType:'MICRO'\n};\nconst mm = $tsFunc.findPeak(${y2Vals},dto);\nmm;"
       }, {
         "key" : "~cycleInfo",
         "val" : "!javascript===\nconst key = '%d30Cycle.${symbol}';\nconst cycleInfo = $bzk.g(key);\ncycleInfo;"

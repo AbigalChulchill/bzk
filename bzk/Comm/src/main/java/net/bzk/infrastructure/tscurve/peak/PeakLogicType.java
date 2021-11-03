@@ -8,12 +8,12 @@ import java.util.Map;
 public enum PeakLogicType {
     MACRO, MICRO;
 
-    public TsPeakDimension genLogic() {
+    public TsPeakLogic genLogic() {
         switch (this) {
             case MACRO:
-                return new TsPeakDimension.MacroDimension();
+                return new TsPeakLogic.MacroLogic();
             case MICRO:
-                return new TsPeakDimension.MicroDimension();
+                return new TsPeakLogic.MicroLogic();
         }
         throw new NotImplementedException(this + "not support");
     }

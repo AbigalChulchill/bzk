@@ -15,9 +15,9 @@ public class TsCurveFunc {
     private TsCurveFunc() {
     }
 
-    public TsPeakFinder.Result findPeak(Map<String, Double> rm, Map<String, Object> dimensionMap) {
-        PeakLogicType d = PeakLogicType.valueOf(dimensionMap.get("dimension").toString());
-        var dto = d.genDto(dimensionMap);
+    public TsPeakFinder.Result findPeak(Map<String, Double> rm, Map<String, Object> logicTypeMap) {
+        PeakLogicType d = PeakLogicType.valueOf(logicTypeMap.get("logicType").toString());
+        var dto = d.genDto(logicTypeMap);
         var logic = d.genLogic();
         logic.setDto(dto);
         TsPeakFinder pf = new TsPeakFinder(rm, logic);

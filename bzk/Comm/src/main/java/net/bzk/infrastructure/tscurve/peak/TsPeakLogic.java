@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public abstract class TsPeakDimension<T extends PeakLogicDto> {
+public abstract class TsPeakLogic<T extends PeakLogicDto> {
 
 
     @Setter
@@ -52,7 +52,7 @@ public abstract class TsPeakDimension<T extends PeakLogicDto> {
 
     @Data
     @EqualsAndHashCode(callSuper = false)
-    public static class MicroDimension extends TsPeakDimension<PeakLogicDto.MicroPeakLogicDto> {
+    public static class MicroLogic extends TsPeakLogic<PeakLogicDto.MicroPeakLogicDto> {
 
 
 
@@ -81,7 +81,7 @@ public abstract class TsPeakDimension<T extends PeakLogicDto> {
 
     @Data
     @EqualsAndHashCode(callSuper = false)
-    public static class MacroDimension extends TsPeakDimension<PeakLogicDto.MacroPeakLogicDto> {
+    public static class MacroLogic extends TsPeakLogic<PeakLogicDto.MacroPeakLogicDto> {
 
 
 
