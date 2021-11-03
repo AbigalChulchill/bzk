@@ -13,11 +13,11 @@ import org.apache.commons.lang3.NotImplementedException;
 import java.util.List;
 import java.util.Map;
 
-public class TsTrendPeakFilter extends TsCurveFunc.TsCurve {
+public class TsBiggerFinder extends TsCurveFunc.TsCurve {
 
     private final TsHowBig howBig;
 
-    public TsTrendPeakFilter(Map<String, Double> rMap) {
+    public TsBiggerFinder(Map<String, Double> rMap) {
         super(rMap);
         this.howBig = new TsHowBig(rMap);
     }

@@ -5,7 +5,7 @@ import net.bzk.infrastructure.JsonUtils;
 import net.bzk.infrastructure.tscurve.peak.Dimension;
 import net.bzk.infrastructure.tscurve.peak.TsPeakCycle;
 import net.bzk.infrastructure.tscurve.peak.TsPeakFinder;
-import net.bzk.infrastructure.tscurve.peak.TsTrendPeakFilter;
+import net.bzk.infrastructure.tscurve.peak.TsBiggerFinder;
 
 import java.util.*;
 
@@ -35,14 +35,14 @@ public class TsCurveFunc {
         return tcd.calc();
     }
 
-    public TsHowBig.Result findBigger(Map<String, Double> rm, String dtoJson) {
+    public TsHowBig.Result howBigger(Map<String, Double> rm, String dtoJson) {
         TsHowBig.Dto dto = JsonUtils.loadByJson(dtoJson, TsHowBig.Dto.class);
         TsHowBig tb = new TsHowBig(rm);
         return tb.calc(dto);
     }
 
-    public TsTrendPeakFilter.Result filterPeak(Map<String, Double> rMap, boolean bigger, double shelfLife, double persistTime) {
-        TsTrendPeakFilter tf = new TsTrendPeakFilter(rMap);
+    public TsBiggerFinder.Result findNearBigger(Map<String, Double> rMap, boolean bigger, double shelfLife, double persistTime) {
+        TsBiggerFinder tf = new TsBiggerFinder(rMap);
         return tf.calc(bigger, shelfLife, persistTime);
     }
 

@@ -3,14 +3,12 @@ package net.bzk.infrastructure.tscurve;
 import net.bzk.infrastructure.CommUtils;
 import net.bzk.infrastructure.JsonUtils;
 import net.bzk.infrastructure.tscurve.peak.DimensionDto;
-import net.bzk.infrastructure.tscurve.peak.TsPeakDimension;
 import net.bzk.infrastructure.tscurve.peak.TsPeakFinder;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.Resource;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -51,7 +49,7 @@ public class TestTsCurveFunc {
                 .bigger(true)
                 .targetKey(mFirst.getKey())
                 .build();
-        var bAns = TsCurveFunc.getInstance().findBigger(map, JsonUtils.toJson(dto));
+        var bAns = TsCurveFunc.getInstance().howBigger(map, JsonUtils.toJson(dto));
         System.out.println(bAns);
 
     }
@@ -71,7 +69,7 @@ public class TestTsCurveFunc {
                 .bigger(ans.getTrendInfo().getNearPeakType() == TsPeakFinder.PointType.MAXED)
                 .targetKey(mFirst.getKey())
                 .build();
-        var bAns = TsCurveFunc.getInstance().findBigger(map, JsonUtils.toJson(dto));
+        var bAns = TsCurveFunc.getInstance().howBigger(map, JsonUtils.toJson(dto));
         System.out.println(bAns);
 
     }
