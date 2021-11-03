@@ -6,7 +6,7 @@ import org.apache.commons.lang3.NotImplementedException;
 import java.util.Map;
 
 public enum PeakLogicType {
-    MACRO, MICRO;
+    MACRO, MICRO , BIGGER;
 
     public TsPeakLogic genLogic() {
         switch (this) {

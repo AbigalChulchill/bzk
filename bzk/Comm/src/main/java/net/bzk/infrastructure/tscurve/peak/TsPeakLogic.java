@@ -2,6 +2,7 @@ package net.bzk.infrastructure.tscurve.peak;
 
 import lombok.*;
 import net.bzk.infrastructure.tscurve.TsCurveUtils;
+import net.bzk.infrastructure.tscurve.TsHowBig;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,15 +17,10 @@ public abstract class TsPeakLogic<T extends PeakLogicDto> {
     protected TsPeakFinder finder;
 
 
-
     public List<String> getKeys() {
         return finder.getKeys();
     }
 
-    public TsPeakFinder.PointType checkMinMax(boolean maxed, boolean mined, double fromVal) {
-        if (maxed && mined) return TsPeakFinder.PointType.NONE;
-        return checkMinMaxEx(maxed, mined, fromVal);
-    }
 
     protected void removeByIdx(List<TsCurveUtils.Point> list, int idx) {
         var po = list.stream().filter(p -> p.getIdx() == idx).findFirst();
@@ -32,28 +28,80 @@ public abstract class TsPeakLogic<T extends PeakLogicDto> {
         list.remove(po.get());
     }
 
-    public TsCurveUtils.Direction calcState(double maxNearTime, double minNearTime) {
-        if (maxNearTime < minNearTime) {
-            return maxNearTime >  dto.peakMaxWaitSeconds ? TsCurveUtils.Direction.FALL : TsCurveUtils.Direction.RISE;
-        } else {
-            return minNearTime > dto.peakMaxWaitSeconds ? TsCurveUtils.Direction.RISE : TsCurveUtils.Direction.FALL;
-        }
-    }
+    public abstract TsCurveUtils.Direction calcState(double maxNearTime, double minNearTime);
 
-    protected abstract TsPeakFinder.PointType checkMinMaxEx(boolean maxed, boolean mined, double fromVal);
 
     public abstract TsPeakFinder.MinMaxInfo filterAmplitude(TsPeakFinder.MinMaxInfo iArrays);
 
     public abstract double getValByKey(String key);
 
-    public abstract boolean isBoundary(String fromKey, int nowIdx, String nowKey, double fromNowTime, boolean forward);
-
+    public abstract TsPeakFinder.PointType findMinOrMax(int idx);
 
 
     @Data
     @EqualsAndHashCode(callSuper = false)
-    public static class MicroLogic extends TsPeakLogic<PeakLogicDto.MicroPeakLogicDto> {
+    public static abstract class WaitLogic<E extends PeakLogicDto.WaitPeakLogicDto> extends TsPeakLogic<E> {
 
+
+        private boolean isBoundary(String fromKey, int nowIdx, boolean forward) {
+            if (nowIdx < 0) return true;
+            if (nowIdx >= getKeys().size()) return true;
+            String nowKey = getKeys().get(nowIdx);
+            double fromNowTime = Math.abs(TsCurveUtils.subtractKeySeconds(fromKey, nowKey));
+            return isBoundary(fromKey, nowIdx, nowKey, fromNowTime, forward);
+        }
+
+        public TsPeakFinder.PointType findMinOrMax(int idx) {
+            int fromIdx = idx;
+            String fromKey = getKeys().get(fromIdx);
+            double fromVal = getValByKey(fromKey);
+            boolean maxed = true, mined = true;
+            boolean forward = true;
+            while (maxed || mined) {
+                if (forward) idx--;
+                else idx++;
+
+                if (isBoundary(fromKey, idx, forward)) {
+                    if (forward) {
+                        idx = fromIdx;
+                        forward = false;
+                        continue;
+                    }
+
+                    break;
+                }
+                double nowVal = getValByKey(getKeys().get(idx));
+                if (maxed) {
+                    if (nowVal > fromVal) maxed = false;
+                }
+                if (mined) {
+                    if (nowVal < fromVal) mined = false;
+                }
+            }
+            return checkMinMax(maxed, mined, fromVal);
+        }
+
+        public TsPeakFinder.PointType checkMinMax(boolean maxed, boolean mined, double fromVal) {
+            if (maxed && mined) return TsPeakFinder.PointType.NONE;
+            return checkMinMaxEx(maxed, mined, fromVal);
+        }
+
+        public TsCurveUtils.Direction calcState(double maxNearTime, double minNearTime) {
+            if (maxNearTime < minNearTime) {
+                return maxNearTime > dto.peakMaxWaitSeconds ? TsCurveUtils.Direction.FALL : TsCurveUtils.Direction.RISE;
+            } else {
+                return minNearTime > dto.peakMaxWaitSeconds ? TsCurveUtils.Direction.RISE : TsCurveUtils.Direction.FALL;
+            }
+        }
+
+        protected abstract TsPeakFinder.PointType checkMinMaxEx(boolean maxed, boolean mined, double fromVal);
+
+        public abstract boolean isBoundary(String fromKey, int nowIdx, String nowKey, double fromNowTime, boolean forward);
+    }
+
+    @Data
+    @EqualsAndHashCode(callSuper = false)
+    public static class MicroLogic extends WaitLogic<PeakLogicDto.MicroPeakLogicDto> {
 
 
         @Override
@@ -75,14 +123,13 @@ public abstract class TsPeakLogic<T extends PeakLogicDto> {
 
         @Override
         public boolean isBoundary(String fromKey, int nowIdx, String nowKey, double fromNowTime, boolean forward) {
-            return fromNowTime > dto.peakMaxWaitSeconds ;
+            return fromNowTime > dto.peakMaxWaitSeconds;
         }
     }
 
     @Data
     @EqualsAndHashCode(callSuper = false)
-    public static class MacroLogic extends TsPeakLogic<PeakLogicDto.MacroPeakLogicDto> {
-
+    public static class MacroLogic extends WaitLogic<PeakLogicDto.MacroPeakLogicDto> {
 
 
         @Override
@@ -166,6 +213,40 @@ public abstract class TsPeakLogic<T extends PeakLogicDto> {
             double cv = getValByKey(getKeys().get(nowIdx));
             double nv = getValByKey(getKeys().get(nidx));
             return nv * cv < 0;
+        }
+    }
+
+    @Data
+    @EqualsAndHashCode(callSuper = false)
+    public static class BiggerLogic extends TsPeakLogic<PeakLogicDto.BiggerPeakLogicDto> {
+
+        private TsHowBig _howBig = null;
+
+        private TsHowBig hb() {
+            if (_howBig == null) {
+                _howBig = new TsHowBig(finder.getRMap());
+            }
+            return _howBig;
+        }
+
+        @Override
+        public TsCurveUtils.Direction calcState(double maxNearTime, double minNearTime) {
+            return null;
+        }
+
+        @Override
+        public TsPeakFinder.MinMaxInfo filterAmplitude(TsPeakFinder.MinMaxInfo iArrays) {
+            return null;
+        }
+
+        @Override
+        public double getValByKey(String key) {
+            return 0;
+        }
+
+        @Override
+        public TsPeakFinder.PointType findMinOrMax(int idx) {
+            return null;
         }
     }
 

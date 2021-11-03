@@ -43,7 +43,8 @@ public class TsPeakFinder extends TsCurveFunc.TsCurve {
         private double val;
     }
 
-    public static class AtPointMap extends HashMap<Double,Point>{}
+    public static class AtPointMap extends HashMap<Double, Point> {
+    }
 
     @Data
     @Builder
@@ -85,7 +86,7 @@ public class TsPeakFinder extends TsCurveFunc.TsCurve {
     private MinMaxInfo listMinMax() {
         var ans = new MinMaxInfo();
         for (int i = 0; i < keys.size(); i++) {
-            PointType mmr = findMinOrMax(i);
+            PointType mmr = peakLogic.findMinOrMax(i);
             Point info = genPoint(i);
             if (mmr == PointType.MINED) {
                 ans.min.add(info);
@@ -124,44 +125,6 @@ public class TsPeakFinder extends TsCurveFunc.TsCurve {
 
     public double getValByKey(String key) {
         return peakLogic.getValByKey(key);
-    }
-
-    private boolean isBoundary(String fromKey, int nowIdx, boolean forward) {
-        if (nowIdx < 0) return true;
-        if (nowIdx >= keys.size()) return true;
-        String nowKey = keys.get(nowIdx);
-        double fromNowTime = Math.abs(TsCurveUtils.subtractKeySeconds(fromKey, nowKey));
-        return peakLogic.isBoundary(fromKey, nowIdx, nowKey, fromNowTime, forward);
-    }
-
-    private PointType findMinOrMax(int idx) {
-        int fromIdx = idx;
-        String fromKey = keys.get(fromIdx);
-        double fromVal = getValByKey(fromKey);
-        boolean maxed = true, mined = true;
-        boolean forward = true;
-        while (maxed || mined) {
-            if (forward) idx--;
-            else idx++;
-
-            if (isBoundary(fromKey, idx, forward)) {
-                if (forward) {
-                    idx = fromIdx;
-                    forward = false;
-                    continue;
-                }
-
-                break;
-            }
-            double nowVal = getValByKey(keys.get(idx));
-            if (maxed) {
-                if (nowVal > fromVal) maxed = false;
-            }
-            if (mined) {
-                if (nowVal < fromVal) mined = false;
-            }
-        }
-        return peakLogic.checkMinMax(maxed, mined, fromVal);
     }
 
 
