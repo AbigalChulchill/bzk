@@ -2,7 +2,7 @@ package net.bzk.infrastructure.tscurve;
 
 import net.bzk.infrastructure.CommUtils;
 import net.bzk.infrastructure.JsonUtils;
-import net.bzk.infrastructure.tscurve.peak.DimensionDto;
+import net.bzk.infrastructure.tscurve.peak.PeakLogicDto;
 import net.bzk.infrastructure.tscurve.peak.TsPeakFinder;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,7 +38,7 @@ public class TestTsCurveFunc {
         double peakMaxWaitSeconds = 60 * 60 * 24 * 3;
         double macroAmplitudeRate = 0;
         Map map = loadMap(d90Data);
-        DimensionDto.MacroDimensionDto md = new DimensionDto.MacroDimensionDto();
+        PeakLogicDto.MacroPeakLogicDto md = new PeakLogicDto.MacroPeakLogicDto();
         md.setPeakMaxWaitSeconds(peakMaxWaitSeconds);
         md.setAmplitudeRate(macroAmplitudeRate);
         Map mdsm = JsonUtils.toByJson(md, Map.class);
@@ -59,7 +59,7 @@ public class TestTsCurveFunc {
 
         double peakMaxWaitSeconds = 60 * 60 * 1.5;
         Map map = loadMap(y2Data);
-        DimensionDto.MicroDimensionDto md = new DimensionDto.MicroDimensionDto();
+        PeakLogicDto.MicroPeakLogicDto md = new PeakLogicDto.MicroPeakLogicDto();
         md.setPeakMaxWaitSeconds(peakMaxWaitSeconds);
         Map mdsm = JsonUtils.toByJson(md, Map.class);
         var ans = TsCurveFunc.getInstance().findPeak(map, mdsm);
@@ -79,7 +79,7 @@ public class TestTsCurveFunc {
 
         double peakMaxWaitSeconds = 60 * 60 * 24 * 3.5;
         Map map = loadMap(y1Data);
-        DimensionDto.MicroDimensionDto md = new DimensionDto.MicroDimensionDto();
+        PeakLogicDto.MicroPeakLogicDto md = new PeakLogicDto.MicroPeakLogicDto();
         md.setPeakMaxWaitSeconds(peakMaxWaitSeconds);
         Map mdsm = JsonUtils.toByJson(md, Map.class);
         var ans = TsCurveFunc.getInstance().findPeak(map, mdsm);
@@ -94,7 +94,7 @@ public class TestTsCurveFunc {
 
         double peakMaxWaitSeconds = 60 * 60 * 24 * 4;
         Map map = loadMap(biasY1Data);
-        DimensionDto.MacroDimensionDto md = new DimensionDto.MacroDimensionDto();
+        PeakLogicDto.MacroPeakLogicDto md = new PeakLogicDto.MacroPeakLogicDto();
         md.setPeakMaxWaitSeconds(peakMaxWaitSeconds);
         md.setAmplitudeRate(0.1);
         Map mdsm = JsonUtils.toByJson(md, Map.class);

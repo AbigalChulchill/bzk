@@ -2,7 +2,7 @@ package net.bzk.infrastructure.tscurve;
 
 import lombok.Getter;
 import net.bzk.infrastructure.JsonUtils;
-import net.bzk.infrastructure.tscurve.peak.Dimension;
+import net.bzk.infrastructure.tscurve.peak.PeakLogicType;
 import net.bzk.infrastructure.tscurve.peak.TsPeakCycle;
 import net.bzk.infrastructure.tscurve.peak.TsPeakFinder;
 import net.bzk.infrastructure.tscurve.peak.TsBiggerFinder;
@@ -16,7 +16,7 @@ public class TsCurveFunc {
     }
 
     public TsPeakFinder.Result findPeak(Map<String, Double> rm, Map<String, Object> dimensionMap) {
-        Dimension d = Dimension.valueOf(dimensionMap.get("dimension").toString());
+        PeakLogicType d = PeakLogicType.valueOf(dimensionMap.get("dimension").toString());
         var dto = d.genDto(dimensionMap);
         var logic = d.genLogic();
         logic.setDto(dto);

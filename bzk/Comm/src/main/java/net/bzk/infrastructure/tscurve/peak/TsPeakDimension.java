@@ -1,17 +1,13 @@
 package net.bzk.infrastructure.tscurve.peak;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import net.bzk.infrastructure.JsonUtils;
 import net.bzk.infrastructure.tscurve.TsCurveUtils;
-import org.apache.commons.lang3.NotImplementedException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 
-public abstract class TsPeakDimension<T extends  DimensionDto> {
+public abstract class TsPeakDimension<T extends PeakLogicDto> {
 
 
     @Setter
@@ -56,7 +52,7 @@ public abstract class TsPeakDimension<T extends  DimensionDto> {
 
     @Data
     @EqualsAndHashCode(callSuper = false)
-    public static class MicroDimension extends TsPeakDimension<DimensionDto.MicroDimensionDto> {
+    public static class MicroDimension extends TsPeakDimension<PeakLogicDto.MicroPeakLogicDto> {
 
 
 
@@ -85,7 +81,7 @@ public abstract class TsPeakDimension<T extends  DimensionDto> {
 
     @Data
     @EqualsAndHashCode(callSuper = false)
-    public static class MacroDimension extends TsPeakDimension<DimensionDto.MacroDimensionDto> {
+    public static class MacroDimension extends TsPeakDimension<PeakLogicDto.MacroPeakLogicDto> {
 
 
 

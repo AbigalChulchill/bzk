@@ -5,7 +5,7 @@ import org.apache.commons.lang3.NotImplementedException;
 
 import java.util.Map;
 
-public enum Dimension {
+public enum PeakLogicType {
     MACRO, MICRO;
 
     public TsPeakDimension genLogic() {
@@ -18,17 +18,17 @@ public enum Dimension {
         throw new NotImplementedException(this + "not support");
     }
 
-    public Class<? extends DimensionDto> getDtoClass(){
+    public Class<? extends PeakLogicDto> getDtoClass(){
         switch (this) {
             case MACRO:
-                return DimensionDto.MacroDimensionDto.class;
+                return PeakLogicDto.MacroPeakLogicDto.class;
             case MICRO:
-                return DimensionDto.MicroDimensionDto.class;
+                return PeakLogicDto.MicroPeakLogicDto.class;
         }
         throw new NotImplementedException(this + "not support");
     }
 
-    public DimensionDto genDto(Map<String, Object> m) {
+    public PeakLogicDto genDto(Map<String, Object> m) {
         var c = getDtoClass();
         return JsonUtils.toByJson(m, c);
     }
