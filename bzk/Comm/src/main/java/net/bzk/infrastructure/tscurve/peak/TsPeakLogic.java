@@ -3,6 +3,7 @@ package net.bzk.infrastructure.tscurve.peak;
 import lombok.*;
 import net.bzk.infrastructure.tscurve.TsCurveUtils;
 import net.bzk.infrastructure.tscurve.TsHowBig;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -231,22 +232,60 @@ public abstract class TsPeakLogic<T extends PeakLogicDto> {
 
         @Override
         public TsCurveUtils.Direction calcState(double maxNearTime, double minNearTime) {
-            return null;
+            return minNearTime < maxNearTime ? TsCurveUtils.Direction.FALL : TsCurveUtils.Direction.RISE;
         }
 
         @Override
         public TsPeakFinder.MinMaxInfo filterAmplitude(TsPeakFinder.MinMaxInfo iArrays) {
-            return null;
+            return iArrays;
         }
 
         @Override
         public double getValByKey(String key) {
-            return 0;
+            var bigR = hb().calc(TsHowBig.Dto.builder()
+                    .bigger(true)
+                    .targetKey(key)
+                    .build());
+            var smallR = hb().calc(TsHowBig.Dto.builder()
+                    .bigger(false)
+                    .targetKey(key)
+                    .build());
+            if (bigR.getTime() > smallR.getTime()) {
+                return bigR.getTime();
+            } else {
+                return -smallR.getTime();
+            }
         }
 
         @Override
         public TsPeakFinder.PointType findMinOrMax(int idx) {
-            return null;
+
+            String origKey = getKeys().get(idx);
+            String forwardKey = optKey(idx - 1);
+            String backKey = optKey(idx + 1);
+            var origVal = getValByKey(origKey);
+
+            boolean forwardCheck = isAbsGreater(origKey, forwardKey);
+            boolean backCheck = isAbsGreater(origKey, backKey);
+            if (forwardCheck && backCheck) {
+                return origVal > 0 ? TsPeakFinder.PointType.MAXED : TsPeakFinder.PointType.MINED;
+            }
+            return TsPeakFinder.PointType.NONE;
+        }
+
+        private boolean isAbsGreater(String origKey, String checkKey) {
+            if (StringUtils.isBlank(checkKey)) {
+                return true;
+            }
+            var origVal = getValByKey(origKey);
+            var checkVal = getValByKey(checkKey);
+            return Math.abs(origVal) > Math.abs(checkVal);
+        }
+
+        private String optKey(int nidx) {
+            if (nidx < 0) return null;
+            if (nidx >= getKeys().size()) return null;
+            return getKeys().get(nidx);
         }
     }
 

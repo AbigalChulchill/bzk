@@ -123,9 +123,7 @@ public class TsPeakFinder extends TsCurveFunc.TsCurve {
         return ans;
     }
 
-    public double getValByKey(String key) {
-        return peakLogic.getValByKey(key);
-    }
+
 
 
     private TrendInfo genTrendInfo() {
