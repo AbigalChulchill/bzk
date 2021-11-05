@@ -1,44 +1,47 @@
 {
   "clazz" : "net.bzk.flow.model.Flow",
   "uid" : "C72RPBZMZzy1",
-  "name" : "SUB-strategy-daily-frequency",
+  "name" : "SUB-strategy-daily-frequency-stop",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
     "uid" : "5rUTO9zVomsD",
     "name" : "Box",
     "actions" : [ {
-      "clazz" : "net.bzk.flow.model.Action$NodejsAction",
-      "uid" : "YIzu90Xkrt01",
-      "name" : "Action",
+      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
+      "uid" : "8kpgEvHUBJkk",
+      "name" : "M_InitVars",
       "tryErrorble" : false,
       "enable" : true,
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "alwayCleanWorkDir" : false,
-      "code" : "console.log($bzk.init)",
-      "installs" : [ ],
-      "dependencies" : {
-        "moment" : "^2.26.0"
-      },
-      "devDependencies" : { }
+      "flatData" : [ {
+        "key" : "stopTakePositionSide",
+        "val" : "!javascript===\nconst state = '${peaks40m.trendInfo.state}';\n\n\nfunction calc(){\n    return state == 'RISE' ? \"SHORT\" : \"LONG\";\n}\ncalc();"
+      } ]
     } ],
     "links" : [ {
       "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "QPSnfnFcemGi",
-      "name" : "TODOLink",
-      "condition" : null,
+      "uid" : "hDXet1ywzdtF",
+      "name" : "CheckNoAllow",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
+        "kind" : "NONE",
+        "next" : null,
+        "polyglot" : "js",
+        "code" : "const allowSymbols = ${bottleneck};\nconst sbl = '${symbol}';\n!allowSymbols.includes(sbl);"
+      },
       "transition" : {
         "toBox" : "",
-        "endTag" : "TestEnd",
+        "endTag" : "${symbol} NoAllow",
         "failEnd" : false,
         "endResultKeys" : [ ],
-        "resultCode" : ""
+        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"CheckNoAllow\"\n}"
       },
       "enable" : true
     } ],
     "vars" : { },
-    "taskSort" : [ "YIzu90Xkrt01", "QPSnfnFcemGi" ],
+    "taskSort" : [ "hDXet1ywzdtF", "8kpgEvHUBJkk" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
@@ -49,7 +52,7 @@
     },
     "minLogLv" : "DEBUG"
   } ],
-  "varCfgNames" : [ ],
+  "varCfgNames" : [ "crypto-symbol.json", "binance.json" ],
   "vars" : { },
   "entry" : {
     "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
