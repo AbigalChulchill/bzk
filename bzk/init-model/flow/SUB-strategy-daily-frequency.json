@@ -1,0 +1,68 @@
+{
+  "clazz" : "net.bzk.flow.model.Flow",
+  "uid" : "C72RPBZMZzy1",
+  "name" : "SUB-strategy-daily-frequency",
+  "boxs" : [ {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "5rUTO9zVomsD",
+    "name" : "Box",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$NodejsAction",
+      "uid" : "YIzu90Xkrt01",
+      "name" : "Action",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "alwayCleanWorkDir" : false,
+      "code" : "console.log($bzk.init)",
+      "installs" : [ ],
+      "dependencies" : {
+        "moment" : "^2.26.0"
+      },
+      "devDependencies" : { }
+    } ],
+    "links" : [ {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "QPSnfnFcemGi",
+      "name" : "TODOLink",
+      "condition" : null,
+      "transition" : {
+        "toBox" : "",
+        "endTag" : "TestEnd",
+        "failEnd" : false,
+        "endResultKeys" : [ ],
+        "resultCode" : ""
+      },
+      "enable" : true
+    } ],
+    "vars" : { },
+    "taskSort" : [ "YIzu90Xkrt01", "QPSnfnFcemGi" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "TODO Why",
+      "failEnd" : false,
+      "endResultKeys" : [ ],
+      "resultCode" : ""
+    },
+    "minLogLv" : "DEBUG"
+  } ],
+  "varCfgNames" : [ ],
+  "vars" : { },
+  "entry" : {
+    "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
+    "boxUid" : "5rUTO9zVomsD",
+    "autoRegister" : false,
+    "requiredKeys" : [ ],
+    "outputKeys" : [ ]
+  },
+  "threadCfg" : {
+    "corePoolSize" : 10,
+    "maximumPoolSize" : 50,
+    "keepAliveTime" : 500,
+    "aliveUnit" : "MINUTES"
+  },
+  "version" : 4
+}
