@@ -28,6 +28,7 @@ public class TsHowBig extends TsCurveFunc.TsCurve {
                 if (StringUtils.equals(key, dto.targetKey)) {
                     started = true;
                     targetVal = getAdjustVal(dto, i);
+                    lastKey = key;
                 }
                 continue;
             }

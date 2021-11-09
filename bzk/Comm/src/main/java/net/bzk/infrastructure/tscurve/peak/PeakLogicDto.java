@@ -42,6 +42,8 @@ public class PeakLogicDto {
     @EqualsAndHashCode(callSuper = false)
     public static class BiggerPeakLogicDto extends PeakLogicDto {
 
+        double persistTime;
+
         public BiggerPeakLogicDto() {
             setLogicType(PeakLogicType.BIGGER);
         }

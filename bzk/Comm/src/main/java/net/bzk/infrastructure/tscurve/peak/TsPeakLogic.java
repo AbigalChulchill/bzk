@@ -264,21 +264,23 @@ public abstract class TsPeakLogic<T extends PeakLogicDto> {
             String forwardKey = optKey(idx - 1);
             String backKey = optKey(idx + 1);
             var origVal = getValByKey(origKey);
+            if (Math.abs(origVal) < dto.persistTime) return TsPeakFinder.PointType.NONE;
 
-            boolean forwardCheck = isAbsGreater(origKey, forwardKey);
-            boolean backCheck = isAbsGreater(origKey, backKey);
+            boolean forwardCheck = isPeak(origKey, forwardKey);
+            boolean backCheck = isPeak(origKey, backKey);
             if (forwardCheck && backCheck) {
                 return origVal > 0 ? TsPeakFinder.PointType.MAXED : TsPeakFinder.PointType.MINED;
             }
             return TsPeakFinder.PointType.NONE;
         }
 
-        private boolean isAbsGreater(String origKey, String checkKey) {
+        private boolean isPeak(String origKey, String checkKey) {
             if (StringUtils.isBlank(checkKey)) {
                 return true;
             }
             var origVal = getValByKey(origKey);
             var checkVal = getValByKey(checkKey);
+            if ((origVal * checkVal) < 0) return true;
             return Math.abs(origVal) > Math.abs(checkVal);
         }
 

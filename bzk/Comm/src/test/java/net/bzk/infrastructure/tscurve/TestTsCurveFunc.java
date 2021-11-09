@@ -77,10 +77,10 @@ public class TestTsCurveFunc {
     @Test
     public void test1YPeakFinder() {
 
-        double peakMaxWaitSeconds = 60 * 60 * 24 * 3.5;
+        double persistTime = 60 * 60 * 24 * 15;
         Map map = loadMap(y1Data);
-        PeakLogicDto.MicroPeakLogicDto md = new PeakLogicDto.MicroPeakLogicDto();
-        md.setPeakMaxWaitSeconds(peakMaxWaitSeconds);
+        PeakLogicDto.BiggerPeakLogicDto md = new PeakLogicDto.BiggerPeakLogicDto();
+        md.setPersistTime(persistTime);
         Map mdsm = JsonUtils.toByJson(md, Map.class);
         var ans = TsCurveFunc.getInstance().findPeak(map, mdsm);
         System.out.println(ans);
