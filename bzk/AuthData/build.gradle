@@ -2,7 +2,6 @@ plugins {
 	id 'org.springframework.boot' version '2.3.0.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
 	id 'java'
-	id "com.palantir.docker" version "0.20.1"
 }
 
 bootJar.enabled=false
