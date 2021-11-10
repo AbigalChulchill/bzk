@@ -87,6 +87,8 @@ public class TestTsCurveFunc {
         var allmap = ans.getTrendInfo().getAllList();
         var sortPoints = TsCurveUtils.sortPoints(allmap);
         System.out.println(sortPoints);
+        var sortMinPoints = TsCurveUtils.sortPoints( ans.getTrendInfo().getMinList());
+        System.out.println(sortMinPoints);
     }
 
     @Test

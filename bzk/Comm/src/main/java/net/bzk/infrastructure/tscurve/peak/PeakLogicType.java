@@ -15,7 +15,7 @@ public enum PeakLogicType {
             case MICRO:
                 return new TsPeakLogic.MicroLogic();
             case BIGGER:
-                return new TsPeakLogic.BiggerLogic();
+                return new BiggerPeakLogic();
         }
         throw new NotImplementedException(this + "not support");
     }

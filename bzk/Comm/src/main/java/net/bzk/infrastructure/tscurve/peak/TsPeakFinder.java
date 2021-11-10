@@ -124,8 +124,6 @@ public class TsPeakFinder extends TsCurveFunc.TsCurve {
     }
 
 
-
-
     private TrendInfo genTrendInfo() {
         MinMaxInfo minMaxInfo = listMinMax();
         Point nearMax = getNearInfo(minMaxInfo.max);
@@ -159,4 +157,8 @@ public class TsPeakFinder extends TsCurveFunc.TsCurve {
         return state == Direction.FALL ? PointType.MAXED : PointType.MINED;
     }
 
+    @Override
+    public Point genPoint(int i) {
+        return peakLogic.genPoint(i);
+    }
 }

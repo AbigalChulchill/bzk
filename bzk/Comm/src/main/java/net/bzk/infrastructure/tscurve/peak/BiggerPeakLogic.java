@@ -1,0 +1,108 @@
+package net.bzk.infrastructure.tscurve.peak;
+
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import net.bzk.infrastructure.tscurve.TsCurveUtils;
+import net.bzk.infrastructure.tscurve.TsHowBig;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.HashMap;
+import java.util.Map;
+
+@Data
+@EqualsAndHashCode(callSuper = false)
+public class BiggerPeakLogic extends TsPeakLogic<PeakLogicDto.BiggerPeakLogicDto> {
+
+    private TsHowBig _howBig = null;
+    private Map<String, Double> cacheDeepValMap = new HashMap<>();
+
+    private TsHowBig hb() {
+        if (_howBig == null) {
+            _howBig = new TsHowBig(finder.getRMap());
+        }
+        return _howBig;
+    }
+
+    @Override
+    public TsCurveUtils.Direction calcState(double maxNearTime, double minNearTime) {
+        return minNearTime < maxNearTime ? TsCurveUtils.Direction.FALL : TsCurveUtils.Direction.RISE;
+    }
+
+    @Override
+    public TsPeakFinder.MinMaxInfo filterAmplitude(TsPeakFinder.MinMaxInfo iArrays) {
+        return iArrays;
+    }
+
+    @Override
+    public double getValByKey(String key) {
+        if (!cacheDeepValMap.containsKey(key)) {
+            var bigR = hb().calc(TsHowBig.Dto.builder()
+                    .bigger(true)
+                    .targetKey(key)
+                    .build());
+            var smallR = hb().calc(TsHowBig.Dto.builder()
+                    .bigger(false)
+                    .targetKey(key)
+                    .build());
+            if (bigR.getTime() > smallR.getTime()) {
+                cacheDeepValMap.put(key, bigR.getTime());
+            } else {
+                cacheDeepValMap.put(key, -smallR.getTime());
+            }
+        }
+        return cacheDeepValMap.get(key);
+    }
+
+    @Override
+    public TsPeakFinder.PointType findMinOrMax(int idx) {
+
+        String origKey = getKeys().get(idx);
+        String forwardKey = optKey(idx - 1);
+        String backKey = optKey(idx + 1);
+        var origVal = getValByKey(origKey);
+        if (Math.abs(origVal) < dto.persistTime) return TsPeakFinder.PointType.NONE;
+
+        boolean forwardCheck = isPeak(origKey, forwardKey);
+        boolean backCheck = isPeak(origKey, backKey);
+        if (forwardCheck && backCheck) {
+            return origVal > 0 ? TsPeakFinder.PointType.MAXED : TsPeakFinder.PointType.MINED;
+        }
+        return TsPeakFinder.PointType.NONE;
+    }
+
+    private boolean isPeak(String origKey, String checkKey) {
+        if (StringUtils.isBlank(checkKey)) {
+            return true;
+        }
+        var origVal = getValByKey(origKey);
+        var checkVal = getValByKey(checkKey);
+        if ((origVal * checkVal) < 0) return true;
+        return Math.abs(origVal) > Math.abs(checkVal);
+    }
+
+    private String optKey(int nidx) {
+        if (nidx < 0) return null;
+        if (nidx >= getKeys().size()) return null;
+        return getKeys().get(nidx);
+    }
+
+    @Override
+    public TsCurveUtils.Point genPoint(int i) {
+        String key = getKeys().get(i);
+        DeepPoint ans = new DeepPoint();
+        ans.setDeepTimeVal(getValByKey(key));
+        ans.setIdx(i);
+        ans.setDtime(TsCurveUtils.subtractKeySeconds(finder.getFirstKey(), key));
+        ans.setKey(key);
+        ans.setVal(finder.getRMap().get(key));
+        return ans;
+    }
+
+    @Data
+    @EqualsAndHashCode(callSuper = false)
+    public static class DeepPoint extends TsCurveUtils.Point {
+        public double deepTimeVal;
+    }
+
+}

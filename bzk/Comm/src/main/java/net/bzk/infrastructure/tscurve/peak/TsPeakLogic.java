@@ -29,6 +29,11 @@ public abstract class TsPeakLogic<T extends PeakLogicDto> {
         list.remove(po.get());
     }
 
+    public TsCurveUtils.Point genPoint(int i) {
+        String key = getKeys().get(i);
+        return TsCurveUtils.Point.builder().key(key).idx(i).val(finder.getRMap().get(key)).dtime(TsCurveUtils.subtractKeySeconds(finder.getFirstKey(), key)).build();
+    }
+
     public abstract TsCurveUtils.Direction calcState(double maxNearTime, double minNearTime);
 
 
@@ -37,6 +42,8 @@ public abstract class TsPeakLogic<T extends PeakLogicDto> {
     public abstract double getValByKey(String key);
 
     public abstract TsPeakFinder.PointType findMinOrMax(int idx);
+
+
 
 
     @Data
@@ -214,80 +221,6 @@ public abstract class TsPeakLogic<T extends PeakLogicDto> {
             double cv = getValByKey(getKeys().get(nowIdx));
             double nv = getValByKey(getKeys().get(nidx));
             return nv * cv < 0;
-        }
-    }
-
-    @Data
-    @EqualsAndHashCode(callSuper = false)
-    public static class BiggerLogic extends TsPeakLogic<PeakLogicDto.BiggerPeakLogicDto> {
-
-        private TsHowBig _howBig = null;
-
-        private TsHowBig hb() {
-            if (_howBig == null) {
-                _howBig = new TsHowBig(finder.getRMap());
-            }
-            return _howBig;
-        }
-
-        @Override
-        public TsCurveUtils.Direction calcState(double maxNearTime, double minNearTime) {
-            return minNearTime < maxNearTime ? TsCurveUtils.Direction.FALL : TsCurveUtils.Direction.RISE;
-        }
-
-        @Override
-        public TsPeakFinder.MinMaxInfo filterAmplitude(TsPeakFinder.MinMaxInfo iArrays) {
-            return iArrays;
-        }
-
-        @Override
-        public double getValByKey(String key) {
-            var bigR = hb().calc(TsHowBig.Dto.builder()
-                    .bigger(true)
-                    .targetKey(key)
-                    .build());
-            var smallR = hb().calc(TsHowBig.Dto.builder()
-                    .bigger(false)
-                    .targetKey(key)
-                    .build());
-            if (bigR.getTime() > smallR.getTime()) {
-                return bigR.getTime();
-            } else {
-                return -smallR.getTime();
-            }
-        }
-
-        @Override
-        public TsPeakFinder.PointType findMinOrMax(int idx) {
-
-            String origKey = getKeys().get(idx);
-            String forwardKey = optKey(idx - 1);
-            String backKey = optKey(idx + 1);
-            var origVal = getValByKey(origKey);
-            if (Math.abs(origVal) < dto.persistTime) return TsPeakFinder.PointType.NONE;
-
-            boolean forwardCheck = isPeak(origKey, forwardKey);
-            boolean backCheck = isPeak(origKey, backKey);
-            if (forwardCheck && backCheck) {
-                return origVal > 0 ? TsPeakFinder.PointType.MAXED : TsPeakFinder.PointType.MINED;
-            }
-            return TsPeakFinder.PointType.NONE;
-        }
-
-        private boolean isPeak(String origKey, String checkKey) {
-            if (StringUtils.isBlank(checkKey)) {
-                return true;
-            }
-            var origVal = getValByKey(origKey);
-            var checkVal = getValByKey(checkKey);
-            if ((origVal * checkVal) < 0) return true;
-            return Math.abs(origVal) > Math.abs(checkVal);
-        }
-
-        private String optKey(int nidx) {
-            if (nidx < 0) return null;
-            if (nidx >= getKeys().size()) return null;
-            return getKeys().get(nidx);
         }
     }
 
