@@ -7,8 +7,7 @@ import net.bzk.infrastructure.tscurve.TsCurveUtils;
 import net.bzk.infrastructure.tscurve.TsHowBig;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -31,7 +30,39 @@ public class BiggerPeakLogic extends TsPeakLogic<PeakLogicDto.BiggerPeakLogicDto
 
     @Override
     public TsPeakFinder.MinMaxInfo filterAmplitude(TsPeakFinder.MinMaxInfo iArrays) {
+
+        boolean maxed = false;
+        var all = iArrays.getAll();
+        List<TsCurveUtils.Point> rmAllList = new ArrayList<>();
+
+        DeepPoint curPeakPoint = null;
+        for (int i = 0; i < all.size(); i++) {
+            DeepPoint dp = (DeepPoint) all.get(i);
+            if("2021-09-22T00:00:00+00:00".equals(dp.getKey())){
+                System.out.println(dp);
+            }
+
+            if (i == 0) {
+                maxed = dp.deepTimeVal > 0;
+                curPeakPoint = dp;
+                continue;
+            }
+            if ((maxed && dp.deepTimeVal < 0) || !maxed && dp.deepTimeVal > 0) {
+                maxed = dp.deepTimeVal > 0;
+                curPeakPoint = dp;
+                continue;
+            }
+            rmAllList.add(dp);
+
+        }
+
+        for(var rp: rmAllList){
+            removeByIdx(iArrays.getAll(),rp.getIdx());
+            removeByIdx(iArrays.getMax(),rp.getIdx());
+            removeByIdx(iArrays.getMin(),rp.getIdx());
+        }
         return iArrays;
+
     }
 
     @Override
@@ -51,7 +82,12 @@ public class BiggerPeakLogic extends TsPeakLogic<PeakLogicDto.BiggerPeakLogicDto
                 cacheDeepValMap.put(key, -smallR.getTime());
             }
         }
-        return cacheDeepValMap.get(key);
+
+        double ans = cacheDeepValMap.get(key);
+        if ("2021-09-22T00:00:00+00:00".equals(key)) {
+            System.out.println("OO");
+        }
+        return ans;
     }
 
     @Override
@@ -92,6 +128,7 @@ public class BiggerPeakLogic extends TsPeakLogic<PeakLogicDto.BiggerPeakLogicDto
         String key = getKeys().get(i);
         DeepPoint ans = new DeepPoint();
         ans.setDeepTimeVal(getValByKey(key));
+        ans.setDeepTimeDayVal(ans.getDeepTimeVal() / (60 * 60 * 24));
         ans.setIdx(i);
         ans.setDtime(TsCurveUtils.subtractKeySeconds(finder.getFirstKey(), key));
         ans.setKey(key);
@@ -103,6 +140,7 @@ public class BiggerPeakLogic extends TsPeakLogic<PeakLogicDto.BiggerPeakLogicDto
     @EqualsAndHashCode(callSuper = false)
     public static class DeepPoint extends TsCurveUtils.Point {
         public double deepTimeVal;
+        private double deepTimeDayVal;
     }
 
 }
