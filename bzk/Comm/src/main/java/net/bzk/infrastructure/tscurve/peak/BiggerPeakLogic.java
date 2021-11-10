@@ -52,7 +52,12 @@ public class BiggerPeakLogic extends TsPeakLogic<PeakLogicDto.BiggerPeakLogicDto
                 curPeakPoint = dp;
                 continue;
             }
-            rmAllList.add(dp);
+            if(Math.abs(dp.deepTimeVal) > Math.abs(curPeakPoint.deepTimeVal)){
+                rmAllList.add(curPeakPoint);
+                curPeakPoint = dp;
+            }else{
+                rmAllList.add(dp);
+            }
 
         }
 

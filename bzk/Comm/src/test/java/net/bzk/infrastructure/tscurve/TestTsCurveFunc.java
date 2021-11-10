@@ -77,7 +77,7 @@ public class TestTsCurveFunc {
     @Test
     public void test1YPeakFinder() {
 
-        double persistTime = 60 * 60 * 24 * 15;
+        double persistTime = 60 * 60 * 24 * 5;
         Map map = loadMap(y1Data);
         PeakLogicDto.BiggerPeakLogicDto md = new PeakLogicDto.BiggerPeakLogicDto();
         md.setPersistTime(persistTime);
