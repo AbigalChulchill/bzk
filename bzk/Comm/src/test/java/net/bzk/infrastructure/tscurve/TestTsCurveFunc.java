@@ -31,6 +31,12 @@ public class TestTsCurveFunc {
     @Value("classpath:tscurve/serial-test-data-bais-2020-10-29T15-34-30Z_2021-10-29T15-34-30Z.json")
     private Resource y1Data;
 
+    /*
+     * from(bucket: \"quote\")\r\n  |> range(start: 2021-11-12T06:32:34Z, stop:2021-11-13T06:32:34Z)\r\n   |> filter(fn: (r) =>\r\n    r._measurement == \"realtime\" and\r\n    r.symbol == \"BTC\" and\r\n    r._field == \"price\"\r\n  )
+     */
+    @Value("classpath:tscurve/serial-test-data-20211112-20211113.json")
+    private Resource d1Data;
+
 
     @Test
     public void testPeakFinder() {
@@ -75,7 +81,7 @@ public class TestTsCurveFunc {
     }
 
     @Test
-    public void test1YPeakFinder() {
+    public void test1YBiggerPeakFinder() {
 
         double persistTime = 60 * 60 * 24 * 5;
         Map map = loadMap(y1Data);
@@ -87,7 +93,24 @@ public class TestTsCurveFunc {
         var allmap = ans.getTrendInfo().getAllList();
         var sortPoints = TsCurveUtils.sortPoints(allmap);
         System.out.println(sortPoints);
-        var sortMinPoints = TsCurveUtils.sortPoints( ans.getTrendInfo().getMinList());
+        var sortMinPoints = TsCurveUtils.sortPoints(ans.getTrendInfo().getMinList());
+        System.out.println(sortMinPoints);
+    }
+
+    @Test
+    public void test1DBiggerPeakFinder() {
+
+        double persistTime = 60 * 60 * 3;
+        Map map = loadMap(d1Data);
+        PeakLogicDto.BiggerPeakLogicDto md = new PeakLogicDto.BiggerPeakLogicDto();
+        md.setPersistTime(persistTime);
+        Map mdsm = JsonUtils.toByJson(md, Map.class);
+        var ans = TsCurveFunc.getInstance().findPeak(map, mdsm);
+        System.out.println(ans);
+        var allmap = ans.getTrendInfo().getAllList();
+        var sortPoints = TsCurveUtils.sortPoints(allmap);
+        System.out.println(sortPoints);
+        var sortMinPoints = TsCurveUtils.sortPoints(ans.getTrendInfo().getMinList());
         System.out.println(sortMinPoints);
     }
 
