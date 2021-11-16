@@ -4,6 +4,91 @@
   "name" : "CRON-AutoFund",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "os5alTWuo8sG",
+    "name" : "Fund",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
+      "uid" : "f7V2cufsehiv",
+      "name" : "GetCMD",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flatData" : [ {
+        "key" : "cmd",
+        "val" : "!javascript===\r\n const i = ${curI};\r\nconst list = ${bfx.fund.strategy};\r\nconst ans = list[i];\r\nans;"
+      }, {
+        "key" : "curI",
+        "val" : "!javascript===\r\n ${curI}+1;"
+      }, {
+        "key" : "bfxSignHeader",
+        "val" : "!javascript===\r\n null"
+      } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "WUaNxD2C8X5H",
+      "name" : "PostOathFundRest",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flowUid" : "gBDvmpqUFgQD",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "apiPath",
+        "val" : "!javascript===\r\n \"v2/auth/w/funding/offer/submit\""
+      }, {
+        "key" : "apiBody",
+        "val" : "!javascript===\r\n ${bfxRestBody}"
+      }, {
+        "key" : "apiMethod",
+        "val" : "!javascript===\r\n \"POST\""
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "HttpResult",
+        "toKey" : {
+          "lv" : "not_specify",
+          "key" : "FundAns"
+        }
+      } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$PolyglotAction",
+      "uid" : "vavBM6ZK6VbW",
+      "name" : "bfxRestBodyGen",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "code" : "const cmd = ${cmd};\nconst r = cmd.rate+'';\nconst p = cmd.day;\nconst a = cmd.amount+'';\nconst ans= {\n \t\ttype: 'LIMIT',\n \t\tsymbol: 'fUSD',\n \t\tamount: a,\n \t\trate: r,\n \t\tperiod: p\n};\nans;",
+      "polyglot" : "js",
+      "resultLv" : "not_specify",
+      "resultKey" : "bfxRestBody"
+    } ],
+    "links" : [ ],
+    "vars" : {
+      "curI" : 0
+    },
+    "taskSort" : [ "f7V2cufsehiv", "vavBM6ZK6VbW", "WUaNxD2C8X5H" ],
+    "whileJudgment" : {
+      "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
+      "kind" : "NONE",
+      "next" : null,
+      "polyglot" : "js",
+      "code" : "function check(){\r\n    const i = ${curI};\r\n    const list = ${bfx.fund.strategy};\r\n    const lsize = list.length;\r\n    return i<lsize;\r\n}\r\n\r\ncheck();"
+    },
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "Done",
+      "failEnd" : false,
+      "endResultKeys" : [ ],
+      "resultCode" : ""
+    },
+    "minLogLv" : "WARNING"
+  }, {
+    "clazz" : "net.bzk.flow.model.Box",
     "uid" : "VzPzT54lux1a8rsJ",
     "name" : "CheckCanFund",
     "actions" : [ {
@@ -168,91 +253,6 @@
       "resultCode" : ""
     },
     "minLogLv" : "WARNING"
-  }, {
-    "clazz" : "net.bzk.flow.model.Box",
-    "uid" : "os5alTWuo8sG",
-    "name" : "Fund",
-    "actions" : [ {
-      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
-      "uid" : "f7V2cufsehiv",
-      "name" : "GetCMD",
-      "tryErrorble" : false,
-      "enable" : true,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "flatData" : [ {
-        "key" : "cmd",
-        "val" : "!javascript===\r\n const i = ${curI};\r\nconst list = ${bfx.fund.strategy};\r\nconst ans = list[i];\r\nans;"
-      }, {
-        "key" : "curI",
-        "val" : "!javascript===\r\n ${curI}+1;"
-      }, {
-        "key" : "bfxSignHeader",
-        "val" : "!javascript===\r\n null"
-      } ]
-    }, {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "WUaNxD2C8X5H",
-      "name" : "PostOathFundRest",
-      "tryErrorble" : false,
-      "enable" : true,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "flowUid" : "gBDvmpqUFgQD",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "apiPath",
-        "val" : "!javascript===\r\n \"v2/auth/w/funding/offer/submit\""
-      }, {
-        "key" : "apiBody",
-        "val" : "!javascript===\r\n ${bfxRestBody}"
-      }, {
-        "key" : "apiMethod",
-        "val" : "!javascript===\r\n \"POST\""
-      } ],
-      "outputReflects" : [ {
-        "srcKey" : "HttpResult",
-        "toKey" : {
-          "lv" : "not_specify",
-          "key" : "FundAns"
-        }
-      } ]
-    }, {
-      "clazz" : "net.bzk.flow.model.Action$PolyglotAction",
-      "uid" : "vavBM6ZK6VbW",
-      "name" : "bfxRestBodyGen",
-      "tryErrorble" : false,
-      "enable" : true,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "code" : "const cmd = ${cmd};\nconst r = cmd.rate+'';\nconst p = cmd.day;\nconst a = cmd.amount+'';\nconst ans= {\n \t\ttype: 'LIMIT',\n \t\tsymbol: 'fUSD',\n \t\tamount: a,\n \t\trate: r,\n \t\tperiod: p\n};\nans;",
-      "polyglot" : "js",
-      "resultLv" : "not_specify",
-      "resultKey" : "bfxRestBody"
-    } ],
-    "links" : [ ],
-    "vars" : {
-      "curI" : 0
-    },
-    "taskSort" : [ "f7V2cufsehiv", "vavBM6ZK6VbW", "WUaNxD2C8X5H" ],
-    "whileJudgment" : {
-      "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
-      "kind" : "NONE",
-      "next" : null,
-      "polyglot" : "js",
-      "code" : "function check(){\r\n    const i = ${curI};\r\n    const list = ${bfx.fund.strategy};\r\n    const lsize = list.length;\r\n    return i<lsize;\r\n}\r\n\r\ncheck();"
-    },
-    "transition" : {
-      "toBox" : "",
-      "endTag" : "Done",
-      "failEnd" : false,
-      "endResultKeys" : [ ],
-      "resultCode" : ""
-    },
-    "minLogLv" : "WARNING"
   } ],
   "varCfgNames" : [ ],
   "vars" : { },
@@ -260,7 +260,7 @@
     "clazz" : "net.bzk.flow.model.Entry$FixedRateEntry",
     "boxUid" : "VzPzT54lux1a8rsJ",
     "autoRegister" : true,
-    "period" : 40,
+    "period" : 35,
     "unit" : "MINUTES",
     "initialDelay" : 0
   },
@@ -270,5 +270,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 4
+  "version" : 6
 }
