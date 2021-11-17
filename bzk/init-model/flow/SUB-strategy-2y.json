@@ -130,26 +130,41 @@
     }, {
       "clazz" : "net.bzk.flow.model.HttpAction",
       "uid" : "JRXb3aUYrssP",
-      "name" : "FetchTSDB",
+      "name" : "FetchTSDBAvgs",
       "tryErrorble" : false,
       "enable" : true,
-      "devBoxVars" : { },
+      "devBoxVars" : {
+        "symbol" : "BTC"
+      },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "url" : "!javascript===\n\nlet queryDtos = [];\n\nfunction genRealtimeQuery(maCount){\n    const temp = `\nfrom(bucket: \"quote\")\n  |> range(start: -5d)\n  |> filter(fn: (r) =>\n    r._measurement == \"realtime\" and\n    r._field == \"price\" and\n    r.symbol == \"${symbol}\" \n  )\n  |> movingAverage(n: `+maCount+` )\n  `;\n\n}\n\nfunction appendQueryDto(query,uid){\n    const dto= {\n        'query':query,\n        'uid':uid\n    };\n    queryDtos.push(\"dto\");\n}\nqueryDtos;",
+      "url" : "${finProxyUrl}/proxy/tsdb/multiple",
       "uriVariables" : { },
-      "body" : "{}",
+      "body" : "!javascript===!return-json===\n\nlet queryDtos = [];\n\nfunction genRealtimeQuery(maCount5m){\n    return `\nfrom(bucket: \"quote\")\n  |> range(start: -3d)\n  |> filter(fn: (r) =>\n    r._measurement == \"realtime\" and\n    r._field == \"price\" and\n    r.symbol == \"${symbol}\" \n  )\n  |> movingAverage(n: `+maCount5m+` )\n  `;\n    \n}\n\nfunction genDayQuery(maCount1d){\n    return `\nfrom(bucket: \"quote\")\n  |> range(start: -1y)\n  |> filter(fn: (r) =>\n    r._measurement == \"daily\" and\n    r.valmean == \"open\" and\n    r.symbol == \"${symbol}\" \n  )\n  |> movingAverage(n: `+maCount1d+` )\n  `;\n\n}\n\nfunction appendQueryDto(query,uid){\n    const dto= {\n        'query':query,\n        'uid':uid\n    };\n    queryDtos.push(dto);\n}\n\nappendQueryDto(genRealtimeQuery(3),'m5x3'); //15m\nappendQueryDto(genRealtimeQuery(12),'m5x12'); // 1h\nappendQueryDto(genRealtimeQuery(15),'m5x15'); // 75m\nappendQueryDto(genRealtimeQuery(30),'m5x30'); //150m\nappendQueryDto(genRealtimeQuery(60),'m5x60'); // 5h\nappendQueryDto(genRealtimeQuery(120),'m5x120'); // 10h\nappendQueryDto(genRealtimeQuery(240),'m5x240'); // 20h\nappendQueryDto(genRealtimeQuery(288),'m5x288'); // 24h\nappendQueryDto(genDayQuery(3),'d3'); // 3d\nappendQueryDto(genDayQuery(5),'d5'); // 5d\nappendQueryDto(genDayQuery(10),'d10'); // 10d\nappendQueryDto(genDayQuery(10),'d15'); // 15d\n\nJSON.stringify(queryDtos);",
       "method" : "POST",
       "headers" : { },
       "headersFlat" : "",
       "key" : {
         "lv" : "not_specify",
-        "key" : ""
+        "key" : "TSDBAvgs"
       }
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$PolyglotAction",
+      "uid" : "nONU5vc3Jzg8",
+      "name" : "analyzeAll",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "code" : "const persistTime = 60*240;\nconst dto = {\n    persistTime:persistTime,\n    logicType:'BIGGER'\n};\nconst mm = $tsFunc.findPeak(${y2Vals},dto);\nmm;",
+      "polyglot" : "js",
+      "resultLv" : "not_specify",
+      "resultKey" : ""
     } ],
     "links" : [ ],
     "vars" : { },
-    "taskSort" : [ "JRXb3aUYrssP", "xHaqpw4loFKq", "Dfq0TAINMBq2", "bdp2D8EmHQHn", "afqbSMjT5kKT" ],
+    "taskSort" : [ "JRXb3aUYrssP", "xHaqpw4loFKq", "nONU5vc3Jzg8", "Dfq0TAINMBq2", "bdp2D8EmHQHn", "afqbSMjT5kKT" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "hLZ3d8T7Vkot",
@@ -160,7 +175,7 @@
     },
     "minLogLv" : "DEBUG"
   } ],
-  "varCfgNames" : [ "binance.json" ],
+  "varCfgNames" : [ "binance.json", "fin-proxy.json" ],
   "vars" : {
     "symbol" : "BTC"
   },
@@ -177,5 +192,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 67
+  "version" : 69
 }
