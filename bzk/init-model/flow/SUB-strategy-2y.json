@@ -4,48 +4,6 @@
   "name" : "SUB-strategy-2y",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
-    "uid" : "hLZ3d8T7Vkot",
-    "name" : "Strategy",
-    "actions" : [ {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "vWD538GBmnZO",
-      "name" : "bottleneck",
-      "tryErrorble" : false,
-      "enable" : true,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "flowUid" : "SSPBbWtmfHPV",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "__ALL__",
-        "val" : "${~__ALL__}"
-      } ],
-      "outputReflects" : [ {
-        "srcKey" : "__pk_result",
-        "toKey" : {
-          "lv" : "not_specify",
-          "key" : "call_resp"
-        }
-      } ]
-    } ],
-    "links" : [ ],
-    "vars" : { },
-    "taskSort" : [ "vWD538GBmnZO" ],
-    "whileJudgment" : null,
-    "transition" : {
-      "toBox" : "",
-      "endTag" : "${symbol} ordered:${call_resp.ordered} ${call_resp.breakName}",
-      "failEnd" : false,
-      "endResultKeys" : [ {
-        "lv" : "run_flow",
-        "key" : "peaks40m"
-      } ],
-      "resultCode" : ""
-    },
-    "minLogLv" : "DEBUG"
-  }, {
-    "clazz" : "net.bzk.flow.model.Box",
     "uid" : "UQC5RZ3iJLB7",
     "name" : "Box",
     "actions" : [ {
@@ -140,7 +98,7 @@
       "minLogLv" : "NONE",
       "url" : "${finProxyUrl}/proxy/tsdb/multiple",
       "uriVariables" : { },
-      "body" : "!javascript===!return-json===\n\nlet queryDtos = [];\n\nfunction genRealtimeQuery(maCount5m){\n    return `\nfrom(bucket: \"quote\")\n  |> range(start: -3d)\n  |> filter(fn: (r) =>\n    r._measurement == \"realtime\" and\n    r._field == \"price\" and\n    r.symbol == \"${symbol}\" \n  )\n  |> movingAverage(n: `+maCount5m+` )\n  `;\n    \n}\n\nfunction genDayQuery(maCount1d){\n    return `\nfrom(bucket: \"quote\")\n  |> range(start: -1y)\n  |> filter(fn: (r) =>\n    r._measurement == \"daily\" and\n    r.valmean == \"open\" and\n    r.symbol == \"${symbol}\" \n  )\n  |> movingAverage(n: `+maCount1d+` )\n  `;\n\n}\n\nfunction appendQueryDto(query,uid){\n    const dto= {\n        'query':query,\n        'uid':uid\n    };\n    queryDtos.push(dto);\n}\n\nappendQueryDto(genRealtimeQuery(3),'m5x3'); //15m\nappendQueryDto(genRealtimeQuery(12),'m5x12'); // 1h\nappendQueryDto(genRealtimeQuery(15),'m5x15'); // 75m\nappendQueryDto(genRealtimeQuery(30),'m5x30'); //150m\nappendQueryDto(genRealtimeQuery(60),'m5x60'); // 5h\nappendQueryDto(genRealtimeQuery(120),'m5x120'); // 10h\nappendQueryDto(genRealtimeQuery(240),'m5x240'); // 20h\nappendQueryDto(genRealtimeQuery(288),'m5x288'); // 24h\nappendQueryDto(genDayQuery(3),'d3'); // 3d\nappendQueryDto(genDayQuery(5),'d5'); // 5d\nappendQueryDto(genDayQuery(10),'d10'); // 10d\nappendQueryDto(genDayQuery(10),'d15'); // 15d\n\nJSON.stringify(queryDtos);",
+      "body" : "!javascript===!return-json===\n\nlet queryDtos = [];\n\nfunction genRealtimeQuery(maCount5m){\n    return `\nfrom(bucket: \"quote\")\n  |> range(start: -2d)\n  |> filter(fn: (r) =>\n    r._measurement == \"realtime\" and\n    r._field == \"price\" and\n    r.symbol == \"${symbol}\" \n  )\n  |> movingAverage(n: `+maCount5m+` )\n  `;\n    \n}\n\nfunction genDayQuery(maCount1d){\n    return `\nfrom(bucket: \"quote\")\n  |> range(start: -1y)\n  |> filter(fn: (r) =>\n    r._measurement == \"daily\" and\n    r.valmean == \"open\" and\n    r.symbol == \"${symbol}\" \n  )\n  |> movingAverage(n: `+maCount1d+` )\n  `;\n\n}\n\nfunction appendQueryDto(query,uid){\n    const dto= {\n        'query':query,\n        'uid':uid\n    };\n    queryDtos.push(dto);\n}\n\nappendQueryDto(genRealtimeQuery(3),'m5x3'); //15m\nappendQueryDto(genRealtimeQuery(12),'m5x12'); // 1h\nappendQueryDto(genRealtimeQuery(60),'m5x60'); // 5h\nappendQueryDto(genRealtimeQuery(120),'m5x120'); // 10h\nappendQueryDto(genRealtimeQuery(288),'m5x288'); // 24h\nappendQueryDto(genDayQuery(5),'d5'); // 5d\nappendQueryDto(genDayQuery(10),'d10'); // 10d\nappendQueryDto(genDayQuery(10),'d15'); // 15d\n\nJSON.stringify(queryDtos);",
       "method" : "POST",
       "headers" : { },
       "headersFlat" : "",
@@ -157,10 +115,10 @@
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "code" : "const persistTime = 60*240;\nconst dto = {\n    persistTime:persistTime,\n    logicType:'BIGGER'\n};\nconst mm = $tsFunc.findPeak(${y2Vals},dto);\nmm;",
+      "code" : "const h6BiggerPeak = $tsFunc.findPeak(${y2Vals},genBiggerDto(60*60*6));\n$bzk.putObj('h6BiggerPeak',h6BiggerPeak);\nconst h1BiggerPeak = $tsFunc.findPeak(${h24Vals},genBiggerDto(60*60*1));\n$bzk.putObj('h1BiggerPeak',h1BiggerPeak);\n\n\nfunction genBiggerDto(persistTime){\n    return {\n        persistTime:persistTime,\n        logicType:'BIGGER'\n    };\n}\n\nh1BiggerPeak;",
       "polyglot" : "js",
       "resultLv" : "not_specify",
-      "resultKey" : ""
+      "resultKey" : "analyzeAll"
     } ],
     "links" : [ ],
     "vars" : { },
@@ -171,6 +129,48 @@
       "endTag" : null,
       "failEnd" : false,
       "endResultKeys" : [ ],
+      "resultCode" : ""
+    },
+    "minLogLv" : "DEBUG"
+  }, {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "hLZ3d8T7Vkot",
+    "name" : "Strategy",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "vWD538GBmnZO",
+      "name" : "bottleneck",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flowUid" : "SSPBbWtmfHPV",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "__ALL__",
+        "val" : "${~__ALL__}"
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "__pk_result",
+        "toKey" : {
+          "lv" : "not_specify",
+          "key" : "call_resp"
+        }
+      } ]
+    } ],
+    "links" : [ ],
+    "vars" : { },
+    "taskSort" : [ "vWD538GBmnZO" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "${symbol} ordered:${call_resp.ordered} ${call_resp.breakName}",
+      "failEnd" : false,
+      "endResultKeys" : [ {
+        "lv" : "run_flow",
+        "key" : "peaks40m"
+      } ],
       "resultCode" : ""
     },
     "minLogLv" : "DEBUG"
@@ -192,5 +192,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 69
+  "version" : 77
 }

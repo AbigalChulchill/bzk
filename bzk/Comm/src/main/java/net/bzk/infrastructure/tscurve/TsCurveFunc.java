@@ -8,6 +8,7 @@ import net.bzk.infrastructure.tscurve.peak.TsPeakFinder;
 import net.bzk.infrastructure.tscurve.peak.TsBiggerFinder;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class TsCurveFunc {
     private static final TsCurveFunc instance = new TsCurveFunc();
@@ -20,7 +21,7 @@ public class TsCurveFunc {
         var dto = d.genDto(logicTypeMap);
         var logic = d.genLogic();
         logic.setDto(dto);
-        TsPeakFinder pf = new TsPeakFinder(rm, logic);
+        TsPeakFinder pf = new TsPeakFinder(new ConcurrentHashMap<>(rm), logic);
         return pf.calc();
     }
 

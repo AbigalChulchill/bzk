@@ -8,6 +8,7 @@ import net.bzk.infrastructure.tscurve.TsHowBig;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -38,7 +39,7 @@ public class BiggerPeakLogic extends TsPeakLogic<PeakLogicDto.BiggerPeakLogicDto
         DeepPoint curPeakPoint = null;
         for (int i = 0; i < all.size(); i++) {
             DeepPoint dp = (DeepPoint) all.get(i);
-            if("2021-09-22T00:00:00+00:00".equals(dp.getKey())){
+            if ("2021-09-22T00:00:00+00:00".equals(dp.getKey())) {
                 System.out.println(dp);
             }
 
@@ -52,19 +53,19 @@ public class BiggerPeakLogic extends TsPeakLogic<PeakLogicDto.BiggerPeakLogicDto
                 curPeakPoint = dp;
                 continue;
             }
-            if(Math.abs(dp.deepTimeVal) > Math.abs(curPeakPoint.deepTimeVal)){
+            if (Math.abs(dp.deepTimeVal) > Math.abs(curPeakPoint.deepTimeVal)) {
                 rmAllList.add(curPeakPoint);
                 curPeakPoint = dp;
-            }else{
+            } else {
                 rmAllList.add(dp);
             }
 
         }
 
-        for(var rp: rmAllList){
-            removeByIdx(iArrays.getAll(),rp.getIdx());
-            removeByIdx(iArrays.getMax(),rp.getIdx());
-            removeByIdx(iArrays.getMin(),rp.getIdx());
+        for (var rp : rmAllList) {
+            removeByIdx(iArrays.getAll(), rp.getIdx());
+            removeByIdx(iArrays.getMax(), rp.getIdx());
+            removeByIdx(iArrays.getMin(), rp.getIdx());
         }
         return iArrays;
 

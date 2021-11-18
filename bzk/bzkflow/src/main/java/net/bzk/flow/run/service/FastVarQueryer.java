@@ -58,6 +58,15 @@ public class FastVarQueryer implements Function<String, Object> {
         service.putVarVal(uids,val);
     }
 
+    public void putObj(String path,Object o){
+        VarKey fs = VarLv.checkLvByPrefix(path);
+        VarVal val = new VarVal();
+        val.setVal(o);
+        val.setKey(fs.getKey());
+        val.setLv(fs.getLv());
+        service.putVarVal(uids,val);
+    }
+
 
     @Override
     public Object apply(String s) {
