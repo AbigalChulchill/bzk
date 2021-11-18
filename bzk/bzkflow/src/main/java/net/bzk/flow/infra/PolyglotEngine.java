@@ -1,6 +1,7 @@
 package net.bzk.flow.infra;
 
 import java.util.Map;
+import java.util.Set;
 
 import lombok.extern.slf4j.Slf4j;
 import net.bzk.flow.BzkConstant;
@@ -102,8 +103,12 @@ public class PolyglotEngine {
         Object d = JsonUtils.stringToValue(ii);
         HttpMethod ss = JsonUtils.toByJson(d, HttpMethod.class);
         System.out.println("d=" + ss);
-
-
+//        Map m = null;
+//        Set<Map.Entry> es = m.entrySet();
+//        for (Map.Entry e : es){
+//            e.getKey();
+//            e.getValue()
+//        }
     }
 
 }
