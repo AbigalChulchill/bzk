@@ -28,25 +28,17 @@ public class DirectionUtils {
         throw new BzkRuntimeException("not support " + positionSide);
     }
 
-    public boolean isValidStopPrice(String positionSide, double base, double stop) {
+    public boolean isHighPrice(String positionSide, double base, double tar) {
         switch (PositionSide.valueOf(positionSide)) {
             case LONG:
-                return base > stop;
+                return base < tar;
             case SHORT:
-                return base < stop;
+                return base > tar;
         }
         throw new BzkRuntimeException("not support " + positionSide);
     }
 
-    public boolean isValidLimitPrice(String positionSide, double base, double limit) {
-        switch (PositionSide.valueOf(positionSide)) {
-            case LONG:
-                return base < limit;
-            case SHORT:
-                return base > limit;
-        }
-        throw new BzkRuntimeException("not support " + positionSide);
-    }
+
 
     public OrderSide getLimitOrderSide(String positionSide) {
         switch (PositionSide.valueOf(positionSide)) {
