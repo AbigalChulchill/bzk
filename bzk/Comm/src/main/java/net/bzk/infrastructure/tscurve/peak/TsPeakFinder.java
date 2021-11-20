@@ -44,6 +44,7 @@ public class TsPeakFinder extends TsCurveFunc.TsCurve {
     }
 
     public static class AtPointMap extends HashMap<Double, Point> {
+
     }
 
     @Data

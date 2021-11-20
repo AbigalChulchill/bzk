@@ -16,6 +16,15 @@ public class TsCurveFunc {
     private TsCurveFunc() {
     }
 
+    public TsPeakFinder.LastInfo getLast(Map<String, Double> rm) {
+        Set<String> timeKs = rm.keySet();
+        String minKey = timeKs.stream().min(TsCurveUtils.ASC_TIME_ISO).get();
+        return TsPeakFinder.LastInfo.builder()
+                .time(minKey)
+                .val(rm.get(minKey))
+                .build();
+    }
+
     public TsPeakFinder.Result findPeak(Map<String, Double> rm, Map<String, Object> logicTypeMap) {
         PeakLogicType d = PeakLogicType.valueOf(logicTypeMap.get("logicType").toString());
         var dto = d.genDto(logicTypeMap);

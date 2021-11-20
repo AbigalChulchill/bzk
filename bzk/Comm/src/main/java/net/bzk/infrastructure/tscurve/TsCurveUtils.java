@@ -9,8 +9,10 @@ import net.bzk.infrastructure.tscurve.peak.TsPeakFinder;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class TsCurveUtils {
@@ -36,6 +38,11 @@ public class TsCurveUtils {
         return ChronoUnit.MILLIS.between(k2t, k1t) / 1000;
     }
 
+    public static Comparator<String> ASC_TIME_ISO = (a,b)->{
+        ZonedDateTime ta = toTime(a);
+        ZonedDateTime tb = toTime(b);
+        return ta.compareTo(tb);
+    };
 
     public static ZonedDateTime toTime(String iso8601) {
         return ZonedDateTime.parse(iso8601);
