@@ -98,7 +98,7 @@
       "minLogLv" : "NONE",
       "url" : "${finProxyUrl}/proxy/tsdb/multiple",
       "uriVariables" : { },
-      "body" : "!javascript===!return-json===\n\nlet queryDtos = [];\n\nfunction genRealtimeQuery(maCount5m){\n    const startM = (maCount5m*5*2)+'m';\n    return `\nfrom(bucket: \"quote\")\n  |> range(start: -`+startM+`)\n  |> filter(fn: (r) =>\n    r._measurement == \"realtime\" and\n    r._field == \"price\" and\n    r.symbol == \"${symbol}\" \n  )\n  |> movingAverage(n: `+maCount5m+` )\n  `;\n    \n}\n\nfunction genDayQuery(maCount1d){\n    const startD = (maCount1d*3)+'d';\n    return `\nfrom(bucket: \"quote\")\n  |> range(start: -`+startD+`)\n  |> filter(fn: (r) =>\n    r._measurement == \"daily\" and\n    r.valmean == \"open\" and\n    r.symbol == \"${symbol}\" \n  )\n  |> movingAverage(n: `+maCount1d+` )\n  `;\n\n}\n\nfunction appendQueryDto(query,uid){\n    const dto= {\n        'query':query,\n        'uid':uid\n    };\n    queryDtos.push(dto);\n}\n\nappendQueryDto(genRealtimeQuery(3),'m5x3'); //15m\nappendQueryDto(genRealtimeQuery(12),'m5x12'); // 1h\nappendQueryDto(genRealtimeQuery(60),'m5x60'); // 5h\nappendQueryDto(genRealtimeQuery(120),'m5x120'); // 10h\nappendQueryDto(genRealtimeQuery(288),'m5x288'); // 24h\nappendQueryDto(genDayQuery(5),'d5'); // 5d\nappendQueryDto(genDayQuery(10),'d10'); // 10d\nappendQueryDto(genDayQuery(15),'d15'); // 15d\n\nJSON.stringify(queryDtos);",
+      "body" : "!javascript===!return-json===\n\nlet queryDtos = [];\n\nfunction genRealtimeQuery(maCount5m){\n    const startM = (maCount5m*5*2)+'m';\n    return `\nfrom(bucket: \"quote\")\n  |> range(start: -`+startM+`)\n  |> filter(fn: (r) =>\n    r._measurement == \"realtime\" and\n    r._field == \"price\" and\n    r.symbol == \"${symbol}\" \n  )\n  |> movingAverage(n: `+maCount5m+` )\n  `;\n    \n}\n\nfunction genDayQuery(maCount1d){\n    const startD = (maCount1d*3)+'d';\n    return `\nfrom(bucket: \"quote\")\n  |> range(start: -`+startD+`)\n  |> filter(fn: (r) =>\n    r._measurement == \"daily\" and\n    r.valmean == \"open\" and\n    r.symbol == \"${symbol}\" \n  )\n  |> movingAverage(n: `+maCount1d+` )\n  `;\n\n}\n\nfunction appendQueryDto(query,uid){\n    const dto= {\n        'query':query,\n        'uid':uid\n    };\n    queryDtos.push(dto);\n}\n\n//appendQueryDto(genRealtimeQuery(3),'m5x3'); //15m\nappendQueryDto(genRealtimeQuery(12),'m5x12'); // 1h\n//appendQueryDto(genRealtimeQuery(60),'m5x60'); // 5h\n//appendQueryDto(genRealtimeQuery(120),'m5x120'); // 10h\n//appendQueryDto(genRealtimeQuery(288),'m5x288'); // 24h\nappendQueryDto(genDayQuery(5),'d5'); // 5d\n//appendQueryDto(genDayQuery(10),'d10'); // 10d\n//appendQueryDto(genDayQuery(15),'d15'); // 15d\n\nJSON.stringify(queryDtos);",
       "method" : "POST",
       "headers" : { },
       "headersFlat" : "",
@@ -115,7 +115,7 @@
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "code" : "//const tsdbAvgs = $bzk.g('TSDBAvgs');\nconst h6BiggerPeak = $tsFunc.findPeak(${y2Vals},genBiggerDto(60*60*6));\n$bzk.putObj('~h6BiggerPeak',h6BiggerPeak);\nconst h1BiggerPeak = $tsFunc.findPeak(${h24Vals},genBiggerDto(60*60*1));\n$bzk.putObj('~h1BiggerPeak',h1BiggerPeak);\n\n\nfunction genBiggerDto(persistTime){\n    return {\n        persistTime:persistTime,\n        logicType:'BIGGER'\n    };\n}\n\nfunction injectTSDBAvgs(){\n    \n    for (const e of tsdbAvgs) {\n        console.log(e);\n        $bzk.putObj('~ma.'+e.get('uid'),e.get('result').get(0).get('values'));\n    }\n\n}\n//injectTSDBAvgs();\ntrue;",
+      "code" : "const tsdbAvgs = $bzk.g('TSDBAvgs');\nconst h6BiggerPeak = $tsFunc.findPeak(${y2Vals},genBiggerDto(60*60*6));\n$bzk.putObj('~h6BiggerPeak',h6BiggerPeak);\nconst h1BiggerPeak = $tsFunc.findPeak(${h24Vals},genBiggerDto(60*60*1));\n$bzk.putObj('~h1BiggerPeak',h1BiggerPeak);\n\n\nfunction genBiggerDto(persistTime){\n    return {\n        persistTime:persistTime,\n        logicType:'BIGGER'\n    };\n}\n\nfunction injectTSDBAvgs(){\n    \n    for (const e of tsdbAvgs) {\n        console.log(e);\n        $bzk.putObj('~ma.'+e.get('uid'),e.get('result').get(0).get('values'));\n    }\n\n}\ninjectTSDBAvgs();\ntrue;",
       "polyglot" : "js",
       "resultLv" : "not_specify",
       "resultKey" : "analyzeAll"
@@ -167,10 +167,7 @@
       "toBox" : "",
       "endTag" : "${symbol} ordered:${call_resp.ordered} ${call_resp.breakName}",
       "failEnd" : false,
-      "endResultKeys" : [ {
-        "lv" : "run_flow",
-        "key" : "h1BiggerPeak"
-      } ],
+      "endResultKeys" : [ ],
       "resultCode" : ""
     },
     "minLogLv" : "DEBUG"
@@ -192,5 +189,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 95
+  "version" : 98
 }
