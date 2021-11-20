@@ -230,7 +230,7 @@
         "kind" : "NONE",
         "next" : null,
         "polyglot" : "js",
-        "code" : "const positionSide='${positionSide}';\r\nconst exPrice = ${binanceQuote.all.lastPrice};\r\nconst h1NearPrice = ${h1BiggerPeak.trendInfo.nearPeak.val};\r\nconst h6NearPrice = ${h6BiggerPeak.trendInfo.nearPeak.val};\r\n\r\nconst h1GrantherH6 = $directionUtils.isHighPrice(positionSide,h6NearPrice,h1NearPrice);\r\nconst exGrantherH6 = $directionUtils.isHighPrice(positionSide,h6NearPrice,exPrice);\r\nconst ans = !h1GrantherH6 || !exGrantherH1;\r\nans;"
+        "code" : "const positionSide='${positionSide}';\r\nconst exPrice = ${binanceQuote.all.lastPrice};\r\nconst h1NearPrice = ${h1BiggerPeak.trendInfo.nearPeak.val};\r\nconst h6NearPrice = ${h6BiggerPeak.trendInfo.nearPeak.val};\r\n\r\nconst h1GrantherH6 = $directionUtils.isHighPrice(positionSide,h6NearPrice,h1NearPrice);\r\nconst exGrantherH6 = $directionUtils.isHighPrice(positionSide,h6NearPrice,exPrice);\r\nconst ans = !h1GrantherH6 || !exGrantherH6;\r\nans;"
       },
       "transition" : {
         "toBox" : "",
@@ -363,5 +363,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 122
+  "version" : 123
 }
