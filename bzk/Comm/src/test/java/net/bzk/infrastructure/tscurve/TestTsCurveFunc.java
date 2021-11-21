@@ -104,6 +104,7 @@ public class TestTsCurveFunc {
         Map map = loadMap(d1Data);
         PeakLogicDto.BiggerPeakLogicDto md = new PeakLogicDto.BiggerPeakLogicDto();
         md.setPersistTime(persistTime);
+        md.setReversePersistTime(60*30);
         Map mdsm = JsonUtils.toByJson(md, Map.class);
         var ans = TsCurveFunc.getInstance().findPeak(map, mdsm);
         System.out.println(ans);

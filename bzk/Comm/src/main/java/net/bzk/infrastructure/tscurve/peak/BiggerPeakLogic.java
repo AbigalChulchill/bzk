@@ -3,6 +3,8 @@ package net.bzk.infrastructure.tscurve.peak;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import net.bzk.infrastructure.convert.Overwrite;
+import net.bzk.infrastructure.convert.OverwriteIncludeClass;
 import net.bzk.infrastructure.tscurve.TsCurveUtils;
 import net.bzk.infrastructure.tscurve.TsHowBig;
 import org.apache.commons.lang3.StringUtils;
@@ -29,9 +31,20 @@ public class BiggerPeakLogic extends TsPeakLogic<PeakLogicDto.BiggerPeakLogicDto
     @Override
     public TsCurveUtils.Direction calcState(double maxNearTime, double minNearTime) {
         boolean isNearMin = minNearTime < maxNearTime;
-        double nearTime = isNearMin ? minNearTime : maxNearTime;
-        _biggerFinder.calc(isNearMin, nearTime, dto.reversePersistTime);
+        var r = getReversePeak(maxNearTime, minNearTime);
+        boolean findded = r.getState() == TsBiggerFinder.FilterState.FINDED;
+        if (findded) {
+            return isNearMin ? TsCurveUtils.Direction.RISE : TsCurveUtils.Direction.FALL;
+        } else {
+            return isNearMin ? TsCurveUtils.Direction.FALL : TsCurveUtils.Direction.RISE;
+        }
 
+    }
+
+    private TsBiggerFinder.Result getReversePeak(double maxNearTime, double minNearTime) {
+        boolean isNearMin = minNearTime < maxNearTime;
+        double nearTime = isNearMin ? minNearTime : maxNearTime;
+        return _biggerFinder.calc(isNearMin, nearTime, dto.reversePersistTime);
     }
 
     @Override
@@ -147,6 +160,14 @@ public class BiggerPeakLogic extends TsPeakLogic<PeakLogicDto.BiggerPeakLogicDto
         return ans;
     }
 
+    @Override
+    public TsPeakFinder.Result fixResult(TsPeakFinder.Result orig) {
+        BiggerResult newAns = new BiggerResult();
+        newAns = Overwrite.overwrite(orig, newAns);
+        newAns.setReverseResult(getReversePeak(orig.getTrendInfo().getMaxNearTime(), orig.getTrendInfo().getMinNearTime()));
+        return newAns;
+    }
+
     @Data
     @EqualsAndHashCode(callSuper = false)
     public static class DeepPoint extends TsCurveUtils.Point {
@@ -154,4 +175,11 @@ public class BiggerPeakLogic extends TsPeakLogic<PeakLogicDto.BiggerPeakLogicDto
         private double deepTimeDayVal;
     }
 
+
+    @Data
+    @EqualsAndHashCode(callSuper = false)
+    @OverwriteIncludeClass(include = TsPeakFinder.Result.class)
+    public static class BiggerResult extends TsPeakFinder.Result {
+        private TsBiggerFinder.Result reverseResult;
+    }
 }

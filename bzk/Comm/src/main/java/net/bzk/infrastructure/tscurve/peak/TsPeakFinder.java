@@ -79,6 +79,7 @@ public class TsPeakFinder extends TsCurveFunc.TsCurve {
         Result ans = new Result();
         ans.setLast(LastInfo.builder().val(rMap.get(firstKey)).time(firstKey).build());
         ans.setTrendInfo(genTrendInfo());
+        ans= peakLogic.fixResult(ans) ;
         return ans;
 
     }

@@ -34,6 +34,10 @@ public abstract class TsPeakLogic<T extends PeakLogicDto> {
         return TsCurveUtils.Point.builder().key(key).idx(i).val(finder.getRMap().get(key)).dtime(TsCurveUtils.subtractKeySeconds(finder.getFirstKey(), key)).build();
     }
 
+    public TsPeakFinder.Result fixResult(TsPeakFinder.Result ans) {
+        return ans;
+    }
+
     public abstract TsCurveUtils.Direction calcState(double maxNearTime, double minNearTime);
 
 
@@ -42,8 +46,6 @@ public abstract class TsPeakLogic<T extends PeakLogicDto> {
     public abstract double getValByKey(String key);
 
     public abstract TsPeakFinder.PointType findMinOrMax(int idx);
-
-
 
 
     @Data
