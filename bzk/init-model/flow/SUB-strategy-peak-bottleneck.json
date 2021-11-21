@@ -25,7 +25,7 @@
         "val" : "${symbol}"
       }, {
         "key" : "withdrawAmountRate",
-        "val" : "0.1"
+        "val" : "0.2"
       }, {
         "key" : "tags",
         "val" : "[\"bneck\"]"
@@ -102,152 +102,6 @@
       "failEnd" : false,
       "endResultKeys" : [ ],
       "resultCode" : "{\n  \"ordered\": true,\n  \"breakName\": \"NONE\"\n}"
-    },
-    "minLogLv" : "DEBUG"
-  }, {
-    "clazz" : "net.bzk.flow.model.Box",
-    "uid" : "MINMAX52of8",
-    "name" : "MINMAX",
-    "actions" : [ {
-      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
-      "uid" : "POnGmKqao8p1",
-      "name" : "M_InitVars",
-      "tryErrorble" : false,
-      "enable" : true,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "flatData" : [ {
-        "key" : "~positionSide",
-        "val" : "!javascript===\r\nconst state = '${h6BiggerPeak.trendInfo.state}';\r\n\r\n\r\nfunction calc(){\r\n    return state == 'RISE' ? \"LONG\" : \"SHORT\";\r\n}\r\ncalc();"
-      }, {
-        "key" : "h5maInfo",
-        "val" : "!javascript===\n$tsFunc.getLast(${ma.m5x60});"
-      } ]
-    } ],
-    "links" : [ {
-      "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "6q7K82sD3xWo",
-      "name" : "h1Lessh6",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
-        "kind" : "NONE",
-        "next" : null,
-        "polyglot" : "js",
-        "code" : "const positionSide='${positionSide}';\r\nconst exPrice = ${binanceQuote.all.lastPrice};\r\nconst h1NearPrice = ${h1BiggerPeak.trendInfo.nearPeak.val};\r\nconst h6NearPrice = ${h6BiggerPeak.trendInfo.nearPeak.val};\r\n\r\nconst h1GrantherH6 = $directionUtils.isHighPrice(positionSide,h6NearPrice,h1NearPrice);\r\nconst exGrantherH6 = $directionUtils.isHighPrice(positionSide,h6NearPrice,exPrice);\r\nconst ans = !h1GrantherH6 || !exGrantherH6;\r\nans;"
-      },
-      "transition" : {
-        "toBox" : "",
-        "endTag" : "${symbol} h1Lessh6",
-        "failEnd" : false,
-        "endResultKeys" : [ {
-          "lv" : "not_specify",
-          "key" : "__ALL__"
-        } ],
-        "resultCode" : "{\r\n  \"ordered\": false,\r\n  \"breakName\": \"h1Lessh6\"\r\n}"
-      },
-      "enable" : true
-    }, {
-      "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "dgKXFR8jH8x5",
-      "name" : "h1TooLong",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
-        "kind" : "NONE",
-        "next" : null,
-        "left" : "${h1BiggerPeak.trendInfo.nearPeak.dtime}",
-        "right" : "3300",
-        "type" : "greater_equal"
-      },
-      "transition" : {
-        "toBox" : "",
-        "endTag" : "${symbol} ${positionSide} h1TooLong",
-        "failEnd" : false,
-        "endResultKeys" : [ {
-          "lv" : "not_specify",
-          "key" : "__ALL__"
-        } ],
-        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"h1TooLong\"\n}"
-      },
-      "enable" : true
-    }, {
-      "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "6NprXSn7ndco",
-      "name" : "OverH5MA",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
-        "kind" : "NONE",
-        "next" : null,
-        "polyglot" : "js",
-        "code" : "const positionSide='${positionSide}';\nconst h5ma= ${h5maInfo.val};\nconst exPrice = ${binanceQuote.all.lastPrice};\n\n$directionUtils.isHighPrice(positionSide,h5ma,exPrice);"
-      },
-      "transition" : {
-        "toBox" : "",
-        "endTag" : "${symbol} ${positionSide} OverH5MA",
-        "failEnd" : false,
-        "endResultKeys" : [ {
-          "lv" : "not_specify",
-          "key" : "binanceQuote.all.lastPrice"
-        }, {
-          "lv" : "not_specify",
-          "key" : "h5maInfo"
-        } ],
-        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"OverH5MA\"\n}\n\n"
-      },
-      "enable" : true
-    }, {
-      "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "Div2tmjgl8JG",
-      "name" : "CheckNoAllow",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
-        "kind" : "NONE",
-        "next" : null,
-        "polyglot" : "js",
-        "code" : "const allowSymbols = ${bottleneck};\r\nconst sbl = '${symbol}';\r\n!allowSymbols.includes(sbl);"
-      },
-      "transition" : {
-        "toBox" : "",
-        "endTag" : "${symbol} NoAllow",
-        "failEnd" : false,
-        "endResultKeys" : [ ],
-        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"CheckNoAllow\"\n}"
-      },
-      "enable" : true
-    }, {
-      "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "6uYbQgoYnTCE",
-      "name" : "h1PeakStateSame",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionTxt",
-        "kind" : "NONE",
-        "next" : null,
-        "left" : "${h6BiggerPeak.trendInfo.state}",
-        "right" : "${h1BiggerPeak.trendInfo.state}",
-        "not" : false,
-        "type" : "equal"
-      },
-      "transition" : {
-        "toBox" : "",
-        "endTag" : "${symbol} ${positionSide} h1PeakStateSame",
-        "failEnd" : false,
-        "endResultKeys" : [ {
-          "lv" : "not_specify",
-          "key" : "__ALL__"
-        } ],
-        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"h1PeakStateSame\"\n}"
-      },
-      "enable" : true
-    } ],
-    "vars" : { },
-    "taskSort" : [ "Div2tmjgl8JG", "POnGmKqao8p1", "6NprXSn7ndco", "6uYbQgoYnTCE", "dgKXFR8jH8x5", "6q7K82sD3xWo" ],
-    "whileJudgment" : null,
-    "transition" : {
-      "toBox" : "iQ07yoOBfiPS",
-      "endTag" : null,
-      "failEnd" : false,
-      "endResultKeys" : [ ],
-      "resultCode" : "!javascript===\nconst side = '${toSellOrBuy}';\nconst ans = {\n    side : side,\n    tag : \"MINMAX\"\n};\nans;"
     },
     "minLogLv" : "DEBUG"
   }, {
@@ -349,6 +203,127 @@
       "resultCode" : "{\r\n  \"limit\": ${__pk_result},\r\n  \"takeProfit\":{\r\n      \"ordered\":true\r\n  }\r\n}"
     },
     "minLogLv" : "DEBUG"
+  }, {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "MINMAX52of8",
+    "name" : "MINMAX",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
+      "uid" : "POnGmKqao8p1",
+      "name" : "M_InitVars",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flatData" : [ {
+        "key" : "~positionSide",
+        "val" : "!javascript===\r\nconst state = '${h8r1BiggerPeak.trendInfo.state}';\r\n\r\n\r\nfunction calc(){\r\n    return state == 'RISE' ? \"LONG\" : \"SHORT\";\r\n}\r\ncalc();"
+      }, {
+        "key" : "h5maInfo",
+        "val" : "!javascript===\n$tsFunc.getLast(${ma.m5x60});"
+      } ]
+    } ],
+    "links" : [ {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "6q7K82sD3xWo",
+      "name" : "h1Lessh6",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
+        "kind" : "NONE",
+        "next" : null,
+        "polyglot" : "js",
+        "code" : "const positionSide='${positionSide}';\r\nconst exPrice = ${binanceQuote.all.lastPrice};\r\nconst reversePrice = ${h8r1BiggerPeak.reverseResult.peakInfo.point.val};\r\nconst h8r1BiggerPeak = ${h8r1BiggerPeak.trendInfo.nearPeak.val};\r\n\r\nconst h1GrantherH6 = $directionUtils.isHighPrice(positionSide,h8r1BiggerPeak,reversePrice);\r\nconst exGrantherH6 = $directionUtils.isHighPrice(positionSide,h8r1BiggerPeak,exPrice);\r\nconst ans = !h1GrantherH6 || !exGrantherH6;\r\nans;"
+      },
+      "transition" : {
+        "toBox" : "",
+        "endTag" : "${symbol} h1Lessh6",
+        "failEnd" : false,
+        "endResultKeys" : [ {
+          "lv" : "not_specify",
+          "key" : "__ALL__"
+        } ],
+        "resultCode" : "{\r\n  \"ordered\": false,\r\n  \"breakName\": \"h1Lessh6\"\r\n}"
+      },
+      "enable" : true
+    }, {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "6NprXSn7ndco",
+      "name" : "OverH5MA",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
+        "kind" : "NONE",
+        "next" : null,
+        "polyglot" : "js",
+        "code" : "const positionSide='${positionSide}';\nconst h5ma= ${h5maInfo.val};\nconst exPrice = ${binanceQuote.all.lastPrice};\n\n$directionUtils.isHighPrice(positionSide,h5ma,exPrice);"
+      },
+      "transition" : {
+        "toBox" : "",
+        "endTag" : "${symbol} ${positionSide} OverH5MA",
+        "failEnd" : false,
+        "endResultKeys" : [ {
+          "lv" : "not_specify",
+          "key" : "binanceQuote.all.lastPrice"
+        }, {
+          "lv" : "not_specify",
+          "key" : "h5maInfo"
+        } ],
+        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"OverH5MA\"\n}\n\n"
+      },
+      "enable" : true
+    }, {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "Div2tmjgl8JG",
+      "name" : "CheckNoAllow",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
+        "kind" : "NONE",
+        "next" : null,
+        "polyglot" : "js",
+        "code" : "const allowSymbols = ${bottleneck};\r\nconst sbl = '${symbol}';\r\n!allowSymbols.includes(sbl);"
+      },
+      "transition" : {
+        "toBox" : "",
+        "endTag" : "${symbol} NoAllow",
+        "failEnd" : false,
+        "endResultKeys" : [ ],
+        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"CheckNoAllow\"\n}"
+      },
+      "enable" : true
+    }, {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "6uYbQgoYnTCE",
+      "name" : "NoFindRevese",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
+        "kind" : "NONE",
+        "next" : null,
+        "polyglot" : "js",
+        "code" : "const h8r1BiggerPeakReverseFinded = '${h8r1BiggerPeak.reverseResult.state}' == 'FINDED';\n!h8r1BiggerPeakReverseFinded"
+      },
+      "transition" : {
+        "toBox" : "",
+        "endTag" : "${symbol} ${positionSide} NoFindRevese",
+        "failEnd" : false,
+        "endResultKeys" : [ {
+          "lv" : "not_specify",
+          "key" : "h8r1BiggerPeak"
+        } ],
+        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"h1PeakStateSame\"\n}"
+      },
+      "enable" : true
+    } ],
+    "vars" : { },
+    "taskSort" : [ "Div2tmjgl8JG", "POnGmKqao8p1", "6NprXSn7ndco", "6uYbQgoYnTCE", "6q7K82sD3xWo" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "iQ07yoOBfiPS",
+      "endTag" : null,
+      "failEnd" : false,
+      "endResultKeys" : [ ],
+      "resultCode" : "!javascript===\nconst side = '${toSellOrBuy}';\nconst ans = {\n    side : side,\n    tag : \"MINMAX\"\n};\nans;"
+    },
+    "minLogLv" : "DEBUG"
   } ],
   "varCfgNames" : [ "binance.json", "crypto-symbol.json" ],
   "vars" : { },
@@ -365,5 +340,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 139
+  "version" : 141
 }
