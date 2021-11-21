@@ -15,18 +15,23 @@ import java.util.concurrent.ConcurrentHashMap;
 public class BiggerPeakLogic extends TsPeakLogic<PeakLogicDto.BiggerPeakLogicDto> {
 
     private TsHowBig _howBig = null;
+    private TsBiggerFinder _biggerFinder;
     private Map<String, Double> cacheDeepValMap = new HashMap<>();
 
     private TsHowBig hb() {
         if (_howBig == null) {
             _howBig = new TsHowBig(finder.getRMap());
+            _biggerFinder = new TsBiggerFinder(finder.getRMap());
         }
         return _howBig;
     }
 
     @Override
     public TsCurveUtils.Direction calcState(double maxNearTime, double minNearTime) {
-        return minNearTime < maxNearTime ? TsCurveUtils.Direction.FALL : TsCurveUtils.Direction.RISE;
+        boolean isNearMin = minNearTime < maxNearTime;
+        double nearTime = isNearMin ? minNearTime : maxNearTime;
+        _biggerFinder.calc(isNearMin, nearTime, dto.reversePersistTime);
+
     }
 
     @Override

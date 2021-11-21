@@ -43,6 +43,7 @@ public class PeakLogicDto {
     public static class BiggerPeakLogicDto extends PeakLogicDto {
 
         double persistTime;
+        double reversePersistTime;
 
         public BiggerPeakLogicDto() {
             setLogicType(PeakLogicType.BIGGER);
