@@ -31,9 +31,11 @@ public class BiggerPeakLogic extends TsPeakLogic<PeakLogicDto.BiggerPeakLogicDto
     @Override
     public TsCurveUtils.Direction calcState(double maxNearTime, double minNearTime) {
         boolean isNearMin = minNearTime < maxNearTime;
+        double nearTime = isNearMin ? minNearTime : maxNearTime;
         var r = getReversePeak(maxNearTime, minNearTime);
         boolean findded = r.getState() == TsBiggerFinder.FilterState.FINDED;
-        if (findded) {
+        boolean isOverWaitTime = nearTime > dto.reverseWaitTime;
+        if (findded || isOverWaitTime) {
             return isNearMin ? TsCurveUtils.Direction.RISE : TsCurveUtils.Direction.FALL;
         } else {
             return isNearMin ? TsCurveUtils.Direction.FALL : TsCurveUtils.Direction.RISE;

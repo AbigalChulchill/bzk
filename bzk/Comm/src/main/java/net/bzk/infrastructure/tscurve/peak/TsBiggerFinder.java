@@ -31,7 +31,7 @@ public class TsBiggerFinder extends TsCurveFunc.TsCurve {
     private Result findTargetPoint(boolean bigger,double shelfLife, double persistTime) {
         for (int i = 0; i < keys.size(); i++) {
             var p = genPoint(i);
-            if (p.getDtime() > shelfLife) {// 在搜尋區間沒有找到任何的高 peaker
+            if (p.getDtime() >= shelfLife) {// 在搜尋區間沒有找到任何的高 peaker
                 return Result.builder()
                         .state(FilterState.OVER_SHELFLIFE)
                         .build();

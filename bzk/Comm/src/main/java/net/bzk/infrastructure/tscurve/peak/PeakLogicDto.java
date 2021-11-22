@@ -44,6 +44,7 @@ public class PeakLogicDto {
 
         double persistTime;
         double reversePersistTime;
+        double reverseWaitTime;
 
         public BiggerPeakLogicDto() {
             setLogicType(PeakLogicType.BIGGER);
