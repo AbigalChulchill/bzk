@@ -4,6 +4,45 @@
   "name" : "SUB-strategy-2y",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "hLZ3d8T7Vkot",
+    "name" : "Strategy",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "vWD538GBmnZO",
+      "name" : "bottleneck",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flowUid" : "SSPBbWtmfHPV",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "__ALL__",
+        "val" : "${~__ALL__}"
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "__pk_result",
+        "toKey" : {
+          "lv" : "not_specify",
+          "key" : "call_resp"
+        }
+      } ]
+    } ],
+    "links" : [ ],
+    "vars" : { },
+    "taskSort" : [ "vWD538GBmnZO" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "${symbol} ordered:${call_resp.ordered} ${call_resp.breakName}",
+      "failEnd" : false,
+      "endResultKeys" : [ ],
+      "resultCode" : ""
+    },
+    "minLogLv" : "DEBUG"
+  }, {
+    "clazz" : "net.bzk.flow.model.Box",
     "uid" : "UQC5RZ3iJLB7",
     "name" : "Box",
     "actions" : [ {
@@ -115,7 +154,7 @@
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "code" : "const tsdbAvgs = $bzk.g('TSDBAvgs');\nconst h8r1BiggerPeak = $tsFunc.findPeak(${y2Vals},genBiggerDto(60*60*8,60*60*1));\n$bzk.putObj('~h8r1BiggerPeak',h8r1BiggerPeak);\n// const h1BiggerPeak = $tsFunc.findPeak(${h24Vals},genBiggerDto(60*60*1));\n// $bzk.putObj('~h1BiggerPeak',h1BiggerPeak);\n\n\nfunction genBiggerDto(persistTime,reversePersistTime){\n    return {\n        persistTime:persistTime,\n        logicType:'BIGGER',\n        reversePersistTime:reversePersistTime\n    };\n}\n\nfunction injectTSDBAvgs(){\n    \n    for (const e of tsdbAvgs) {\n        console.log(e);\n        $bzk.putObj('~ma.'+e.get('uid'),e.get('result').get(0).get('values'));\n    }\n\n}\ninjectTSDBAvgs();\ntrue;",
+      "code" : "const tsdbAvgs = $bzk.g('TSDBAvgs');\n\nconst h8r1BiggerPeak = $tsFunc.findPeak(${y2Vals}, {\n        persistTime:60*60*8,\n        logicType:'BIGGER',\n        reversePersistTime:60*60*0.85,\n        reverseWaitTime:60*60*1\n    });\n$bzk.putObj('~h8r1BiggerPeak',h8r1BiggerPeak);\n// const h1BiggerPeak = $tsFunc.findPeak(${h24Vals},genBiggerDto(60*60*1));\n// $bzk.putObj('~h1BiggerPeak',h1BiggerPeak);\n\n\nfunction genBiggerDto(persistTime,reversePersistTime){\n    return {\n        persistTime:persistTime,\n        logicType:'BIGGER',\n        reversePersistTime:reversePersistTime\n    };\n}\n\nfunction injectTSDBAvgs(){\n    \n    for (const e of tsdbAvgs) {\n        console.log(e);\n        $bzk.putObj('~ma.'+e.get('uid'),e.get('result').get(0).get('values'));\n    }\n\n}\ninjectTSDBAvgs();\ntrue;",
       "polyglot" : "js",
       "resultLv" : "not_specify",
       "resultKey" : "analyzeAll"
@@ -127,45 +166,6 @@
     "transition" : {
       "toBox" : "hLZ3d8T7Vkot",
       "endTag" : null,
-      "failEnd" : false,
-      "endResultKeys" : [ ],
-      "resultCode" : ""
-    },
-    "minLogLv" : "DEBUG"
-  }, {
-    "clazz" : "net.bzk.flow.model.Box",
-    "uid" : "hLZ3d8T7Vkot",
-    "name" : "Strategy",
-    "actions" : [ {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "vWD538GBmnZO",
-      "name" : "bottleneck",
-      "tryErrorble" : false,
-      "enable" : true,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "flowUid" : "SSPBbWtmfHPV",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "__ALL__",
-        "val" : "${~__ALL__}"
-      } ],
-      "outputReflects" : [ {
-        "srcKey" : "__pk_result",
-        "toKey" : {
-          "lv" : "not_specify",
-          "key" : "call_resp"
-        }
-      } ]
-    } ],
-    "links" : [ ],
-    "vars" : { },
-    "taskSort" : [ "vWD538GBmnZO" ],
-    "whileJudgment" : null,
-    "transition" : {
-      "toBox" : "",
-      "endTag" : "${symbol} ordered:${call_resp.ordered} ${call_resp.breakName}",
       "failEnd" : false,
       "endResultKeys" : [ ],
       "resultCode" : ""
@@ -189,5 +189,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 104
+  "version" : 106
 }
