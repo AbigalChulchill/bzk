@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import javax.transaction.NotSupportedException;
 
 import net.bzk.flow.model.RunLog;
+import net.bzk.flow.run.dao.ArchiveRunDao;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Page;
@@ -27,6 +28,8 @@ public class SysActionCall extends ActionCall<SysAction> {
 
 	@Inject
 	private RunLogDao logDao;
+	@Inject
+	private ArchiveRunDao archiveRunDao;
 
 	public SysActionCall() {
 		super(SysAction.class);
@@ -39,23 +42,23 @@ public class SysActionCall extends ActionCall<SysAction> {
 		if(StringUtils.equals(func, "deleteLogs")) {
 			deleteLogs(m);
 			return new VarValSet();
+		}else if(StringUtils.equals(func, "deleteArchiveRuns")){
+			deleteArchiveRuns(m);
+			return new VarValSet();
 		}
 		throw new NotSupportedException("this "+func+" not suport!");
+	}
+
+	private void deleteArchiveRuns(Map<String,?> m) {
+		Date date = Date.from(Instant.parse(m.get("date").toString()));
+		archiveRunDao.deleteByCreateAtBefore(date);
 	}
 
 
 	private void deleteLogs(Map<String, ?> m) {
 		Date date = Date.from(Instant.parse(m.get("date").toString()));
 		logDao.deleteByCreateAtBefore(date);
-//		Pageable pageable = PageRequest.of(0, 100);
-//		Page<RunLog> logp = logDao.findByCreateAtBefore(date,pageable);
-//		while(true) {
-//			logDao.deleteAll(logp.getContent());
-//			if (!logp.hasNext()) {
-//				break;
-//			}
-//			pageable = logp.nextPageable();
-//		}
+
 	}
 
 }
