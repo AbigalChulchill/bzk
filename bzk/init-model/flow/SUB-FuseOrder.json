@@ -17,7 +17,7 @@
       "minLogLv" : "NONE",
       "url" : "${finExManageApiUrl}",
       "uriVariables" : { },
-      "body" : "{\n    \"__bzk_api_key\": \"${finExManageApiKey}\",\n    \"name\": \"position/fuse/post\",\n    \"symbol\": \"${symbol}\",\n    \"positionSide\":\"LONG\",\n    \"tags\":[\"tkst\"],\n    \"stopLoss\":{\n        \"balanceRate\":0.003,\n        \"restopRate\":0.01,\n        \"clearRate\":0.05\n    },\n    \"stopGuaranteed\":{\n        \"closeRate\":0.5,\n        \"thresholdRate\":1.002\n    }\n    \n}",
+      "body" : "{\n    \"__bzk_api_key\": \"${finExManageApiKey}\",\n    \"name\": \"position/fuse/post\",\n    \"exchange\": \"binance\",\n    \"symbol\": \"${symbol}\",\n    \"positionSide\":\"LONG\",\n    \"tags\":[\"tkst\"],\n    \"stopLoss\":{\n        \"balanceRate\":0.003,\n        \"restopRate\":0.01,\n        \"clearRate\":0.05\n    },\n    \"stopGuaranteed\":{\n        \"closeRate\":0.5,\n        \"thresholdRate\":1.002\n    }\n    \n}",
       "method" : "POST",
       "headers" : { },
       "headersFlat" : "",
@@ -36,7 +36,7 @@
       "minLogLv" : "NONE",
       "url" : "${finExManageApiUrl}",
       "uriVariables" : { },
-      "body" : "{\n    \"__bzk_api_key\": \"${finExManageApiKey}\",\n    \"name\": \"position/fuse/post\",\n    \"symbol\": \"${symbol}\",\n    \"positionSide\":\"SHORT\",\n    \"tags\":[\"tkst\"],\n    \"stopLoss\":{\n        \"balanceRate\":0.003,\n        \"restopRate\":0.01,\n        \"clearRate\":0.05\n    },\n    \"stopGuaranteed\":{\n        \"closeRate\":0.5,\n        \"thresholdRate\":1.002\n    }\n    \n}",
+      "body" : "{\n    \"__bzk_api_key\": \"${finExManageApiKey}\",\n    \"name\": \"position/fuse/post\",\n    \"exchange\": \"binance\",\n    \"symbol\": \"${symbol}\",\n    \"positionSide\":\"SHORT\",\n    \"tags\":[\"tkst\"],\n    \"stopLoss\":{\n        \"balanceRate\":0.003,\n        \"restopRate\":0.01,\n        \"clearRate\":0.05\n    },\n    \"stopGuaranteed\":{\n        \"closeRate\":0.5,\n        \"thresholdRate\":1.002\n    }\n    \n}",
       "method" : "POST",
       "headers" : { },
       "headersFlat" : "",
@@ -79,5 +79,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 19
+  "version" : 20
 }
