@@ -64,7 +64,7 @@
     },
     "minLogLv" : "DEBUG"
   } ],
-  "varCfgNames" : [ "binance.json" ],
+  "varCfgNames" : [ "fin-exchange-manage.json" ],
   "vars" : { },
   "entry" : {
     "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
@@ -79,5 +79,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 17
+  "version" : 19
 }
