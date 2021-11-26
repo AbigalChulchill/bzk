@@ -41,7 +41,7 @@
     }, {
       "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
       "uid" : "LWXYn43on07m",
-      "name" : "StopOrder",
+      "name" : "FuseOrder",
       "tryErrorble" : false,
       "enable" : true,
       "devBoxVars" : { },
@@ -99,5 +99,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 14
+  "version" : 16
 }
