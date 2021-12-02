@@ -17,7 +17,7 @@
       "minLogLv" : "NONE",
       "url" : "${finExManageApiUrl}",
       "uriVariables" : { },
-      "body" : "{\n  \"__bzk_api_key\": \"${finExManageApiKey}\",\n  \"name\": \"position/fuse/post\",\n  \"exchange\": \"binance\",\n  \"symbol\": \"${symbol}\",\n  \"positionSide\": \"LONG\",\n  \"tags\": [\n    \"tkst\"\n  ],\n  \"stopLoss\": {\n    \"balanceRate\": 0.03,\n    \"restopRate\": 0.01,\n    \"clearRate\": 0.1\n  },\n  \"stopTrailing\": {\n    \"steps\": [\n      {\n        \"profitRate\": -0.03,\n        \"clearRate\": 1,\n        \"fallRate\": 0.0125\n      },\n      {\n        \"profitRate\": -0.02,\n        \"clearRate\": 0.6,\n        \"fallRate\": 0.0018\n      },\n      {\n        \"profitRate\": -0.015,\n        \"clearRate\": 0.05,\n        \"fallRate\": 0.0018\n      },\n      {\n        \"profitRate\": 0.0038,\n        \"clearRate\": 0.02,\n        \"fallRate\": 0.0005\n      },\n      {\n        \"profitRate\": 0.03,\n        \"clearRate\": 0.3,\n        \"fallRate\": 0.015\n      },\n      {\n        \"profitRate\": 0.08,\n        \"clearRate\": 0.5,\n        \"fallRate\": 0.03\n      },\n      {\n        \"profitRate\": 0.11,\n        \"clearRate\": 0.3,\n        \"fallRate\": 0.03\n      },\n      {\n        \"profitRate\": 0.15,\n        \"clearRate\": 0.3,\n        \"fallRate\": 0.04\n      }\n    ],\n    \"restopRate\": 0.002\n  }\n}",
+      "body" : "{\n  \"__bzk_api_key\": \"${finExManageApiKey}\",\n  \"name\": \"position/fuse/post\",\n  \"exchange\": \"binance\",\n  \"symbol\": \"${symbol}\",\n  \"positionSide\": \"LONG\",\n  \"tags\": [\n    \"tkst\"\n  ],\n  \"stopLoss\": {\n    \"balanceRate\": 0.03,\n    \"restopRate\": 0.01,\n    \"clearRate\": 0.1\n  },\n  \"stopTrailing\": {\n    \"steps\":${steps},\n    \"restopRate\": 0.002\n  }\n}",
       "method" : "POST",
       "headers" : { },
       "headersFlat" : "",
@@ -36,7 +36,7 @@
       "minLogLv" : "NONE",
       "url" : "${finExManageApiUrl}",
       "uriVariables" : { },
-      "body" : "{\n  \"__bzk_api_key\": \"${finExManageApiKey}\",\n  \"name\": \"position/fuse/post\",\n  \"exchange\": \"binance\",\n  \"symbol\": \"${symbol}\",\n  \"positionSide\": \"SHORT\",\n  \"tags\": [\n    \"tkst\"\n  ],\n  \"stopLoss\": {\n    \"balanceRate\": 0.03,\n    \"restopRate\": 0.01,\n    \"clearRate\": 0.1\n  },\n  \"stopTrailing\": {\n    \"steps\": [\n     {\n        \"profitRate\": -0.03,\n        \"clearRate\": 1,\n        \"fallRate\": 0.0125\n      },\n      {\n        \"profitRate\": -0.02,\n        \"clearRate\": 0.6,\n        \"fallRate\": 0.0018\n      },\n      {\n        \"profitRate\": -0.015,\n        \"clearRate\": 0.05,\n        \"fallRate\": 0.0018\n      },\n      {\n        \"profitRate\": 0.0038,\n        \"clearRate\": 0.02,\n        \"fallRate\": 0.0005\n      },\n      {\n        \"profitRate\": 0.03,\n        \"clearRate\": 0.3,\n        \"fallRate\": 0.015\n      },\n      {\n        \"profitRate\": 0.08,\n        \"clearRate\": 0.5,\n        \"fallRate\": 0.03\n      },\n      {\n        \"profitRate\": 0.11,\n        \"clearRate\": 0.3,\n        \"fallRate\": 0.03\n      },\n      {\n        \"profitRate\": 0.15,\n        \"clearRate\": 0.3,\n        \"fallRate\": 0.04\n      }\n    ],\n    \"restopRate\": 0.002\n  }\n}",
+      "body" : "{\n  \"__bzk_api_key\": \"${finExManageApiKey}\",\n  \"name\": \"position/fuse/post\",\n  \"exchange\": \"binance\",\n  \"symbol\": \"${symbol}\",\n  \"positionSide\": \"SHORT\",\n  \"tags\": [\n    \"tkst\"\n  ],\n  \"stopLoss\": {\n    \"balanceRate\": 0.03,\n    \"restopRate\": 0.01,\n    \"clearRate\": 0.1\n  },\n  \"stopTrailing\": {\n    \"steps\":${steps},\n    \"restopRate\": 0.002\n  }\n}",
       "method" : "POST",
       "headers" : { },
       "headersFlat" : "",
@@ -44,10 +44,23 @@
         "lv" : "not_specify",
         "key" : "SHORT_resp"
       }
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
+      "uid" : "TUKYi7VDrdP0",
+      "name" : "Vars",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flatData" : [ {
+        "key" : "steps",
+        "val" : " [\n      {\n        \"profitRate\": -0.03,\n        \"clearRate\": 1,\n        \"fallRate\": 0.0125\n      },\n      {\n        \"profitRate\": -0.0225,\n        \"clearRate\": 0.6,\n        \"fallRate\": 0.0018\n      },\n      {\n        \"profitRate\": -0.015,\n        \"clearRate\": 0.0368,\n        \"fallRate\": 0.00588\n      },\n      {\n        \"profitRate\": 0.0038,\n        \"clearRate\": 0.02,\n        \"fallRate\": 0.005\n      },\n      {\n        \"profitRate\": 0.03,\n        \"clearRate\": 0.225,\n        \"fallRate\": 0.015\n      },\n      {\n        \"profitRate\": 0.08,\n        \"clearRate\": 0.5,\n        \"fallRate\": 0.03\n      },\n      {\n        \"profitRate\": 0.11,\n        \"clearRate\": 0.3,\n        \"fallRate\": 0.03\n      },\n      {\n        \"profitRate\": 0.15,\n        \"clearRate\": 0.3,\n        \"fallRate\": 0.04\n      }\n    ]"
+      } ]
     } ],
     "links" : [ ],
     "vars" : { },
-    "taskSort" : [ "nmCu0fdfgf6S", "U5ijIwhVXXzl" ],
+    "taskSort" : [ "TUKYi7VDrdP0", "nmCu0fdfgf6S", "U5ijIwhVXXzl" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
@@ -79,5 +92,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 29
+  "version" : 31
 }
