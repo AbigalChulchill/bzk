@@ -19,7 +19,7 @@
         "key" : "h5maInfo",
         "val" : "!javascript===\n$tsFunc.getLast(${ma.m5x60});"
       }, {
-        "key" : "positionSide",
+        "key" : "~positionSide",
         "val" : "!javascript===\n$bzk.g('MACDtrender.trendInfo.state')== 'RISE' ? 'LONG':'SHORT';"
       } ]
     } ],
@@ -129,10 +129,10 @@
         "val" : "bottleneck"
       }, {
         "key" : "size",
-        "val" : "8"
+        "val" : "5"
       }, {
         "key" : "gapRate",
-        "val" : "0.0025"
+        "val" : "0.005"
       }, {
         "key" : "priceBuffRate",
         "val" : "1.003"
@@ -211,7 +211,7 @@
         "val" : "bottleneck"
       }, {
         "key" : "size",
-        "val" : "10"
+        "val" : "8"
       }, {
         "key" : "gapRate",
         "val" : "0.0056"
@@ -302,10 +302,10 @@
         "val" : "[\"bneck\"]"
       }, {
         "key" : "size",
-        "val" : "8"
+        "val" : "5"
       }, {
         "key" : "gapRate",
-        "val" : "0.0025"
+        "val" : "0.005"
       }, {
         "key" : "priceBuffRate",
         "val" : "1.001"
@@ -349,5 +349,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 170
+  "version" : 174
 }

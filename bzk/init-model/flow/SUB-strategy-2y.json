@@ -39,20 +39,11 @@
       "uid" : "Dfq0TAINMBq2",
       "name" : "analyzeVars",
       "tryErrorble" : false,
-      "enable" : false,
+      "enable" : true,
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
       "flatData" : [ {
-        "key" : "~peaks40m",
-        "val" : "!javascript===\nconst peakMaxWaitSeconds = 60*40;\nconst dto = {\n    peakMaxWaitSeconds:peakMaxWaitSeconds,\n    logicType:'MICRO'\n};\nconst mm = $tsFunc.findPeak(${h24Vals},dto);\nmm;"
-      }, {
-        "key" : "~peaks15d",
-        "val" : "!javascript===\nconst peakMaxWaitSeconds = 60*60*24*1.5;\nconst dto = {\n    peakMaxWaitSeconds:peakMaxWaitSeconds,\n    logicType:'MICRO'\n};\nconst mm = $tsFunc.findPeak(${y2Vals},dto);\nmm;"
-      }, {
-        "key" : "~cycleInfo",
-        "val" : "!javascript===\nconst key = '%d30Cycle.${symbol}';\nconst cycleInfo = $bzk.g(key);\ncycleInfo;"
-      }, {
         "key" : "~MACDtrender",
         "val" : "!javascript===\nconst rm = ${ma.macd10m120m};\nconst ops = {\n    logicType:\"MACRO\",\n    peakMaxWaitSeconds:6*60\n};\n$tsFunc.findPeak(rm,ops);"
       } ]
@@ -192,5 +183,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 110
+  "version" : 112
 }
