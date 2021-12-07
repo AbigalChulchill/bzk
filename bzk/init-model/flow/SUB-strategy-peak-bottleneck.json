@@ -4,28 +4,107 @@
   "name" : "SUB-strategy-peak-bottleneck",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
-    "uid" : "y09CvF3tt03P",
-    "name" : "CallOrderProfit",
+    "uid" : "MINMAX52of8",
+    "name" : "MINMAX",
     "actions" : [ {
-      "clazz" : "net.bzk.flow.model.HttpAction",
-      "uid" : "yAfJwV3nc7b9",
-      "name" : "query_take_profit_ods",
+      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
+      "uid" : "POnGmKqao8p1",
+      "name" : "M_InitVars",
       "tryErrorble" : false,
       "enable" : true,
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "url" : "${binance.proxyHost}proxy",
-      "uriVariables" : { },
-      "body" : "!javascript===\nconst positionSide = '${positionSide}';\n\nfunction calcPositionSide(){\n    return positionSide == 'LONG' ? 'SHORT' : 'LONG';\n}\n\nvar body= {\n    \"name\": \"get_all_orders\",\n    \"apiKey\":\"${binance.key}\",\n    \"secret\":\"${binance.secret}\",\n    \"symbol\": \"${symbol}\",\n    \"status\":\"NEW\",\n    \"orderType\":\"TAKE_PROFIT_MARKET\",\n    \"positionSide\":calcPositionSide()\n};\nbody;",
-      "method" : "POST",
-      "headers" : { },
-      "headersFlat" : "",
-      "key" : {
-        "lv" : "not_specify",
-        "key" : "lessOds"
-      }
+      "flatData" : [ {
+        "key" : "h5maInfo",
+        "val" : "!javascript===\n$tsFunc.getLast(${ma.m5x60});"
+      }, {
+        "key" : "positionSide",
+        "val" : "!javascript===\n$bzk.g('MACDtrender.trendInfo.state')== 'RISE' ? 'LONG':'SHORT';"
+      } ]
+    } ],
+    "links" : [ {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "Div2tmjgl8JG",
+      "name" : "CheckNoAllow",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
+        "kind" : "NONE",
+        "next" : null,
+        "polyglot" : "js",
+        "code" : "const allowSymbols = ${bottleneck};\r\nconst sbl = '${symbol}';\r\n!allowSymbols.includes(sbl);"
+      },
+      "transition" : {
+        "toBox" : "",
+        "endTag" : "${symbol} NoAllow",
+        "failEnd" : false,
+        "endResultKeys" : [ ],
+        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"CheckNoAllow\"\n}"
+      },
+      "enable" : true
     }, {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "B5FC1rRP7MUE",
+      "name" : "PeakNear",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
+        "kind" : "NONE",
+        "next" : null,
+        "left" : "${MACDtrender.trendInfo.nearPeak.dtime}\n",
+        "right" : "500",
+        "type" : "lessthan_equal"
+      },
+      "transition" : {
+        "toBox" : "iQ07yoOBfiPS",
+        "endTag" : null,
+        "failEnd" : false,
+        "endResultKeys" : [ {
+          "lv" : "not_specify",
+          "key" : "h8r1BiggerPeak.reverseResult"
+        } ],
+        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"ReverseTooBig\"\n}"
+      },
+      "enable" : true
+    }, {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "oFQV3T3mrCu7",
+      "name" : "crossNear",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
+        "kind" : "NONE",
+        "next" : null,
+        "left" : "!javascript===\nconst lastVal = ${MACDtrender.last.val};\nconst exQuote = ${binanceQuote.all.avgPrice};\nconst ans = Math.abs( lastVal) / exQuote;\nans;",
+        "right" : "0.0006",
+        "type" : "lessthan_equal"
+      },
+      "transition" : {
+        "toBox" : "y09CvF3tt03P",
+        "endTag" : null,
+        "failEnd" : false,
+        "endResultKeys" : [ {
+          "lv" : "not_specify",
+          "key" : "h8r1BiggerPeak.trendInfo.nearPeak.dtime"
+        } ],
+        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"PeakTooFar\"\n}"
+      },
+      "enable" : true
+    } ],
+    "vars" : { },
+    "taskSort" : [ "Div2tmjgl8JG", "POnGmKqao8p1", "B5FC1rRP7MUE", "oFQV3T3mrCu7" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "${symbol} ${positionSide} IDLE",
+      "failEnd" : false,
+      "endResultKeys" : [ ],
+      "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"IDLE\"\n}"
+    },
+    "minLogLv" : "DEBUG"
+  }, {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "y09CvF3tt03P",
+    "name" : "CallOrderProfit",
+    "actions" : [ {
       "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
       "uid" : "tWrAJcQR5WgW",
       "name" : "ORDER_TAKE_PROFIT",
@@ -38,7 +117,7 @@
       "asynced" : false,
       "inputData" : [ {
         "key" : "positionSide",
-        "val" : "!javascript===\nconst positionSide = '${positionSide}';\nfunction calc(){\n    return positionSide == 'LONG' ? 'SHORT' : 'LONG';\n}\ncalc();"
+        "val" : "${positionSide}"
       }, {
         "key" : "symbol",
         "val" : "${symbol}"
@@ -68,30 +147,29 @@
         "val" : "0.5"
       } ],
       "outputReflects" : [ ]
+    }, {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "hM85UtkI5OS0",
+      "name" : "CancelProfit",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "url" : "${finExManageApiUrl}",
+      "uriVariables" : { },
+      "body" : "{\n    \"symbol\": \"${symbol}\",\n    \"positionSide\": \"${positionSide}\",\n    \"status\":\"NEW\",\n    \"orderType\":\"TAKE_PROFIT\",\n    \"name\": \"order/delete_by_filter\",\n    \"exchange\": \"binance\",\n    \"__bzk_api_key\": \"${finExManageApiKey}\"\n}",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : ""
+      }
     } ],
-    "links" : [ {
-      "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "nJw0imQ8HFYq",
-      "name" : "ChechNoTakeProfit",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
-        "kind" : "NONE",
-        "next" : null,
-        "left" : "${lessOds.origQty}",
-        "right" : "0",
-        "type" : "greater"
-      },
-      "transition" : {
-        "toBox" : "",
-        "endTag" : "${symbol} ${positionSide} LIMIT:${__pk_result.ordered} profit:false",
-        "failEnd" : false,
-        "endResultKeys" : [ ],
-        "resultCode" : "{\n  \"limit\": ${__pk_result},\n  \"takeProfit\":{\n      \"ordered\":false,\n      \"breakName\":\"ChechNoTakeProfit\"\n  }\n}"
-      },
-      "enable" : true
-    } ],
+    "links" : [ ],
     "vars" : { },
-    "taskSort" : [ "yAfJwV3nc7b9", "nJw0imQ8HFYq", "tWrAJcQR5WgW" ],
+    "taskSort" : [ "hM85UtkI5OS0", "tWrAJcQR5WgW" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
@@ -150,228 +228,113 @@
       "outputReflects" : [ ]
     }, {
       "clazz" : "net.bzk.flow.model.HttpAction",
-      "uid" : "PsQBy93YXD9c",
-      "name" : "query_limit_ods",
+      "uid" : "UtKNelqPvlEh",
+      "name" : "CancelLIMIT",
       "tryErrorble" : false,
       "enable" : true,
-      "devBoxVars" : {
-        "symbol" : "BNB",
-        "positionSide" : "LONG"
-      },
+      "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "url" : "${binance.proxyHost}proxy",
+      "url" : "${finExManageApiUrl}",
       "uriVariables" : { },
-      "body" : "!javascript===\r\nvar positionSide = '${positionSide}';\r\n// var orderSide = $directionUtils.getLimitOrderSide(positionSide);\r\n//var start = new Date();\r\n//start.setSeconds(start.getSeconds() - 3*60*60);\r\n//var startAt = start.toISOString();\r\nvar body= {\r\n    \"name\": \"get_all_orders\",\r\n    \"apiKey\":\"${binance.key}\",\r\n    \"secret\":\"${binance.secret}\",\r\n    \"symbol\": \"${symbol}\",\r\n    \"status\":\"NEW\",\r\n    \"orderType\":\"LIMIT\",\r\n    \"positionSide\":positionSide\r\n};\r\nbody;",
+      "body" : "{\r\n    \"symbol\": \"${symbol}\",\r\n    \"positionSide\": \"${positionSide}\",\r\n    \"status\":\"NEW\",\r\n    \"orderType\":\"LIMIT\",\r\n    \"name\": \"order/delete_by_filter\",\r\n    \"exchange\": \"binance\",\r\n    \"__bzk_api_key\": \"${finExManageApiKey}\"\r\n}",
       "method" : "POST",
       "headers" : { },
       "headersFlat" : "",
       "key" : {
         "lv" : "not_specify",
-        "key" : "lessOds"
+        "key" : ""
       }
-    } ],
-    "links" : [ {
-      "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "ovgapaO520SD",
-      "name" : "ChechNoLimitOd",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
-        "kind" : "NONE",
-        "next" : null,
-        "left" : "${lessOds.origQty}",
-        "right" : "0",
-        "type" : "greater"
-      },
-      "transition" : {
-        "toBox" : "y09CvF3tt03P",
-        "endTag" : null,
-        "failEnd" : false,
-        "endResultKeys" : [ ],
-        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"ChechNoLimitOd\"\n}"
-      },
-      "enable" : true
-    } ],
-    "vars" : { },
-    "taskSort" : [ "PsQBy93YXD9c", "ovgapaO520SD", "3gcfLj4AEmmZ" ],
-    "whileJudgment" : null,
-    "transition" : {
-      "toBox" : "y09CvF3tt03P",
-      "endTag" : null,
-      "failEnd" : false,
-      "endResultKeys" : [ ],
-      "resultCode" : "{\n  \"ordered\": true,\n  \"breakName\": \"NONE\"\n}"
-    },
-    "minLogLv" : "DEBUG"
-  }, {
-    "clazz" : "net.bzk.flow.model.Box",
-    "uid" : "MINMAX52of8",
-    "name" : "MINMAX",
-    "actions" : [ {
+    }, {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "MLu2PZ4XJZcQ",
+      "name" : "CancelSTOP",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "url" : "${finExManageApiUrl}",
+      "uriVariables" : { },
+      "body" : "{\n    \"symbol\": \"${symbol}\",\n    \"positionSide\": \"${stopPositionSide}\",\n    \"status\":\"NEW\",\n    \"orderType\":\"STOP_MARKET\",\n    \"name\": \"order/delete_by_filter\",\n    \"exchange\": \"binance\",\n    \"__bzk_api_key\": \"${finExManageApiKey}\"\n}",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : ""
+      }
+    }, {
       "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
-      "uid" : "POnGmKqao8p1",
-      "name" : "M_InitVars",
+      "uid" : "kuYJgT4psWwq",
+      "name" : "CLSVars",
       "tryErrorble" : false,
       "enable" : true,
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
       "flatData" : [ {
-        "key" : "~positionSide",
-        "val" : "!javascript===\r\nconst state = '${h8r1BiggerPeak.trendInfo.state}';\r\n\r\n\r\nfunction calc(){\r\n    return state == 'RISE' ? \"LONG\" : \"SHORT\";\r\n}\r\ncalc();"
-      }, {
-        "key" : "h5maInfo",
-        "val" : "!javascript===\n$tsFunc.getLast(${ma.m5x60});"
+        "key" : "stopPositionSide ",
+        "val" : "const positionSide = '${positionSide}';\n\nfunction calcPositionSide(){\n    return positionSide == 'LONG' ? 'SHORT' : 'LONG';\n}\ncalcPositionSide();"
       } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "BL84Fj9g5LiH",
+      "name" : "ORDER_STOP",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flowUid" : "02eQyaMwyojZ",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "positionSide",
+        "val" : "${stopPositionSide }"
+      }, {
+        "key" : "symbol",
+        "val" : "${symbol}"
+      }, {
+        "key" : "tags",
+        "val" : "TODO"
+      }, {
+        "key" : "trigger",
+        "val" : "[\"bneck\"]"
+      }, {
+        "key" : "size",
+        "val" : "8"
+      }, {
+        "key" : "gapRate",
+        "val" : "0.0025"
+      }, {
+        "key" : "priceBuffRate",
+        "val" : "1.001"
+      }, {
+        "key" : "proportionalRate",
+        "val" : "1.3"
+      }, {
+        "key" : "strategy",
+        "val" : "STOP_MARKET"
+      }, {
+        "key" : "positionRate",
+        "val" : "0.5"
+      } ],
+      "outputReflects" : [ ]
     } ],
-    "links" : [ {
-      "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "6q7K82sD3xWo",
-      "name" : "h1Lessh6",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
-        "kind" : "NONE",
-        "next" : null,
-        "polyglot" : "js",
-        "code" : "const positionSide='${positionSide}';\r\nconst exPrice = ${binanceQuote.all.lastPrice};\r\n\r\nconst h8r1BiggerPeak = ${h8r1BiggerPeak.trendInfo.nearPeak.val};\r\n\r\n\r\nconst exGrantherH6 = $directionUtils.isHighPrice(positionSide,h8r1BiggerPeak,exPrice);\r\nconst ans =  !exGrantherH6;\r\nans;"
-      },
-      "transition" : {
-        "toBox" : "",
-        "endTag" : "${symbol} ${positionSide} h1Lessh6",
-        "failEnd" : false,
-        "endResultKeys" : [ {
-          "lv" : "not_specify",
-          "key" : "__ALL__"
-        } ],
-        "resultCode" : "{\r\n  \"ordered\": false,\r\n  \"breakName\": \"h1Lessh6\"\r\n}"
-      },
-      "enable" : true
-    }, {
-      "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "6NprXSn7ndco",
-      "name" : "OverH5MA",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
-        "kind" : "NONE",
-        "next" : null,
-        "polyglot" : "js",
-        "code" : "const positionSide='${positionSide}';\nconst h5ma= ${h5maInfo.val};\nconst exPrice = ${binanceQuote.all.lastPrice};\n\n$directionUtils.isHighPrice(positionSide,h5ma,exPrice);"
-      },
-      "transition" : {
-        "toBox" : "",
-        "endTag" : "${symbol} ${positionSide} OverH5MA",
-        "failEnd" : false,
-        "endResultKeys" : [ {
-          "lv" : "not_specify",
-          "key" : "binanceQuote.all.lastPrice"
-        }, {
-          "lv" : "not_specify",
-          "key" : "h5maInfo"
-        } ],
-        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"OverH5MA\"\n}\n\n"
-      },
-      "enable" : true
-    }, {
-      "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "Div2tmjgl8JG",
-      "name" : "CheckNoAllow",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
-        "kind" : "NONE",
-        "next" : null,
-        "polyglot" : "js",
-        "code" : "const allowSymbols = ${bottleneck};\r\nconst sbl = '${symbol}';\r\n!allowSymbols.includes(sbl);"
-      },
-      "transition" : {
-        "toBox" : "",
-        "endTag" : "${symbol} NoAllow",
-        "failEnd" : false,
-        "endResultKeys" : [ ],
-        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"CheckNoAllow\"\n}"
-      },
-      "enable" : true
-    }, {
-      "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "6uYbQgoYnTCE",
-      "name" : "NoFindRevese",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
-        "kind" : "NONE",
-        "next" : null,
-        "polyglot" : "js",
-        "code" : "const h8r1BiggerPeakReverseFinded = '${h8r1BiggerPeak.reverseResult.state}' == 'FINDED';\n!h8r1BiggerPeakReverseFinded"
-      },
-      "transition" : {
-        "toBox" : "",
-        "endTag" : "${symbol} ${positionSide} NoFindRevese",
-        "failEnd" : false,
-        "endResultKeys" : [ {
-          "lv" : "not_specify",
-          "key" : "h8r1BiggerPeak"
-        } ],
-        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"h1PeakStateSame\"\n}"
-      },
-      "enable" : true
-    }, {
-      "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "B5FC1rRP7MUE",
-      "name" : "ReverseTooBig",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
-        "kind" : "NONE",
-        "next" : null,
-        "left" : "!javascript===\nconst reverseResult= ${h8r1BiggerPeak.reverseResult.peakInfo.biggerInfo.time};\nfunction check(){\n    if(reverseResult==null) return 0;\n    return reverseResult;\n}\ncheck();",
-        "right" : "3800",
-        "type" : "greater"
-      },
-      "transition" : {
-        "toBox" : "",
-        "endTag" : "${symbol} ${positionSide} ReverseTooBig",
-        "failEnd" : false,
-        "endResultKeys" : [ {
-          "lv" : "not_specify",
-          "key" : "h8r1BiggerPeak.reverseResult"
-        } ],
-        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"ReverseTooBig\"\n}"
-      },
-      "enable" : true
-    }, {
-      "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "oFQV3T3mrCu7",
-      "name" : "PeakTooFar",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
-        "kind" : "NONE",
-        "next" : null,
-        "left" : "${h8r1BiggerPeak.trendInfo.nearPeak.dtime}",
-        "right" : "5000",
-        "type" : "greater"
-      },
-      "transition" : {
-        "toBox" : "",
-        "endTag" : "${symbol} ${positionSide} PeakTooFar",
-        "failEnd" : false,
-        "endResultKeys" : [ {
-          "lv" : "not_specify",
-          "key" : "h8r1BiggerPeak.trendInfo.nearPeak.dtime"
-        } ],
-        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"PeakTooFar\"\n}"
-      },
-      "enable" : true
-    } ],
+    "links" : [ ],
     "vars" : { },
-    "taskSort" : [ "Div2tmjgl8JG", "POnGmKqao8p1", "6NprXSn7ndco", "6uYbQgoYnTCE", "6q7K82sD3xWo", "B5FC1rRP7MUE", "oFQV3T3mrCu7" ],
+    "taskSort" : [ "kuYJgT4psWwq", "UtKNelqPvlEh", "3gcfLj4AEmmZ", "MLu2PZ4XJZcQ", "BL84Fj9g5LiH" ],
     "whileJudgment" : null,
     "transition" : {
-      "toBox" : "iQ07yoOBfiPS",
-      "endTag" : null,
+      "toBox" : "",
+      "endTag" : "${symbol} ${positionSide} LIMIT:false  profit:false",
       "failEnd" : false,
       "endResultKeys" : [ ],
-      "resultCode" : "!javascript===\nconst side = '${toSellOrBuy}';\nconst ans = {\n    side : side,\n    tag : \"MINMAX\"\n};\nans;"
+      "resultCode" : "{\n  \"ordered\": true,\n  \"breakName\": \"NONE\"\n}"
     },
     "minLogLv" : "DEBUG"
   } ],
-  "varCfgNames" : [ "binance.json", "crypto-symbol.json" ],
+  "varCfgNames" : [ "binance.json", "crypto-symbol.json", "fin-exchange-manage.json" ],
   "vars" : { },
   "entry" : {
     "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
@@ -386,5 +349,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 161
+  "version" : 170
 }
