@@ -4,104 +4,6 @@
   "name" : "SUB-strategy-peak-bottleneck",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
-    "uid" : "MINMAX52of8",
-    "name" : "MINMAX",
-    "actions" : [ {
-      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
-      "uid" : "POnGmKqao8p1",
-      "name" : "M_InitVars",
-      "tryErrorble" : false,
-      "enable" : true,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "flatData" : [ {
-        "key" : "h5maInfo",
-        "val" : "!javascript===\n$tsFunc.getLast(${ma.m5x60});"
-      }, {
-        "key" : "~positionSide",
-        "val" : "!javascript===\n$bzk.g('MACDtrender.trendInfo.state')== 'RISE' ? 'LONG':'SHORT';"
-      } ]
-    } ],
-    "links" : [ {
-      "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "Div2tmjgl8JG",
-      "name" : "CheckNoAllow",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
-        "kind" : "NONE",
-        "next" : null,
-        "polyglot" : "js",
-        "code" : "const allowSymbols = ${bottleneck};\r\nconst sbl = '${symbol}';\r\n!allowSymbols.includes(sbl);"
-      },
-      "transition" : {
-        "toBox" : "",
-        "endTag" : "${symbol} NoAllow",
-        "failEnd" : false,
-        "endResultKeys" : [ ],
-        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"CheckNoAllow\"\n}"
-      },
-      "enable" : true
-    }, {
-      "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "B5FC1rRP7MUE",
-      "name" : "PeakNear",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
-        "kind" : "NONE",
-        "next" : null,
-        "left" : "${MACDtrender.trendInfo.nearPeak.dtime}\n",
-        "right" : "500",
-        "type" : "lessthan_equal"
-      },
-      "transition" : {
-        "toBox" : "iQ07yoOBfiPS",
-        "endTag" : null,
-        "failEnd" : false,
-        "endResultKeys" : [ {
-          "lv" : "not_specify",
-          "key" : "h8r1BiggerPeak.reverseResult"
-        } ],
-        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"ReverseTooBig\"\n}"
-      },
-      "enable" : true
-    }, {
-      "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "oFQV3T3mrCu7",
-      "name" : "crossNear",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
-        "kind" : "NONE",
-        "next" : null,
-        "left" : "!javascript===\nconst lastVal = ${MACDtrender.last.val};\nconst exQuote = ${binanceQuote.all.avgPrice};\nconst ans = Math.abs( lastVal) / exQuote;\nans;",
-        "right" : "0.0006",
-        "type" : "lessthan_equal"
-      },
-      "transition" : {
-        "toBox" : "y09CvF3tt03P",
-        "endTag" : null,
-        "failEnd" : false,
-        "endResultKeys" : [ {
-          "lv" : "not_specify",
-          "key" : "h8r1BiggerPeak.trendInfo.nearPeak.dtime"
-        } ],
-        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"PeakTooFar\"\n}"
-      },
-      "enable" : true
-    } ],
-    "vars" : { },
-    "taskSort" : [ "Div2tmjgl8JG", "POnGmKqao8p1", "B5FC1rRP7MUE", "oFQV3T3mrCu7" ],
-    "whileJudgment" : null,
-    "transition" : {
-      "toBox" : "",
-      "endTag" : "${symbol} ${positionSide} IDLE",
-      "failEnd" : false,
-      "endResultKeys" : [ ],
-      "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"IDLE\"\n}"
-    },
-    "minLogLv" : "DEBUG"
-  }, {
-    "clazz" : "net.bzk.flow.model.Box",
     "uid" : "y09CvF3tt03P",
     "name" : "CallOrderProfit",
     "actions" : [ {
@@ -173,10 +75,108 @@
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
-      "endTag" : "${symbol} ${positionSide} LIMIT:${__pk_result.ordered} profit:true",
+      "endTag" : "${symbol} ${positionSide} LIMIT:false profit:true",
       "failEnd" : false,
       "endResultKeys" : [ ],
-      "resultCode" : "{\r\n  \"limit\": ${__pk_result},\r\n  \"takeProfit\":{\r\n      \"ordered\":true\r\n  }\r\n}"
+      "resultCode" : "{\n  \"ordered\": true,\n  \"breakName\": \"NONE\"\n}"
+    },
+    "minLogLv" : "DEBUG"
+  }, {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "MINMAX52of8",
+    "name" : "MINMAX",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
+      "uid" : "POnGmKqao8p1",
+      "name" : "M_InitVars",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flatData" : [ {
+        "key" : "h5maInfo",
+        "val" : "!javascript===\n$tsFunc.getLast(${ma.m5x60});"
+      }, {
+        "key" : "~positionSide",
+        "val" : "!javascript===\n$bzk.g('MACDtrender.trendInfo.state')== 'RISE' ? 'LONG':'SHORT';"
+      } ]
+    } ],
+    "links" : [ {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "Div2tmjgl8JG",
+      "name" : "CheckNoAllow",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
+        "kind" : "NONE",
+        "next" : null,
+        "polyglot" : "js",
+        "code" : "const allowSymbols = ${bottleneck};\r\nconst sbl = '${symbol}';\r\n!allowSymbols.includes(sbl);"
+      },
+      "transition" : {
+        "toBox" : "",
+        "endTag" : "${symbol} NoAllow",
+        "failEnd" : false,
+        "endResultKeys" : [ ],
+        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"CheckNoAllow\"\n}"
+      },
+      "enable" : true
+    }, {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "B5FC1rRP7MUE",
+      "name" : "PeakNear",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
+        "kind" : "NONE",
+        "next" : null,
+        "left" : "${MACDtrender.trendInfo.nearPeak.dtime}\n",
+        "right" : "500",
+        "type" : "lessthan_equal"
+      },
+      "transition" : {
+        "toBox" : "iQ07yoOBfiPS",
+        "endTag" : null,
+        "failEnd" : false,
+        "endResultKeys" : [ {
+          "lv" : "not_specify",
+          "key" : "h8r1BiggerPeak.reverseResult"
+        } ],
+        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"ReverseTooBig\"\n}"
+      },
+      "enable" : true
+    }, {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "oFQV3T3mrCu7",
+      "name" : "crossNear",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
+        "kind" : "NONE",
+        "next" : null,
+        "left" : "${MACDtrender.last.val}",
+        "right" : "!javascript===\r\nconst exQuote = ${binanceQuote.all.avgPrice};\r\nconst ans = exQuote * 0.0005;\r\nans;",
+        "type" : "lessthan_equal"
+      },
+      "transition" : {
+        "toBox" : "y09CvF3tt03P",
+        "endTag" : null,
+        "failEnd" : false,
+        "endResultKeys" : [ {
+          "lv" : "not_specify",
+          "key" : "h8r1BiggerPeak.trendInfo.nearPeak.dtime"
+        } ],
+        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"PeakTooFar\"\n}"
+      },
+      "enable" : true
+    } ],
+    "vars" : { },
+    "taskSort" : [ "Div2tmjgl8JG", "POnGmKqao8p1", "B5FC1rRP7MUE", "oFQV3T3mrCu7" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "${symbol} ${positionSide} IDLE",
+      "failEnd" : false,
+      "endResultKeys" : [ ],
+      "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"IDLE\"\n}"
     },
     "minLogLv" : "DEBUG"
   }, {
@@ -256,7 +256,7 @@
       "minLogLv" : "NONE",
       "url" : "${finExManageApiUrl}",
       "uriVariables" : { },
-      "body" : "{\n    \"symbol\": \"${symbol}\",\n    \"positionSide\": \"${stopPositionSide}\",\n    \"status\":\"NEW\",\n    \"orderType\":\"STOP_MARKET\",\n    \"name\": \"order/delete_by_filter\",\n    \"exchange\": \"binance\",\n    \"__bzk_api_key\": \"${finExManageApiKey}\"\n}",
+      "body" : "{\n    \"symbol\": \"${symbol}\",\n    \"positionSide\": \"${stopPositionSide}\",\n    \"status\":\"NEW\",\n    \"orderType\":\"STOP_MARKET\",\n    \"untags\":\"FUSE\"\n    \"name\": \"order/delete_by_filter\",\n    \"exchange\": \"binance\",\n    \"__bzk_api_key\": \"${finExManageApiKey}\"\n}",
       "method" : "POST",
       "headers" : { },
       "headersFlat" : "",
@@ -349,5 +349,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 174
+  "version" : 179
 }
