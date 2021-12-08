@@ -306,7 +306,7 @@
         "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
         "kind" : "NONE",
         "next" : null,
-        "left" : "${MACDtrender.last.val}",
+        "left" : "!javascript===\nMath.abs(${MACDtrender.last.val});",
         "right" : "!javascript===\r\nconst exQuote = ${binanceQuote.all.avgPrice};\r\nconst ans = exQuote * 0.0005;\r\nans;",
         "type" : "lessthan_equal"
       },
@@ -349,5 +349,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 181
+  "version" : 182
 }
