@@ -290,7 +290,7 @@
       "asynced" : false,
       "inputData" : [ {
         "key" : "positionSide",
-        "val" : "${stopPositionSide }"
+        "val" : "${stopPositionSide}"
       }, {
         "key" : "symbol",
         "val" : "${symbol}"
@@ -349,5 +349,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 193
+  "version" : 194
 }
