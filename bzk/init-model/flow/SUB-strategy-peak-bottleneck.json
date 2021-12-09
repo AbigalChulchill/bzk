@@ -229,7 +229,7 @@
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
-      "endTag" : "${symbol} ${positionSide} LIMIT:false  profit:false",
+      "endTag" : "${symbol} ${positionSide} LIMIT:true  profit:false",
       "failEnd" : false,
       "endResultKeys" : [ ],
       "resultCode" : "{\n  \"ordered\": true,\n  \"breakName\": \"NONE\"\n}"
@@ -349,5 +349,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 185
+  "version" : 186
 }
