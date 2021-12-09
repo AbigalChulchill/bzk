@@ -256,7 +256,7 @@
       "minLogLv" : "NONE",
       "url" : "${finExManageApiUrl}",
       "uriVariables" : { },
-      "body" : "{\n    \"symbol\": \"${symbol}\",\n    \"positionSide\": \"${stopPositionSide}\",\n    \"status\":\"NEW\",\n    \"orderType\":\"STOP_MARKET\",\n    \"untags\":\"FUSE\"\n    \"name\": \"order/delete_by_filter\",\n    \"exchange\": \"binance\",\n    \"__bzk_api_key\": \"${finExManageApiKey}\"\n}",
+      "body" : "{\n    \"symbol\": \"${symbol}\",\n    \"status\":\"NEW\",\n    \"orderType\":\"STOP_MARKET\",\n    \"untags\":\"FUSE\"\n    \"name\": \"order/delete_by_filter\",\n    \"exchange\": \"binance\",\n    \"__bzk_api_key\": \"${finExManageApiKey}\"\n}",
       "method" : "POST",
       "headers" : { },
       "headersFlat" : "",
@@ -274,7 +274,7 @@
       "devFlowVars" : { },
       "minLogLv" : "NONE",
       "flatData" : [ {
-        "key" : "stopPositionSide ",
+        "key" : "stopPositionSide",
         "val" : "!javascript===\nconst positionSide = '${positionSide}';\n\nfunction calcPositionSide(){\n    return positionSide == 'LONG' ? 'SHORT' : 'LONG';\n}\ncalcPositionSide();"
       } ]
     }, {
@@ -349,5 +349,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 191
+  "version" : 192
 }
