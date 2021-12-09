@@ -296,10 +296,10 @@
         "val" : "${symbol}"
       }, {
         "key" : "tags",
-        "val" : "TODO"
+        "val" : "[\"bneck\"]"
       }, {
         "key" : "trigger",
-        "val" : "[\"bneck\"]"
+        "val" : "bottleneck"
       }, {
         "key" : "size",
         "val" : "5"
@@ -349,5 +349,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 194
+  "version" : 195
 }
