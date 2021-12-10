@@ -35,8 +35,8 @@
       "devFlowVars" : { },
       "minLogLv" : "NONE",
       "flatData" : [ {
-        "key" : "body",
-        "val" : " {\n    \"__bzk_api_key\": \"${finExManageApiKey}\",\n    \"exchange\": \"binance\",\n    \"name\": \"order/post\",\n    \"strategy\":\"${strategy}\",\n    \"symbol\": \"${symbol}\",\n    \"positionSide\": \"${positionSide}\",\n    \"withdrawAmountRate\": ${withdrawAmountRate},\n    \"positionRate\":${positionRate},\n    \"priceBuffRate\": ${priceBuffRate},\n    \"gapRate\":${gapRate},\n    \"size\":${size},\n    \"proportionalRate\":${proportionalRate}\n}\n"
+        "key" : "body.__bzk_api_key",
+        "val" : "${finExManageApiKey}"
       }, {
         "key" : "body.tags",
         "val" : "!javascript===\nvar tags =  ${tags};\ntags.push(\"bot\");\ntags;"
@@ -70,7 +70,7 @@
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
-      "endTag" : "${symbol} ${positionSide} ${strategy} ${trigger}",
+      "endTag" : "${body.symbol} ${body.positionSide} ${body.strategy} ${trigger}",
       "failEnd" : false,
       "endResultKeys" : [ {
         "lv" : "not_specify",
@@ -82,21 +82,26 @@
   } ],
   "varCfgNames" : [ "binance.json", "mail.json", "fin-proxy.json", "fin-exchange-manage.json" ],
   "vars" : {
-    "symbol" : "ETH",
-    "size" : 2,
-    "positionSide" : "LONG",
-    "withdrawAmountRate" : 0.005,
-    "priceBuffRate" : 1.9,
-    "strategy" : "LIMIT",
-    "proportionalRate" : 1.2,
-    "gapRate" : 0.002,
-    "tags" : [ "shortTermBuy" ]
+    "body" : {
+      "symbol" : "XRP",
+      "positionSide" : "SHORT",
+      "priceBuffRate" : 1.001,
+      "proportionalRate" : 1.3,
+      "gapRate" : 0.005,
+      "positionRate" : 0.5,
+      "size" : 5,
+      "withdrawAmountRate" : 0.005,
+      "name" : "order/post",
+      "exchange" : "binance",
+      "strategy" : "STOP_MARKET"
+    },
+    "tags" : [ "bneck", "bot" ]
   },
   "entry" : {
     "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
     "boxUid" : "htivUO7YKtyD",
     "autoRegister" : false,
-    "requiredKeys" : [ "positionSide", "symbol", "withdrawAmountRate", "tags", "trigger", "size", "gapRate", "priceBuffRate", "proportionalRate", "strategy", "positionRate" ],
+    "requiredKeys" : [ "body", "tags", "trigger" ],
     "outputKeys" : [ ]
   },
   "threadCfg" : {
@@ -105,5 +110,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 49
+  "version" : 52
 }
