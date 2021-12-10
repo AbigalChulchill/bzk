@@ -35,10 +35,10 @@
       "devFlowVars" : { },
       "minLogLv" : "NONE",
       "flatData" : [ {
-        "key" : "body.__bzk_api_key",
+        "key" : "~body.__bzk_api_key",
         "val" : "${finExManageApiKey}"
       }, {
-        "key" : "body.tags",
+        "key" : "~body.tags",
         "val" : "!javascript===\nvar tags =  ${tags};\ntags.push(\"bot\");\ntags;"
       } ]
     }, {
@@ -52,7 +52,7 @@
       "minLogLv" : "NONE",
       "url" : "${finProxyUrl}/proxy/tsdb/insert/multiple",
       "uriVariables" : { },
-      "body" : "!javascript===\n\nconst sbl = '${symbol}';\nconst positionSide = '${positionSide}';\nconst strategy = '${strategy}';\nconst postResult = ${postResult};\n\n\nlet ans = [];\n\nfunction genPointDto(fd,v,idx){\n    let  now = new Date();\n    now.setSeconds(now.getSeconds() + idx*60);\n    const nowiso = now.toISOString();\n  const row = {\n      measurement : 'order-measurement',\n      tags:{\n        \"symbol\" : sbl,        \n        \"category\":'cryptocurrency',\n        \"source\":'binance',\n        \"positionSide\":positionSide,\n        \"trigger\":'${trigger}',\n        \"strategy\":strategy\n      },\n      field: fd,\n      val:v,\n      time :nowiso\n  };\n  return row;\n}\n\n\n\nfor(let i=0;i<postResult.length;i++){\n    let od = postResult[i];\n    if(od == null) continue;\n    const price = $orderUtils.getPrice(od);\n    ans.push(genPointDto('price',price,i));\n    ans.push(genPointDto('quantity',od.origQty,i));\n}\n\nans;",
+      "body" : "!javascript===\n\nconst sbl = '${body.symbol}';\nconst positionSide = '${body.positionSide}';\nconst strategy = '${body.strategy}';\nconst postResult = ${postResult};\n\n\nlet ans = [];\n\nfunction genPointDto(fd,v,idx){\n    let  now = new Date();\n    now.setSeconds(now.getSeconds() + idx*60);\n    const nowiso = now.toISOString();\n  const row = {\n      measurement : 'order-measurement',\n      tags:{\n        \"symbol\" : sbl,        \n        \"category\":'cryptocurrency',\n        \"source\":'binance',\n        \"positionSide\":positionSide,\n        \"trigger\":'${trigger}',\n        \"strategy\":strategy\n      },\n      field: fd,\n      val:v,\n      time :nowiso\n  };\n  return row;\n}\n\n\n\nfor(let i=0;i<postResult.length;i++){\n    let od = postResult[i];\n    if(od == null) continue;\n    const price = $orderUtils.getPrice(od);\n    ans.push(genPointDto('price',price,i));\n    ans.push(genPointDto('quantity',od.origQty,i));\n}\n\nans;",
       "method" : "POST",
       "headers" : { },
       "headersFlat" : "{}",
@@ -110,5 +110,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 52
+  "version" : 54
 }
