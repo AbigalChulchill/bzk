@@ -4,6 +4,45 @@
   "name" : "SUB-strategy-2y",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "hLZ3d8T7Vkot",
+    "name" : "Strategy",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "vWD538GBmnZO",
+      "name" : "bottleneck",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flowUid" : "SSPBbWtmfHPV",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "__ALL__",
+        "val" : "${~__ALL__}"
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "__pk_result",
+        "toKey" : {
+          "lv" : "not_specify",
+          "key" : "call_resp"
+        }
+      } ]
+    } ],
+    "links" : [ ],
+    "vars" : { },
+    "taskSort" : [ "vWD538GBmnZO" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "${symbol} ordered:${call_resp.ordered} ${call_resp.breakName}",
+      "failEnd" : false,
+      "endResultKeys" : [ ],
+      "resultCode" : ""
+    },
+    "minLogLv" : "DEBUG"
+  }, {
+    "clazz" : "net.bzk.flow.model.Box",
     "uid" : "UQC5RZ3iJLB7",
     "name" : "Box",
     "actions" : [ {
@@ -71,13 +110,16 @@
       "uid" : "afqbSMjT5kKT",
       "name" : "Sortout",
       "tryErrorble" : false,
-      "enable" : false,
+      "enable" : true,
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
       "flatData" : [ {
-        "key" : "~extremeInfo",
-        "val" : "!javascript===\nconst shelfLife =  5*60*60*24;\nconst persistTime = ${cycleInfo.avgRadius} * 1.8 ;\nconst bigger = '${peaks15d.trendInfo.state}' == 'FALL';\n\n$tsFunc.findNearBigger(${y2Vals},bigger,shelfLife,persistTime);\n"
+        "key" : "~position.LONG",
+        "val" : "!javascript===\nconst pos = ${positionInfos};\n\nvar ans = pos.find(function(item, index, array){\n  return item.positionSide == 'LONG';\n});\nans;"
+      }, {
+        "key" : "~position.SHORT",
+        "val" : "!javascript===\nconst pos = ${positionInfos};\n\nvar ans = pos.find(function(item, index, array){\n  return item.positionSide == 'SHORT';\n});\nans;"
       } ]
     }, {
       "clazz" : "net.bzk.flow.model.HttpAction",
@@ -113,10 +155,29 @@
       "polyglot" : "js",
       "resultLv" : "not_specify",
       "resultKey" : "analyzeAll"
+    }, {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "YXOO8IaDkXfV",
+      "name" : "PositionInfo",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "url" : "${finExManageApiUrl}",
+      "uriVariables" : { },
+      "body" : "{\n    \"symbol\": \"BTC\",\n    \"name\": \"position/get\",\n    \"exchange\": \"binance\",\n    \"__bzk_api_key\": \"${finExManageApiKey}\"\n}",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : "positionInfos"
+      }
     } ],
     "links" : [ ],
     "vars" : { },
-    "taskSort" : [ "JRXb3aUYrssP", "xHaqpw4loFKq", "nONU5vc3Jzg8", "Dfq0TAINMBq2", "bdp2D8EmHQHn", "afqbSMjT5kKT" ],
+    "taskSort" : [ "JRXb3aUYrssP", "xHaqpw4loFKq", "nONU5vc3Jzg8", "Dfq0TAINMBq2", "YXOO8IaDkXfV", "bdp2D8EmHQHn", "afqbSMjT5kKT" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "hLZ3d8T7Vkot",
@@ -126,47 +187,8 @@
       "resultCode" : ""
     },
     "minLogLv" : "DEBUG"
-  }, {
-    "clazz" : "net.bzk.flow.model.Box",
-    "uid" : "hLZ3d8T7Vkot",
-    "name" : "Strategy",
-    "actions" : [ {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "vWD538GBmnZO",
-      "name" : "bottleneck",
-      "tryErrorble" : false,
-      "enable" : true,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "flowUid" : "SSPBbWtmfHPV",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "__ALL__",
-        "val" : "${~__ALL__}"
-      } ],
-      "outputReflects" : [ {
-        "srcKey" : "__pk_result",
-        "toKey" : {
-          "lv" : "not_specify",
-          "key" : "call_resp"
-        }
-      } ]
-    } ],
-    "links" : [ ],
-    "vars" : { },
-    "taskSort" : [ "vWD538GBmnZO" ],
-    "whileJudgment" : null,
-    "transition" : {
-      "toBox" : "",
-      "endTag" : "${symbol} ordered:${call_resp.ordered} ${call_resp.breakName}",
-      "failEnd" : false,
-      "endResultKeys" : [ ],
-      "resultCode" : ""
-    },
-    "minLogLv" : "DEBUG"
   } ],
-  "varCfgNames" : [ "binance.json", "fin-proxy.json" ],
+  "varCfgNames" : [ "binance.json", "fin-proxy.json", "fin-exchange-manage.json" ],
   "vars" : {
     "symbol" : "BTC"
   },
@@ -183,5 +205,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 112
+  "version" : 120
 }
