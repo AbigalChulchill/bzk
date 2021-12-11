@@ -8,10 +8,7 @@ import net.bzk.infrastructure.tscurve.peak.TsPeakFinder;
 
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -38,7 +35,7 @@ public class TsCurveUtils {
         return ChronoUnit.MILLIS.between(k2t, k1t) / 1000;
     }
 
-    public static Comparator<String> ASC_TIME_ISO = (a,b)->{
+    public static Comparator<String> ASC_TIME_ISO = (a, b) -> {
         ZonedDateTime ta = toTime(a);
         ZonedDateTime tb = toTime(b);
         return ta.compareTo(tb);
@@ -46,6 +43,19 @@ public class TsCurveUtils {
 
     public static ZonedDateTime toTime(String iso8601) {
         return ZonedDateTime.parse(iso8601);
+    }
+
+    public static List<String> sortIso8601(Set<String> iso8601s) {
+        List<String> keys = new ArrayList<>(iso8601s);
+        keys.sort(Comparator.comparing(TsCurveUtils::toTime));
+        Collections.reverse(keys);
+        return keys;
+    }
+
+    public static List<Double> sortValues(Map<String, Double> rMap) {
+        var keys = sortIso8601(rMap.keySet());
+        List<Double> ans = keys.stream().map(k -> rMap.get(k)).collect(Collectors.toList());
+        return ans;
     }
 
     public static List<Double> sortTimeKeys(Set<Double> keys) {

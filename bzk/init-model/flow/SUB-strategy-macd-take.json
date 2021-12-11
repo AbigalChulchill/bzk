@@ -1,0 +1,100 @@
+{
+  "clazz" : "net.bzk.flow.model.Flow",
+  "uid" : "C72RPBZMZzy1",
+  "name" : "SUB-strategy-macd-take",
+  "boxs" : [ {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "5rUTO9zVomsD",
+    "name" : "Box",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "ZahxqV9uwkFF",
+      "name" : "CancelProfit",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "url" : "${finExManageApiUrl}",
+      "uriVariables" : { },
+      "body" : "{\n    \"symbol\": \"${symbol}\",\n    \"status\":\"NEW\",\n    \"orderType\":\"TAKE_PROFIT_MARKET\",\n    \"name\": \"order/delete_by_filter\",\n    \"exchange\": \"binance\",\n    \"__bzk_api_key\": \"${finExManageApiKey}\"\n}",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : "cp"
+      }
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "N2Hplfa0qfl1",
+      "name" : "ORDER_TAKE_PROFIT",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flowUid" : "02eQyaMwyojZ",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "body",
+        "val" : "{\n  \"symbol\": \"${symbol}\",\n  \"size\": 7,\n  \"positionSide\": \"${positionSide}\",\n  \"withdrawAmountRate\": 1,\n  \"priceBuffRate\": 1.003,\n  \"name\": \"order/post\",\n  \"exchange\": \"binance\",\n  \"strategy\": \"TAKE_PROFIT\",\n  \"proportionalRate\": 1.3,\n  \"gapRate\": 0.005,\n  \"positionRate\": 0.5\n}"
+      }, {
+        "key" : "tags",
+        "val" : "[\"macd\"]"
+      }, {
+        "key" : "trigger",
+        "val" : "take"
+      } ],
+      "outputReflects" : [ ]
+    } ],
+    "links" : [ {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "hDXet1ywzdtF",
+      "name" : "NoCross",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
+        "kind" : "NONE",
+        "next" : null,
+        "left" : "!javascript===\nconst sortVs = $tsFunc.sortValues(${ma.macd10m120m});\nconst n1 = sortVs.get(0);\nconst n2 = sortVs.get(1);\nconst ans = n1 * n2;\nans;",
+        "right" : "0",
+        "type" : "greater_equal"
+      },
+      "transition" : {
+        "toBox" : "",
+        "endTag" : "${symbol} ${positionSide} NoCross",
+        "failEnd" : false,
+        "endResultKeys" : [ ],
+        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"NoCross\"\n}"
+      },
+      "enable" : true
+    } ],
+    "vars" : { },
+    "taskSort" : [ "hDXet1ywzdtF", "ZahxqV9uwkFF", "N2Hplfa0qfl1" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "${symbol} ${positionSide} TAKE",
+      "failEnd" : false,
+      "endResultKeys" : [ ],
+      "resultCode" : "{\n  \"ordered\": true,\n  \"breakName\": \"NONE\"\n}"
+    },
+    "minLogLv" : "DEBUG"
+  } ],
+  "varCfgNames" : [ "crypto-symbol.json", "fin-exchange-manage.json" ],
+  "vars" : { },
+  "entry" : {
+    "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
+    "boxUid" : "5rUTO9zVomsD",
+    "autoRegister" : false,
+    "requiredKeys" : [ "__ALL__" ],
+    "outputKeys" : [ "__pk_result" ]
+  },
+  "threadCfg" : {
+    "corePoolSize" : 10,
+    "maximumPoolSize" : 50,
+    "keepAliveTime" : 500,
+    "aliveUnit" : "MINUTES"
+  },
+  "version" : 10
+}

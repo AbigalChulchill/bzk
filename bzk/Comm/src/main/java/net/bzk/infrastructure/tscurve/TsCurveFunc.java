@@ -9,6 +9,7 @@ import net.bzk.infrastructure.tscurve.peak.TsBiggerFinder;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public class TsCurveFunc {
     private static final TsCurveFunc instance = new TsCurveFunc();
@@ -63,6 +64,10 @@ public class TsCurveFunc {
         return tc.calc();
     }
 
+    public List<Double> sortValues(Map<String, Double> rMap) {
+        return TsCurveUtils.sortValues(rMap);
+    }
+
     public static TsCurveFunc getInstance() {
         return instance;
     }
@@ -77,9 +82,7 @@ public class TsCurveFunc {
 
         public TsCurve(Map<String, Double> rMap) {
             this.rMap = rMap;
-            keys = new ArrayList<>(rMap.keySet());
-            keys.sort(Comparator.comparing(TsCurveUtils::toTime));
-            Collections.reverse(keys);
+            keys = TsCurveUtils.sortIso8601(rMap.keySet());
             firstKey = keys.get(0);
         }
 

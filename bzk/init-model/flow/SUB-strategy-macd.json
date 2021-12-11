@@ -1,0 +1,137 @@
+{
+  "clazz" : "net.bzk.flow.model.Flow",
+  "uid" : "SSPBbWtmfHPV",
+  "name" : "SUB-strategy-macd",
+  "boxs" : [ {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "MINMAX52of8",
+    "name" : "MINMAX",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
+      "uid" : "POnGmKqao8p1",
+      "name" : "M_InitVars",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flatData" : [ {
+        "key" : "h5maInfo",
+        "val" : "!javascript===\n$tsFunc.getLast(${ma.m5x60});"
+      }, {
+        "key" : "~positionSide",
+        "val" : "!javascript===\n$bzk.g('MACDtrender.trendInfo.state')== 'RISE' ? 'LONG':'SHORT';"
+      } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "DmpvFO68Ya38",
+      "name" : "CancelLIMIT",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "url" : "${finExManageApiUrl}",
+      "uriVariables" : { },
+      "body" : "{\n    \"symbol\": \"${symbol}\",\n    \"status\":\"NEW\",\n    \"orderType\":\"LIMIT\",\n    \"name\": \"order/delete_by_filter\",\n    \"exchange\": \"binance\",\n    \"__bzk_api_key\": \"${finExManageApiKey}\"\n}",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : "cl"
+      }
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "NPJloJ9SkiyJ",
+      "name" : "CallTake",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flowUid" : "C72RPBZMZzy1",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "__ALL__",
+        "val" : "${~__ALL__}"
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "__pk_result",
+        "toKey" : {
+          "lv" : "not_specify",
+          "key" : "takeResult"
+        }
+      } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "3oi9e2ESsDQ3",
+      "name" : "CallStopLimit",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flowUid" : "stopPBZlimit",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "__ALL__",
+        "val" : "${~__ALL__}"
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "__pk_result",
+        "toKey" : {
+          "lv" : "not_specify",
+          "key" : "stopLimitResult"
+        }
+      } ]
+    } ],
+    "links" : [ {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "Div2tmjgl8JG",
+      "name" : "CheckNoAllow",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
+        "kind" : "NONE",
+        "next" : null,
+        "polyglot" : "js",
+        "code" : "const allowSymbols = ${bottleneck};\r\nconst sbl = '${symbol}';\r\n!allowSymbols.includes(sbl);"
+      },
+      "transition" : {
+        "toBox" : "",
+        "endTag" : "${symbol} NoAllow",
+        "failEnd" : false,
+        "endResultKeys" : [ ],
+        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"CheckNoAllow\"\n}"
+      },
+      "enable" : true
+    } ],
+    "vars" : { },
+    "taskSort" : [ "Div2tmjgl8JG", "POnGmKqao8p1", "DmpvFO68Ya38", "NPJloJ9SkiyJ", "3oi9e2ESsDQ3" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "${symbol} ${positionSide} take : ${takeResult.ordered} limitStop: ${stopLimitResult.ordered}",
+      "failEnd" : false,
+      "endResultKeys" : [ ],
+      "resultCode" : "!javascript===\nconst tr = ${takeResult.ordered};\nconst lsr = ${stopLimitResult.ordered};\nconst ans= {\n  \"ordered\": tr||lsr,\n  \"breakName\": \"NONE\",\n  \"take\":tr,\n  \"limitStop\":lsr\n};\nans;"
+    },
+    "minLogLv" : "DEBUG"
+  } ],
+  "varCfgNames" : [ "binance.json", "crypto-symbol.json", "fin-exchange-manage.json" ],
+  "vars" : { },
+  "entry" : {
+    "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
+    "boxUid" : "MINMAX52of8",
+    "autoRegister" : false,
+    "requiredKeys" : [ "__ALL__" ],
+    "outputKeys" : [ ]
+  },
+  "threadCfg" : {
+    "corePoolSize" : 10,
+    "maximumPoolSize" : 50,
+    "keepAliveTime" : 500,
+    "aliveUnit" : "MINUTES"
+  },
+  "version" : 221
+}
