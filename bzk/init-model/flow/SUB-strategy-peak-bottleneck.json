@@ -128,7 +128,7 @@
         "kind" : "NONE",
         "next" : null,
         "left" : "${MACDtrender.trendInfo.nearPeak.dtime}\n",
-        "right" : "600",
+        "right" : "450",
         "type" : "lessthan_equal"
       },
       "transition" : {
@@ -289,5 +289,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 208
+  "version" : 209
 }
