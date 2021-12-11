@@ -55,7 +55,7 @@
       "minLogLv" : "NONE",
       "flatData" : [ {
         "key" : "steps",
-        "val" : " [\n      {\n        \"profitRate\": -0.90,\n        \"clearRate\": 0.8,\n        \"fallRate\": 0.02\n      },\n      {\n        \"profitRate\": -0.02,\n        \"clearRate\": 0.6,\n        \"fallRate\": 0.02\n      },\n      {\n        \"profitRate\": -0.01,\n        \"clearRate\": 0.05,\n        \"fallRate\": 0.02\n      },\n      {\n        \"profitRate\": 0.01,\n        \"clearRate\": 0.08,\n        \"fallRate\": 0.008\n      },\n      {\n        \"profitRate\": 0.05,\n        \"clearRate\": 0.2,\n        \"fallRate\": 0.02\n      },\n      {\n        \"profitRate\": 0.10,\n        \"clearRate\": 0.8,\n        \"fallRate\": 0.05\n      }\n    ]"
+        "val" : " [\n      {\n        \"profitRate\": -0.90,\n        \"clearRate\": 1,\n        \"fallRate\": 0.02\n      },\n      {\n        \"profitRate\": -0.05,\n        \"clearRate\": 0.8,\n        \"fallRate\": 0.03\n      },\n      {\n        \"profitRate\": -0.015,\n        \"clearRate\": 0.5,\n        \"fallRate\": 0.035\n      },\n      {\n        \"profitRate\": 0.05,\n        \"clearRate\": 0.5,\n        \"fallRate\": 0.04\n      },\n      {\n        \"profitRate\": 0.10,\n        \"clearRate\": 0.8,\n        \"fallRate\": 0.05\n      }\n    ]"
       } ]
     } ],
     "links" : [ ],
@@ -92,5 +92,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 36
+  "version" : 38
 }
