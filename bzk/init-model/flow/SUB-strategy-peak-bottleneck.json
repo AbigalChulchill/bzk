@@ -4,6 +4,64 @@
   "name" : "SUB-strategy-peak-bottleneck",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "y09CvF3tt03P",
+    "name" : "CallOrderProfit",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "tWrAJcQR5WgW",
+      "name" : "ORDER_TAKE_PROFIT",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flowUid" : "02eQyaMwyojZ",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "tags",
+        "val" : "[\"bneck\"]"
+      }, {
+        "key" : "trigger",
+        "val" : "bottleneck"
+      }, {
+        "key" : "body",
+        "val" : "{\n  \"symbol\": \"${symbol}\",\n  \"size\": 5,\n  \"positionSide\": \"${positionSide}\",\n  \"withdrawAmountRate\": 0.005,\n  \"priceBuffRate\": 1.003,\n  \"name\": \"order/post\",\n  \"exchange\": \"binance\",\n  \"strategy\": \"TAKE_PROFIT\",\n  \"proportionalRate\": 1.025,\n  \"gapRate\": 0.005,\n  \"positionRate\": 0.5\n}"
+      } ],
+      "outputReflects" : [ ]
+    }, {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "hM85UtkI5OS0",
+      "name" : "CancelProfit",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "url" : "${finExManageApiUrl}",
+      "uriVariables" : { },
+      "body" : "{\n    \"symbol\": \"${symbol}\",\n    \"positionSide\": \"${positionSide}\",\n    \"status\":\"NEW\",\n    \"orderType\":\"TAKE_PROFIT_MARKET\",\n    \"name\": \"order/delete_by_filter\",\n    \"exchange\": \"binance\",\n    \"__bzk_api_key\": \"${finExManageApiKey}\"\n}",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : "cp"
+      }
+    } ],
+    "links" : [ ],
+    "vars" : { },
+    "taskSort" : [ "hM85UtkI5OS0", "tWrAJcQR5WgW" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "${symbol} ${positionSide} Take",
+      "failEnd" : false,
+      "endResultKeys" : [ ],
+      "resultCode" : "{\n  \"ordered\": true,\n  \"breakName\": \"NONE\"\n}"
+    },
+    "minLogLv" : "DEBUG"
+  }, {
+    "clazz" : "net.bzk.flow.model.Box",
     "uid" : "iQ07yoOBfiPS",
     "name" : "CallOrderLIMIT",
     "actions" : [ {
@@ -82,7 +140,7 @@
         "val" : "bottleneck"
       }, {
         "key" : "body",
-        "val" : "{\n  \"symbol\": \"${symbol}\",\n  \"size\": 5,\n  \"positionSide\": \"${stopPositionSide}\",\n  \"withdrawAmountRate\": 0.005,\n  \"priceBuffRate\": 1.001,\n  \"name\": \"order/post\",\n  \"exchange\": \"binance\",\n  \"strategy\": \"STOP_MARKET\",\n  \"proportionalRate\": 1.3,\n  \"proportionalReverse\": true,\n  \"targetPrice\": ${stopPositionEntryPrice},\n  \"positionRate\": 0.5\n}"
+        "val" : "{\n  \"symbol\": \"${symbol}\",\n  \"size\": 5,\n  \"positionSide\": \"${stopPositionSide}\",\n  \"withdrawAmountRate\": 0.005,\n  \"priceBuffRate\": 1.003,\n  \"name\": \"order/post\",\n  \"exchange\": \"binance\",\n  \"strategy\": \"STOP_MARKET\",\n  \"proportionalRate\": 1.3,\n  \"proportionalReverse\": true,\n  \"targetPrice\": ${stopPositionEntryPrice},\n  \"positionRate\": 0.5\n}"
       } ],
       "outputReflects" : [ ]
     } ],
@@ -166,7 +224,7 @@
         "kind" : "NONE",
         "next" : null,
         "left" : "${MACDtrender.trendInfo.nearPeak.dtime}\n",
-        "right" : "6000",
+        "right" : "600",
         "type" : "lessthan_equal"
       },
       "transition" : {
@@ -215,64 +273,6 @@
       "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"IDLE\"\n}"
     },
     "minLogLv" : "DEBUG"
-  }, {
-    "clazz" : "net.bzk.flow.model.Box",
-    "uid" : "y09CvF3tt03P",
-    "name" : "CallOrderProfit",
-    "actions" : [ {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "tWrAJcQR5WgW",
-      "name" : "ORDER_TAKE_PROFIT",
-      "tryErrorble" : false,
-      "enable" : true,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "flowUid" : "02eQyaMwyojZ",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "tags",
-        "val" : "[\"bneck\"]"
-      }, {
-        "key" : "trigger",
-        "val" : "bottleneck"
-      }, {
-        "key" : "body",
-        "val" : "{\n  \"symbol\": \"${symbol}\",\n  \"size\": 5,\n  \"positionSide\": \"${positionSide}\",\n  \"withdrawAmountRate\": 0.005,\n  \"priceBuffRate\": 1.003,\n  \"name\": \"order/post\",\n  \"exchange\": \"binance\",\n  \"strategy\": \"TAKE_PROFIT\",\n  \"proportionalRate\": 1.025,\n  \"gapRate\": 0.005,\n  \"positionRate\": 0.5\n}"
-      } ],
-      "outputReflects" : [ ]
-    }, {
-      "clazz" : "net.bzk.flow.model.HttpAction",
-      "uid" : "hM85UtkI5OS0",
-      "name" : "CancelProfit",
-      "tryErrorble" : false,
-      "enable" : true,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "url" : "${finExManageApiUrl}",
-      "uriVariables" : { },
-      "body" : "{\n    \"symbol\": \"${symbol}\",\n    \"positionSide\": \"${positionSide}\",\n    \"status\":\"NEW\",\n    \"orderType\":\"TAKE_PROFIT_MARKET\",\n    \"name\": \"order/delete_by_filter\",\n    \"exchange\": \"binance\",\n    \"__bzk_api_key\": \"${finExManageApiKey}\"\n}",
-      "method" : "POST",
-      "headers" : { },
-      "headersFlat" : "",
-      "key" : {
-        "lv" : "not_specify",
-        "key" : "cp"
-      }
-    } ],
-    "links" : [ ],
-    "vars" : { },
-    "taskSort" : [ "hM85UtkI5OS0", "tWrAJcQR5WgW" ],
-    "whileJudgment" : null,
-    "transition" : {
-      "toBox" : "",
-      "endTag" : "${symbol} ${positionSide} Take",
-      "failEnd" : false,
-      "endResultKeys" : [ ],
-      "resultCode" : "{\n  \"ordered\": true,\n  \"breakName\": \"NONE\"\n}"
-    },
-    "minLogLv" : "DEBUG"
   } ],
   "varCfgNames" : [ "binance.json", "crypto-symbol.json", "fin-exchange-manage.json" ],
   "vars" : { },
@@ -289,5 +289,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 202
+  "version" : 206
 }
