@@ -4,6 +4,45 @@
   "name" : "SUB-strategy-2y",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "hLZ3d8T7Vkot",
+    "name" : "Strategy",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "vWD538GBmnZO",
+      "name" : "bottleneck",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flowUid" : "SSPBbWtmfHPV",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "__ALL__",
+        "val" : "${~__ALL__}"
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "__pk_result",
+        "toKey" : {
+          "lv" : "not_specify",
+          "key" : "call_resp"
+        }
+      } ]
+    } ],
+    "links" : [ ],
+    "vars" : { },
+    "taskSort" : [ "vWD538GBmnZO" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "${symbol} ordered:${call_resp.ordered} ${call_resp.breakName}",
+      "failEnd" : false,
+      "endResultKeys" : [ ],
+      "resultCode" : ""
+    },
+    "minLogLv" : "DEBUG"
+  }, {
+    "clazz" : "net.bzk.flow.model.Box",
     "uid" : "UQC5RZ3iJLB7",
     "name" : "Box",
     "actions" : [ {
@@ -45,7 +84,7 @@
       "minLogLv" : "NONE",
       "flatData" : [ {
         "key" : "~MACDtrender",
-        "val" : "!javascript===\nconst rm = ${ma.macd10m120m};\nconst ops = {\n    logicType:\"MACRO\",\n    peakMaxWaitSeconds:6*60\n};\n$tsFunc.findPeak(rm,ops);"
+        "val" : "!javascript===\nconst rm = ${ma.macd10m120m};\nconst ops = {\n    logicType:\"MICRO\",\n    peakMaxWaitSeconds:6*60\n};\n$tsFunc.findPeak(rm,ops);"
       } ]
     }, {
       "clazz" : "net.bzk.flow.model.HttpAction",
@@ -148,45 +187,6 @@
       "resultCode" : ""
     },
     "minLogLv" : "DEBUG"
-  }, {
-    "clazz" : "net.bzk.flow.model.Box",
-    "uid" : "hLZ3d8T7Vkot",
-    "name" : "Strategy",
-    "actions" : [ {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "vWD538GBmnZO",
-      "name" : "bottleneck",
-      "tryErrorble" : false,
-      "enable" : true,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "flowUid" : "SSPBbWtmfHPV",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "__ALL__",
-        "val" : "${~__ALL__}"
-      } ],
-      "outputReflects" : [ {
-        "srcKey" : "__pk_result",
-        "toKey" : {
-          "lv" : "not_specify",
-          "key" : "call_resp"
-        }
-      } ]
-    } ],
-    "links" : [ ],
-    "vars" : { },
-    "taskSort" : [ "vWD538GBmnZO" ],
-    "whileJudgment" : null,
-    "transition" : {
-      "toBox" : "",
-      "endTag" : "${symbol} ordered:${call_resp.ordered} ${call_resp.breakName}",
-      "failEnd" : false,
-      "endResultKeys" : [ ],
-      "resultCode" : ""
-    },
-    "minLogLv" : "DEBUG"
   } ],
   "varCfgNames" : [ "binance.json", "fin-proxy.json", "fin-exchange-manage.json" ],
   "vars" : {
@@ -205,5 +205,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 122
+  "version" : 124
 }
