@@ -127,6 +127,9 @@
         }, {
           "lv" : "not_specify",
           "key" : "MACDtrender.trendInfo.nearPeak"
+        }, {
+          "lv" : "not_specify",
+          "key" : "MACDtrender.last.val"
         } ],
         "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"PeakVOpposite\"\n}"
       },
@@ -159,5 +162,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 16
+  "version" : 17
 }
