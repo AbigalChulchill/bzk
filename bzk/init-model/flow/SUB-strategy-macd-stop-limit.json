@@ -106,9 +106,34 @@
         "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"PeakFar\"\n}"
       },
       "enable" : true
+    }, {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "zkWZrDsHaXib",
+      "name" : "PeakVOpposite",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
+        "kind" : "NONE",
+        "next" : null,
+        "polyglot" : "js",
+        "code" : "const nearPeakV = ${MACDtrender.trendInfo.nearPeak.val};\r\nconst lastV = ${MACDtrender.last.val};\r\nconst nearPeakType = '${MACDtrender.trendInfo.nearPeakType}';\r\n\r\nfunction checkRightV(v){\r\n    if(nearPeakType == 'MAXED') return v > 0;\r\n    return v<0;\r\n}\r\n\r\nfunction check(){\r\n    return !checkRightV(nearPeakV) || !checkRightV(lastV);\r\n}\r\n\r\ncheck();"
+      },
+      "transition" : {
+        "toBox" : "",
+        "endTag" : "${symbol} ${positionSide} PeakVOpposite",
+        "failEnd" : false,
+        "endResultKeys" : [ {
+          "lv" : "not_specify",
+          "key" : "MACDtrender.trendInfo.nearPeakType"
+        }, {
+          "lv" : "not_specify",
+          "key" : "MACDtrender.trendInfo.nearPeak"
+        } ],
+        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"PeakVOpposite\"\n}"
+      },
+      "enable" : true
     } ],
     "vars" : { },
-    "taskSort" : [ "hDXet1ywzdtF", "lFWjVThmDz0L", "N2Hplfa0qfl1", "ZahxqV9uwkFF", "Xy3YmdKQq1bU" ],
+    "taskSort" : [ "hDXet1ywzdtF", "zkWZrDsHaXib", "lFWjVThmDz0L", "N2Hplfa0qfl1", "ZahxqV9uwkFF", "Xy3YmdKQq1bU" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
@@ -134,5 +159,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 12
+  "version" : 14
 }
