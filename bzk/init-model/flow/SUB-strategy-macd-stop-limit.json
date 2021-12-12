@@ -133,7 +133,7 @@
       "enable" : true
     } ],
     "vars" : { },
-    "taskSort" : [ "hDXet1ywzdtF", "zkWZrDsHaXib", "lFWjVThmDz0L", "N2Hplfa0qfl1", "ZahxqV9uwkFF", "Xy3YmdKQq1bU" ],
+    "taskSort" : [ "zkWZrDsHaXib", "hDXet1ywzdtF", "lFWjVThmDz0L", "N2Hplfa0qfl1", "ZahxqV9uwkFF", "Xy3YmdKQq1bU" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
@@ -159,5 +159,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 14
+  "version" : 16
 }
