@@ -83,7 +83,7 @@
       "enable" : true
     } ],
     "vars" : { },
-    "taskSort" : [ "hDXet1ywzdtF", "WHCAyZpxJDuE", "ZahxqV9uwkFF", "N2Hplfa0qfl1" ],
+    "taskSort" : [ "WHCAyZpxJDuE", "hDXet1ywzdtF", "ZahxqV9uwkFF", "N2Hplfa0qfl1" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
@@ -109,5 +109,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 12
+  "version" : 14
 }
