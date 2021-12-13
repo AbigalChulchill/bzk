@@ -1,10 +1,10 @@
 {
   "clazz" : "net.bzk.flow.model.Flow",
-  "uid" : "stopPBZlimit",
-  "name" : "SUB-strategy-macd-stop-limit",
+  "uid" : "substoplimit",
+  "name" : "SUB-stop-limit",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
-    "uid" : "5rUTO9zVomsD",
+    "uid" : "stopO9zVlimit",
     "name" : "Box",
     "actions" : [ {
       "clazz" : "net.bzk.flow.model.HttpAction",
@@ -38,7 +38,7 @@
       "asynced" : false,
       "inputData" : [ {
         "key" : "body",
-        "val" : "{\n  \"symbol\": \"${symbol}\",\n  \"size\": 5,\n  \"positionSide\": \"${positionSide}\",\n  \"withdrawAmountRate\": 0.1,\n  \"priceBuffRate\": 1.001,\n  \"name\": \"order/post\",\n  \"exchange\": \"binance\",\n  \"strategy\": \"LIMIT\",\n  \"proportionalRate\": 1.186,\n  \"gapRate\": 0.00368\n}"
+        "val" : "{\n  \"symbol\": \"${symbol}\",\n  \"size\": 5,\n  \"positionSide\": \"${positionSide}\",\n  \"withdrawAmountRate\": 0.05,\n  \"priceBuffRate\": 1.001,\n  \"name\": \"order/post\",\n  \"exchange\": \"binance\",\n  \"strategy\": \"LIMIT\",\n  \"proportionalRate\": 1.186,\n  \"gapRate\": 0.00368\n}"
       }, {
         "key" : "tags",
         "val" : "[\"macd\"]"
@@ -86,57 +86,9 @@
       } ],
       "outputReflects" : [ ]
     } ],
-    "links" : [ {
-      "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "hDXet1ywzdtF",
-      "name" : "PeakFar",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
-        "kind" : "NONE",
-        "next" : null,
-        "left" : "${MACDtrender.trendInfo.nearPeak.dtime}\n",
-        "right" : "450",
-        "type" : "greater_equal"
-      },
-      "transition" : {
-        "toBox" : "",
-        "endTag" : "${symbol} ${positionSide} PeakFar",
-        "failEnd" : false,
-        "endResultKeys" : [ ],
-        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"PeakFar\"\n}"
-      },
-      "enable" : true
-    }, {
-      "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "zkWZrDsHaXib",
-      "name" : "PeakVOpposite",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
-        "kind" : "NONE",
-        "next" : null,
-        "polyglot" : "js",
-        "code" : "const nearPeakV = ${MACDtrender.trendInfo.nearPeak.val};\r\nconst lastV = ${MACDtrender.last.val};\r\nconst nearPeakType = '${MACDtrender.trendInfo.nearPeakType}';\r\n\r\nfunction checkRightV(v){\r\n    if(nearPeakType == 'MAXED') return v > 0;\r\n    return v<0;\r\n}\r\n\r\nfunction check(){\r\n    return !checkRightV(nearPeakV) || !checkRightV(lastV);\r\n}\r\n\r\ncheck();"
-      },
-      "transition" : {
-        "toBox" : "",
-        "endTag" : "${symbol} ${positionSide} PeakVOpposite",
-        "failEnd" : false,
-        "endResultKeys" : [ {
-          "lv" : "not_specify",
-          "key" : "MACDtrender.trendInfo.nearPeakType"
-        }, {
-          "lv" : "not_specify",
-          "key" : "MACDtrender.trendInfo.nearPeak"
-        }, {
-          "lv" : "not_specify",
-          "key" : "MACDtrender.last.val"
-        } ],
-        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"PeakVOpposite\"\n}"
-      },
-      "enable" : true
-    } ],
+    "links" : [ ],
     "vars" : { },
-    "taskSort" : [ "zkWZrDsHaXib", "hDXet1ywzdtF", "lFWjVThmDz0L", "N2Hplfa0qfl1", "ZahxqV9uwkFF", "Xy3YmdKQq1bU" ],
+    "taskSort" : [ "lFWjVThmDz0L", "N2Hplfa0qfl1", "ZahxqV9uwkFF", "Xy3YmdKQq1bU" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
@@ -151,7 +103,7 @@
   "vars" : { },
   "entry" : {
     "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
-    "boxUid" : "5rUTO9zVomsD",
+    "boxUid" : "stopO9zVlimit",
     "autoRegister" : false,
     "requiredKeys" : [ "__ALL__" ],
     "outputKeys" : [ "__pk_result" ]
@@ -162,5 +114,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 17
+  "version" : 21
 }

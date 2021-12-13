@@ -1,0 +1,151 @@
+{
+  "clazz" : "net.bzk.flow.model.Flow",
+  "uid" : "stopPBZlimit",
+  "name" : "SUB-strategy-bigger-stop-limit",
+  "boxs" : [ {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "5rUTO9zVomsD",
+    "name" : "Box",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "JgUhd71Ae25u",
+      "name" : "CallStopLimit",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flowUid" : "substoplimit",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "__ALL__",
+        "val" : "${~__ALL__}"
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "__pk_result",
+        "toKey" : {
+          "lv" : "not_specify",
+          "key" : "stopLimitResult"
+        }
+      } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$PolyglotAction",
+      "uid" : "rcQSfyeYDG2f",
+      "name" : "InitVars",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "code" : "const lastBigger = ${lastBigger};\nconst bigVal = lastBigger.val;\nconst tsdbLastVal = ${tsdbLastVal};\nfunction calcPositionSide(){\n    return lastBigger.min.time > lastBigger.max.time ? 'LONG' : 'SHORT';\n}\n\nfunction calcBigger(){\n    return lastBigger.min.time > lastBigger.max.time ? lastBigger.min : lastBigger.max;\n}\n\nconst biggerInfo = calcBigger();\n\n\n\nfunction clacBiggSeconds(){\n    return $tsFunc.subtractKeySecondsToNow(biggerInfo.targetKey);\n}\n\n$bzk.putObj('biggSeconds',clacBiggSeconds());\n$bzk.putObj('~positionSide',calcPositionSide());\n$bzk.put('biggerInfo',JSON.stringify(biggerInfo));\n$bzk.putObj('backD',tsdbLastVal-bigVal);\n\n\ntrue;",
+      "polyglot" : "js",
+      "resultLv" : "not_specify",
+      "resultKey" : "InitVars"
+    } ],
+    "links" : [ {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "hDXet1ywzdtF",
+      "name" : "PeakFar",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
+        "kind" : "NONE",
+        "next" : null,
+        "left" : "${biggSeconds}",
+        "right" : "1000",
+        "type" : "greater_equal"
+      },
+      "transition" : {
+        "toBox" : "",
+        "endTag" : "${symbol} ${positionSide} PeakFar",
+        "failEnd" : false,
+        "endResultKeys" : [ {
+          "lv" : "not_specify",
+          "key" : "biggSeconds"
+        } ],
+        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"PeakFar\"\n}"
+      },
+      "enable" : true
+    }, {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "zkWZrDsHaXib",
+      "name" : "PeakBiggLow",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
+        "kind" : "NONE",
+        "next" : null,
+        "left" : "${biggerInfo.time}",
+        "right" : "!javascript===\n60*60*6",
+        "type" : "lessthan"
+      },
+      "transition" : {
+        "toBox" : "",
+        "endTag" : "${symbol} ${positionSide} PeakBiggLow",
+        "failEnd" : false,
+        "endResultKeys" : [ {
+          "lv" : "not_specify",
+          "key" : "positionSide"
+        }, {
+          "lv" : "not_specify",
+          "key" : "biggerInfo"
+        } ],
+        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"PeakBiggLow\"\n}"
+      },
+      "enable" : true
+    }, {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "0cFpR8dywwb8",
+      "name" : "BackD",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
+        "kind" : "NONE",
+        "next" : null,
+        "polyglot" : "js",
+        "code" : "const backD = ${backD};\r\nconst tsdbLastVal = ${tsdbLastVal};\r\nconst positionSide = ${positionSide};\r\n\r\nfunction check(){\r\n    const rate = backD / tsdbLastVal;\r\n    if (rate < 0.001) return false;\r\n    if (positionSide == 'LONG') return backD>0;\r\n    if (positionSide == 'SHORT') return backD<0;\r\n    throw new Error(positionSide);\r\n}\r\n\r\n!check();\r\n"
+      },
+      "transition" : {
+        "toBox" : "",
+        "endTag" : "${symbol} ${positionSide} BackD",
+        "failEnd" : false,
+        "endResultKeys" : [ {
+          "lv" : "not_specify",
+          "key" : "tsdbLastVal"
+        }, {
+          "lv" : "not_specify",
+          "key" : "lastBigger.val"
+        }, {
+          "lv" : "not_specify",
+          "key" : "backD"
+        } ],
+        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"BackD\"\n}"
+      },
+      "enable" : true
+    } ],
+    "vars" : { },
+    "taskSort" : [ "rcQSfyeYDG2f", "zkWZrDsHaXib", "hDXet1ywzdtF", "0cFpR8dywwb8", "JgUhd71Ae25u" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "${symbol} ${positionSide} LimitStop",
+      "failEnd" : false,
+      "endResultKeys" : [ ],
+      "resultCode" : "{\n  \"ordered\": true,\n  \"breakName\": \"NONE\"\n}"
+    },
+    "minLogLv" : "DEBUG"
+  } ],
+  "varCfgNames" : [ "crypto-symbol.json", "fin-exchange-manage.json" ],
+  "vars" : { },
+  "entry" : {
+    "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
+    "boxUid" : "5rUTO9zVomsD",
+    "autoRegister" : false,
+    "requiredKeys" : [ "__ALL__" ],
+    "outputKeys" : [ "__pk_result" ]
+  },
+  "threadCfg" : {
+    "corePoolSize" : 10,
+    "maximumPoolSize" : 50,
+    "keepAliveTime" : 500,
+    "aliveUnit" : "MINUTES"
+  },
+  "version" : 31
+}

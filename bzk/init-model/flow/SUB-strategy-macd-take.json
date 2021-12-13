@@ -47,6 +47,19 @@
         "val" : "take"
       } ],
       "outputReflects" : [ ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
+      "uid" : "WHCAyZpxJDuE",
+      "name" : "Vars",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flatData" : [ {
+        "key" : "positionSide",
+        "val" : "!javascript===\n$bzk.g('MACDtrender.trendInfo.state')== 'RISE' ? 'LONG':'SHORT';"
+      } ]
     } ],
     "links" : [ {
       "clazz" : "net.bzk.flow.model.Link",
@@ -70,7 +83,7 @@
       "enable" : true
     } ],
     "vars" : { },
-    "taskSort" : [ "hDXet1ywzdtF", "ZahxqV9uwkFF", "N2Hplfa0qfl1" ],
+    "taskSort" : [ "hDXet1ywzdtF", "WHCAyZpxJDuE", "ZahxqV9uwkFF", "N2Hplfa0qfl1" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
@@ -96,5 +109,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 10
+  "version" : 12
 }

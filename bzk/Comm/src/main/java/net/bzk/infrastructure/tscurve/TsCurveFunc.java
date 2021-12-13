@@ -68,6 +68,15 @@ public class TsCurveFunc {
         return TsCurveUtils.sortValues(rMap);
     }
 
+    public List<String> sortIso8601Key(Map<String, Double> rMap) {
+        return TsCurveUtils.sortIso8601(rMap.keySet());
+    }
+
+
+    public Double subtractKeySecondsToNow(String key) {
+        return TsCurveUtils.subtractKeySecondsToNow(key);
+    }
+
     public static TsCurveFunc getInstance() {
         return instance;
     }

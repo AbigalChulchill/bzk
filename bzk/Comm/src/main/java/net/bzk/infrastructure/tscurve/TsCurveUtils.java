@@ -35,6 +35,12 @@ public class TsCurveUtils {
         return ChronoUnit.MILLIS.between(k2t, k1t) / 1000;
     }
 
+    public static double subtractKeySecondsToNow(String k2){
+        var k1t = ZonedDateTime.now();
+        var k2t = ZonedDateTime.parse(k2);
+        return ChronoUnit.MILLIS.between(k2t, k1t) / 1000;
+    }
+
     public static Comparator<String> ASC_TIME_ISO = (a, b) -> {
         ZonedDateTime ta = toTime(a);
         ZonedDateTime tb = toTime(b);

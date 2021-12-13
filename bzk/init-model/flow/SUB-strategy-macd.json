@@ -18,9 +18,6 @@
       "flatData" : [ {
         "key" : "h5maInfo",
         "val" : "!javascript===\n$tsFunc.getLast(${ma.m5x60});"
-      }, {
-        "key" : "~positionSide",
-        "val" : "!javascript===\n$bzk.g('MACDtrender.trendInfo.state')== 'RISE' ? 'LONG':'SHORT';"
       } ]
     }, {
       "clazz" : "net.bzk.flow.model.HttpAction",
@@ -133,5 +130,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 221
+  "version" : 223
 }
