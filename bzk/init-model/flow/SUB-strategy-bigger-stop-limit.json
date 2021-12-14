@@ -109,7 +109,7 @@
         "kind" : "NONE",
         "next" : null,
         "polyglot" : "js",
-        "code" : "const backD = ${backD};\r\nconst tsdbLastVal = ${tsdbLastVal};\r\nconst positionSide = ${positionSide};\r\n\r\nfunction check(){\r\n    const rate = backD / tsdbLastVal;\r\n    if (rate < 0.001) return false;\r\n    if (positionSide == 'LONG') return backD>0;\r\n    if (positionSide == 'SHORT') return backD<0;\r\n    throw new Error(positionSide);\r\n}\r\n\r\n!check();\r\n"
+        "code" : "const backD = ${backD};\r\nconst tsdbLastVal = ${tsdbLastVal};\r\nconst positionSide = '${positionSide}';\r\n\r\nfunction check(){\r\n    const rate = backD / tsdbLastVal;\r\n    if (rate < 0.001) return false;\r\n    if (positionSide == 'LONG') return backD>0;\r\n    if (positionSide == 'SHORT') return backD<0;\r\n    throw new Error(positionSide);\r\n}\r\n\r\n!check();\r\n"
       },
       "transition" : {
         "toBox" : "",
@@ -156,5 +156,4 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 37
-}
+  "version" : 38}
