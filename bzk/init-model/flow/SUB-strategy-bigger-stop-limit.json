@@ -18,8 +18,17 @@
       "flowUid" : "substoplimit",
       "asynced" : false,
       "inputData" : [ {
-        "key" : "__ALL__",
-        "val" : "${~__ALL__}"
+        "key" : "positionSide",
+        "val" : "${positionSide}"
+      }, {
+        "key" : "position",
+        "val" : "${position}"
+      }, {
+        "key" : "symbol",
+        "val" : "${symbol}"
+      }, {
+        "key" : "orderLimitBody",
+        "val" : "${orderLimitBody}"
       } ],
       "outputReflects" : [ {
         "srcKey" : "__pk_result",
@@ -37,7 +46,7 @@
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "code" : "const lastBigger = ${lastBigger};\nconst bigVal = lastBigger.val;\nconst tsdbLastVal = ${tsdbLastVal};\nfunction calcPositionSide(){\n    return lastBigger.min.time > lastBigger.max.time ? 'LONG' : 'SHORT';\n}\n\nfunction calcBigger(){\n    return lastBigger.min.time > lastBigger.max.time ? lastBigger.min : lastBigger.max;\n}\n\nconst biggerInfo = calcBigger();\n\n\n\nfunction clacBiggSeconds(){\n    return $tsFunc.subtractKeySecondsToNow(biggerInfo.targetKey);\n}\n\n$bzk.putObj('biggSeconds',clacBiggSeconds());\n$bzk.putObj('~positionSide',calcPositionSide());\n$bzk.put('biggerInfo',JSON.stringify(biggerInfo));\n$bzk.putObj('backD',tsdbLastVal-bigVal);\n\n\ntrue;",
+      "code" : "const lastBigger = ${lastBigger};\nconst bigVal = lastBigger.val;\nconst tsdbLastVal = ${tsdbLastVal};\n\nfunction calcPositionSide(){\n    return lastBigger.min.time > lastBigger.max.time ? 'LONG' : 'SHORT';\n}\n\nconst positionSide = calcPositionSide();\n\n\nfunction calcBigger(){\n    return lastBigger.min.time > lastBigger.max.time ? lastBigger.min : lastBigger.max;\n}\n\nconst biggerInfo = calcBigger();\n\n\nfunction clacBiggSeconds(){\n    return $tsFunc.subtractKeySecondsToNow(biggerInfo.targetKey);\n}\n\nfunction genOrderObjJson(){\n    const sp = $directionUtils.plusPriceByRate(positionSide,bigVal,-0.006);\n    return JSON.stringify({\n        \"targetPrice\":bigVal,\n        \"stopPrice\": sp\n    });\n}\n\n$bzk.putObj('biggSeconds',clacBiggSeconds());\n$bzk.putObj('~positionSide',positionSide);\n$bzk.put('biggerInfo',JSON.stringify(biggerInfo));\n$bzk.putObj('backD',tsdbLastVal-bigVal);\n$bzk.put('orderLimitBody',genOrderObjJson());\ntrue;",
       "polyglot" : "js",
       "resultLv" : "not_specify",
       "resultKey" : "InitVars"
@@ -147,5 +156,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 31
+  "version" : 37
 }

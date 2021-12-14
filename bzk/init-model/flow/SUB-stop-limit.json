@@ -17,7 +17,7 @@
       "minLogLv" : "NONE",
       "url" : "${finExManageApiUrl}",
       "uriVariables" : { },
-      "body" : "{\n    \"symbol\": \"${symbol}\",\n    \"status\":\"NEW\",\n    \"orderType\":\"STOP_MARKET\",\n    \"untags\":[\"FUSE\"],\n    \"name\": \"order/delete_by_filter\",\n    \"exchange\": \"binance\",\n    \"__bzk_api_key\": \"${finExManageApiKey}\"\n}",
+      "body" : "{\n    \"symbol\": \"${symbol}\",\n    \"status\":\"NEW\",\n    \"orderType\":\"STOP_MARKET\",\n    \"untags\":[\"FUSE\",\"st\"],\n    \"name\": \"order/delete_by_filter\",\n    \"exchange\": \"binance\",\n    \"__bzk_api_key\": \"${finExManageApiKey}\"\n}",
       "method" : "POST",
       "headers" : { },
       "headersFlat" : "",
@@ -38,10 +38,10 @@
       "asynced" : false,
       "inputData" : [ {
         "key" : "body",
-        "val" : "{\n  \"symbol\": \"${symbol}\",\n  \"size\": 5,\n  \"positionSide\": \"${positionSide}\",\n  \"withdrawAmountRate\": 0.05,\n  \"priceBuffRate\": 1.001,\n  \"name\": \"order/post\",\n  \"exchange\": \"binance\",\n  \"strategy\": \"LIMIT\",\n  \"proportionalRate\": 1.186,\n  \"gapRate\": 0.00368\n}"
+        "val" : "{\n  \"symbol\": \"${symbol}\",\n  \"size\": 5,\n  \"positionSide\": \"${positionSide}\",\n  \"withdrawAmountRate\": 0.05,\n  \"priceBuffRate\": 1.001,\n  \"name\": \"order/post\",\n  \"exchange\": \"binance\",\n  \"strategy\": \"LIMIT\",\n  \"proportionalRate\": 1.186,\n  \"gapRate\": 0.00368,\n  \"targetPrice\":${orderLimitBody.targetPrice},\n  \"stopPrice\":${orderLimitBody.stopPrice}\n}"
       }, {
         "key" : "tags",
-        "val" : "[\"macd\"]"
+        "val" : "[\"st\"]"
       }, {
         "key" : "trigger",
         "val" : "limit"
@@ -105,7 +105,7 @@
     "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
     "boxUid" : "stopO9zVlimit",
     "autoRegister" : false,
-    "requiredKeys" : [ "__ALL__" ],
+    "requiredKeys" : [ "positionSide", "position", "symbol", "orderLimitBody" ],
     "outputKeys" : [ "__pk_result" ]
   },
   "threadCfg" : {
@@ -114,5 +114,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 21
+  "version" : 25
 }

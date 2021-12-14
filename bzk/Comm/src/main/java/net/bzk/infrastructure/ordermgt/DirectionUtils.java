@@ -50,6 +50,18 @@ public class DirectionUtils {
         throw new BzkRuntimeException("not support " + positionSide);
     }
 
+    public double plusPriceByRate(String positionSide,double orgPrice,double rate) {
+        double dp = orgPrice * rate;
+        switch (PositionSide.valueOf(positionSide)) {
+            case LONG:
+                return orgPrice + dp;
+            case SHORT:
+                return orgPrice - dp;
+        }
+        throw new BzkRuntimeException("not support " + positionSide);
+    }
+
+
 
     public static DirectionUtils getInstance() {
         return instance;
