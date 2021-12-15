@@ -8,7 +8,4 @@ public class TestTSDB {
 
     private RestTemplate restTemplate = new RestTemplate();
 
-    String example = """
-     Example text""";
-
 }
