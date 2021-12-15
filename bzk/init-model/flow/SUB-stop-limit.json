@@ -100,7 +100,44 @@
     "minLogLv" : "DEBUG"
   } ],
   "varCfgNames" : [ "crypto-symbol.json", "fin-exchange-manage.json" ],
-  "vars" : { },
+  "vars" : {
+    "symbol" : "BCH",
+    "orderLimitBody" : {
+      "stopPrice" : 424.6316104067401,
+      "targetPrice" : 427.19477908122747
+    },
+    "positionSide" : "LONG",
+    "position" : {
+      "LONG" : {
+        "entryPrice" : 0,
+        "isAutoAddMargin" : true,
+        "leverage" : 75,
+        "maxNotionalValue" : 10000,
+        "liquidationPrice" : 0,
+        "markPrice" : 427.39,
+        "positionAmt" : 0,
+        "symbol" : "BCH",
+        "unrealizedProfit" : 0,
+        "marginType" : "cross",
+        "isolatedMargin" : 0,
+        "positionSide" : "LONG"
+      },
+      "SHORT" : {
+        "entryPrice" : 0,
+        "isAutoAddMargin" : true,
+        "leverage" : 75,
+        "maxNotionalValue" : 10000,
+        "liquidationPrice" : 0,
+        "markPrice" : 427.39,
+        "positionAmt" : 0,
+        "symbol" : "BCH",
+        "unrealizedProfit" : 0,
+        "marginType" : "cross",
+        "isolatedMargin" : 0,
+        "positionSide" : "SHORT"
+      }
+    }
+  },
   "entry" : {
     "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
     "boxUid" : "stopO9zVlimit",
@@ -114,5 +151,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 27
+  "version" : 29
 }
