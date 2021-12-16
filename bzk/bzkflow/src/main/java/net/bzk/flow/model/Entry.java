@@ -25,7 +25,8 @@ public class Entry implements OType {
 
 		private long period;
 		private ChronoUnit unit;
-		private long initialDelay; 
+		private long initialDelay;
+		private String cronExpression;
 		
 	}
 	

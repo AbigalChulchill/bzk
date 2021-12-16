@@ -41,6 +41,11 @@ export class FixedRateEntry extends Entry {
     type: PropType.Number
   })
   public initialDelay = 0;
+  @PropInfo({
+    title: 'cronExpression',
+    type: PropType.Text
+  })
+  public cronExpression = '0 0/5 0 ? * *';
 
 }
 
@@ -94,6 +99,6 @@ export class EventEntry extends Entry {
     customViewFolded: true
   })
   @Type(() => Condition)
-  public condition: Condition = new ConditionTxt() ;
+  public condition: Condition = new ConditionTxt();
 
 }
