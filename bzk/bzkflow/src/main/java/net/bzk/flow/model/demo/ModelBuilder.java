@@ -37,6 +37,7 @@ public class ModelBuilder {
 		ans.setBoxUid(model.getBoxs().stream().findFirst().get().getUid());
 		ans.setInitialDelay(2);
 		ans.setPeriod(-1);
+		ans.setCronExpression("0 0/10 * * * *");
 		ans.setUnit(ChronoUnit.SECONDS);
 		return ans;
 	}

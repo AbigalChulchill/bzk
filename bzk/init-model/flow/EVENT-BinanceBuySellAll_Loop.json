@@ -88,7 +88,7 @@
       "kind" : "NONE",
       "next" : null,
       "left" : "${data}",
-      "right" : "CurrentCMCQuote",
+      "right" : "CryptocurrencyQuote",
       "not" : false,
       "type" : "equal"
     }
@@ -99,5 +99,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 16
+  "version" : 18
 }

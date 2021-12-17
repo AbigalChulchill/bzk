@@ -1,7 +1,7 @@
 {
   "clazz" : "net.bzk.flow.model.Flow",
-  "uid" : "QbvxTDraJESZ",
-  "name" : "CRON-5M-CryptocurrencyQuote",
+  "uid" : "DEVFTDraJRCQ",
+  "name" : "DEV-Fetch-Range-CryptocurrencyQuote",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
     "uid" : "zYfNNRDbILHI",
@@ -19,27 +19,38 @@
       "asynced" : false,
       "inputData" : [ {
         "key" : "startTime",
-        "val" : "null"
+        "val" : "2021-12-06T00:00:00+00:00"
       }, {
         "key" : "limit",
-        "val" : "1"
+        "val" : "12"
       } ],
       "outputReflects" : [ ]
     }, {
-      "clazz" : "net.bzk.flow.model.Action$EventAction",
-      "uid" : "3uHcnXfvAvB5",
-      "name" : "EventPush",
+      "clazz" : "net.bzk.flow.model.Action$PolyglotAction",
+      "uid" : "YmcqZtlkFDFd",
+      "name" : "",
       "tryErrorble" : false,
       "enable" : true,
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "data" : "CryptocurrencyQuote"
+      "code" : "const startTime = new Date('${startTime}');\r\nstartTime.setSeconds(startTime.getSeconds() + 60*60);\r\nvar startiso = startTime.toISOString();\r\nstartiso;",
+      "polyglot" : "js",
+      "resultLv" : "not_specify",
+      "resultKey" : "startTime"
     } ],
     "links" : [ ],
-    "vars" : { },
-    "taskSort" : [ "TChdkuQhIu7d", "3uHcnXfvAvB5" ],
-    "whileJudgment" : null,
+    "vars" : {
+      "startTime" : "2021-12-01T00:00:00+00:00"
+    },
+    "taskSort" : [ "TChdkuQhIu7d", "YmcqZtlkFDFd" ],
+    "whileJudgment" : {
+      "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
+      "kind" : "NONE",
+      "next" : null,
+      "polyglot" : "js",
+      "code" : "const startTime = new Date('${startTime}');\r\nconst now = new Date('2021-12-16T00:00:00+00:00');\r\nconst check = (startTime<now);\r\ncheck;"
+    },
     "transition" : {
       "toBox" : "",
       "endTag" : "TODO Why",
@@ -52,13 +63,11 @@
   "varCfgNames" : [ ],
   "vars" : { },
   "entry" : {
-    "clazz" : "net.bzk.flow.model.Entry$FixedRateEntry",
+    "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
     "boxUid" : "zYfNNRDbILHI",
-    "autoRegister" : true,
-    "period" : -1,
-    "unit" : "SECONDS",
-    "initialDelay" : 2,
-    "cronExpression" : "0 0/5 * * * *"
+    "autoRegister" : false,
+    "requiredKeys" : [ ],
+    "outputKeys" : [ ]
   },
   "threadCfg" : {
     "corePoolSize" : 10,
@@ -66,5 +75,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 6
+  "version" : 20
 }

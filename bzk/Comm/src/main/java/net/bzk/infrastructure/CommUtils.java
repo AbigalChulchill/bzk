@@ -17,6 +17,7 @@ import java.util.function.Supplier;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.core.io.Resource;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -113,12 +114,12 @@ public class CommUtils {
 		return System.getProperty("os.name").toLowerCase().contains("win");
 	}
 
-	public static boolean isNumeric(String strNum) {
+	public static boolean isInt(String strNum) {
 		if (strNum == null) {
 			return false;
 		}
 		try {
-			double d = Double.parseDouble(strNum);
+			long d = Long.parseLong(strNum);
 		} catch (NumberFormatException nfe) {
 			return false;
 		}
