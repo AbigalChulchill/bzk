@@ -19,29 +19,29 @@
       "asynced" : false,
       "inputData" : [ {
         "key" : "startTime",
-        "val" : "2021-12-06T00:00:00+00:00"
+        "val" : "${startTime}"
       }, {
         "key" : "limit",
-        "val" : "12"
+        "val" : "!javascript===\n${intervalSenconds}/(60*5)"
       } ],
       "outputReflects" : [ ]
     }, {
       "clazz" : "net.bzk.flow.model.Action$PolyglotAction",
       "uid" : "YmcqZtlkFDFd",
-      "name" : "",
+      "name" : "Vars",
       "tryErrorble" : false,
       "enable" : true,
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "code" : "const startTime = new Date('${startTime}');\r\nstartTime.setSeconds(startTime.getSeconds() + 60*60);\r\nvar startiso = startTime.toISOString();\r\nstartiso;",
+      "code" : "const startTime = new Date('${startTime}');\r\nstartTime.setSeconds(startTime.getSeconds() + ${intervalSenconds});\r\nvar startiso = startTime.toISOString();\r\nstartiso;",
       "polyglot" : "js",
       "resultLv" : "not_specify",
       "resultKey" : "startTime"
     } ],
     "links" : [ ],
     "vars" : {
-      "startTime" : "2021-12-01T00:00:00+00:00"
+      "startTime" : "2021-12-11T00:00:00+00:00"
     },
     "taskSort" : [ "TChdkuQhIu7d", "YmcqZtlkFDFd" ],
     "whileJudgment" : {
@@ -61,7 +61,9 @@
     "minLogLv" : "DEBUG"
   } ],
   "varCfgNames" : [ ],
-  "vars" : { },
+  "vars" : {
+    "intervalSenconds" : 1200
+  },
   "entry" : {
     "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
     "boxUid" : "zYfNNRDbILHI",
@@ -75,5 +77,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 20
+  "version" : 24
 }
