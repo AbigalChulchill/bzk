@@ -22,7 +22,7 @@
         "val" : "null"
       }, {
         "key" : "limit",
-        "val" : "1"
+        "val" : "2"
       } ],
       "outputReflects" : [ ]
     }, {
@@ -66,5 +66,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 6
+  "version" : 8
 }

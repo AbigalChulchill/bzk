@@ -68,7 +68,7 @@
       },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "code" : "const resp= ${resp};\nconst prd_name_list=${symbols};\nconst ans = [];\n\nfor (const prd of prd_name_list) {\n    const ochls = resp[prd];\n   // let last = ochls[1];\n   for (const kData of ochls) {\n    setupkData(prd,kData);\n   }\n}\n\nfunction setupkData(prd,k){\n    genPointDto(prd,'open',k.open,k.openAt);\n    genPointDto(prd,'high',k.high,k.openAt);\n    genPointDto(prd,'low',k.low,k.openAt);\n    genPointDto(prd,'close',k.close,k.openAt);\n    genPointDto(prd,'volume',k.volume,k.openAt);\n    genPointDto(prd,'quoteAssetVolume',k.quoteAssetVolume,k.openAt);\n    genPointDto(prd,'takerBuyQuoteAssetVolume',k.takerBuyQuoteAssetVolume,k.openAt);\n\n}\n\nfunction isLast(ochl){\n    const openAt = new Date(ochl.openAt);\n    const closeAt = new Date(ochl.closeAt);\n    return Math.abs(closeAt - openAt) < (1000*60*2);\n}\n\n\n\nfunction genPointDto(prd,field,v,time){\n  const row = {\n      measurement : 'realtime',\n      tags:{\n        symbol : prd,\n        category:'cryptocurrency',\n        source:'binance',\n        interval:'5m'\n      },\n      field: field,\n      val:v,\n      time :time\n  };\n  ans.push(row);\n  //return row;\n}\n\nans;\n",
+      "code" : "const resp= ${resp};\nconst prd_name_list=${symbols};\nconst ans = [];\n\nfor (const prd of prd_name_list) {\n    const ochls = resp[prd];\n   // let last = ochls[1];\n   for (const kData of ochls) {\n        if(isNotLast(kData)) continue;\n        setupkData(prd,kData);\n   }\n}\n\nfunction setupkData(prd,k){\n    genPointDto(prd,'open',k.open,k.openAt);\n    genPointDto(prd,'high',k.high,k.openAt);\n    genPointDto(prd,'low',k.low,k.openAt);\n    genPointDto(prd,'close',k.close,k.openAt);\n    genPointDto(prd,'volume',k.volume,k.openAt);\n    genPointDto(prd,'quoteAssetVolume',k.quoteAssetVolume,k.openAt);\n    genPointDto(prd,'takerBuyQuoteAssetVolume',k.takerBuyQuoteAssetVolume,k.openAt);\n\n}\n\nfunction isNotLast(ochl){\n    const nowAt = new Date();\n    const openAt = new Date(ochl.openAt);\n    return (nowAt - openAt) < ((5*60 -10)*1000);\n}\n\n\n\nfunction genPointDto(prd,field,v,time){\n  const row = {\n      measurement : 'realtime',\n      tags:{\n        symbol : prd,\n        category:'cryptocurrency',\n        source:'binance',\n        interval:'5m'\n      },\n      field: field,\n      val:v,\n      time :time\n  };\n  ans.push(row);\n  //return row;\n}\n\nans;\n",
       "polyglot" : "js",
       "resultLv" : "not_specify",
       "resultKey" : "body"
@@ -236,5 +236,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 23
+  "version" : 26
 }
