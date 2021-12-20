@@ -19,7 +19,7 @@
       "asynced" : false,
       "inputData" : [ {
         "key" : "startTime",
-        "val" : "null"
+        "val" : ""
       }, {
         "key" : "limit",
         "val" : "2"
@@ -66,5 +66,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 8
+  "version" : 10
 }
