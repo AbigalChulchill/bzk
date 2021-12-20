@@ -46,7 +46,7 @@
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "code" : "const lastBigger = ${lastBigger};\nconst bigVal = lastBigger.val;\nconst tsdbLastVal = ${tsdbLastVal};\n\nfunction calcPositionSide(){\n    return lastBigger.min.time > lastBigger.max.time ? 'LONG' : 'SHORT';\n}\n\nconst positionSide = calcPositionSide();\n\n\nfunction calcBigger(){\n    return lastBigger.min.time > lastBigger.max.time ? lastBigger.min : lastBigger.max;\n}\n\nconst biggerInfo = calcBigger();\n\n\nfunction clacBiggSeconds(){\n    return $tsFunc.subtractKeySecondsToNow(biggerInfo.targetKey);\n}\n\nfunction genOrderObjJson(){\n    const sp = $directionUtils.plusPriceByRate(positionSide,bigVal,-0.006);\n    return JSON.stringify({\n        \"targetPrice\":bigVal,\n        \"stopPrice\": sp\n    });\n}\n\n$bzk.putObj('biggSeconds',clacBiggSeconds());\n$bzk.putObj('~positionSide',positionSide);\n$bzk.put('biggerInfo',JSON.stringify(biggerInfo));\n$bzk.putObj('backD',tsdbLastVal-bigVal);\n$bzk.put('orderLimitBody',genOrderObjJson());\ntrue;",
+      "code" : "const difMa360mMapBigger = ${difMa360mMapBigger};\nconst priceBigger = ${priceBigger};\n// const bigVal = priceBigger.previousVal;\n// const tsdbLastVal = priceBigger.;\n\nfunction calcPositionSide(){\n    return difMa360mMapBigger.previousMin.time > difMa360mMapBigger.previousMax.time ? 'LONG' : 'SHORT';\n}\n\nconst positionSide = calcPositionSide();\n\n\nfunction calcBigger(){\n    return difMa360mMapBigger.previousMin.time > difMa360mMapBigger.previousMax.time ? difMa360mMapBigger.previousMin : difMa360mMapBigger.previousMax;\n}\n\nconst biggerInfo = calcBigger();\n\n\nfunction clacBiggSeconds(){\n    return $tsFunc.subtractKeySecondsToNow(biggerInfo.targetKey);\n}\n\nfunction genOrderObjJson(){\n    const sp = $directionUtils.plusPriceByRate(positionSide,priceBigger.lastVal,-0.006);\n    return JSON.stringify({\n        \"targetPrice\":priceBigger.previousVal,\n        \"stopPrice\": sp\n    });\n}\n\n$bzk.putObj('biggSeconds',clacBiggSeconds());\n$bzk.putObj('~positionSide',positionSide);\n$bzk.put('biggerInfo',JSON.stringify(biggerInfo));\n$bzk.put('orderLimitBody',genOrderObjJson());\ntrue;",
       "polyglot" : "js",
       "resultLv" : "not_specify",
       "resultKey" : "InitVars"
@@ -109,7 +109,7 @@
         "kind" : "NONE",
         "next" : null,
         "polyglot" : "js",
-        "code" : "const backD = ${backD};\r\nconst tsdbLastVal = ${tsdbLastVal};\r\nconst positionSide = '${positionSide}';\r\n\r\nfunction check(){\r\n    const rate = backD / tsdbLastVal;\r\n    if (rate < 0.001) return false;\r\n    if (positionSide == 'LONG') return backD>0;\r\n    if (positionSide == 'SHORT') return backD<0;\r\n    throw new Error(positionSide);\r\n}\r\n\r\n!check();\r\n"
+        "code" : "const lastVal = ${priceBigger.lastVal};\r\nconst previousVal = ${priceBigger.priceBigger};\r\nconst positionSide = '${positionSide}';\r\n\r\nfunction check(){\r\n    const d= lastVal-previousVal;\r\n    const rate = Math.abs( d / previousVal);\r\n    if (rate < 0.0001) return false;\r\n    if (positionSide == 'LONG') return d>0;\r\n    if (positionSide == 'SHORT') return d<0;\r\n    throw new Error(positionSide);\r\n}\r\n\r\n!check();\r\n"
       },
       "transition" : {
         "toBox" : "",
@@ -156,4 +156,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 38}
+  "version" : 42
+}
