@@ -38,7 +38,7 @@
       "asynced" : false,
       "inputData" : [ {
         "key" : "body",
-        "val" : "{\n  \"symbol\": \"${symbol}\",\n  \"size\": 5,\n  \"positionSide\": \"${positionSide}\",\n  \"withdrawAmountRate\": 0.05,\n  \"priceBuffRate\": 1.001,\n  \"name\": \"order/post\",\n  \"exchange\": \"binance\",\n  \"strategy\": \"LIMIT\",\n  \"proportionalRate\": 1.186,\n  \"gapRate\": ${orderLimitBody.gapRate},\n  \"targetPrice\":${orderLimitBody.targetPrice},\n  \"stopPrice\":${orderLimitBody.stopPrice}\n}"
+        "val" : "{\n  \"symbol\": \"${symbol}\",\n  \"size\": 5,\n  \"positionSide\": \"${positionSide}\",\n  \"withdrawAmountRate\": 0.08,\n  \"priceBuffRate\": 1.001,\n  \"name\": \"order/post\",\n  \"exchange\": \"binance\",\n  \"strategy\": \"LIMIT\",\n  \"proportionalRate\": 1.186,\n  \"gapRate\": ${orderLimitBody.gapRate},\n  \"targetPrice\":${orderLimitBody.targetPrice},\n  \"stopPrice\":${orderLimitBody.stopPrice}\n}"
       }, {
         "key" : "tags",
         "val" : "[\"st\"]"
@@ -151,5 +151,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 29
+  "version" : 31
 }
