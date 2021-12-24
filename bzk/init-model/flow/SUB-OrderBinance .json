@@ -80,7 +80,7 @@
     },
     "minLogLv" : "DEBUG"
   } ],
-  "varCfgNames" : [ "binance.json", "mail.json", "fin-proxy.json", "fin-exchange-manage.json" ],
+  "varCfgNames" : [  "mail.json", "fin-proxy.json", "fin-exchange-manage.json" ],
   "vars" : {
     "body" : {
       "symbol" : "XRP",

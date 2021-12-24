@@ -15,9 +15,9 @@
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "url" : "${binance.proxyHost}proxy",
+      "url" : "${finExManageApiUrl}",
       "uriVariables" : { },
-      "body" : "!javascript===\n// var start = new Date();\n// start.setSeconds(start.getSeconds() - 2.5*60*60);\n// var startAt = start.toISOString();\nvar body= {\n    \"name\": \"get_all_orders\",\n    \"apiKey\":\"${binance.key}\",\n    \"secret\":\"${binance.secret}\",\n    \"symbol\": \"${symbol}\",\n    \"status\":\"NEW\"\n};\nbody;",
+      "body" : "{\n    \"name\": \"order/query/get\",\n    \"exchange\":\"binance\",\n    \"symbol\": \"${symbol}\",\n    \"status\":\"NEW\",\n    \"__bzk_api_key\": \"${finExManageApiKey}\"\n}",
       "method" : "POST",
       "headers" : { },
       "headersFlat" : "",
@@ -25,25 +25,6 @@
         "lv" : "not_specify",
         "key" : "result"
       }
-    }, {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "xS9t93fuw2hH",
-      "name" : "call-1",
-      "tryErrorble" : false,
-      "enable" : true,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "flowUid" : "7fDTbOFBwVkP",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "orders",
-        "val" : "${toDelOds}"
-      }, {
-        "key" : "symbol",
-        "val" : "${symbol}"
-      } ],
-      "outputReflects" : [ ]
     }, {
       "clazz" : "net.bzk.flow.model.HttpAction",
       "uid" : "UUgNCLrtUbl3",
@@ -53,9 +34,9 @@
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "url" : "${binance.proxyHost}proxy",
+      "url" : "${finExManageApiUrl}",
       "uriVariables" : { },
-      "body" : "{\r\n    \"name\":\"get_position\",\r\n    \"apiKey\":\"${binance.key}\",\r\n    \"secret\":\"${binance.secret}\",\r\n    \"symbol\":\"${symbol}\"\r\n}",
+      "body" : "{\r\n    \"name\": \"position/get\",\r\n    \"__bzk_api_key\": \"${finExManageApiKey}\",\r\n    \"exchange\": \"binance\",\r\n    \"symbol\":\"${symbol}\"\r\n}",
       "method" : "POST",
       "headers" : { },
       "headersFlat" : "",
@@ -139,9 +120,9 @@
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "url" : "${binance.proxyHost}proxy",
+      "url" : "${finExManageApiUrl}",
       "uriVariables" : { },
-      "body" : "{\n    \"name\":\"get_recent_trades_list\",\n    \"apiKey\":\"${binance.key}\",\n    \"secret\":\"${binance.secret}\",\n    \"symbol\":\"${symbol}\",\n    \"limit\":100,\n    \"timeMaped\":false\n}",
+      "body" : "{\n    \"name\": \"market/get_recent_trades_list\",\n    \"exchange\": \"binance\",\n    \"symbol\":\"${symbol}\",\n    \"limit\":100,\n    \"timeMaped\":false,\n    \"__bzk_api_key\": \"${finExManageApiKey}\"\n}",
       "method" : "POST",
       "headers" : { },
       "headersFlat" : "",
@@ -149,12 +130,31 @@
         "lv" : "not_specify",
         "key" : "binanceQuote"
       }
+    }, {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "kAlyLS9yTOMg",
+      "name" : "Post",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "url" : "${finExManageApiUrl}",
+      "uriVariables" : { },
+      "body" : "{\r\n    \"name\": \"order/clean_orders\",\r\n    \"exchange\": \"binance\",\r\n    \"symbol\": \"${symbol}\",\r\n    \"currentOds\": ${toDelOds},\r\n    \"__bzk_api_key\": \"${finExManageApiKey}\"\r\n}",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : "callResp"
+      }
     } ],
     "links" : [ ],
     "vars" : {
       "symbolIdx" : 0
     },
-    "taskSort" : [ "QvboCjjxxF3d", "CqZK2BeXJdkR", "9TkSb5GN94Km", "w8eTa5RYg3u7", "aD6jPbJPZE3R", "UUgNCLrtUbl3", "mI5kvjAUl9xe", "xS9t93fuw2hH" ],
+    "taskSort" : [ "QvboCjjxxF3d", "CqZK2BeXJdkR", "9TkSb5GN94Km", "w8eTa5RYg3u7", "aD6jPbJPZE3R", "UUgNCLrtUbl3", "mI5kvjAUl9xe", "kAlyLS9yTOMg" ],
     "whileJudgment" : {
       "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
       "kind" : "NONE",
@@ -172,7 +172,7 @@
     },
     "minLogLv" : "DEBUG"
   } ],
-  "varCfgNames" : [ "binance.json", "crypto-symbol.json" ],
+  "varCfgNames" : [ "crypto-symbol.json", "fin-exchange-manage.json" ],
   "vars" : { },
   "entry" : {
     "clazz" : "net.bzk.flow.model.Entry$FixedRateEntry",
@@ -180,7 +180,8 @@
     "autoRegister" : true,
     "period" : 20,
     "unit" : "MINUTES",
-    "initialDelay" : 0
+    "initialDelay" : 0,
+    "cronExpression" : null
   },
   "threadCfg" : {
     "corePoolSize" : 10,
@@ -188,5 +189,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 41
+  "version" : 47
 }

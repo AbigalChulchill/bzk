@@ -115,7 +115,7 @@
     },
     "minLogLv" : "DEBUG"
   } ],
-  "varCfgNames" : [ "binance.json", "crypto-symbol.json", "fin-exchange-manage.json" ],
+  "varCfgNames" : [  "crypto-symbol.json", "fin-exchange-manage.json" ],
   "vars" : { },
   "entry" : {
     "clazz" : "net.bzk.flow.model.Entry$PluginEntry",

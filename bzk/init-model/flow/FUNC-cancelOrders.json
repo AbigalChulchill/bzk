@@ -106,7 +106,7 @@
     },
     "minLogLv" : "DEBUG"
   } ],
-  "varCfgNames" : [ "binance.json" ],
+  "varCfgNames" : [  ],
   "vars" : {
     "symbol" : "EOS",
     "orderSubtotal" : {
