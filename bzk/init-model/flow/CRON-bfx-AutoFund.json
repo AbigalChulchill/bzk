@@ -1,0 +1,84 @@
+{
+  "clazz" : "net.bzk.flow.model.Flow",
+  "uid" : "rQvx6dfy2MSS",
+  "name" : "CRON-bfx-AutoFund",
+  "boxs" : [ {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "yXYP6rbTgiJI",
+    "name" : "Box",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "9aoVdlf0cqZB",
+      "name" : "Call",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flowUid" : "ebBli92LdIYZzOo7",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "currency",
+        "val" : "${currency}"
+      } ],
+      "outputReflects" : [ ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
+      "uid" : "IXcDURKKInfg",
+      "name" : "InitVars",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flatData" : [ {
+        "key" : "currency",
+        "val" : "!javascript===\nconst sbs = ${currencys};\nconst idx = ${cidx};\nconst sb = sbs[idx];\nsb"
+      }, {
+        "key" : "cidx",
+        "val" : "!javascript===\n${cidx}+1"
+      } ]
+    } ],
+    "links" : [ ],
+    "vars" : {
+      "cidx" : 0
+    },
+    "taskSort" : [ "IXcDURKKInfg", "9aoVdlf0cqZB" ],
+    "whileJudgment" : {
+      "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
+      "kind" : "NONE",
+      "next" : null,
+      "left" : "${cidx}",
+      "right" : "!javascript===\nconst sbs = ${currencys};\nconst len= sbs.length;\nlen",
+      "type" : "lessthan"
+    },
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "TODO Why",
+      "failEnd" : false,
+      "endResultKeys" : [ ],
+      "resultCode" : ""
+    },
+    "minLogLv" : "DEBUG"
+  } ],
+  "varCfgNames" : [ ],
+  "vars" : {
+    "currencys" : [ "USD" ]
+  },
+  "entry" : {
+    "clazz" : "net.bzk.flow.model.Entry$FixedRateEntry",
+    "boxUid" : "yXYP6rbTgiJI",
+    "autoRegister" : true,
+    "period" : 35,
+    "unit" : "MINUTES",
+    "initialDelay" : 0,
+    "cronExpression" : ""
+  },
+  "threadCfg" : {
+    "corePoolSize" : 10,
+    "maximumPoolSize" : 50,
+    "keepAliveTime" : 500,
+    "aliveUnit" : "MINUTES"
+  },
+  "version" : 6
+}

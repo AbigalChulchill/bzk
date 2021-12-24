@@ -15,7 +15,7 @@
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "url" : "https://api-pub.bitfinex.com/v2/book/fUSD/P1?len=100",
+      "url" : "https://api-pub.bitfinex.com/v2/book/f${currency}/P1?len=100",
       "uriVariables" : { },
       "body" : "{}",
       "method" : "GET",
@@ -75,7 +75,8 @@
   } ],
   "varCfgNames" : [ ],
   "vars" : {
-    "balance" : 219
+    "balance" : 219,
+    "currency" : "USD"
   },
   "entry" : {
     "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
@@ -90,5 +91,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 11
+  "version" : 13
 }

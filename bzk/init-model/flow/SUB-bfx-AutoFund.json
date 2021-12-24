@@ -1,7 +1,7 @@
 {
   "clazz" : "net.bzk.flow.model.Flow",
   "uid" : "ebBli92LdIYZzOo7",
-  "name" : "CRON-AutoFund",
+  "name" : "SUB-bfx-AutoFund",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
     "uid" : "os5alTWuo8sG",
@@ -62,7 +62,7 @@
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "code" : "const cmd = ${cmd};\nconst r = cmd.rate+'';\nconst p = cmd.day;\nconst a = cmd.amount+'';\nconst ans= {\n \t\ttype: 'LIMIT',\n \t\tsymbol: 'fUSD',\n \t\tamount: a,\n \t\trate: r,\n \t\tperiod: p\n};\nans;",
+      "code" : "const cmd = ${cmd};\nconst r = cmd.rate+'';\nconst p = cmd.day;\nconst a = cmd.amount+'';\nconst ans= {\n \t\ttype: 'LIMIT',\n \t\tsymbol: 'f${currency}',\n \t\tamount: a,\n \t\trate: r,\n \t\tperiod: p\n};\nans;",
       "polyglot" : "js",
       "resultLv" : "not_specify",
       "resultKey" : "bfxRestBody"
@@ -100,7 +100,7 @@
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "syntax" : "$[?(@[1]=='USD' &&  @[0]=='funding')].*",
+      "syntax" : "$[?(@[1]=='${currency}' &&  @[0]=='funding')].*",
       "source" : {
         "lv" : "not_specify",
         "key" : "bfxWallet"
@@ -120,7 +120,7 @@
       "minLogLv" : "NONE",
       "flatData" : [ {
         "key" : "bfx.fund",
-        "val" : "!javascript===\r\n const orgUsdW = ${bfxWallet};\nconst ans = {\n    balance : orgUsdW[4],\n    sum : orgUsdW[2],\n};\nans;\n"
+        "val" : "!javascript===\n const orgUsdW = ${bfxWallet};\nconst ans = {\n    balance : orgUsdW[4],\n    sum : orgUsdW[2],\n};\nans;\n"
       }, {
         "key" : "bfxWallet",
         "val" : "!javascript===\r\n null"
@@ -167,6 +167,9 @@
       "inputData" : [ {
         "key" : "balance",
         "val" : "!javascript===\r\n ${bfx.fund.balance}"
+      }, {
+        "key" : "currency",
+        "val" : "${currency}"
       } ],
       "outputReflects" : [ {
         "srcKey" : "bfx.fund.strategy",
@@ -191,7 +194,7 @@
         "val" : "!javascript===\r\n \"v2/auth/w/funding/offer/cancel/all\""
       }, {
         "key" : "apiBody",
-        "val" : "!javascript===\r\n {\n \t\t\"currency\": \"USD\"\n}"
+        "val" : "{\n \t\t\"currency\": \"${currency}\"\n}"
       }, {
         "key" : "apiMethod",
         "val" : " \"POST\""
@@ -255,14 +258,15 @@
     "minLogLv" : "WARNING"
   } ],
   "varCfgNames" : [ ],
-  "vars" : { },
+  "vars" : {
+    "currency" : "USD"
+  },
   "entry" : {
-    "clazz" : "net.bzk.flow.model.Entry$FixedRateEntry",
+    "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
     "boxUid" : "VzPzT54lux1a8rsJ",
-    "autoRegister" : true,
-    "period" : 35,
-    "unit" : "MINUTES",
-    "initialDelay" : 0
+    "autoRegister" : false,
+    "requiredKeys" : [ "currency" ],
+    "outputKeys" : [ ]
   },
   "threadCfg" : {
     "corePoolSize" : 10,
@@ -270,5 +274,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 6
+  "version" : 8
 }
