@@ -32,15 +32,7 @@ services:
     ports: 
       - "27017:27017"   
     command:  mongod --dbpath /data/db --port 27017 --config /etc/mongo/mongod.conf 
-    ulimits:
-      nofile:
-        soft: 20000
-        hard: 40000
-    deploy:
-      resources:
-        limits:
-          cpus: '1.00'
-          memory: 2048M         
+
   
         
         
