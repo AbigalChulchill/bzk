@@ -68,7 +68,7 @@
   "entry" : {
     "clazz" : "net.bzk.flow.model.Entry$FixedRateEntry",
     "boxUid" : "yXYP6rbTgiJI",
-    "autoRegister" : true,
+    "autoRegister" : false,
     "period" : 35,
     "unit" : "MINUTES",
     "initialDelay" : 0,
@@ -80,5 +80,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 10
+  "version" : 11
 }
