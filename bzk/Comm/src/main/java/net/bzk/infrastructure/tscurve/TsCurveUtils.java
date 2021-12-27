@@ -1,5 +1,6 @@
 package net.bzk.infrastructure.tscurve;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,6 +19,7 @@ public class TsCurveUtils {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Point {
         private int idx;
         private String key;
@@ -35,7 +37,7 @@ public class TsCurveUtils {
         return ChronoUnit.MILLIS.between(k2t, k1t) / 1000;
     }
 
-    public static double subtractKeySecondsToNow(String k2){
+    public static double subtractKeySecondsToNow(String k2) {
         var k1t = ZonedDateTime.now();
         var k2t = ZonedDateTime.parse(k2);
         return ChronoUnit.MILLIS.between(k2t, k1t) / 1000;
@@ -73,6 +75,13 @@ public class TsCurveUtils {
     public static List<Point> sortPoints(TsPeakFinder.AtPointMap apm) {
         var sortKeys = sortTimeKeys(apm.keySet());
         return sortKeys.stream().map(k -> apm.get(k)).collect(Collectors.toList());
+    }
+
+    public static double avgByPoints(List<Point> points) {
+        return points.stream()
+                .mapToDouble(p -> p.getVal())
+                .average()
+                .orElse(Double.NaN);
     }
 
 

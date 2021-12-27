@@ -10,7 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class TsHowBig extends TsCurveFunc.TsCurve {
+public class TsHowBig extends TsCurve {
 
 
     public TsHowBig(Map<String, Double> rMap) {

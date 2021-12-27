@@ -77,33 +77,33 @@ public class TsCurveFunc {
         return TsCurveUtils.subtractKeySecondsToNow(key);
     }
 
+    public double avgByPoints(List<TsCurveUtils.Point> points) {
+        return TsCurveUtils.avgByPoints(points);
+    }
+
+    public double avgByPointMap(Object pointMap) {
+        Map<Double, TsCurveUtils.Point> map = null;
+        if (pointMap instanceof Map) {
+            map = (Map<Double, TsCurveUtils.Point>) pointMap;
+        } else if (pointMap instanceof String) {
+            map = (Map<Double, TsCurveUtils.Point>) JsonUtils.loadByJson((String) pointMap, TsPeakFinder.AtPointMap.class);
+        }
+        return TsCurveUtils.avgByPoints(map.values().stream().collect(Collectors.toList()));
+    }
+
+    public static List<TsCurveUtils.Point> sortPoints(Object pointMap) {
+        TsPeakFinder.AtPointMap map = null;
+        if (pointMap instanceof Map) {
+            map = new TsPeakFinder.AtPointMap((Map<Double, TsCurveUtils.Point>) pointMap);
+        } else if (pointMap instanceof String) {
+            var _map = (Map<Double, TsCurveUtils.Point>) JsonUtils.loadByJson((String) pointMap, TsPeakFinder.AtPointMap.class);
+            map = new TsPeakFinder.AtPointMap(_map);
+        }
+        return TsCurveUtils.sortPoints(map);
+    }
+
     public static TsCurveFunc getInstance() {
         return instance;
     }
 
-    public static class TsCurve {
-        @Getter
-        protected final Map<String, Double> rMap;
-        @Getter
-        protected final List<String> keys;
-        @Getter
-        protected final String firstKey;
-
-        public TsCurve(Map<String, Double> rMap) {
-            this.rMap = rMap;
-            keys = TsCurveUtils.sortIso8601(rMap.keySet());
-            firstKey = keys.get(0);
-        }
-
-        public TsCurveUtils.Point genPoint(int i) {
-            String key = keys.get(i);
-            return TsCurveUtils.Point.builder().key(key).idx(i).val(rMap.get(key)).dtime(TsCurveUtils.subtractKeySeconds(firstKey, key)).build();
-        }
-
-        public double getV(int idx) {
-            String k = keys.get(idx);
-            return rMap.get(k);
-        }
-
-    }
 }

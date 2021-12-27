@@ -4,16 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.bzk.infrastructure.ex.BzkRuntimeException;
-import net.bzk.infrastructure.tscurve.TsCurveFunc;
+import net.bzk.infrastructure.tscurve.TsCurve;
 import net.bzk.infrastructure.tscurve.TsCurveUtils;
 import net.bzk.infrastructure.tscurve.TsHowBig;
-import org.apache.commons.lang3.NotImplementedException;
 
-import java.util.List;
 import java.util.Map;
 
-public class TsBiggerFinder extends TsCurveFunc.TsCurve {
+public class TsBiggerFinder extends TsCurve {
 
     private final TsHowBig howBig;
 

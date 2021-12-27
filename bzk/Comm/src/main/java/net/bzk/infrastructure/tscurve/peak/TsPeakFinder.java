@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.bzk.infrastructure.tscurve.TsCurveFunc;
+import net.bzk.infrastructure.tscurve.TsCurve;
 import net.bzk.infrastructure.tscurve.TsCurveUtils;
 import net.bzk.infrastructure.tscurve.TsCurveUtils.Direction;
 import net.bzk.infrastructure.tscurve.TsCurveUtils.Point;
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class TsPeakFinder extends TsCurveFunc.TsCurve {
+public class TsPeakFinder extends TsCurve {
 
     public enum PointType {
         MINED, MAXED, NONE
@@ -44,7 +44,20 @@ public class TsPeakFinder extends TsCurveFunc.TsCurve {
     }
 
     public static class AtPointMap extends HashMap<Double, Point> {
+        public AtPointMap(int initialCapacity, float loadFactor) {
+            super(initialCapacity, loadFactor);
+        }
 
+        public AtPointMap(int initialCapacity) {
+            super(initialCapacity);
+        }
+
+        public AtPointMap() {
+        }
+
+        public AtPointMap(Map<? extends Double, ? extends Point> m) {
+            super(m);
+        }
     }
 
     @Data

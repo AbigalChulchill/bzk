@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class TsContinuousDirection extends TsCurveFunc.TsCurve {
+public class TsContinuousDirection extends TsCurve {
 
     public static enum Mode {
         UNIFORM_SLOPE
@@ -52,9 +52,9 @@ public class TsContinuousDirection extends TsCurveFunc.TsCurve {
     }
 
     public abstract class ModeLogic {
-        protected final TsCurveFunc.TsCurve curve;
+        protected final TsCurve curve;
 
-        protected ModeLogic(TsCurveFunc.TsCurve curve) {
+        protected ModeLogic(TsCurve curve) {
             this.curve = curve;
         }
 
@@ -63,7 +63,7 @@ public class TsContinuousDirection extends TsCurveFunc.TsCurve {
 
     public class UniformSlopeLogic extends ModeLogic {
 
-        protected UniformSlopeLogic(TsCurveFunc.TsCurve curve) {
+        protected UniformSlopeLogic(TsCurve curve) {
             super(curve);
         }
 

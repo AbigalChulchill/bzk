@@ -9,7 +9,7 @@ import java.util.*;
 
 import net.bzk.infrastructure.tscurve.TsCurveUtils.Point;
 
-public class TsMinMax extends TsCurveFunc.TsCurve {
+public class TsMinMax extends TsCurve {
 
     @Data
     @Builder
