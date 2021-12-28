@@ -69,7 +69,7 @@
         "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
         "kind" : "NONE",
         "next" : null,
-        "left" : "!javascript===\nconst sortVs = $tsFunc.sortValues(${ma.macd10m120m});\nconst n1 = sortVs.get(0);\nconst n2 = sortVs.get(1);\nconst ans = n1 * n2;\nans;",
+        "left" : "!javascript===\nconst sortVs = $tsFunc.sortValues(${cs.macd10m120m});\nconst n1 = sortVs.get(0);\nconst n2 = sortVs.get(1);\nconst ans = n1 * n2;\nans;",
         "right" : "0",
         "type" : "greater_equal"
       },
@@ -109,5 +109,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 14
+  "version" : 16
 }

@@ -45,7 +45,7 @@ public class Condition implements OType {
 	}
 
 	public static enum NumCheckType {
-		equal, greater, greater_equal, lessthan, lessthan_equal
+		equal, greater, greater_equal, lessthan, lessthan_equal , not_equal
 	}
 	
 	@Data

@@ -91,7 +91,7 @@ public class TsCurveFunc {
         return TsCurveUtils.avgByPoints(map.values().stream().collect(Collectors.toList()));
     }
 
-    public static List<TsCurveUtils.Point> sortPoints(Object pointMap) {
+    public  List<TsCurveUtils.Point> sortPoints(Object pointMap) {
         TsPeakFinder.AtPointMap map = null;
         if (pointMap instanceof Map) {
             map = new TsPeakFinder.AtPointMap((Map<Double, TsCurveUtils.Point>) pointMap);

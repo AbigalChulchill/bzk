@@ -19,7 +19,7 @@ export class Condition extends OType {
   //   type: PropType.Enum,
   // })
   // @PropEnums(Object.keys(ConKind))
-  public kind= ConKind.NONE;
+  public kind = ConKind.NONE;
   @Type(() => Condition)
   public next: Condition;
 
@@ -32,7 +32,7 @@ export class Condition extends OType {
 
 
 export enum NumCheckType {
-  equal = 'equal', greater = 'greater', greater_equal = 'greater_equal', lessthan = 'lessthan', lessthan_equal = 'lessthan_equal'
+  equal = 'equal', greater = 'greater', greater_equal = 'greater_equal', lessthan = 'lessthan', lessthan_equal = 'lessthan_equal', not_equal = 'not_equal'
 }
 
 
@@ -41,7 +41,7 @@ export enum TxtCheckType {
 }
 
 export enum TimeCheckType {
-  After='After', Before='Before', Equal='Equal'
+  After = 'After', Before = 'Before', Equal = 'Equal'
 }
 
 @PropClazz({
@@ -72,12 +72,12 @@ export class ConditionInclude extends Condition {
 export class ConditionTxt extends Condition {
   public left = '';
   public right = '';
-  public type= TxtCheckType.contains;
+  public type = TxtCheckType.contains;
   @PropInfo({
     title: 'not',
     type: PropType.Boolean
   })
-  public  not = false;
+  public not = false;
 
   public static gen(): ConditionTxt {
     const na = new ConditionTxt();
@@ -97,12 +97,12 @@ export class ConditionTxt extends Condition {
 export class ConditionTime extends Condition {
   public left = '';
   public right = '';
-  public type= TimeCheckType.After;
+  public type = TimeCheckType.After;
   @PropInfo({
     title: 'not',
     type: PropType.Boolean
   })
-  public  not = false;
+  public not = false;
 
   public static gen(): ConditionTime {
     const na = new ConditionTime();

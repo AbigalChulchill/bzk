@@ -75,6 +75,7 @@ public class TsPeakFinder extends TsCurve {
         private Point nearMin;
         private Point nearPeak;
         private PointType nearPeakType;
+        private List<Point> peaks;
     }
 
 
@@ -162,6 +163,7 @@ public class TsPeakFinder extends TsCurve {
                 .nearMax(nearMax)
                 .nearMin(nearMin)
                 .nearPeak(nearPoint)
+                .peaks(minMaxInfo.all)
                 .nearPeakType(peakType).build();
 
     }

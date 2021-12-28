@@ -63,9 +63,9 @@
     }, {
       "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
       "uid" : "3oi9e2ESsDQ3",
-      "name" : "CallStopLimit",
+      "name" : "CallBigger",
       "tryErrorble" : false,
-      "enable" : true,
+      "enable" : false,
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
@@ -80,6 +80,28 @@
         "toKey" : {
           "lv" : "not_specify",
           "key" : "stopLimitResult"
+        }
+      } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "jTyoT1poRNiz",
+      "name" : "CallDif",
+      "tryErrorble" : false,
+      "enable" : true,
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flowUid" : "eH4vMOnKs3ps",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "__ALL__",
+        "val" : "${~__ALL__}"
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "__pk_result",
+        "toKey" : {
+          "lv" : "not_specify",
+          "key" : "CallDifResult"
         }
       } ]
     } ],
@@ -104,7 +126,7 @@
       "enable" : true
     } ],
     "vars" : { },
-    "taskSort" : [ "Div2tmjgl8JG", "POnGmKqao8p1", "DmpvFO68Ya38", "NPJloJ9SkiyJ", "3oi9e2ESsDQ3" ],
+    "taskSort" : [ "Div2tmjgl8JG", "POnGmKqao8p1", "DmpvFO68Ya38", "NPJloJ9SkiyJ", "3oi9e2ESsDQ3", "jTyoT1poRNiz" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
@@ -115,7 +137,7 @@
     },
     "minLogLv" : "DEBUG"
   } ],
-  "varCfgNames" : [  "crypto-symbol.json", "fin-exchange-manage.json" ],
+  "varCfgNames" : [ "crypto-symbol.json", "fin-exchange-manage.json" ],
   "vars" : { },
   "entry" : {
     "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
@@ -130,5 +152,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 223
+  "version" : 229
 }
