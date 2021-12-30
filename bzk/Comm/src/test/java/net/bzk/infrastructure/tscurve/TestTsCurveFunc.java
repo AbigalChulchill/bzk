@@ -2,6 +2,7 @@ package net.bzk.infrastructure.tscurve;
 
 import net.bzk.infrastructure.CommUtils;
 import net.bzk.infrastructure.JsonUtils;
+import net.bzk.infrastructure.tscurve.dto.Point;
 import net.bzk.infrastructure.tscurve.peak.PeakLogicDto;
 import net.bzk.infrastructure.tscurve.peak.TsPeakFinder;
 import org.junit.jupiter.api.Test;
@@ -129,7 +130,7 @@ public class TestTsCurveFunc {
         System.out.println(ans);
 
         var keys = TsCurveUtils.sortTimeKeys(ans.getTrendInfo().getAllList().keySet());
-        List<TsCurveUtils.Point> ps = keys.stream().map(k -> ans.getTrendInfo().getAllList().get(k)).collect(Collectors.toList());
+        List<Point> ps = keys.stream().map(k -> ans.getTrendInfo().getAllList().get(k)).collect(Collectors.toList());
         System.out.println(ps);
 
         var cResult = TsCurveFunc.getInstance().calcCycle(JsonUtils.toJson(ans.getTrendInfo()));

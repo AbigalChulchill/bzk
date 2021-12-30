@@ -1,7 +1,7 @@
 package net.bzk.infrastructure.tscurve;
 
-import lombok.Getter;
 import net.bzk.infrastructure.JsonUtils;
+import net.bzk.infrastructure.tscurve.dto.Point;
 import net.bzk.infrastructure.tscurve.peak.PeakLogicType;
 import net.bzk.infrastructure.tscurve.peak.TsPeakCycle;
 import net.bzk.infrastructure.tscurve.peak.TsPeakFinder;
@@ -68,6 +68,10 @@ public class TsCurveFunc {
         return TsCurveUtils.sortValues(rMap);
     }
 
+    public List<Point> toPoints(Map<String, Double> rMap) {
+        return TsCurveUtils.toPoints(rMap);
+    }
+
     public List<String> sortIso8601Key(Map<String, Double> rMap) {
         return TsCurveUtils.sortIso8601(rMap.keySet());
     }
@@ -77,26 +81,26 @@ public class TsCurveFunc {
         return TsCurveUtils.subtractKeySecondsToNow(key);
     }
 
-    public double avgByPoints(List<TsCurveUtils.Point> points) {
+    public double avgByPoints(List<Point> points) {
         return TsCurveUtils.avgByPoints(points);
     }
 
     public double avgByPointMap(Object pointMap) {
-        Map<Double, TsCurveUtils.Point> map = null;
+        Map<Double, Point> map = null;
         if (pointMap instanceof Map) {
-            map = (Map<Double, TsCurveUtils.Point>) pointMap;
+            map = (Map<Double, Point>) pointMap;
         } else if (pointMap instanceof String) {
-            map = (Map<Double, TsCurveUtils.Point>) JsonUtils.loadByJson((String) pointMap, TsPeakFinder.AtPointMap.class);
+            map = (Map<Double, Point>) JsonUtils.loadByJson((String) pointMap, TsPeakFinder.AtPointMap.class);
         }
         return TsCurveUtils.avgByPoints(map.values().stream().collect(Collectors.toList()));
     }
 
-    public  List<TsCurveUtils.Point> sortPoints(Object pointMap) {
+    public List<Point> sortPoints(Object pointMap) {
         TsPeakFinder.AtPointMap map = null;
         if (pointMap instanceof Map) {
-            map = new TsPeakFinder.AtPointMap((Map<Double, TsCurveUtils.Point>) pointMap);
+            map = new TsPeakFinder.AtPointMap((Map<Double, Point>) pointMap);
         } else if (pointMap instanceof String) {
-            var _map = (Map<Double, TsCurveUtils.Point>) JsonUtils.loadByJson((String) pointMap, TsPeakFinder.AtPointMap.class);
+            var _map = (Map<Double, Point>) JsonUtils.loadByJson((String) pointMap, TsPeakFinder.AtPointMap.class);
             map = new TsPeakFinder.AtPointMap(_map);
         }
         return TsCurveUtils.sortPoints(map);

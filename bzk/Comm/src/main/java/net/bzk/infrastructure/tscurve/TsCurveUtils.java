@@ -1,31 +1,14 @@
 package net.bzk.infrastructure.tscurve;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import net.bzk.infrastructure.tscurve.dto.Point;
 import net.bzk.infrastructure.tscurve.peak.TsPeakFinder;
 
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class TsCurveUtils {
-
-    @Data
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class Point {
-        private int idx;
-        private String key;
-        private double val;
-        private double dtime;
-    }
 
     public enum Direction {
         RISE, FALL
@@ -63,6 +46,17 @@ public class TsCurveUtils {
     public static List<Double> sortValues(Map<String, Double> rMap) {
         var keys = sortIso8601(rMap.keySet());
         List<Double> ans = keys.stream().map(k -> rMap.get(k)).collect(Collectors.toList());
+        return ans;
+    }
+
+    public static List<Point> toPoints(Map<String, Double> rMap) {
+        var keys = TsCurveUtils.sortIso8601(rMap.keySet());
+        var firstKey = keys.get(0);
+        List<Point> ans = new ArrayList<>();
+        for (int i = 0; i < keys.size(); i++) {
+            String key = keys.get(i);
+            ans.add(Point.builder().key(key).idx(i).val(rMap.get(key)).dtime(TsCurveUtils.subtractKeySeconds(firstKey, key)).build());
+        }
         return ans;
     }
 

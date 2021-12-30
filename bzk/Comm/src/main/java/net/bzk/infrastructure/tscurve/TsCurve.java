@@ -1,6 +1,7 @@
 package net.bzk.infrastructure.tscurve;
 
 import lombok.Getter;
+import net.bzk.infrastructure.tscurve.dto.Point;
 
 import java.util.List;
 import java.util.Map;
@@ -19,9 +20,9 @@ public class TsCurve {
         firstKey = keys.get(0);
     }
 
-    public TsCurveUtils.Point genPoint(int i) {
+    public Point genPoint(int i) {
         String key = keys.get(i);
-        return TsCurveUtils.Point.builder().key(key).idx(i).val(rMap.get(key)).dtime(TsCurveUtils.subtractKeySeconds(firstKey, key)).build();
+        return Point.builder().key(key).idx(i).val(rMap.get(key)).dtime(TsCurveUtils.subtractKeySeconds(firstKey, key)).build();
     }
 
     public double getV(int idx) {

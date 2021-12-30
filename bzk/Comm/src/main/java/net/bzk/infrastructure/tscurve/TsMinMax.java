@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.*;
 
-import net.bzk.infrastructure.tscurve.TsCurveUtils.Point;
+import net.bzk.infrastructure.tscurve.dto.Point;
 
 public class TsMinMax extends TsCurve {
 

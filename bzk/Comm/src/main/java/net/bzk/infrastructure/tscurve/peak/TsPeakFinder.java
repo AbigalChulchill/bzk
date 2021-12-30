@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import net.bzk.infrastructure.tscurve.TsCurve;
 import net.bzk.infrastructure.tscurve.TsCurveUtils;
 import net.bzk.infrastructure.tscurve.TsCurveUtils.Direction;
-import net.bzk.infrastructure.tscurve.TsCurveUtils.Point;
+import net.bzk.infrastructure.tscurve.dto.Point;
 
 import java.util.ArrayList;
 import java.util.HashMap;

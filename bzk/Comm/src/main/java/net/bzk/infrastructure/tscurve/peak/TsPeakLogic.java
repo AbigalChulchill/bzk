@@ -2,8 +2,7 @@ package net.bzk.infrastructure.tscurve.peak;
 
 import lombok.*;
 import net.bzk.infrastructure.tscurve.TsCurveUtils;
-import net.bzk.infrastructure.tscurve.TsHowBig;
-import org.apache.commons.lang3.StringUtils;
+import net.bzk.infrastructure.tscurve.dto.Point;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,15 +22,15 @@ public abstract class TsPeakLogic<T extends PeakLogicDto> {
     }
 
 
-    protected void removeByIdx(List<TsCurveUtils.Point> list, int idx) {
+    protected void removeByIdx(List<Point> list, int idx) {
         var po = list.stream().filter(p -> p.getIdx() == idx).findFirst();
         if (po.isEmpty()) return;
         list.remove(po.get());
     }
 
-    public TsCurveUtils.Point genPoint(int i) {
+    public Point genPoint(int i) {
         String key = getKeys().get(i);
-        return TsCurveUtils.Point.builder().key(key).idx(i).val(finder.getRMap().get(key)).dtime(TsCurveUtils.subtractKeySeconds(finder.getFirstKey(), key)).build();
+        return Point.builder().key(key).idx(i).val(finder.getRMap().get(key)).dtime(TsCurveUtils.subtractKeySeconds(finder.getFirstKey(), key)).build();
     }
 
     public TsPeakFinder.Result fixResult(TsPeakFinder.Result ans) {
@@ -165,15 +164,15 @@ public abstract class TsPeakLogic<T extends PeakLogicDto> {
             return iArrays;
         }
 
-        private List<TsCurveUtils.Point> listAmplitudeSmall(int idx, List<TsCurveUtils.Point> list) {
-            List<TsCurveUtils.Point> ans = new ArrayList<>();
+        private List<Point> listAmplitudeSmall(int idx, List<Point> list) {
+            List<Point> ans = new ArrayList<>();
             double curV = Math.abs(list.get(idx).getVal());
             boolean forward = true, later = true;
 
             for (int i = 1; i < list.size(); i++) {
-                TsCurveUtils.Point fr = getRmForward(forward, idx, i, curV, list);
+                Point fr = getRmForward(forward, idx, i, curV, list);
                 if (fr == null) forward = false;
-                TsCurveUtils.Point lr = getRmLater(later, idx, i, curV, list);
+                Point lr = getRmLater(later, idx, i, curV, list);
                 if (lr == null) later = false;
                 if (fr != null) ans.add(fr);
                 if (lr != null) ans.add(lr);
@@ -182,7 +181,7 @@ public abstract class TsPeakLogic<T extends PeakLogicDto> {
             return ans;
         }
 
-        private TsCurveUtils.Point getRmLater(boolean later, int idx, int pidx, double curV, List<TsCurveUtils.Point> list) {
+        private Point getRmLater(boolean later, int idx, int pidx, double curV, List<Point> list) {
             if (!later) return null;
             int fidx = idx + pidx;
             if (fidx >= list.size()) {
@@ -192,7 +191,7 @@ public abstract class TsPeakLogic<T extends PeakLogicDto> {
 
         }
 
-        private TsCurveUtils.Point getRmForward(boolean forward, int idx, int pidx, double curV, List<TsCurveUtils.Point> list) {
+        private Point getRmForward(boolean forward, int idx, int pidx, double curV, List<Point> list) {
             if (!forward) return null;
             int fidx = idx - pidx;
             if (fidx < 0) {
@@ -201,7 +200,7 @@ public abstract class TsPeakLogic<T extends PeakLogicDto> {
             return checkOveAmplitudeRate(list, fidx, curV);
         }
 
-        private TsCurveUtils.Point checkOveAmplitudeRate(List<TsCurveUtils.Point> list, int fidx, double curV) {
+        private Point checkOveAmplitudeRate(List<Point> list, int fidx, double curV) {
             double tv = Math.abs(list.get(fidx).getVal());
             double r = tv / curV;
             if (r > dto.amplitudeRate) {

@@ -1,16 +1,15 @@
 package net.bzk.infrastructure.tscurve.peak;
 
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import net.bzk.infrastructure.convert.Overwrite;
 import net.bzk.infrastructure.convert.OverwriteIncludeClass;
 import net.bzk.infrastructure.tscurve.TsCurveUtils;
 import net.bzk.infrastructure.tscurve.TsHowBig;
+import net.bzk.infrastructure.tscurve.dto.Point;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -54,7 +53,7 @@ public class BiggerPeakLogic extends TsPeakLogic<PeakLogicDto.BiggerPeakLogicDto
 
         boolean maxed = false;
         var all = iArrays.getAll();
-        List<TsCurveUtils.Point> rmAllList = new ArrayList<>();
+        List<Point> rmAllList = new ArrayList<>();
 
         DeepPoint curPeakPoint = null;
         for (int i = 0; i < all.size(); i++) {
@@ -150,7 +149,7 @@ public class BiggerPeakLogic extends TsPeakLogic<PeakLogicDto.BiggerPeakLogicDto
     }
 
     @Override
-    public TsCurveUtils.Point genPoint(int i) {
+    public Point genPoint(int i) {
         String key = getKeys().get(i);
         DeepPoint ans = new DeepPoint();
         ans.setDeepTimeVal(getValByKey(key));
@@ -172,7 +171,7 @@ public class BiggerPeakLogic extends TsPeakLogic<PeakLogicDto.BiggerPeakLogicDto
 
     @Data
     @EqualsAndHashCode(callSuper = false)
-    public static class DeepPoint extends TsCurveUtils.Point {
+    public static class DeepPoint extends Point {
         public double deepTimeVal;
         private double deepTimeDayVal;
     }

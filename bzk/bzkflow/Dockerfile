@@ -25,6 +25,6 @@ RUN mkdir /app
 COPY --from=build /bzk/model/* /bzk/model/
 COPY --from=build /app/bzkflow/build/libs/bzkflow-0.0.1-SNAPSHOT.jar /app/spring-boot-application.jar
 
-ENTRYPOINT ["java","-Dspring.profiles.active=prod","-jar","/app/spring-boot-application.jar"]
+ENTRYPOINT ["java","-Xmx2048m","-Xms1024m","-Dspring.profiles.active=prod","-jar","/app/spring-boot-application.jar"]
 #ENTRYPOINT ["java","-Dspring.profiles.active=prod","-Dcom.sun.management.jmxremote","-Dcom.sun.management.jmxremote.port=7091","-Dcom.sun.management.jmxremote.rmi.port=7091","-Dcom.sun.management.jmxremote.authenticate=false","-Dcom.sun.management.jmxremote.ssl=false","-Djava.rmi.server.hostname=localhost","-jar","/app/spring-boot-application.jar"]
 

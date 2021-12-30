@@ -5,8 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.bzk.infrastructure.tscurve.TsCurve;
-import net.bzk.infrastructure.tscurve.TsCurveUtils;
 import net.bzk.infrastructure.tscurve.TsHowBig;
+import net.bzk.infrastructure.tscurve.dto.Point;
 
 import java.util.Map;
 
@@ -62,7 +62,7 @@ public class TsBiggerFinder extends TsCurve {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class PointPeakInfo {
-        private TsCurveUtils.Point point;
+        private Point point;
         private TsHowBig.Result biggerInfo;
     }
 
