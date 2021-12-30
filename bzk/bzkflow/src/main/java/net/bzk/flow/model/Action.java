@@ -28,7 +28,7 @@ public class Action extends BzkObj {
 
     private String name = "Action";
     private boolean tryErrorble;
-    private boolean enable = true;
+    private String enable = "true";
 
     private VarMap devBoxVars = new VarMap();
     private VarMap devFlowVars = new VarMap();

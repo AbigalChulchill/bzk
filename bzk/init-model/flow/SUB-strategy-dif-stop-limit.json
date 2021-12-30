@@ -11,11 +11,11 @@
       "uid" : "66NmfSdxlftf",
       "name" : "Vars",
       "tryErrorble" : false,
-      "enable" : true,
+      "enable" : "true",
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "code" : "const difMa2Peak = ${cs.difMa2Peak};\r\nconst difTH = ${cs.difTH};\r\n\r\nfunction getPositionSide(){\r\n    return difMa2Peak.trendInfo.maxList.hasOwnProperty('0.0') ? 'LONG' : 'SHORT' ;\r\n}\r\n\r\nfunction getThVal(){\r\n    var key;\r\n    for (var k in difTH) {\r\n        return difTH[k];\r\n    }\r\n}\r\n\r\nconst positionSide = getPositionSide();\r\nconst nearPeak = difMa2Peak.trendInfo.nearPeak;\r\n\r\n\r\nfunction genOrderObjJson(){\r\n    \r\n    return JSON.stringify({\r\n        \"targetPrice\":-1,\r\n        \"stopPrice\": -1,\r\n        \"gapRate\":0.002\r\n    });\r\n}\r\n\r\n\r\n$bzk.putObj('positionSide',positionSide);\r\n$bzk.put('nearPeak',JSON.stringify( nearPeak));\r\n$bzk.putObj('thVal',getThVal());\r\n$bzk.put('orderLimitBody',genOrderObjJson());\r\ntrue;",
+      "code" : "const difPeak = ${cs.dif};\r\nconst difPoints = $tsFunc.toPoints(${cs.dif});\r\nconst difTH = ${cs.difTH};\r\n\r\nfunction getPositionSide(){\r\n    return difPeak.trendInfo.maxList.hasOwnProperty('0.0') ? 'LONG' : 'SHORT' ;\r\n}\r\n\r\nfunction getThVal(){\r\n    var key;\r\n    for (var k in difTH) {\r\n        return difTH[k];\r\n    }\r\n}\r\n\r\nconst positionSide = getPositionSide();\r\nconst nearPeak = difPeak.trendInfo.nearPeak;\r\n\r\n\r\nfunction genOrderObjJson(){\r\n    return JSON.stringify({\r\n        \"targetPrice\":-1,\r\n        \"stopPrice\": -1,\r\n        \"gapRate\":0.002\r\n    });\r\n}\r\n\r\nfunction getNearOverThPeak(){\r\n    const th = getThVal();\r\n    let minDp , maxDp;\r\n    for (const dp of difPoints) {\r\n        if(Math.abs( dp.val)>th){\r\n            if ( dp.val<0 && minDp==null){\r\n                minDp = dp;\r\n            }\r\n            if ( dp.val>0 && maxDp==null){\r\n                maxDp = dp;\r\n            }\r\n        }\r\n        if (minDp != null && maxDp != null){\r\n            return {\r\n                min:minDp,\r\n                max:maxDp\r\n            };\r\n        }\r\n    }\r\n    return null;\r\n}\r\n\r\n$bzk.putObj('positionSide',positionSide);\r\n$bzk.put('nearPeak',JSON.stringify( nearPeak));\r\n$bzk.putObj('~thVal',getThVal());\r\n$bzk.put('~orderLimitBody',genOrderObjJson());\r\ntrue;",
       "polyglot" : "js",
       "resultLv" : "not_specify",
       "resultKey" : "vars"
@@ -24,7 +24,7 @@
       "uid" : "wcOS08RF0tY6",
       "name" : "CallStopLimit",
       "tryErrorble" : false,
-      "enable" : true,
+      "enable" : "true",
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
@@ -42,6 +42,9 @@
       }, {
         "key" : "orderLimitBody",
         "val" : "${orderLimitBody}"
+      }, {
+        "key" : "runStoped",
+        "val" : "false"
       } ],
       "outputReflects" : [ {
         "srcKey" : "__pk_result",
@@ -128,5 +131,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 16
+  "version" : 20
 }

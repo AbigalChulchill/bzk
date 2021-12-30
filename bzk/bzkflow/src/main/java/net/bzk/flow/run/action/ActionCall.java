@@ -59,6 +59,11 @@ public abstract class ActionCall<T extends Action> implements Callable<VarValSet
 		return this;
 	}
 
+	public boolean isEnable(){
+		boolean ans = getPolyglotEngine().parseScriptbleText(getModel().getEnable(), Boolean.class);
+		return ans;
+	}
+
 	protected T replaceModel(T _m) {
 		return BzkFlowUtils.replaceModel(varQueryer, _m, modelClazz);
 	}

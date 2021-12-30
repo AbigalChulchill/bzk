@@ -145,7 +145,7 @@ public class BoxRuner {
         if (!ao.isPresent()) return false;
 
         Action a = ao.get();
-        if (!a.isEnable()) return true;
+
         VarValSet vvs = callAction(a);
         if (vvs != null) {
             runVarService.putVarVals(genUids(), vvs);
@@ -215,6 +215,7 @@ public class BoxRuner {
             logUtils.log(genUids(), Enums.RunState.StartAction);
             ActionCall naer = context.getBean(a.getClazz(), ActionCall.class);
             naer.initBase(genUids(), a);
+            if (!naer.isEnable()) return null;
             Callable<VarValSet> cb = naer;
             VarValSet ans = cb.call();
             logUtils.log(naer.getUids(), Enums.RunState.ActionResult, l -> l.setVarVals(VarVal.toMap(ans.list())));

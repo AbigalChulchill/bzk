@@ -9,9 +9,9 @@
     "actions" : [ {
       "clazz" : "net.bzk.flow.model.HttpAction",
       "uid" : "ZahxqV9uwkFF",
-      "name" : "CanceStop",
+      "name" : "CancelStop",
       "tryErrorble" : false,
-      "enable" : true,
+      "enable" : "${runStoped}",
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
@@ -30,7 +30,7 @@
       "uid" : "N2Hplfa0qfl1",
       "name" : "ORDER_LIMIT",
       "tryErrorble" : false,
-      "enable" : true,
+      "enable" : "true",
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
@@ -52,7 +52,7 @@
       "uid" : "lFWjVThmDz0L",
       "name" : "CLSVars",
       "tryErrorble" : false,
-      "enable" : true,
+      "enable" : "true",
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
@@ -68,7 +68,7 @@
       "uid" : "Xy3YmdKQq1bU",
       "name" : "ORDER_STOP",
       "tryErrorble" : false,
-      "enable" : true,
+      "enable" : "${runStoped}",
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
@@ -102,6 +102,7 @@
   "varCfgNames" : [ "crypto-symbol.json", "fin-exchange-manage.json" ],
   "vars" : {
     "symbol" : "BCH",
+    "runStoped" : true,
     "orderLimitBody" : {
       "stopPrice" : 424.6316104067401,
       "targetPrice" : 427.19477908122747
@@ -142,7 +143,7 @@
     "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
     "boxUid" : "stopO9zVlimit",
     "autoRegister" : false,
-    "requiredKeys" : [ "positionSide", "position", "symbol", "orderLimitBody" ],
+    "requiredKeys" : [ "positionSide", "position", "symbol", "orderLimitBody", "runStoped" ],
     "outputKeys" : [ "__pk_result" ]
   },
   "threadCfg" : {
@@ -151,5 +152,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 31
+  "version" : 35
 }
