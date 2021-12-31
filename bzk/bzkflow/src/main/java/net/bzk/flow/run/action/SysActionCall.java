@@ -45,6 +45,9 @@ public class SysActionCall extends ActionCall<SysAction> {
 		}else if(StringUtils.equals(func, "deleteArchiveRuns")){
 			deleteArchiveRuns(m);
 			return new VarValSet();
+		}else if(StringUtils.equals(func, "gc")){
+			System.gc();
+			return new VarValSet();
 		}
 		throw new NotSupportedException("this "+func+" not suport!");
 	}

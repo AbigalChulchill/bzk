@@ -1,7 +1,6 @@
 package net.bzk.flow.run.dao;
 
 import net.bzk.flow.model.ArchiveRun;
-import net.bzk.flow.model.RunLog;
 import net.bzk.flow.run.flow.FlowRuner;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,5 +24,5 @@ public interface ArchiveRunDao extends CrudRepository<ArchiveRun, String> {
 
 	@Transactional
 	@Modifying
-	List<RunLog> deleteByCreateAtBefore(Date date);
+	List<ArchiveRun> deleteByCreateAtBefore(Date date);
 }

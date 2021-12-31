@@ -11,7 +11,7 @@
       "uid" : "V4n8lARxLx88",
       "name" : "Call_API_realtime",
       "tryErrorble" : false,
-      "enable" : true,
+      "enable" : "true",
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
@@ -30,16 +30,27 @@
       "uid" : "cq1pOylBlvcA",
       "name" : "ExpireArchiveRuns",
       "tryErrorble" : false,
-      "enable" : true,
+      "enable" : "true",
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
       "func" : "deleteArchiveRuns",
       "data" : "!javascript===\nlet dat = new Date();\n\ndat.setSeconds(dat.getSeconds() - 24*60*60*4);\n\nconst d= {\n \"date\":dat.toISOString()\n};\nd;"
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$SysAction",
+      "uid" : "qVts85DycAln",
+      "name" : "GC",
+      "tryErrorble" : false,
+      "enable" : "true",
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "func" : "gc",
+      "data" : "{}"
     } ],
     "links" : [ ],
     "vars" : { },
-    "taskSort" : [ "V4n8lARxLx88", "cq1pOylBlvcA" ],
+    "taskSort" : [ "qVts85DycAln", "V4n8lARxLx88", "cq1pOylBlvcA" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
@@ -56,9 +67,10 @@
     "clazz" : "net.bzk.flow.model.Entry$FixedRateEntry",
     "boxUid" : "V3hRVYlXQi8n",
     "autoRegister" : true,
-    "period" : 8,
+    "period" : 1,
     "unit" : "HOURS",
-    "initialDelay" : 0
+    "initialDelay" : 0,
+    "cronExpression" : null
   },
   "threadCfg" : {
     "corePoolSize" : 10,
@@ -66,5 +78,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 29
+  "version" : 32
 }
