@@ -1,7 +1,9 @@
 package net.bzk.infrastructure.tscurve;
 
+import net.bzk.infrastructure.ex.BzkRuntimeException;
 import net.bzk.infrastructure.tscurve.dto.Point;
 import net.bzk.infrastructure.tscurve.peak.TsPeakFinder;
+import org.apache.commons.lang3.StringUtils;
 
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
@@ -69,6 +71,17 @@ public class TsCurveUtils {
     public static List<Point> sortPoints(TsPeakFinder.AtPointMap apm) {
         var sortKeys = sortTimeKeys(apm.keySet());
         return sortKeys.stream().map(k -> apm.get(k)).collect(Collectors.toList());
+    }
+
+    public static List<Point> slicePoints(List<Point> ps, String key) {
+        List<Point> ans = new ArrayList<>();
+        for (Point p : ps) {
+            ans.add(p);
+            if (StringUtils.equals(p.getKey(), key)) {
+                return ans;
+            }
+        }
+        return new ArrayList<>();
     }
 
     public static double avgByPoints(List<Point> points) {

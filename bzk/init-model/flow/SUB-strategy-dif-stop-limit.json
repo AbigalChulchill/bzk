@@ -4,117 +4,6 @@
   "name" : "SUB-strategy-dif-stop-limit",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
-    "uid" : "Xe4OI2dpu4qY",
-    "name" : "RangeBigger",
-    "actions" : [ {
-      "clazz" : "net.bzk.flow.model.Action$PolyglotAction",
-      "uid" : "nrl9G3HFHx8o",
-      "name" : "RBVars",
-      "tryErrorble" : false,
-      "enable" : "true",
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "code" : "const nearOverThPeak = ${nearOverThPeak};\r\nconst priceBigger = ${cs.priceBigger};\r\n\r\nfunction getPositionSide(){\r\n    if (nearOverThPeak.min == null && nearOverThPeak.max==null) return \"NOThPeak\";\r\n    if( nearOverThPeak.min == null ) return 'SHORT';\r\n    if( nearOverThPeak.max == null ) return 'LONG';\r\n    return nearOverThPeak.max.dtime<nearOverThPeak.min.dtime ? 'SHORT' : 'LONG';\r\n}\r\n\r\nconst positionSide = getPositionSide();\r\n\r\nfunction getTargetPriceBigger(){\r\n    if(positionSide=='NOThPeak') return \"NONE\";\r\n    return positionSide == 'LONG' ? priceBigger.lastMin : priceBigger.lastMax;\r\n}\r\n\r\n$bzk.putObj('positionSide',positionSide);\r\n$bzk.put('targetPriceBigger',JSON.stringify( getTargetPriceBigger()));\r\n\r\ntrue;",
-      "polyglot" : "js",
-      "resultLv" : "not_specify",
-      "resultKey" : "RBVars"
-    }, {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "jlTrbwA7rhex",
-      "name" : "CallCB",
-      "tryErrorble" : false,
-      "enable" : "true",
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "flowUid" : "substoplimit",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "positionSide",
-        "val" : "${positionSide}"
-      }, {
-        "key" : "position",
-        "val" : "${position}"
-      }, {
-        "key" : "symbol",
-        "val" : "${symbol}"
-      }, {
-        "key" : "orderLimitBody",
-        "val" : "${orderLimitBody}"
-      }, {
-        "key" : "runStoped",
-        "val" : "true"
-      } ],
-      "outputReflects" : [ {
-        "srcKey" : "__pk_result",
-        "toKey" : {
-          "lv" : "not_specify",
-          "key" : ""
-        }
-      } ]
-    } ],
-    "links" : [ {
-      "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "HlR7OGHt8LZ3",
-      "name" : "CPosSide",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionTxt",
-        "kind" : "NONE",
-        "next" : null,
-        "left" : "${positionSide}",
-        "right" : "NOThPeak",
-        "not" : false,
-        "type" : "equal"
-      },
-      "transition" : {
-        "toBox" : "",
-        "endTag" : "${symbol} ${positionSide} CPosSide",
-        "failEnd" : false,
-        "endResultKeys" : [ {
-          "lv" : "not_specify",
-          "key" : "nearOverThPeak"
-        } ],
-        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"CPosSide\"\n}"
-      },
-      "enable" : true
-    }, {
-      "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "uq9TIUtqIv9M",
-      "name" : "Cbigger",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
-        "kind" : "NONE",
-        "next" : null,
-        "left" : "${targetPriceBigger.time}",
-        "right" : "!javascript===\n60*60*4",
-        "type" : "lessthan"
-      },
-      "transition" : {
-        "toBox" : "",
-        "endTag" : "${symbol} ${positionSide} Cbigger",
-        "failEnd" : false,
-        "endResultKeys" : [ {
-          "lv" : "not_specify",
-          "key" : "targetPriceBigger"
-        } ],
-        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"Cbigger\"\n}"
-      },
-      "enable" : true
-    } ],
-    "vars" : { },
-    "taskSort" : [ "nrl9G3HFHx8o", "HlR7OGHt8LZ3", "uq9TIUtqIv9M", "jlTrbwA7rhex" ],
-    "whileJudgment" : null,
-    "transition" : {
-      "toBox" : "",
-      "endTag" : "${symbol} ${positionSide} CallCB",
-      "failEnd" : false,
-      "endResultKeys" : [ ],
-      "resultCode" : "{\n  \"ordered\": true,\n  \"breakName\": \"NONE\"\n}"
-    },
-    "minLogLv" : "DEBUG"
-  }, {
-    "clazz" : "net.bzk.flow.model.Box",
     "uid" : "AB8uzjML8NdQ",
     "name" : "Box",
     "actions" : [ {
@@ -126,7 +15,7 @@
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "code" : "const difPeak = ${cs.difPeak};\r\nconst difPoints = $tsFunc.toPoints(${cs.dif});\r\nconst difTH = ${cs.difTH};\r\n\r\nfunction getPositionSide(){\r\n    return difPeak.trendInfo.maxList.hasOwnProperty('0.0') ? 'LONG' : 'SHORT' ;\r\n}\r\n\r\nfunction getThVal(){\r\n    var key;\r\n    for (var k in difTH) {\r\n        return difTH[k];\r\n    }\r\n}\r\n\r\nconst positionSide = getPositionSide();\r\nconst nearPeak = difPeak.trendInfo.nearPeak;\r\n\r\n\r\nfunction genOrderObjJson(){\r\n    return JSON.stringify({\r\n        \"targetPrice\":-1,\r\n        \"stopPrice\": -1,\r\n        \"gapRate\":0.002\r\n    });\r\n}\r\n\r\nfunction getNearOverThPeak(){\r\n    const th = getThVal();\r\n    let minDp , maxDp;\r\n    for (const dp of difPoints) {\r\n        if(Math.abs( dp.val)>th){\r\n            if ( dp.val<0 && minDp==null){\r\n                minDp = dp;\r\n            }\r\n            if ( dp.val>0 && maxDp==null){\r\n                maxDp = dp;\r\n            }\r\n        }\r\n    }\r\n    return {\r\n                min:minDp,\r\n                max:maxDp\r\n            };\r\n}\r\n\r\n\r\n\r\n$bzk.putObj('positionSide',positionSide);\r\n$bzk.put('nearPeak',JSON.stringify( nearPeak));\r\n$bzk.put('~nearOverThPeak',JSON.stringify( getNearOverThPeak()));\r\n$bzk.putObj('~thVal',getThVal());\r\n$bzk.put('~orderLimitBody',genOrderObjJson());\r\ntrue;",
+      "code" : "const difPeak = ${cs.difPeak};\r\nconst difPoints = $tsFunc.toPoints(${cs.dif});\r\nconst difTH = ${cs.difTH};\r\n\r\n\r\n\r\nfunction getThVal(){\r\n    var key;\r\n    for (var k in difTH) {\r\n        return difTH[k];\r\n    }\r\n}\r\n\r\n\r\nconst nearPeak = difPeak.trendInfo.nearPeak;\r\n\r\n\r\nfunction genOrderObjJson(){\r\n    return JSON.stringify({\r\n        \"targetPrice\":-1,\r\n        \"stopPrice\": -1,\r\n        \"gapRate\":0.002\r\n    });\r\n}\r\n\r\nfunction getNearOverThPeak(){\r\n    const th = getThVal();\r\n    let minDp , maxDp;\r\n    for (const dp of difPoints) {\r\n        if(Math.abs( dp.val)>th){\r\n            if ( dp.val<0 && minDp==null){\r\n                minDp = dp;\r\n            }\r\n            if ( dp.val>0 && maxDp==null){\r\n                maxDp = dp;\r\n            }\r\n        }\r\n    }\r\n    return {\r\n                min:minDp,\r\n                max:maxDp\r\n            };\r\n}\r\n\r\nconst nearOverThPeak = getNearOverThPeak();\r\n$bzk.put('~nearOverThPeak',JSON.stringify( nearOverThPeak));\r\nfunction getPositionSide(){\r\n    if(nearOverThPeak.max == null && nearOverThPeak.min == null) return 'NONE';\r\n    if(nearOverThPeak.max == null) return 'LONG';\r\n    if(nearOverThPeak.min == null) return 'SHORT';\r\n    return nearOverThPeak.max.dtime<nearOverThPeak.min.dtime?'SHORT':'LONG';\r\n}\r\n\r\nconst positionSide = getPositionSide();\r\n\r\nfunction sliceDif(key){\r\n    const nDp= nearOverThPeak[key];\r\n    if(nDp == null) return null;\r\n    const spList= $tsFunc.slicePoints(difPoints,nDp.key);\r\n    $bzk.putObj('~nearOverThPeak.'+key+'List',spList);\r\n    $bzk.putObj('~nearOverThPeak.'+key+'Rebound',isDifRebound(spList,key));\r\n}\r\n\r\nfunction isDifRebound(spList,key){\r\n    for(let i=0;i<spList.size();i++){\r\n        if(i==spList.size()-1) break;\r\n        if (key=='min'){\r\n            if(spList.get(i).val>0) return true;\r\n        }else if(key=='max'){\r\n            if(spList.get(i).val<0) return true;\r\n        }else{\r\n            throw new Error(key);\r\n        }\r\n\r\n    }\r\n    return false;\r\n}\r\n\r\n$bzk.putObj('positionSide',positionSide);\r\n$bzk.put('difNearPeak',JSON.stringify( nearPeak));\r\n\r\nsliceDif('min');\r\nsliceDif('max');\r\n$bzk.putObj('~thVal',getThVal());\r\n$bzk.put('~orderLimitBody',genOrderObjJson());\r\ntrue;",
       "polyglot" : "js",
       "resultLv" : "not_specify",
       "resultKey" : "vars"
@@ -168,41 +57,39 @@
     "links" : [ {
       "clazz" : "net.bzk.flow.model.Link",
       "uid" : "T5IC58bnUYi6",
-      "name" : "CTime",
+      "name" : "CRebound",
       "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
+        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
         "kind" : "NONE",
         "next" : null,
-        "left" : "${nearPeak.dtime}",
-        "right" : "300",
-        "type" : "not_equal"
+        "polyglot" : "js",
+        "code" : "const nearOverThPeak = ${nearOverThPeak};\nconst positionSide = '${positionSide}';\n\nfunction checkRebound(){\n    if(positionSide=='LONG'){\n        return nearOverThPeak.minRebound;\n    }\n    if(positionSide=='SHORT'){\n        return nearOverThPeak.maxRebound;\n    }\n    throw new Error(positionSide);\n}\n\ncheckRebound();"
       },
       "transition" : {
-        "toBox" : "Xe4OI2dpu4qY",
-        "endTag" : null,
+        "toBox" : "",
+        "endTag" : "${symbol} ${positionSide} CRebound",
         "failEnd" : false,
         "endResultKeys" : [ {
           "lv" : "not_specify",
-          "key" : "nearPeak"
+          "key" : "nearOverThPeak"
         } ],
-        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"CTime\"\n}"
+        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"CRebound\"\n}"
       },
       "enable" : true
     }, {
       "clazz" : "net.bzk.flow.model.Link",
       "uid" : "EzMDMJOZPkxm",
-      "name" : "CTH",
+      "name" : "CLastRebound",
       "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
+        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
         "kind" : "NONE",
         "next" : null,
-        "left" : "!javascript===\nMath.abs(${nearPeak.val});",
-        "right" : "!javascript===\r\nMath.abs(${thVal});\r\n",
-        "type" : "lessthan"
+        "polyglot" : "js",
+        "code" : "const nearOverThPeak = ${nearOverThPeak};\nconst positionSide = '${positionSide}';\n\nfunction getList(){\n    if(positionSide == 'LONG') return nearOverThPeak.minList;\n    if(positionSide == 'SHORT') return nearOverThPeak.maxList;\n    throw new Error(positionSide);\n}\n\nconst tarList = getList();\n\nfunction check(){\n    \n    if(positionSide == 'LONG'){\n        return tarList[tarList.length-1].val>0;\n    }\n    if(positionSide == 'SHORT'){\n        return tarList[tarList.length-1].val<0;\n    }    \n    throw new Error(positionSide);\n\n}\n\n!check();"
       },
       "transition" : {
-        "toBox" : "Xe4OI2dpu4qY",
-        "endTag" : null,
+        "toBox" : "",
+        "endTag" : "${symbol} ${positionSide} CLastRebound",
         "failEnd" : false,
         "endResultKeys" : [ {
           "lv" : "not_specify",
@@ -211,12 +98,33 @@
           "lv" : "not_specify",
           "key" : "nearPeak"
         } ],
-        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"CTH\"\n}"
+        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"CLastRebound\"\n}"
+      },
+      "enable" : true
+    }, {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "whK64UY9TJJn",
+      "name" : "CPos",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionTxt",
+        "kind" : "NONE",
+        "next" : null,
+        "left" : "${positionSide}",
+        "right" : "NONE",
+        "not" : false,
+        "type" : "equal"
+      },
+      "transition" : {
+        "toBox" : "",
+        "endTag" : "${symbol} ${positionSide} CPos",
+        "failEnd" : false,
+        "endResultKeys" : [ ],
+        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"CPos\"\n}"
       },
       "enable" : true
     } ],
     "vars" : { },
-    "taskSort" : [ "66NmfSdxlftf", "T5IC58bnUYi6", "EzMDMJOZPkxm", "wcOS08RF0tY6" ],
+    "taskSort" : [ "66NmfSdxlftf", "whK64UY9TJJn", "T5IC58bnUYi6", "EzMDMJOZPkxm", "wcOS08RF0tY6" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
@@ -242,5 +150,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 27
+  "version" : 34
 }

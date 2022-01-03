@@ -106,6 +106,10 @@ public class TsCurveFunc {
         return TsCurveUtils.sortPoints(map);
     }
 
+    public List<Point> slicePoints(List<Point> ps, String key) {
+        return TsCurveUtils.slicePoints(ps, key);
+    }
+
     public static TsCurveFunc getInstance() {
         return instance;
     }
