@@ -93,10 +93,7 @@
         "failEnd" : false,
         "endResultKeys" : [ {
           "lv" : "not_specify",
-          "key" : "thVal"
-        }, {
-          "lv" : "not_specify",
-          "key" : "nearPeak"
+          "key" : "nearOverThPeak"
         } ],
         "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"CLastRebound\"\n}"
       },
@@ -150,5 +147,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 34
+  "version" : 36
 }
