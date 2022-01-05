@@ -15,7 +15,7 @@
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "code" : "const difPeak = ${cs.difPeak};\r\nconst difPoints = $tsFunc.toPoints(${cs.dif});\r\nconst difTH = ${cs.difTH};\r\n\r\n\r\n\r\nfunction getThVal(){\r\n    var key;\r\n    for (var k in difTH) {\r\n        return difTH[k];\r\n    }\r\n}\r\n\r\n\r\nconst nearPeak = difPeak.trendInfo.nearPeak;\r\n\r\n\r\nfunction genOrderObjJson(){\r\n    return JSON.stringify({\r\n        \"targetPrice\":-1,\r\n        \"stopPrice\": -1,\r\n        \"gapRate\":0.002\r\n    });\r\n}\r\n\r\nfunction getNearOverThPeak(){\r\n    const th = getThVal();\r\n    let minDp , maxDp;\r\n    for (const dp of difPoints) {\r\n        if(Math.abs( dp.val)>th){\r\n            if ( dp.val<0 && minDp==null){\r\n                minDp = dp;\r\n            }\r\n            if ( dp.val>0 && maxDp==null){\r\n                maxDp = dp;\r\n            }\r\n        }\r\n    }\r\n    return {\r\n                min:minDp,\r\n                max:maxDp\r\n            };\r\n}\r\n\r\nconst nearOverThPeak = getNearOverThPeak();\r\n$bzk.put('~nearOverThPeak',JSON.stringify( nearOverThPeak));\r\nfunction getPositionSide(){\r\n    if(nearOverThPeak.max == null && nearOverThPeak.min == null) return 'NONE';\r\n    if(nearOverThPeak.max == null) return 'LONG';\r\n    if(nearOverThPeak.min == null) return 'SHORT';\r\n    return nearOverThPeak.max.dtime<nearOverThPeak.min.dtime?'SHORT':'LONG';\r\n}\r\n\r\nconst positionSide = getPositionSide();\r\n\r\nfunction sliceDif(key){\r\n    const nDp= nearOverThPeak[key];\r\n    if(nDp == null) return null;\r\n    const spList= $tsFunc.slicePoints(difPoints,nDp.key);\r\n    $bzk.putObj('~nearOverThPeak.'+key+'List',spList);\r\n    $bzk.putObj('~nearOverThPeak.'+key+'Rebound',isDifRebound(spList,key));\r\n}\r\n\r\nfunction isDifRebound(spList,key){\r\n    for(let i=0;i<spList.size();i++){\r\n        if(i==spList.size()-1) break;\r\n        if (key=='min'){\r\n            if(spList.get(i).val>0) return true;\r\n        }else if(key=='max'){\r\n            if(spList.get(i).val<0) return true;\r\n        }else{\r\n            throw new Error(key);\r\n        }\r\n\r\n    }\r\n    return false;\r\n}\r\n\r\n$bzk.putObj('positionSide',positionSide);\r\n$bzk.put('difNearPeak',JSON.stringify( nearPeak));\r\n\r\nsliceDif('min');\r\nsliceDif('max');\r\n$bzk.putObj('~thVal',getThVal());\r\n$bzk.put('~orderLimitBody',genOrderObjJson());\r\ntrue;",
+      "code" : "const difPeak = ${cs.difPeak};\r\nconst difPoints = $tsFunc.toPoints(${cs.dif});\r\nconst difTH = ${cs.difTH};\r\n\r\n\r\n\r\nfunction getThVal(){\r\n    var key;\r\n    for (var k in difTH) {\r\n        return difTH[k];\r\n    }\r\n}\r\n\r\n\r\nconst nearPeak = difPeak.trendInfo.nearPeak;\r\n\r\n\r\nfunction genOrderObjJson(){\r\n    return JSON.stringify({\r\n        \"targetPrice\":-1,\r\n        \"stopPrice\": -1,\r\n        \"gapRate\":0.002\r\n    });\r\n}\r\n\r\nfunction getNearOverThPeak(){\r\n    const th = getThVal();\r\n    let minDp , maxDp;\r\n    for (const dp of difPoints) {\r\n        if(Math.abs( dp.val)>th){\r\n            if ( dp.val<0 && minDp==null){\r\n                minDp = dp;\r\n            }\r\n            if ( dp.val>0 && maxDp==null){\r\n                maxDp = dp;\r\n            }\r\n        }\r\n    }\r\n    return {\r\n                min:minDp,\r\n                max:maxDp\r\n            };\r\n}\r\n\r\nconst nearOverThPeak = getNearOverThPeak();\r\n$bzk.put('~nearOverThPeak',JSON.stringify( nearOverThPeak));\r\nfunction getPositionSide(){\r\n    if(nearOverThPeak.max == null && nearOverThPeak.min == null) return 'NONE';\r\n    if(nearOverThPeak.max == null) return 'LONG';\r\n    if(nearOverThPeak.min == null) return 'SHORT';\r\n    return nearOverThPeak.max.dtime<nearOverThPeak.min.dtime?'SHORT':'LONG';\r\n}\r\n\r\nconst positionSide = getPositionSide();\r\n\r\nfunction sliceDif(key){\r\n    const nDp= nearOverThPeak[key];\r\n    if(nDp == null) return null;\r\n    const spList= $tsFunc.slicePoints(difPoints,nDp.key);\r\n    $bzk.putObj('~nearOverThPeak.'+key+'List',spList);\r\n    $bzk.putObj('~nearOverThPeak.'+key+'Rebound',isDifRebound(spList,key));\r\n}\r\n\r\nfunction isDifRebound(spList,key){\r\n    for(let i=1;i<spList.size();i++){\r\n        if (key=='min'){\r\n            if(spList.get(i).val>0) return true;\r\n        }else if(key=='max'){\r\n            if(spList.get(i).val<0) return true;\r\n        }else{\r\n            throw new Error(key);\r\n        }\r\n\r\n    }\r\n    return false;\r\n}\r\n\r\n$bzk.putObj('positionSide',positionSide);\r\n$bzk.put('difNearPeak',JSON.stringify( nearPeak));\r\n\r\nsliceDif('min');\r\nsliceDif('max');\r\n$bzk.putObj('~thVal',getThVal());\r\n$bzk.put('~orderLimitBody',genOrderObjJson());\r\ntrue;",
       "polyglot" : "js",
       "resultLv" : "not_specify",
       "resultKey" : "vars"
@@ -85,7 +85,7 @@
         "kind" : "NONE",
         "next" : null,
         "polyglot" : "js",
-        "code" : "const nearOverThPeak = ${nearOverThPeak};\nconst positionSide = '${positionSide}';\n\nfunction getList(){\n    if(positionSide == 'LONG') return nearOverThPeak.minList;\n    if(positionSide == 'SHORT') return nearOverThPeak.maxList;\n    throw new Error(positionSide);\n}\n\nconst tarList = getList();\n\nfunction check(){\n    \n    if(positionSide == 'LONG'){\n        return tarList[tarList.length-1].val>0;\n    }\n    if(positionSide == 'SHORT'){\n        return tarList[tarList.length-1].val<0;\n    }    \n    throw new Error(positionSide);\n\n}\n\n!check();"
+        "code" : "const nearOverThPeak = ${nearOverThPeak};\nconst positionSide = '${positionSide}';\n\nfunction getList(){\n    if(positionSide == 'LONG') return nearOverThPeak.minList;\n    if(positionSide == 'SHORT') return nearOverThPeak.maxList;\n    throw new Error(positionSide);\n}\n\nconst tarList = getList();\n\nfunction check(){\n    \n    if(positionSide == 'LONG'){\n        return tarList[0].val>0;\n    }\n    if(positionSide == 'SHORT'){\n        return tarList[0].val<0;\n    }    \n    throw new Error(positionSide);\n\n}\n\n!check();"
       },
       "transition" : {
         "toBox" : "",
@@ -93,10 +93,7 @@
         "failEnd" : false,
         "endResultKeys" : [ {
           "lv" : "not_specify",
-          "key" : "thVal"
-        }, {
-          "lv" : "not_specify",
-          "key" : "nearPeak"
+          "key" : "nearOverThPeak"
         } ],
         "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"CLastRebound\"\n}"
       },
@@ -150,5 +147,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 34
+  "version" : 38
 }
