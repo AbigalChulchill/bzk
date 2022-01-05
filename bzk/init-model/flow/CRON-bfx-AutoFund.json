@@ -7,51 +7,61 @@
     "uid" : "yXYP6rbTgiJI",
     "name" : "Box",
     "actions" : [ {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "9aoVdlf0cqZB",
-      "name" : "Call",
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "YDXZFrOe8m0H",
+      "name" : "CancelOffers",
       "tryErrorble" : false,
-      "enable" : true,
+      "enable" : "true",
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "flowUid" : "ebBli92LdIYZzOo7",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "currency",
-        "val" : "${currency}"
-      } ],
-      "outputReflects" : [ ]
+      "url" : "${finExManageApiUrl}",
+      "uriVariables" : { },
+      "body" : "{\n    \"__bzk_api_key\": \"${finExManageApiKey}\",\n    \"name\": \"wallet/cancel_lend_by_filter\",\n    \"symbol_list\":${currencys},\n    \"wallet_type\":\"funding\",\n    \"exchange\": \"bitfinex\"\n}",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : "co"
+      }
     }, {
-      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
-      "uid" : "IXcDURKKInfg",
-      "name" : "InitVars",
+      "clazz" : "net.bzk.flow.model.Action$WaitAction",
+      "uid" : "0TTN33Q0G8wZ",
+      "name" : "Wait",
       "tryErrorble" : false,
-      "enable" : true,
+      "enable" : "true",
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "flatData" : [ {
-        "key" : "currency",
-        "val" : "!javascript===\nconst sbs = ${currencys};\nconst idx = ${cidx};\nconst sb = sbs[idx];\nsb"
-      }, {
-        "key" : "cidx",
-        "val" : "!javascript===\n${cidx}+1"
-      } ]
+      "unit" : "SECONDS",
+      "step" : 10
+    }, {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "qcZ8waY5v6VF",
+      "name" : "Submit",
+      "tryErrorble" : false,
+      "enable" : "true",
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "url" : "${finExManageApiUrl}",
+      "uriVariables" : { },
+      "body" : "{\n    \"__bzk_api_key\": \"${finExManageApiKey}\",\n    \"name\": \"wallet/lend_by_filter\",\n    \"symbol_list\":${currencys},\n    \"rowAmount\": 100,\n    \"bottomWeight\": 1.02,\n    \"topWeight\": 1.01,\n    \"middleWeight\": 0.23,\n    \"wallet_type\": \"funding\",\n    \"exchange\": \"bitfinex\"\n}",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : "sb"
+      }
     } ],
     "links" : [ ],
     "vars" : {
       "cidx" : 0
     },
-    "taskSort" : [ "IXcDURKKInfg", "9aoVdlf0cqZB" ],
-    "whileJudgment" : {
-      "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
-      "kind" : "NONE",
-      "next" : null,
-      "left" : "${cidx}",
-      "right" : "!javascript===\nconst sbs = ${currencys};\nconst len= sbs.length;\nlen",
-      "type" : "lessthan"
-    },
+    "taskSort" : [ "YDXZFrOe8m0H", "0TTN33Q0G8wZ", "qcZ8waY5v6VF" ],
+    "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
       "endTag" : "TODO Why",
@@ -61,7 +71,7 @@
     },
     "minLogLv" : "DEBUG"
   } ],
-  "varCfgNames" : [ ],
+  "varCfgNames" : [ "fin-exchange-manage.json" ],
   "vars" : {
     "currencys" : [ "USD" ]
   },
@@ -80,5 +90,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 13
+  "version" : 18
 }
