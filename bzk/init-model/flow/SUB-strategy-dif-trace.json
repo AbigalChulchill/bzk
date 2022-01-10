@@ -1,0 +1,167 @@
+{
+  "clazz" : "net.bzk.flow.model.Flow",
+  "uid" : "6MRqv4Te57zl",
+  "name" : "SUB-strategy-dif-trace",
+  "boxs" : [ {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "KoOwMvZDE63r",
+    "name" : "Box",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$PolyglotAction",
+      "uid" : "Qvqn3l33fFem",
+      "name" : "InitVars",
+      "tryErrorble" : false,
+      "enable" : "true",
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "code" : "const MACDtrender = ${MACDtrender};\r\nconst lastDifMap = ${lastDifMap};\r\n\r\nfunction getPositionSide(){\r\n    return MACDtrender.last.val > 0 ? 'SHORT' : 'LONG';\r\n}\r\n\r\nconst positionSide = getPositionSide();\r\n\r\n$bzk.putObj('positionSide',positionSide);\r\n\r\nfunction getLastInfo(){\r\n    return lastDifMap[positionSide];\r\n}\r\n\r\nconst lastInfo = getLastInfo();\r\n\r\n$bzk.put('lastInfo',JSON.stringify(lastInfo));\r\n\r\n\r\nfunction genOrderObjJson(){\r\n\r\n    return JSON.stringify({\r\n        \"targetPrice\":-1,\r\n        \"stopPrice\": -1,\r\n        \"gapRate\":0.0025,\r\n        \"attachName\":'DifTraced'\r\n    });\r\n}\r\n$bzk.put('~orderLimitBody',genOrderObjJson());\r\n\r\ntrue;",
+      "polyglot" : "js",
+      "resultLv" : "not_specify",
+      "resultKey" : "InitVars"
+    }, {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "IHNsCCAGqz8g",
+      "name" : "LastDif",
+      "tryErrorble" : false,
+      "enable" : "true",
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "url" : "${finExManageApiUrl}",
+      "uriVariables" : { },
+      "body" : "{\n    \"name\": \"order_pack/last\",\n    \"exchange\": \"binance\",\n     \"filter_map\": {\n        \"LONG\": {\n            \"prd_name\": \"${symbol}\",\n            \"positionSide\":\"LONG\",\n            \"attach_name\":\"DifTrace\"\n        },\n        \"SHORT\": {\n            \"prd_name\": \"${symbol}\",\n            \"positionSide\":\"SHORT\",\n            \"attach_name\":\"DifTrace\"\n        }\n    },\n    \"__bzk_api_key\": \"${finExManageApiKey}\"\n}",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : "lastDifMap"
+      }
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "yBV3YHFsHfCI",
+      "name" : "Order",
+      "tryErrorble" : false,
+      "enable" : "true",
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flowUid" : "substoplimit",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "positionSide",
+        "val" : "${positionSide}"
+      }, {
+        "key" : "position",
+        "val" : "${position}"
+      }, {
+        "key" : "symbol",
+        "val" : "${symbol}"
+      }, {
+        "key" : "orderLimitBody",
+        "val" : "${orderLimitBody}"
+      }, {
+        "key" : "runStoped",
+        "val" : "true"
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "__pk_result",
+        "toKey" : {
+          "lv" : "not_specify",
+          "key" : "stopLimitResult"
+        }
+      } ]
+    } ],
+    "links" : [ {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "9YkIDgEOT1jH",
+      "name" : "RSILastV",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
+        "kind" : "NONE",
+        "next" : null,
+        "polyglot" : "js",
+        "code" : "const rsiDifLast = ${rsiDif360mTrender.last.val};\r\nconst positionSide = '${positionSide}';\r\n\r\nfunction check(){\r\n    if(positionSide=='LONG' ){\r\n        return rsiDifLast > 40;\r\n    }else if(positionSide == 'SHORT'){\r\n        return rsiDifLast < 60;\r\n    }\r\n    throw new Error('not support = '+positionSide);\r\n}\r\n\r\ncheck();"
+      },
+      "transition" : {
+        "toBox" : "",
+        "endTag" : "${symbol} ${positionSide} RSILastV",
+        "failEnd" : false,
+        "endResultKeys" : [ {
+          "lv" : "not_specify",
+          "key" : "rsiDif360mTrender.last.val"
+        } ],
+        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"RSILastV\"\n}"
+      },
+      "enable" : true
+    }, {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "PrtQc5mK5fOc",
+      "name" : "PriceOver",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
+        "kind" : "NONE",
+        "next" : null,
+        "polyglot" : "js",
+        "code" : "const exPrice = ${binanceQuote.all.avgPrice};\r\nconst lastOrderPrice = ${lastInfo.orderPack.attach.stopPrice};\r\nconst positionSide = '${positionSide}';\r\n\r\nfunction check(){\r\n    if(lastOrderPrice == null) return true;\r\n    return $directionUtils.isHighPrice(positionSide,lastOrderPrice,exPrice);\r\n}\r\n\r\ncheck();"
+      },
+      "transition" : {
+        "toBox" : "",
+        "endTag" : "${symbol} ${positionSide} PriceOver",
+        "failEnd" : false,
+        "endResultKeys" : [ ],
+        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"PriceOver\"\n}"
+      },
+      "enable" : true
+    }, {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "U1KRdRZi5SjC",
+      "name" : "PeakWait",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
+        "kind" : "NONE",
+        "next" : null,
+        "polyglot" : "js",
+        "code" : "const rsiDif360mTrenderState = '${rsiDif360mTrender.trendInfo.state}';\r\nconst positionSide = '${positionSide}';\r\n\r\nfunction check(){\r\n    if(positionSide == 'LONG'){\r\n        return rsiDif360mTrenderState == 'FALL';\r\n    }else if(positionSide == 'SHORT'){\r\n        return rsiDif360mTrenderState == 'RISE';\r\n    }\r\n    throw new Error(positionSide);\r\n}\r\n\r\ncheck();"
+      },
+      "transition" : {
+        "toBox" : "",
+        "endTag" : "${symbol} ${positionSide} PeakWait",
+        "failEnd" : false,
+        "endResultKeys" : [ ],
+        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"PeakWait\"\n}"
+      },
+      "enable" : true
+    } ],
+    "vars" : { },
+    "taskSort" : [ "IHNsCCAGqz8g", "Qvqn3l33fFem", "9YkIDgEOT1jH", "PrtQc5mK5fOc", "U1KRdRZi5SjC", "yBV3YHFsHfCI" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "TODO Why",
+      "failEnd" : false,
+      "endResultKeys" : [ ],
+      "resultCode" : ""
+    },
+    "minLogLv" : "DEBUG"
+  } ],
+  "varCfgNames" : [ "fin-exchange-manage.json" ],
+  "vars" : {
+    "symbol" : "ETH"
+  },
+  "entry" : {
+    "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
+    "boxUid" : "KoOwMvZDE63r",
+    "autoRegister" : false,
+    "requiredKeys" : [ "__ALL__" ],
+    "outputKeys" : [ "__pk_result" ]
+  },
+  "threadCfg" : {
+    "corePoolSize" : 10,
+    "maximumPoolSize" : 50,
+    "keepAliveTime" : 500,
+    "aliveUnit" : "MINUTES"
+  },
+  "version" : 10
+}

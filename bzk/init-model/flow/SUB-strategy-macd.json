@@ -11,7 +11,7 @@
       "uid" : "POnGmKqao8p1",
       "name" : "M_InitVars",
       "tryErrorble" : false,
-      "enable" : true,
+      "enable" : "true",
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
@@ -24,7 +24,7 @@
       "uid" : "DmpvFO68Ya38",
       "name" : "CancelLIMIT",
       "tryErrorble" : false,
-      "enable" : true,
+      "enable" : "true",
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
@@ -43,7 +43,7 @@
       "uid" : "NPJloJ9SkiyJ",
       "name" : "CallTake",
       "tryErrorble" : false,
-      "enable" : true,
+      "enable" : "true",
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
@@ -65,7 +65,7 @@
       "uid" : "3oi9e2ESsDQ3",
       "name" : "CallBigger",
       "tryErrorble" : false,
-      "enable" : false,
+      "enable" : "false",
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
@@ -87,7 +87,7 @@
       "uid" : "jTyoT1poRNiz",
       "name" : "CallDif",
       "tryErrorble" : false,
-      "enable" : true,
+      "enable" : "true",
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
@@ -102,6 +102,28 @@
         "toKey" : {
           "lv" : "not_specify",
           "key" : "CallDifResult"
+        }
+      } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "seAOjxSxI6jM",
+      "name" : "CDifTrace",
+      "tryErrorble" : false,
+      "enable" : "true",
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flowUid" : "6MRqv4Te57zl",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "__ALL__",
+        "val" : "${~__ALL__}"
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "__pk_result",
+        "toKey" : {
+          "lv" : "not_specify",
+          "key" : "CallDifTraceResult"
         }
       } ]
     } ],
@@ -126,7 +148,7 @@
       "enable" : true
     } ],
     "vars" : { },
-    "taskSort" : [ "Div2tmjgl8JG", "POnGmKqao8p1", "DmpvFO68Ya38", "NPJloJ9SkiyJ", "3oi9e2ESsDQ3", "jTyoT1poRNiz" ],
+    "taskSort" : [ "Div2tmjgl8JG", "POnGmKqao8p1", "DmpvFO68Ya38", "seAOjxSxI6jM", "NPJloJ9SkiyJ", "3oi9e2ESsDQ3", "jTyoT1poRNiz" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
@@ -152,5 +174,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 229
+  "version" : 231
 }
