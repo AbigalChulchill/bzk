@@ -47,7 +47,7 @@
       "minLogLv" : "NONE",
       "url" : "${finExManageApiUrl}",
       "uriVariables" : { },
-      "body" : "{\n    \"__bzk_api_key\": \"${finExManageApiKey}\",\n    \"name\": \"wallet/lend_by_filter\",\n    \"symbol_list\":${currencys},\n    \"rowAmount\": 100,\n    \"bottomWeight\": 1.02,\n    \"topWeight\": 1.01,\n    \"middleWeight\": 0.23,\n    \"wallet_type\": \"funding\",\n    \"exchange\": \"bitfinex\"\n}",
+      "body" : "{\n    \"__bzk_api_key\": \"${finExManageApiKey}\",\n    \"name\": \"wallet/lend_by_filter\",\n    \"symbol_list\":${currencys},\n    \"rowAmount\": 100,\n    \"bottomWeight\": 1.02,\n    \"topWeight\": 1.01,\n    \"middleWeight\": 0.35,\n    \"wallet_type\": \"funding\",\n    \"exchange\": \"bitfinex\"\n}",
       "method" : "POST",
       "headers" : { },
       "headersFlat" : "",
@@ -90,5 +90,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 21
+  "version" : 22
 }
