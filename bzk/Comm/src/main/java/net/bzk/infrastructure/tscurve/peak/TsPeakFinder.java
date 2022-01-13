@@ -39,8 +39,8 @@ public class TsPeakFinder extends TsCurve {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class LastInfo {
-        private String time;
-        private double val;
+        public String time;
+        public double val;
     }
 
     public static class AtPointMap extends HashMap<Double, Point> {
