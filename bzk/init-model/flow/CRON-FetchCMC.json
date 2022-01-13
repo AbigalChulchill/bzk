@@ -11,7 +11,7 @@
       "uid" : "Jj7CsxrbKdSm",
       "name" : "ListQuote",
       "tryErrorble" : false,
-      "enable" : true,
+      "enable" : "true",
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
@@ -30,7 +30,7 @@
       "uid" : "THy7T41cesZH",
       "name" : "Event",
       "tryErrorble" : false,
-      "enable" : true,
+      "enable" : "true",
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
@@ -40,7 +40,7 @@
       "uid" : "Wo9WX1K0rNTv",
       "name" : "ParseQuote",
       "tryErrorble" : false,
-      "enable" : true,
+      "enable" : "true",
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
@@ -58,11 +58,11 @@
       "uid" : "P0OAGpTL69JZ",
       "name" : "PackPayload",
       "tryErrorble" : false,
-      "enable" : true,
+      "enable" : "true",
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "code" : "const symbolInfo = ${symbolInfo};\nconst list= ${quotes};\nconst ans = [];\n\nfor (const oq of list) {\n    const sbl = oq['symbol'];\n    const name = symbolInfo[sbl]['name'];\n    const q = oq['quotes'][0];\n    open = q['quote']['USD']['open'];\n    ans.push(genPointDto(sbl,name,'open',open,q));\n\n    high = q['quote']['USD']['high'];\n    ans.push(genPointDto(sbl,name,'high',high,q));\n\n    low = q['quote']['USD']['low'];\n    ans.push(genPointDto(sbl,name,'low',low,q));\n\n    close = q['quote']['USD']['close'];\n    ans.push(genPointDto(sbl,name,'close',close,q));    \n\n    volume = q['quote']['USD']['volume'];\n    ans.push(genPointDto(sbl,name,'volume',volume,q));       \n\n\n    market_cap = q['quote']['USD']['market_cap'];\n    ans.push(genPointDto(sbl,name,'market_cap',market_cap,q));            \n\n\n}\n\n\n\nfunction genPointDto(sbl,name,fd,v,q){\n  const row = {\n      measurement : 'daily',\n      tags:{\n        symbol : sbl,\n        name : name,\n        category:'cryptocurrency',\n        valmean: fd  \n      },\n      field: 'val',\n      val:v,\n      time :q['quote']['USD']['timestamp']\n  };\n  return row;\n}\n\nans;\n",
+      "code" : "const symbolInfo = ${symbolInfo};\nconst list= ${quotes};\nconst ans = [];\n\nfor (const oq of list) {\n    const sbl = oq['symbol'];\n    const name = symbolInfo[sbl]['name'];\n    const q = oq['quotes'][0];\n    open = q['quote']['USD']['open'];\n    ans.push(genPointDto(sbl,name,'open',open,q));\n\n    high = q['quote']['USD']['high'];\n    ans.push(genPointDto(sbl,name,'high',high,q));\n\n    low = q['quote']['USD']['low'];\n    ans.push(genPointDto(sbl,name,'low',low,q));\n\n    close = q['quote']['USD']['close'];\n    ans.push(genPointDto(sbl,name,'close',close,q));    \n\n    volume = q['quote']['USD']['volume'];\n    ans.push(genPointDto(sbl,name,'volume',volume,q));       \n\n\n    market_cap = q['quote']['USD']['market_cap'];\n    ans.push(genPointDto(sbl,name,'market_cap',market_cap,q));            \n\n\n}\n\n\n\nfunction genPointDto(sbl,name,fd,v,q){\n  const row = {\n      measurement : 'd1',\n      tags:{\n        symbol : sbl,\n        name : name,\n        category:'cryptocurrency'\n      },\n      field: fd,\n      val:v,\n      time :q['quote']['USD']['timestamp']\n  };\n  return row;\n}\n\nans;\n",
       "polyglot" : "js",
       "resultLv" : "not_specify",
       "resultKey" : "packPayload"
@@ -71,7 +71,7 @@
       "uid" : "OFNh917ZZjFo",
       "name" : "Submit",
       "tryErrorble" : false,
-      "enable" : true,
+      "enable" : "true",
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
@@ -107,7 +107,8 @@
     "autoRegister" : true,
     "period" : 86400,
     "unit" : "SECONDS",
-    "initialDelay" : 8
+    "initialDelay" : 8,
+    "cronExpression" : null
   },
   "threadCfg" : {
     "corePoolSize" : 10,
@@ -115,5 +116,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 22
+  "version" : 24
 }
