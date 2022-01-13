@@ -73,7 +73,7 @@
   } ],
   "varCfgNames" : [ "fin-exchange-manage.json" ],
   "vars" : {
-    "currencys" : [ "USD" ]
+    "currencys" : [ "USD", "USDT" ]
   },
   "entry" : {
     "clazz" : "net.bzk.flow.model.Entry$FixedRateEntry",
@@ -90,5 +90,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 18
+  "version" : 20
 }
