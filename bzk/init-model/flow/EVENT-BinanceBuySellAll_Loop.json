@@ -11,7 +11,7 @@
       "uid" : "VBcwBUuoBz8z",
       "name" : "LoopGen",
       "tryErrorble" : false,
-      "enable" : true,
+      "enable" : "true",
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
@@ -27,27 +27,11 @@
       "uid" : "uCYOwWdhTX61",
       "name" : "DoBuyOrSell",
       "tryErrorble" : true,
-      "enable" : true,
+      "enable" : "true",
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
       "flowUid" : "iYEiFn0pKZCN",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "symbol",
-        "val" : "${curSymbol}"
-      } ],
-      "outputReflects" : [ ]
-    }, {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "LWXYn43on07m",
-      "name" : "FuseOrder",
-      "tryErrorble" : false,
-      "enable" : true,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "flowUid" : "FwGMPiyJdlPl",
       "asynced" : false,
       "inputData" : [ {
         "key" : "symbol",
@@ -59,7 +43,7 @@
     "vars" : {
       "symbolIdx" : 0
     },
-    "taskSort" : [ "VBcwBUuoBz8z", "uCYOwWdhTX61", "LWXYn43on07m" ],
+    "taskSort" : [ "VBcwBUuoBz8z", "uCYOwWdhTX61" ],
     "whileJudgment" : {
       "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
       "kind" : "NONE",
@@ -99,5 +83,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 18
+  "version" : 20
 }
