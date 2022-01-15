@@ -11,7 +11,7 @@
       "uid" : "TChdkuQhIu7d",
       "name" : "Call",
       "tryErrorble" : false,
-      "enable" : true,
+      "enable" : "true",
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
@@ -30,7 +30,7 @@
       "uid" : "YmcqZtlkFDFd",
       "name" : "Vars",
       "tryErrorble" : false,
-      "enable" : true,
+      "enable" : "true",
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
@@ -41,7 +41,7 @@
     } ],
     "links" : [ ],
     "vars" : {
-      "startTime" : "2021-10-05T20:00:00+00:00"
+      "startTime" : "2022-01-12T09:50:00+00:00"
     },
     "taskSort" : [ "TChdkuQhIu7d", "YmcqZtlkFDFd" ],
     "whileJudgment" : {
@@ -49,7 +49,7 @@
       "kind" : "NONE",
       "next" : null,
       "polyglot" : "js",
-      "code" : "const startTime = new Date('${startTime}');\nconst now = new Date('2021-10-15T00:00:00+00:00');\nconst check = (startTime<now);\ncheck;"
+      "code" : "const startTime = new Date('${startTime}');\nconst now = new Date('2022-01-13T17:00:00+00:00');\nconst check = (startTime<now);\ncheck;"
     },
     "transition" : {
       "toBox" : "",
@@ -77,5 +77,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 36
+  "version" : 38
 }

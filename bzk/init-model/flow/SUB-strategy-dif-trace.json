@@ -75,28 +75,6 @@
     } ],
     "links" : [ {
       "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "9YkIDgEOT1jH",
-      "name" : "RSILastV",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
-        "kind" : "NONE",
-        "next" : null,
-        "polyglot" : "js",
-        "code" : "const rsiDifLast = ${rsiDif360mTrender.last.val};\r\nconst positionSide = '${positionSide}';\r\n\r\nfunction check(){\r\n    if(positionSide=='LONG' ){\r\n        return rsiDifLast > 40;\r\n    }else if(positionSide == 'SHORT'){\r\n        return rsiDifLast < 60;\r\n    }\r\n    throw new Error('not support = '+positionSide);\r\n}\r\n\r\ncheck();"
-      },
-      "transition" : {
-        "toBox" : "",
-        "endTag" : "${symbol} ${positionSide} RSILastV",
-        "failEnd" : false,
-        "endResultKeys" : [ {
-          "lv" : "not_specify",
-          "key" : "rsiDif360mTrender.last.val"
-        } ],
-        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"RSILastV\"\n}"
-      },
-      "enable" : true
-    }, {
-      "clazz" : "net.bzk.flow.model.Link",
       "uid" : "PrtQc5mK5fOc",
       "name" : "PriceOver",
       "condition" : {
@@ -133,9 +111,48 @@
         "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"PeakWait\"\n}"
       },
       "enable" : true
+    }, {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "vf5kuyx39UQw",
+      "name" : "HasLastInfo",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
+        "kind" : "NONE",
+        "next" : null,
+        "polyglot" : "js",
+        "code" : "const lastInfo = ${lastInfo};\r\nlastInfo == null;"
+      },
+      "transition" : {
+        "toBox" : "",
+        "endTag" : "${symbol} ${positionSide} HasLastInfo",
+        "failEnd" : false,
+        "endResultKeys" : [ ],
+        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"HasLastInfo\"\n}"
+      },
+      "enable" : true
+    }, {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "frq4EfAYEZ1D",
+      "name" : "OverTime",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
+        "kind" : "NONE",
+        "next" : null,
+        "left" : "!javascript===\nconst lastInfo = ${lastInfo};\n$tsFunc.subtractKeySecondsToNow(lastInfo.orderPack.created_at);",
+        "right" : "!javascript===\n60*60*1.5;",
+        "type" : "greater"
+      },
+      "transition" : {
+        "toBox" : "",
+        "endTag" : "${symbol} ${positionSide} OverTime",
+        "failEnd" : false,
+        "endResultKeys" : [ ],
+        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"OverTime\"\n}"
+      },
+      "enable" : true
     } ],
     "vars" : { },
-    "taskSort" : [ "IHNsCCAGqz8g", "Qvqn3l33fFem", "9YkIDgEOT1jH", "PrtQc5mK5fOc", "U1KRdRZi5SjC", "yBV3YHFsHfCI" ],
+    "taskSort" : [ "IHNsCCAGqz8g", "Qvqn3l33fFem", "vf5kuyx39UQw", "frq4EfAYEZ1D", "PrtQc5mK5fOc", "U1KRdRZi5SjC", "yBV3YHFsHfCI" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
@@ -163,5 +180,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 10
+  "version" : 14
 }
