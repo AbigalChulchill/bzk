@@ -71,7 +71,7 @@
         "failEnd" : false,
         "endResultKeys" : [ {
           "lv" : "not_specify",
-          "key" : "difOverThInfo"
+          "key" : "difPeak.last.val"
         } ],
         "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"CRebound\"\n}"
       },
@@ -153,5 +153,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 50
+  "version" : 52
 }
