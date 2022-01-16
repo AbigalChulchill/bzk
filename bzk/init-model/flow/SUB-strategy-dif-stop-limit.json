@@ -15,7 +15,7 @@
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "code" : "const difPeak = ${cs.difPeak};\r\nconst difPoints = $tsFunc.toPoints(${cs.dif});\r\nconst difTH = ${cs.difTH};\r\nconst difBigger = ${cs.difBigger};\r\nconst k5mLow = ${cs.k5m.low};\r\nconst k5mHigh = ${cs.k5m.high};\r\n\r\nfunction getThVal(){\r\n    var key;\r\n    for (var k in difTH) {\r\n        return difTH[k];\r\n    }\r\n}\r\n\r\nfunction getPositionSide(){\r\n    return difBigger.lastVal < 0 ? 'LONG' : 'SHORT';\r\n}\r\n\r\nconst positionSide = getPositionSide();\r\n\r\nfunction getNearPeak(){\r\n    if(positionSide == 'LONG'){\r\n        return difPeak.trendInfo.nearMin;\r\n    }else if(positionSide=='SHORT'){\r\n        return difPeak.trendInfo.nearMax;\r\n    }\r\n    throw new Error('getStopPrice not support='+positionSide);\r\n}\r\n\r\nconst nearPeak = getNearPeak();\r\n\r\n\r\nfunction getStopPrice(){\r\n\r\n    if(positionSide=='LONG'){\r\n        return k5mLow[nearPeak.key];\r\n    }else if(positionSide == 'SHORT'){\r\n        return k5mHigh[nearPeak.key];\r\n    }\r\n    throw new Error('getStopPrice not support='+positionSide);\r\n}\r\n\r\nfunction genOrderObjJson(){\r\n    const peakPrice=getStopPrice();\r\n    return JSON.stringify({\r\n        \"targetPrice\":peakPrice,\r\n        \"stopPrice\": -1,\r\n        \"gapRate\":-1,\r\n        \"attachName\":'DifTrace',\r\n        \"attach\":{\r\n            \"stopPrice\":peakPrice\r\n        }\r\n    });\r\n}\r\n\r\n$bzk.putObj('positionSide',positionSide);\r\n$bzk.put('difNearPeak',JSON.stringify( nearPeak));\r\n$bzk.putObj('~thVal',getThVal());\r\n$bzk.put('~orderLimitBody',genOrderObjJson());\r\ntrue;",
+      "code" : "const difPeak = ${cs.difPeak};\r\nconst difPoints = $tsFunc.toPoints(${cs.dif});\r\nconst difTH = ${cs.difTH};\r\nconst k5mLow = ${cs.k5m.low};\r\nconst k5mHigh = ${cs.k5m.high};\r\n\r\nfunction getThVal(){\r\n    var key;\r\n    for (var k in difTH) {\r\n        return difTH[k];\r\n    }\r\n}\r\n\r\nfunction getPositionSide(){\r\n    return difPeak.trendInfo.state == 'FALL' ? 'SHORT':'LONG';\r\n}\r\n\r\nconst positionSide = getPositionSide();\r\n\r\n\r\n\r\nconst nearPeak = difPeak.trendInfo.nearPeak;\r\n\r\n\r\nfunction getStopPrice(){\r\n\r\n    if(positionSide=='LONG'){\r\n        return k5mLow[nearPeak.key];\r\n    }else if(positionSide == 'SHORT'){\r\n        return k5mHigh[nearPeak.key];\r\n    }\r\n    throw new Error('getStopPrice not support='+positionSide);\r\n}\r\n\r\nfunction genOrderObjJson(){\r\n    const peakPrice=getStopPrice();\r\n    return JSON.stringify({\r\n        \"targetPrice\":peakPrice,\r\n        \"stopPrice\": -1,\r\n        \"gapRate\":-1,\r\n        \"attachName\":'DifTrace',\r\n        \"attach\":{\r\n            \"stopPrice\":peakPrice\r\n        }\r\n    });\r\n}\r\n\r\n$bzk.putObj('positionSide',positionSide);\r\n$bzk.put('difNearPeak',JSON.stringify( nearPeak));\r\n$bzk.putObj('~thVal',getThVal());\r\n$bzk.put('~orderLimitBody',genOrderObjJson());\r\ntrue;",
       "polyglot" : "js",
       "resultLv" : "not_specify",
       "resultKey" : "vars"
@@ -63,17 +63,17 @@
         "kind" : "NONE",
         "next" : null,
         "polyglot" : "js",
-        "code" : "const difBigger = ${difBigger};\nconst positionSide = '${positionSide}';\nconst thVal = ${thVal};\n\nfunction checkLONG(){\n    const tarTh = -1 * thVal;\n    if(difBigger.lastVal>tarTh) return false;\n    if(difBigger.previousVal>thVal) return false;\n    return difBigger.previousVal<difBigger.lastVal;\n}\n\nfunction checkSHORT(){\n    const tarTh =  thVal;\n    if(difBigger.lastVal<tarTh) return false;\n    if(difBigger.previousVal<thVal) return false;\n    return difBigger.previousVal>difBigger.lastVal;\n}\n\nfunction check(){\n    if(positionSide == 'LONG'){\n        return checkLONG();\n    }else if(positionSide == 'SHORT'){\n        return checkSHORT();\n    }\n    throw new Error(positionSide);\n}\n\n\n!check();"
+        "code" : "const difPeak = ${cs.difPeak};\nconst difNearPeak = ${difNearPeak};\nconst positionSide = '${positionSide}';\nconst thVal = ${thVal};\nconst difBigger = ${cs.difBigger};\n\nfunction checkLONG(){\n    const tarTh = -1 * thVal;\n    if(difPeak.last.val>0) return false;\n    if(difNearPeak.val>thVal) throw new Error('checkLONG difNearPeak.val='+difNearPeak.val+\" thVal=\"+thVal);\n    return difBigger.previousVal<difBigger.lastVal;\n}\n\nfunction checkSHORT(){\n    const tarTh =  thVal;\n    if(difPeak.last.val<0) return false;\n    if(difNearPeak.val<thVal) throw new Error('checkSHORT difNearPeak.val='+difNearPeak.val+\" thVal=\"+thVal);\n    return difBigger.previousVal>difBigger.lastVal;\n}\n\nfunction check(){\n    if(positionSide == 'LONG'){\n        return checkLONG();\n    }else if(positionSide == 'SHORT'){\n        return checkSHORT();\n    }\n    throw new Error(positionSide);\n}\n\n\n!check();"
       },
       "transition" : {
         "toBox" : "",
-        "endTag" : "${symbol} ${positionSide} ${difOverThInfo.msg}",
+        "endTag" : "${symbol} ${positionSide} CRebound",
         "failEnd" : false,
         "endResultKeys" : [ {
           "lv" : "not_specify",
           "key" : "difOverThInfo"
         } ],
-        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"${difOverThInfo.msg}\"\n}"
+        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"CRebound\"\n}"
       },
       "enable" : true
     }, {
@@ -84,7 +84,7 @@
         "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
         "kind" : "NONE",
         "next" : null,
-        "left" : "!javascript===\nMath.abs( ${cs.difBigger.lastVal});",
+        "left" : "!javascript===\nMath.abs( ${difNearPeak.val});",
         "right" : "${thVal}",
         "type" : "lessthan_equal"
       },
@@ -102,9 +102,32 @@
         "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"OverTH\"\n}"
       },
       "enable" : true
+    }, {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "Ip2jdhO8VTwD",
+      "name" : "OverTime",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
+        "kind" : "NONE",
+        "next" : null,
+        "left" : "${difNearPeak.dtime}",
+        "right" : "660",
+        "type" : "greater"
+      },
+      "transition" : {
+        "toBox" : "",
+        "endTag" : "${symbol} ${positionSide} OverTime",
+        "failEnd" : false,
+        "endResultKeys" : [ {
+          "lv" : "not_specify",
+          "key" : "difNearPeak"
+        } ],
+        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"OverTime\"\n}"
+      },
+      "enable" : true
     } ],
     "vars" : { },
-    "taskSort" : [ "66NmfSdxlftf", "ARQTOmYaHf9f", "T5IC58bnUYi6", "wcOS08RF0tY6" ],
+    "taskSort" : [ "66NmfSdxlftf", "ARQTOmYaHf9f", "T5IC58bnUYi6", "Ip2jdhO8VTwD", "wcOS08RF0tY6" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
@@ -130,5 +153,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 48
+  "version" : 50
 }
