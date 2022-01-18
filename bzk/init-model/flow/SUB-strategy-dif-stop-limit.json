@@ -69,10 +69,7 @@
         "toBox" : "",
         "endTag" : "${symbol} ${positionSide} CRebound",
         "failEnd" : false,
-        "endResultKeys" : [ {
-          "lv" : "not_specify",
-          "key" : "difPeak.last.val"
-        } ],
+        "endResultKeys" : [ ],
         "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"CRebound\"\n}"
       },
       "enable" : true
@@ -153,5 +150,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 52
+  "version" : 53
 }
