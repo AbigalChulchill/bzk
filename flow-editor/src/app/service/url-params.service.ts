@@ -55,6 +55,10 @@ export class UrlParamsService {
     return this.route.snapshot.paramMap.get('queryUid');
   }
 
+  public getUid(): string {
+    return this.route.snapshot.paramMap.get('uid');
+  }
+
   public getListType(): ListLogType {
     const key = 'listType';
     if (this.route.snapshot.queryParamMap.has(key)) {

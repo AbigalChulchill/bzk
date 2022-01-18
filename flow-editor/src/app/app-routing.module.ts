@@ -22,6 +22,7 @@ const routes: Routes = [
   { path: 'job/:uid',   component: JobComponent, canActivate: [PathGuideService] },
   { path: 'job/:uid', component: JobSidebarComponent, outlet:'sidebar' },
   { path: 'job/:uid/log/:queryUid', component: RunLogComponent,canActivate: [PathGuideService]  },
+  { path: 'job/:uid/log/:queryUid?origin=:origin', component: RunLogComponent,canActivate: [PathGuideService]  },
   { path: 'config', component: ConfigComponent, canActivate: [PathGuideService] },
   { path: 'login', component: LoginComponent },
   { path: 'logout', component: LoginComponent, canActivate: [PathGuideService]  },

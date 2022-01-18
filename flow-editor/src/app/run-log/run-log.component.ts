@@ -8,6 +8,8 @@ import { Component, OnInit } from '@angular/core';
 import { RunLog } from '../model/run-log';
 import { ActivatedRoute } from '@angular/router';
 import { UrlParamsService } from '../service/url-params.service';
+import { Job } from '../model/job';
+import { JobClientService } from './../service/job-client.service';
 
 @Component({
   selector: 'app-run-log',
@@ -19,7 +21,8 @@ export class RunLogComponent implements OnInit {
   public showType = ShowType.Vars;
   public listType = ListLogType.runflow;
   public queryUid = '';
-  // public jobUid = ''
+  public jobUid = '';
+  public job: Job = null;
   public list = new PageDto<RunLog>();
   public runState: RunState = null;
   public page = 0;
@@ -28,6 +31,7 @@ export class RunLogComponent implements OnInit {
 
   constructor(
     private runLogClient: RunLogClientService,
+    private jobClient: JobClientService,
     private loading: LoadingService,
     private urlParams: UrlParamsService,
     private route: ActivatedRoute
@@ -37,8 +41,14 @@ export class RunLogComponent implements OnInit {
     if (StringUtils.isBlank(this.queryUid)) {
       this.queryUid = this.urlParams.getQueryUid();
     }
-    this.listType = this.urlParams.getListType();
+    if (StringUtils.isBlank(this.jobUid)) {
+      this.jobUid = this.urlParams.getUid();
+    }
+    if(!StringUtils.isBlank(this.jobUid)){
+      this.job = await this.jobClient.getByUid(this.jobUid);
+    }
 
+    this.listType = this.urlParams.getListType();
     this.reflesh();
   }
 
