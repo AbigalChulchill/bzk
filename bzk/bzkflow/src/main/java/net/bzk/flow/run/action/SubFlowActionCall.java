@@ -55,6 +55,7 @@ public class SubFlowActionCall extends ActionCall<SubFlowAction> {
     private VarValSet runRunner(FlowRuner fr) {
         logUtils.log(getUids(), Enums.RunState.ActionCall, r -> {
             r.setRefRunFlowUid(fr.getInfo().getUid());
+            r.setRefFlowUid(fr.getModel().getUid());
             r.setMsg(JsonUtils.toJson(fr.getModel()));
         });
         if (getModel().isAsynced()) {
@@ -76,12 +77,12 @@ public class SubFlowActionCall extends ActionCall<SubFlowAction> {
         for (var kp : kvs) {
             Object rv = getPolyglotEngine().parseScriptbleText(kp.getVal(), Object.class);
             var kinfo = VarLv.checkLvByPrefix(kp.getKey());
-            fr.getVars().putByPath(kinfo.getKey(),rv);
+            fr.getVars().putByPath(kinfo.getKey(), rv);
         }
     }
 
     private VarValSet genVarSet(FlowRuner fr) {
-        Map<String,Object> ers = fr.getInfo().getEndResult();
+        Map<String, Object> ers = fr.getInfo().getEndResult();
         VarValSet ans = new VarValSet();
         List<VarKeyReflect> omap = getModel().getOutputReflects();
         for (var vv : ers.entrySet()) {

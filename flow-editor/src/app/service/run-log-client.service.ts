@@ -26,6 +26,10 @@ export class RunLogClientService {
     return this.httpClient.get<PageDto<RunLog>>(`${environment.apiHost}${RunLogClientService.URL_PREFIX}${uid}?type=${type}&page=${page}&size=${size}`);
   }
 
+  public getByRefRunFlowUid(uid:string):Observable<RunLog>{
+    return this.httpClient.get<RunLog>(`${environment.apiHost}${RunLogClientService.URL_PREFIX}${uid}?type=refRunFlowUid`);
+  }
+
   // public listByRunFlowUid(uid:string): Observable<Array<RunLog>> {
   //   return this.httpClient.get<Array<RunLog>>(environment.apiHost + RunLogClientService.URL_PREFIX + uid+'?type=runflow' );
   // }

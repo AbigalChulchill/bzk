@@ -28,6 +28,7 @@ export class RunLogComponent implements OnInit {
   public page = 0;
   public pages = new Array<number>();
   public size = 25;
+  public originRunLog : RunLog = null;
 
   constructor(
     private runLogClient: RunLogClientService,
@@ -46,6 +47,9 @@ export class RunLogComponent implements OnInit {
     }
     if(!StringUtils.isBlank(this.jobUid)){
       this.job = await this.jobClient.getByUid(this.jobUid);
+    }
+    if(this.listType == ListLogType.runflow){
+      this.originRunLog = await this.runLogClient.getByRefRunFlowUid(this.queryUid).toPromise();
     }
 
     this.listType = this.urlParams.getListType();

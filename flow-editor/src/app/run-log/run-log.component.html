@@ -21,7 +21,7 @@
           </a>
           <ul class="dropdown-menu">
             <a class="dropdown-item" href="javascript:void(0)" (click)="setRunState(rs)"
-              *ngFor="let rs of listRunState()">{{  rs ? rs : 'all' }}</a>
+              *ngFor="let rs of listRunState()">{{ rs ? rs : 'all' }}</a>
 
           </ul>
         </li>
@@ -31,6 +31,16 @@
 
 
     </div>
+
+
+
+    <a target="_blank"
+      [routerLink]="['/',{ outlets: {primary:['job',originRunLog.flowUid,'log',originRunLog.runFlowUid] , sidebar: null } }]"
+      type="button" class="btn alert btn-success" *ngIf="originRunLog">     <i class="fas fa-chevron-circle-up"></i></a>
+
+    <a target="_blank"
+      [routerLink]="['/',{ outlets: {primary:['job',jobUid] , sidebar: null } }]"
+      type="button" class="btn alert btn-success" > <i class="far fa-arrow-alt-circle-left"></i></a>
     <div class="alert alert-primary" role="alert" *ngIf="job">
       {{job.model.name}}
     </div>
@@ -38,7 +48,7 @@
 </nav>
 
 
-<ng-container [ngTemplateOutlet]="pagination" ></ng-container>
+<ng-container [ngTemplateOutlet]="pagination"></ng-container>
 
 <div class="content list-dev">
   <div class="listline" #listlineDom>
@@ -50,7 +60,9 @@
               <span class="btn-danger" class="btn btn-primary mr-2">{{ line.boxName }}<span
                   class="badge badge-secondary">BOX</span></span>
               <span class="btn btn-info mr-2">{{ line.state }}<span class="badge badge-secondary">STATE</span></span>
-              <a target="_blank" *ngIf=" !StringUtils.isBlank( line.refRunFlowUid)" [routerLink]="['/',{ outlets: {primary:['job',jobUid,'log',line.refRunFlowUid] , sidebar: null } }]" >{{ line.refRunFlowUid }}</a>
+              <a target="_blank" *ngIf=" !StringUtils.isBlank( line.refRunFlowUid)"
+                [routerLink]="['/',{ outlets: {primary:['job',line.refFlowUid,'log',line.refRunFlowUid] , sidebar: null } }]">{{
+                line.refRunFlowUid }}</a>
               <span *ngIf=" !StringUtils.isBlank( line.msg)" class="btn btn-light mr-2">{{ line.msg | slice:0:120
                 }}</span>
             </div>
@@ -71,14 +83,15 @@
 
 </div>
 
-<ng-container [ngTemplateOutlet]="pagination" ></ng-container>
+<ng-container [ngTemplateOutlet]="pagination"></ng-container>
 
 <ng-template #pagination>
   <nav aria-label="Page navigation example">
     <ul class="pagination">
       <li class="page-item">
         <div class="dropdown ">
-          <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" id="dropdownMenu2"
+            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             {{size}}
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
@@ -90,7 +103,8 @@
           </div>
         </div>
       </li>
-      <li class="page-item" [class.active] = "p === page" *ngFor="let p of pages" ><button (click)="onPageChange(p)" class="page-link" href="#">{{(p+1)}}</button></li>
+      <li class="page-item" [class.active]="p === page" *ngFor="let p of pages"><button (click)="onPageChange(p)"
+          class="page-link" href="#">{{(p+1)}}</button></li>
 
 
 

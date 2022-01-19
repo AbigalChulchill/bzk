@@ -12,6 +12,7 @@ export class RunLog {
   public actionUid: string;
   public runActionUid: string;
   public refRunFlowUid: string;
+  public refFlowUid: string;
 
   public msg: string;
   public flowVar: BaseVar;

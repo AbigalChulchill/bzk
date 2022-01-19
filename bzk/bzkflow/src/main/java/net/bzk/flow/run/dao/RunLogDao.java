@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface RunLogDao extends MongoRepository<RunLog, String> {
@@ -19,6 +20,8 @@ public interface RunLogDao extends MongoRepository<RunLog, String> {
     Page<RunLog> findByActionUidOrderByCreateAtAsc(String uid,Pageable pageable);
 
     Page<RunLog> findByCreateAtBefore(Date date,Pageable pageable);
+
+    Optional<RunLog> findByRefRunFlowUid(String uid);
 
     @Transactional
     @Modifying

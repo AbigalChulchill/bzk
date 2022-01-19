@@ -49,6 +49,13 @@ public class RunLogController {
 
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
+    @RequestMapping(value = "{uid}", method = RequestMethod.GET, params = "type=refRunFlowUid")
+    public RunLog findByRefRunFlowUid(@PathVariable String uid) {
+        return dao.findByRefRunFlowUid(uid).orElse(null);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
     @RequestMapping(value = "", method = RequestMethod.DELETE)
     public void deleteBefore(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date) {
         dao.deleteByCreateAtBefore(date);
