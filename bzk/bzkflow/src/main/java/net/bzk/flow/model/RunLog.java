@@ -30,6 +30,7 @@ public class RunLog implements Serializable {
     private String actionUid;
     private String runActionUid;
     private String refFlowUid;
+    @Indexed(name = "ref_run_flow_uid_index", direction = IndexDirection.DESCENDING)
     private String refRunFlowUid;
 
     private String msg;

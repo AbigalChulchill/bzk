@@ -207,7 +207,7 @@
       "minLogLv" : "NONE",
       "url" : "${finExManageApiUrl}",
       "uriVariables" : { },
-      "body" : "!javascript===!return-json===\n\nconst lastKRange = ${cs.lastKRange};\nconst ans= {\n    \"name\": \"position/fuse\",\n    \"exchange\": \"binance\",\n    \"prd_name\": \"${symbol}\",\n    \"__bzk_api_key\": \"${finExManageApiKey}\",\n    \"positionSide\": \"LONG\",\n    \"fuseStrategy\": \"FUSE_FIXED_STEP\",\n    \"minCount\": 3,\n    \"priceStep\": lastKRange.val * 5,\n    \"rebuildByPriceStepRate\": 0.5,\n    \"noLoseBaseCount\": 3,\n    \"proportionalRate\": 1.05,\n    \"tags\": [\n        \"y2\"\n    ]\n};\nJSON.stringify(ans);",
+      "body" : "!javascript===!return-json===\n\nconst lastKRange = ${cs.lastKRange};\nconst ans= {\n    \"name\": \"position/fuse\",\n    \"exchange\": \"binance\",\n    \"prd_name\": \"${symbol}\",\n    \"__bzk_api_key\": \"${finExManageApiKey}\",\n    \"positionSide\": \"LONG\",\n    \"fuseStrategy\": \"FUSE_FIXED_STEP\",\n    \"minCount\": 3,\n    \"priceStep\": lastKRange.val * 2,\n    \"rebuildByPriceStepRate\": 0.5,\n    \"noLoseBaseCount\": 3,\n    \"proportionalRate\": 1.05,\n    \"tags\": [\n        \"y2\"\n    ]\n};\nJSON.stringify(ans);",
       "method" : "POST",
       "headers" : { },
       "headersFlat" : "",
@@ -226,7 +226,7 @@
       "minLogLv" : "NONE",
       "url" : "${finExManageApiUrl}",
       "uriVariables" : { },
-      "body" : "!javascript===!return-json===\n\nconst lastKRange = ${cs.lastKRange};\nconst ans= {\n    \"name\": \"position/fuse\",\n    \"exchange\": \"binance\",\n    \"prd_name\": \"${symbol}\",\n    \"__bzk_api_key\": \"${finExManageApiKey}\",\n    \"positionSide\": \"SHORT\",\n    \"fuseStrategy\": \"FUSE_FIXED_STEP\",\n    \"minCount\": 3,\n    \"priceStep\": lastKRange.val * 5,\n    \"rebuildByPriceStepRate\": 0.5,\n    \"noLoseBaseCount\": 3,\n    \"proportionalRate\": 1.05,\n    \"tags\": [\n        \"y2\"\n    ]\n};\nJSON.stringify(ans);",
+      "body" : "!javascript===!return-json===\n\nconst lastKRange = ${cs.lastKRange};\nconst ans= {\n    \"name\": \"position/fuse\",\n    \"exchange\": \"binance\",\n    \"prd_name\": \"${symbol}\",\n    \"__bzk_api_key\": \"${finExManageApiKey}\",\n    \"positionSide\": \"SHORT\",\n    \"fuseStrategy\": \"FUSE_FIXED_STEP\",\n    \"minCount\": 3,\n    \"priceStep\": lastKRange.val * 2,\n    \"rebuildByPriceStepRate\": 0.5,\n    \"noLoseBaseCount\": 3,\n    \"proportionalRate\": 1.05,\n    \"tags\": [\n        \"y2\"\n    ]\n};\nJSON.stringify(ans);",
       "method" : "POST",
       "headers" : { },
       "headersFlat" : "",
@@ -265,4 +265,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 191}
+  "version" : 193
+}
