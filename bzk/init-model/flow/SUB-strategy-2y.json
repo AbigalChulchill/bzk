@@ -4,6 +4,83 @@
   "name" : "SUB-strategy-2y",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "hLZ3d8T7Vkot",
+    "name" : "Strategy",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "vWD538GBmnZO",
+      "name" : "bottleneck",
+      "tryErrorble" : false,
+      "enable" : "true",
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flowUid" : "SSPBbWtmfHPV",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "__ALL__",
+        "val" : "${~__ALL__}"
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "__pk_result",
+        "toKey" : {
+          "lv" : "not_specify",
+          "key" : "call_resp"
+        }
+      } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "IegDp3FgglDY",
+      "name" : "FuseLONG",
+      "tryErrorble" : false,
+      "enable" : "true",
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "url" : "${finExManageApiUrl}",
+      "uriVariables" : { },
+      "body" : "!javascript===!return-json===\n\nconst lastKRange = ${cs.lastKRange};\nconst ans= {\n    \"name\": \"position/fuse\",\n    \"exchange\": \"binance\",\n    \"prd_name\": \"${symbol}\",\n    \"__bzk_api_key\": \"${finExManageApiKey}\",\n    \"positionSide\": \"LONG\",\n    \"fuseStrategy\": \"FUSE_FIXED_STEP\",\n    \"minCount\": 3,\n    \"priceStep\": lastKRange.val * 2,\n    \"rebuildByPriceStepRate\": 0.5,\n    \"noLoseBaseCount\": 3,\n    \"proportionalRate\": 1.05,\n    \"tags\": [\n        \"y2\"\n    ]\n};\nJSON.stringify(ans);",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : "fuseLONGResp"
+      }
+    }, {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "PCKm0u4pI6hV",
+      "name" : "FuseSHORT",
+      "tryErrorble" : false,
+      "enable" : "true",
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "url" : "${finExManageApiUrl}",
+      "uriVariables" : { },
+      "body" : "!javascript===!return-json===\n\nconst lastKRange = ${cs.lastKRange};\nconst ans= {\n    \"name\": \"position/fuse\",\n    \"exchange\": \"binance\",\n    \"prd_name\": \"${symbol}\",\n    \"__bzk_api_key\": \"${finExManageApiKey}\",\n    \"positionSide\": \"SHORT\",\n    \"fuseStrategy\": \"FUSE_FIXED_STEP\",\n    \"minCount\": 3,\n    \"priceStep\": lastKRange.val * 2,\n    \"rebuildByPriceStepRate\": 0.5,\n    \"noLoseBaseCount\": 3,\n    \"proportionalRate\": 1.05,\n    \"tags\": [\n        \"y2\"\n    ]\n};\nJSON.stringify(ans);",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : "fuseSHORTResp"
+      }
+    } ],
+    "links" : [ ],
+    "vars" : { },
+    "taskSort" : [ "vWD538GBmnZO", "IegDp3FgglDY", "PCKm0u4pI6hV" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "${symbol} ordered:${call_resp.ordered} ${call_resp.breakName}",
+      "failEnd" : false,
+      "endResultKeys" : [ ],
+      "resultCode" : ""
+    },
+    "minLogLv" : "DEBUG"
+  }, {
+    "clazz" : "net.bzk.flow.model.Box",
     "uid" : "UQC5RZ3iJLB7",
     "name" : "Box",
     "actions" : [ {
@@ -115,7 +192,7 @@
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "code" : "const tsdbAvgs = $bzk.g('TSDBAvgs');\nconst tsdbAvgsMap = {};\nfunction injectTSDBAvgs(){\n    for (const e of tsdbAvgs) {\n        console.log(e);\n        const results = e.get('result');\n        if(results.size()==1){\n            const v =results.get(0).get('values');\n            tsdbAvgsMap[e.get('uid')] = v\n            $bzk.putObj('~cs.'+e.get('uid'),v);\n        }else if(results.size()>=2){\n            for(let i=0;i<results.size();i++){\n                const v =results.get(i).get('values');\n                const cols = results.get(i).get('columns');\n                $bzk.putObj('~cs.'+e.get('uid')+'.'+cols.get('_field'),v);\n            }\n        }\n\n    }\n\n}\n\ninjectTSDBAvgs();\n\nconst rMap = ${y2Vals};\n\n\n\nfunction setupWaitPicker(uid,waitCount,_rMap){\n    const ops = {\n        logicType:\"MICRO\",\n        peakMaxWaitSeconds:waitCount*5*60\n    };\n    const ans= $tsFunc.findPeak(_rMap,ops);\n    \n    $bzk.putObj('~'+uid,ans);\n}\n\nfunction setupBigger(prefix,_rMap){\n    const sortIso8601Keys = $tsFunc.sortIso8601Key(_rMap);\n\n    const previousKey = sortIso8601Keys.get(1);\n    const lastKey = sortIso8601Keys.get(0);\n\n\n    $bzk.putObj('~'+prefix+'.previousMax',howBigger(_rMap,true,previousKey));\n    $bzk.putObj('~'+prefix+'.previousMin',howBigger(_rMap,false,previousKey));\n    $bzk.putObj('~'+prefix+'.lastMax',howBigger(_rMap,true,lastKey));\n    $bzk.putObj('~'+prefix+'.lastMin',howBigger(_rMap,false,lastKey));\n    $bzk.putObj('~'+prefix+'.previousVal',getMap(_rMap,previousKey));\n    $bzk.putObj('~'+prefix+'.lastVal',getMap(_rMap,lastKey));\n\n}\n\nfunction getMap(_rMap,key){\n    const ans = _rMap[key];\n    if (ans!=null) return ans;\n    return _rMap.get(key);\n}\n\nfunction howBigger(_rMap,big,key){\n        const obj = {\n            targetKey:key,\n            bigger:big\n        };\n        return $tsFunc.howBigger(_rMap,JSON.stringify(obj));\n}\n\nsetupWaitPicker('cs.difPeak',1,tsdbAvgsMap['dif']);\nsetupBigger('cs.priceBigger',rMap);\nsetupBigger('cs.difBigger',tsdbAvgsMap['dif']);\n\nconst KRange360m = tsdbAvgsMap['KRange360m'];\nconst lastKRange = $tsFunc.getLast(KRange360m);\n$bzk.putObj('~cs.lastKRange',lastKRange);\n\ntrue;",
+      "code" : "const tsdbAvgs = $bzk.g('TSDBAvgs');\nconst tsdbAvgsMap = {};\nconst trimLastNotFullMapUids = ['dif'];\nfunction injectTSDBAvgs(){\n    for (const e of tsdbAvgs) {\n        console.log(e);\n        const results = e.get('result');\n        if(results.size()==1){\n            let v =results.get(0).get('values');\n            const uid = e.get('uid');\n            if(trimLastNotFullMapUids.includes(uid)){\n                v = $tsFunc.trimLastNotFullMap(v,60*5);\n            }\n            tsdbAvgsMap[uid] = v\n            $bzk.putObj('~cs.'+e.get('uid'),v);\n        }else if(results.size()>=2){\n            for(let i=0;i<results.size();i++){\n                const v =results.get(i).get('values');\n                const cols = results.get(i).get('columns');\n                $bzk.putObj('~cs.'+e.get('uid')+'.'+cols.get('_field'),v);\n            }\n        }\n\n    }\n\n}\n\ninjectTSDBAvgs();\n\nconst rMap = ${y2Vals};\n\n\n\nfunction setupWaitPicker(uid,waitCount,_rMap){\n    const ops = {\n        logicType:\"MICRO\",\n        peakMaxWaitSeconds:waitCount*5*60\n    };\n    const ans= $tsFunc.findPeak(_rMap,ops);\n    \n    $bzk.putObj('~'+uid,ans);\n}\n\nfunction setupBigger(prefix,_rMap){\n    const sortIso8601Keys = $tsFunc.sortIso8601Key(_rMap);\n\n    const previousKey = sortIso8601Keys.get(1);\n    const lastKey = sortIso8601Keys.get(0);\n\n\n    $bzk.putObj('~'+prefix+'.previousMax',howBigger(_rMap,true,previousKey));\n    $bzk.putObj('~'+prefix+'.previousMin',howBigger(_rMap,false,previousKey));\n    $bzk.putObj('~'+prefix+'.lastMax',howBigger(_rMap,true,lastKey));\n    $bzk.putObj('~'+prefix+'.lastMin',howBigger(_rMap,false,lastKey));\n    $bzk.putObj('~'+prefix+'.previousVal',getMap(_rMap,previousKey));\n    $bzk.putObj('~'+prefix+'.lastVal',getMap(_rMap,lastKey));\n\n}\n\nfunction getMap(_rMap,key){\n    const ans = _rMap[key];\n    if (ans!=null) return ans;\n    return _rMap.get(key);\n}\n\nfunction howBigger(_rMap,big,key){\n        const obj = {\n            targetKey:key,\n            bigger:big\n        };\n        return $tsFunc.howBigger(_rMap,JSON.stringify(obj));\n}\n\nsetupWaitPicker('cs.difPeak',1,tsdbAvgsMap['dif']);\nsetupBigger('cs.priceBigger',rMap);\nsetupBigger('cs.difBigger',tsdbAvgsMap['dif']);\n\nconst KRange360m = tsdbAvgsMap['KRange360m'];\nconst lastKRange = $tsFunc.getLast(KRange360m);\n$bzk.putObj('~cs.lastKRange',lastKRange);\n\ntrue;",
       "polyglot" : "js",
       "resultLv" : "not_specify",
       "resultKey" : "analyzeAll"
@@ -170,83 +247,6 @@
       "resultCode" : ""
     },
     "minLogLv" : "DEBUG"
-  }, {
-    "clazz" : "net.bzk.flow.model.Box",
-    "uid" : "hLZ3d8T7Vkot",
-    "name" : "Strategy",
-    "actions" : [ {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "vWD538GBmnZO",
-      "name" : "bottleneck",
-      "tryErrorble" : false,
-      "enable" : "true",
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "flowUid" : "SSPBbWtmfHPV",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "__ALL__",
-        "val" : "${~__ALL__}"
-      } ],
-      "outputReflects" : [ {
-        "srcKey" : "__pk_result",
-        "toKey" : {
-          "lv" : "not_specify",
-          "key" : "call_resp"
-        }
-      } ]
-    }, {
-      "clazz" : "net.bzk.flow.model.HttpAction",
-      "uid" : "IegDp3FgglDY",
-      "name" : "FuseLONG",
-      "tryErrorble" : false,
-      "enable" : "true",
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "url" : "${finExManageApiUrl}",
-      "uriVariables" : { },
-      "body" : "!javascript===!return-json===\n\nconst lastKRange = ${cs.lastKRange};\nconst ans= {\n    \"name\": \"position/fuse\",\n    \"exchange\": \"binance\",\n    \"prd_name\": \"${symbol}\",\n    \"__bzk_api_key\": \"${finExManageApiKey}\",\n    \"positionSide\": \"LONG\",\n    \"fuseStrategy\": \"FUSE_FIXED_STEP\",\n    \"minCount\": 3,\n    \"priceStep\": lastKRange.val * 2,\n    \"rebuildByPriceStepRate\": 0.5,\n    \"noLoseBaseCount\": 3,\n    \"proportionalRate\": 1.05,\n    \"tags\": [\n        \"y2\"\n    ]\n};\nJSON.stringify(ans);",
-      "method" : "POST",
-      "headers" : { },
-      "headersFlat" : "",
-      "key" : {
-        "lv" : "not_specify",
-        "key" : "fuseLONGResp"
-      }
-    }, {
-      "clazz" : "net.bzk.flow.model.HttpAction",
-      "uid" : "PCKm0u4pI6hV",
-      "name" : "FuseSHORT",
-      "tryErrorble" : false,
-      "enable" : "true",
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "url" : "${finExManageApiUrl}",
-      "uriVariables" : { },
-      "body" : "!javascript===!return-json===\n\nconst lastKRange = ${cs.lastKRange};\nconst ans= {\n    \"name\": \"position/fuse\",\n    \"exchange\": \"binance\",\n    \"prd_name\": \"${symbol}\",\n    \"__bzk_api_key\": \"${finExManageApiKey}\",\n    \"positionSide\": \"SHORT\",\n    \"fuseStrategy\": \"FUSE_FIXED_STEP\",\n    \"minCount\": 3,\n    \"priceStep\": lastKRange.val * 2,\n    \"rebuildByPriceStepRate\": 0.5,\n    \"noLoseBaseCount\": 3,\n    \"proportionalRate\": 1.05,\n    \"tags\": [\n        \"y2\"\n    ]\n};\nJSON.stringify(ans);",
-      "method" : "POST",
-      "headers" : { },
-      "headersFlat" : "",
-      "key" : {
-        "lv" : "not_specify",
-        "key" : "fuseSHORTResp"
-      }
-    } ],
-    "links" : [ ],
-    "vars" : { },
-    "taskSort" : [ "vWD538GBmnZO", "IegDp3FgglDY", "PCKm0u4pI6hV" ],
-    "whileJudgment" : null,
-    "transition" : {
-      "toBox" : "",
-      "endTag" : "${symbol} ordered:${call_resp.ordered} ${call_resp.breakName}",
-      "failEnd" : false,
-      "endResultKeys" : [ ],
-      "resultCode" : ""
-    },
-    "minLogLv" : "DEBUG"
   } ],
   "varCfgNames" : [ "fin-proxy.json", "fin-exchange-manage.json" ],
   "vars" : {
@@ -265,5 +265,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 193
+  "version" : 195
 }

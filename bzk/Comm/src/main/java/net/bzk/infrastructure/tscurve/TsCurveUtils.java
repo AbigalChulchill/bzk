@@ -16,6 +16,18 @@ public class TsCurveUtils {
         RISE, FALL
     }
 
+    public static Map<String, Double> trimLastNotFullMap(Map<String, Double> rMap,double fullSecond){
+        var keys = sortIso8601(rMap.keySet());
+        if(keys.size()<=1) return  rMap;
+        String k0 = keys.get(0);
+        String k1 = keys.get(1);
+        double subTime = subtractKeySeconds(k0,k1);
+        if(subTime<fullSecond) {
+            rMap.remove(k0);
+        }
+        return rMap;
+    }
+
     public static double subtractKeySeconds(String k1, String k2) {
         var k1t = ZonedDateTime.parse(k1);
         var k2t = ZonedDateTime.parse(k2);

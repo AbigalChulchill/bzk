@@ -17,6 +17,10 @@ public class TsCurveFunc {
     private TsCurveFunc() {
     }
 
+    public Map<String, Double> trimLastNotFullMap(Map<String, Double> rMap, double fullSecond) {
+        return TsCurveUtils.trimLastNotFullMap(rMap, fullSecond);
+    }
+
     public TsPeakFinder.LastInfo getLast(Map<String, Double> rm) {
         Set<String> timeKs = rm.keySet();
         String minKey = timeKs.stream().min(TsCurveUtils.ASC_TIME_ISO).get();
