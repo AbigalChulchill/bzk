@@ -63,13 +63,19 @@
         "kind" : "NONE",
         "next" : null,
         "polyglot" : "js",
-        "code" : "const difPeak = ${cs.difPeak};\nconst difNearPeak = ${difNearPeak};\nconst positionSide = '${positionSide}';\nconst thVal = ${thVal};\nconst difBigger = ${cs.difBigger};\n\nfunction checkLONG(){\n    const tarTh = -1 * thVal;\n    if(difPeak.last.val>0) return false;\n    if(difNearPeak.val>thVal) throw new Error('checkLONG difNearPeak.val='+difNearPeak.val+\" thVal=\"+thVal);\n    return difBigger.previousVal<difBigger.lastVal;\n}\n\nfunction checkSHORT(){\n    const tarTh =  thVal;\n    if(difPeak.last.val<0) return false;\n    if(difNearPeak.val<thVal) throw new Error('checkSHORT difNearPeak.val='+difNearPeak.val+\" thVal=\"+thVal);\n    return difBigger.previousVal>difBigger.lastVal;\n}\n\nfunction check(){\n    if(positionSide == 'LONG'){\n        return checkLONG();\n    }else if(positionSide == 'SHORT'){\n        return checkSHORT();\n    }\n    throw new Error(positionSide);\n}\n\n\n!check();"
+        "code" : "const difPeak = ${cs.difPeak};\nconst difNearPeak = ${difNearPeak};\nconst positionSide = '${positionSide}';\nconst thVal = ${thVal};\nconst difBigger = ${cs.difBigger};\n\nfunction checkLONG(){\n    const tarTh = -1 * thVal;\n    if(difPeak.last.val>thVal) return false;\n    if(difNearPeak.val>thVal) throw new Error('checkLONG difNearPeak.val='+difNearPeak.val+\" thVal=\"+thVal);\n    return difBigger.previousVal<difBigger.lastVal;\n}\n\nfunction checkSHORT(){\n    const tarTh =  thVal;\n    if(difPeak.last.val<thVal) return false;\n    if(difNearPeak.val<thVal) throw new Error('checkSHORT difNearPeak.val='+difNearPeak.val+\" thVal=\"+thVal);\n    return difBigger.previousVal>difBigger.lastVal;\n}\n\nfunction check(){\n    if(positionSide == 'LONG'){\n        return checkLONG();\n    }else if(positionSide == 'SHORT'){\n        return checkSHORT();\n    }\n    throw new Error(positionSide);\n}\n\n\n!check();"
       },
       "transition" : {
         "toBox" : "",
         "endTag" : "${symbol} ${positionSide} CRebound",
         "failEnd" : false,
-        "endResultKeys" : [ ],
+        "endResultKeys" : [ {
+          "lv" : "not_specify",
+          "key" : "cs.difPeak.last"
+        }, {
+          "lv" : "not_specify",
+          "key" : "thVal"
+        } ],
         "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"CRebound\"\n}"
       },
       "enable" : true
@@ -150,5 +156,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 53
+  "version" : 55
 }
