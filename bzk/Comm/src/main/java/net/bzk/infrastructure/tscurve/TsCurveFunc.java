@@ -7,6 +7,8 @@ import net.bzk.infrastructure.tscurve.peak.TsPeakCycle;
 import net.bzk.infrastructure.tscurve.peak.TsPeakFinder;
 import net.bzk.infrastructure.tscurve.peak.TsBiggerFinder;
 
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -15,6 +17,10 @@ public class TsCurveFunc {
     private static final TsCurveFunc instance = new TsCurveFunc();
 
     private TsCurveFunc() {
+    }
+
+    public double subtractKeySeconds(String k1, String k2) {
+        return TsCurveUtils.subtractKeySeconds(k1, k2);
     }
 
     public Map<String, Double> trimLastNotFullMap(Map<String, Double> rMap, double fullSecond) {
