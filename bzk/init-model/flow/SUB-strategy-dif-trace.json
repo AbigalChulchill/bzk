@@ -20,25 +20,6 @@
       "resultLv" : "not_specify",
       "resultKey" : "InitVars"
     }, {
-      "clazz" : "net.bzk.flow.model.HttpAction",
-      "uid" : "IHNsCCAGqz8g",
-      "name" : "LastDif",
-      "tryErrorble" : false,
-      "enable" : "true",
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "url" : "${finExManageApiUrl}",
-      "uriVariables" : { },
-      "body" : "{\n    \"name\": \"order_pack/last\",\n    \"exchange\": \"binance\",\n     \"filter_map\": {\n        \"LONG\": {\n            \"prd_name\": \"${symbol}\",\n            \"positionSide\":\"LONG\",\n            \"attach_name\":\"DifTrace\"\n        },\n        \"SHORT\": {\n            \"prd_name\": \"${symbol}\",\n            \"positionSide\":\"SHORT\",\n            \"attach_name\":\"DifTrace\"\n        }\n    },\n    \"__bzk_api_key\": \"${finExManageApiKey}\"\n}",
-      "method" : "POST",
-      "headers" : { },
-      "headersFlat" : "",
-      "key" : {
-        "lv" : "not_specify",
-        "key" : "lastDifMap"
-      }
-    }, {
       "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
       "uid" : "yBV3YHFsHfCI",
       "name" : "Order",
@@ -152,7 +133,7 @@
       "enable" : true
     } ],
     "vars" : { },
-    "taskSort" : [ "IHNsCCAGqz8g", "Qvqn3l33fFem", "DKTiAduexdfC", "vf5kuyx39UQw", "frq4EfAYEZ1D", "PrtQc5mK5fOc", "yBV3YHFsHfCI" ],
+    "taskSort" : [ "Qvqn3l33fFem", "DKTiAduexdfC", "vf5kuyx39UQw", "frq4EfAYEZ1D", "PrtQc5mK5fOc", "yBV3YHFsHfCI" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
@@ -180,5 +161,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 16
+  "version" : 17
 }

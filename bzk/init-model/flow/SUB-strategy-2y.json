@@ -234,10 +234,29 @@
         "lv" : "not_specify",
         "key" : "syncResp"
       }
+    }, {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "RLwmvyfnRDzM",
+      "name" : "LastDif",
+      "tryErrorble" : false,
+      "enable" : "true",
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "url" : "${finExManageApiUrl}",
+      "uriVariables" : { },
+      "body" : "{\n    \"name\": \"order_pack/last\",\n    \"exchange\": \"binance\",\n     \"filter_map\": {\n        \"LONG\": {\n            \"prd_name\": \"${symbol}\",\n            \"positionSide\":\"LONG\",\n            \"attach_name\":\"DifTrace\"\n        },\n        \"SHORT\": {\n            \"prd_name\": \"${symbol}\",\n            \"positionSide\":\"SHORT\",\n            \"attach_name\":\"DifTrace\"\n        }\n    },\n    \"__bzk_api_key\": \"${finExManageApiKey}\"\n}",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "run_flow",
+        "key" : "lastDifMap"
+      }
     } ],
     "links" : [ ],
     "vars" : { },
-    "taskSort" : [ "VOW12BtJqie5", "JRXb3aUYrssP", "xHaqpw4loFKq", "nONU5vc3Jzg8", "Dfq0TAINMBq2", "YXOO8IaDkXfV", "bdp2D8EmHQHn", "afqbSMjT5kKT" ],
+    "taskSort" : [ "VOW12BtJqie5", "JRXb3aUYrssP", "xHaqpw4loFKq", "nONU5vc3Jzg8", "Dfq0TAINMBq2", "YXOO8IaDkXfV", "bdp2D8EmHQHn", "afqbSMjT5kKT", "RLwmvyfnRDzM" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "hLZ3d8T7Vkot",
@@ -265,5 +284,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 195
+  "version" : 197
 }
