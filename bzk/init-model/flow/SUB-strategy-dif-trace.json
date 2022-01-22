@@ -15,7 +15,7 @@
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "code" : "const MACDtrender = ${MACDtrender};\r\nconst lastDifMap = ${lastDifMap};\r\n\r\nfunction getPositionSide(){\r\n    return MACDtrender.last.val > 0 ? 'SHORT' : 'LONG';\r\n}\r\n\r\nconst positionSide = getPositionSide();\r\n\r\n$bzk.putObj('positionSide',positionSide);\r\n\r\nfunction getLastInfo(){\r\n    return lastDifMap[positionSide];\r\n}\r\n\r\nconst lastInfo = getLastInfo();\r\n\r\n$bzk.put('lastInfo',JSON.stringify(lastInfo));\r\n\r\n\r\nfunction genOrderObjJson(){\r\n\r\n    return JSON.stringify({\r\n        \"targetPrice\":-1,\r\n        \"stopPrice\": -1,\r\n        \"gapRate\":0.0025,\r\n        \"attachName\":'DifTraced'\r\n    });\r\n}\r\n$bzk.put('~orderLimitBody',genOrderObjJson());\r\n\r\ntrue;",
+      "code" : "const difBigger = ${cs.difBigger};\r\nconst lastDifMap = ${lastDifMap};\r\n\r\nfunction getPositionSide(){\r\n    const lastDif = difBigger.lastVal;\r\n    const previousDif = difBigger.previousVal;\r\n    if(previousDif>0){\r\n        return lastDif<previousDif ?'SHORT' : 'SHORT_NO_REBOUND';\r\n    }else{\r\n        return lastDif>previousDif ?'LONG' : 'LONG_NO_REBOUND';\r\n    }\r\n    \r\n}\r\n\r\nconst positionSide = getPositionSide();\r\n\r\n$bzk.putObj('positionSide',positionSide);\r\n\r\nfunction getLastInfo(){\r\n    return lastDifMap[positionSide];\r\n}\r\n\r\nconst lastInfo = getLastInfo();\r\n\r\n$bzk.put('lastInfo',JSON.stringify(lastInfo));\r\n\r\n\r\nfunction genOrderObjJson(){\r\n\r\n    return JSON.stringify({\r\n        \"targetPrice\":-1,\r\n        \"stopPrice\": -1,\r\n        \"gapRate\":0.0025,\r\n        \"attachName\":'DifTraced'\r\n    });\r\n}\r\n$bzk.put('~orderLimitBody',genOrderObjJson());\r\n\r\ntrue;",
       "polyglot" : "js",
       "resultLv" : "not_specify",
       "resultKey" : "InitVars"
@@ -94,25 +94,6 @@
       "enable" : true
     }, {
       "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "U1KRdRZi5SjC",
-      "name" : "PeakWait",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
-        "kind" : "NONE",
-        "next" : null,
-        "polyglot" : "js",
-        "code" : "const rsiDif360mTrenderState = '${rsiDif360mTrender.trendInfo.state}';\r\nconst positionSide = '${positionSide}';\r\n\r\nfunction check(){\r\n    if(positionSide == 'LONG'){\r\n        return rsiDif360mTrenderState == 'FALL';\r\n    }else if(positionSide == 'SHORT'){\r\n        return rsiDif360mTrenderState == 'RISE';\r\n    }\r\n    throw new Error(positionSide);\r\n}\r\n\r\ncheck();"
-      },
-      "transition" : {
-        "toBox" : "",
-        "endTag" : "${symbol} ${positionSide} PeakWait",
-        "failEnd" : false,
-        "endResultKeys" : [ ],
-        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"PeakWait\"\n}"
-      },
-      "enable" : true
-    }, {
-      "clazz" : "net.bzk.flow.model.Link",
       "uid" : "vf5kuyx39UQw",
       "name" : "HasLastInfo",
       "condition" : {
@@ -150,9 +131,28 @@
         "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"OverTime\"\n}"
       },
       "enable" : true
+    }, {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "DKTiAduexdfC",
+      "name" : "CPosSide",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
+        "kind" : "NONE",
+        "next" : null,
+        "polyglot" : "js",
+        "code" : "const posSides = ['LONG', 'SHORT'];\nconst positionSide = '${positionSide}';\n!posSides.includes(positionSide);\n"
+      },
+      "transition" : {
+        "toBox" : "",
+        "endTag" : "${symbol} ${positionSide} CPosSide",
+        "failEnd" : false,
+        "endResultKeys" : [ ],
+        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"CPosSide\"\n}"
+      },
+      "enable" : true
     } ],
     "vars" : { },
-    "taskSort" : [ "IHNsCCAGqz8g", "Qvqn3l33fFem", "vf5kuyx39UQw", "frq4EfAYEZ1D", "PrtQc5mK5fOc", "U1KRdRZi5SjC", "yBV3YHFsHfCI" ],
+    "taskSort" : [ "IHNsCCAGqz8g", "Qvqn3l33fFem", "DKTiAduexdfC", "vf5kuyx39UQw", "frq4EfAYEZ1D", "PrtQc5mK5fOc", "yBV3YHFsHfCI" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
@@ -180,5 +180,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 14
+  "version" : 16
 }
