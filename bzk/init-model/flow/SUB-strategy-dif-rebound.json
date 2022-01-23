@@ -63,7 +63,7 @@
         "kind" : "NONE",
         "next" : null,
         "left" : "!javascript===\nconst orderPeakTime = '${orderPeakTime}';\nconst lastInfoCreateAt = '${lastInfo.orderPack.created_at}';\n$tsFunc.subtractKeySeconds(orderPeakTime,lastInfoCreateAt);",
-        "right" : "60",
+        "right" : "400",
         "type" : "greater"
       },
       "transition" : {
@@ -162,5 +162,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 22
+  "version" : 23
 }
