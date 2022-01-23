@@ -62,7 +62,7 @@
         "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
         "kind" : "NONE",
         "next" : null,
-        "left" : "!javascript===\nconst orderPeakTime = ${orderPeakTime};\nconst lastInfoCreateAt = ${lastInfo.orderPack.created_at};\n$tsFunc.subtractKeySeconds(orderPeakTime,lastInfoCreateAt);",
+        "left" : "!javascript===\nconst orderPeakTime = '${orderPeakTime}';\nconst lastInfoCreateAt = '${lastInfo.orderPack.created_at}';\n$tsFunc.subtractKeySeconds(orderPeakTime,lastInfoCreateAt);",
         "right" : "60",
         "type" : "greater"
       },
@@ -162,5 +162,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 20
+  "version" : 22
 }
