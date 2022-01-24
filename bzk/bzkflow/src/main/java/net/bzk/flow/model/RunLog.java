@@ -30,7 +30,7 @@ public class RunLog implements Serializable {
     private String actionUid;
     private String runActionUid;
     private String refFlowUid;
-    @Indexed(name = "ref_run_flow_uid_index", direction = IndexDirection.DESCENDING)
+    @Indexed(name = "ref_run_flow_uid_index",  direction = IndexDirection.ASCENDING)
     private String refRunFlowUid;
 
     private String msg;
@@ -51,7 +51,7 @@ public class RunLog implements Serializable {
     private HashMap<String, Object> varVals;
     private String actionName;
 
-    @Indexed(name = "create_at_index", direction = IndexDirection.DESCENDING,expireAfterSeconds=60*60*20)
+    @Indexed(name = "create_at_index", direction = IndexDirection.DESCENDING, expireAfterSeconds = 60 * 60 * 20)
     private Date createAt;
 
 }

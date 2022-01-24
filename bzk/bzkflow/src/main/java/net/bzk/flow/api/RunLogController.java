@@ -51,7 +51,7 @@ public class RunLogController {
     @ResponseBody
     @RequestMapping(value = "{uid}", method = RequestMethod.GET, params = "type=refRunFlowUid")
     public RunLog findByRefRunFlowUid(@PathVariable String uid) {
-        return dao.findByRefRunFlowUid(uid).orElse(null);
+        return dao.findTopByRefRunFlowUidOrderByUidDesc(uid).orElse(null);
     }
 
     @ResponseStatus(HttpStatus.OK)

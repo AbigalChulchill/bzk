@@ -21,7 +21,9 @@ public interface RunLogDao extends MongoRepository<RunLog, String> {
 
     Page<RunLog> findByCreateAtBefore(Date date,Pageable pageable);
 
-    Optional<RunLog> findByRefRunFlowUid(String uid);
+//    findTopByOrderByIdDesc
+
+    Optional<RunLog> findTopByRefRunFlowUidOrderByUidDesc(String uid);
 
     @Transactional
     @Modifying
