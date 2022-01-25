@@ -44,7 +44,7 @@ public class TestTsCurveFunc {
     @Test
     public void testPeakRebound() {
 
-        double peakMaxWaitSeconds = 60 * 6;
+        double peakMaxWaitSeconds = 60 * 5;
         double macroAmplitudeRate = 0;
         Map map = loadMap(difReboundData);
         PeakLogicDto.MacroPeakLogicDto md = new PeakLogicDto.MacroPeakLogicDto();

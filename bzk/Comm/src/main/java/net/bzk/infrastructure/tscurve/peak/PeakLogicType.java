@@ -1,6 +1,8 @@
 package net.bzk.infrastructure.tscurve.peak;
 
 import net.bzk.infrastructure.JsonUtils;
+import net.bzk.infrastructure.tscurve.peak.logic.MacroLogic;
+import net.bzk.infrastructure.tscurve.peak.logic.MicroLogic;
 import org.apache.commons.lang3.NotImplementedException;
 
 import java.util.Map;
@@ -11,9 +13,9 @@ public enum PeakLogicType {
     public TsPeakLogic genLogic() {
         switch (this) {
             case MACRO:
-                return new TsPeakLogic.MacroLogic();
+                return new MacroLogic();
             case MICRO:
-                return new TsPeakLogic.MicroLogic();
+                return new MicroLogic();
             case BIGGER:
                 return new BiggerPeakLogic();
         }

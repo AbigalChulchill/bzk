@@ -7,20 +7,20 @@ import lombok.EqualsAndHashCode;
 public class PeakLogicDto {
 
 
-    PeakLogicType logicType;
+    public PeakLogicType logicType;
 
     @Data
     @EqualsAndHashCode(callSuper = false)
     public static class WaitPeakLogicDto extends PeakLogicDto {
-        double peakMaxWaitSeconds;
+        public double peakMaxWaitSeconds;
     }
 
     @Data
     @EqualsAndHashCode(callSuper = false)
     public static class MacroPeakLogicDto extends WaitPeakLogicDto {
 
-        double baseVal;
-        double amplitudeRate;
+        public double baseVal;
+        public double amplitudeRate;
 
         public MacroPeakLogicDto() {
             setLogicType(PeakLogicType.MACRO);
@@ -42,9 +42,9 @@ public class PeakLogicDto {
     @EqualsAndHashCode(callSuper = false)
     public static class BiggerPeakLogicDto extends PeakLogicDto {
 
-        double persistTime;
-        double reversePersistTime;
-        double reverseWaitTime;
+        public double persistTime;
+        public double reversePersistTime;
+        public double reverseWaitTime;
 
         public BiggerPeakLogicDto() {
             setLogicType(PeakLogicType.BIGGER);
