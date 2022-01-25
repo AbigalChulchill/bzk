@@ -25,6 +25,8 @@ public class TestTsCurveFunc {
     private Resource y2Data;
     @Value("classpath:tscurve/serial-test-data-bais-20211006-20191107.json")
     private Resource biasY1Data;
+    @Value("classpath:tscurve/serial-test-data-dif-rebound.json")
+    private Resource difReboundData;
 
     /*
      * from(bucket: \"quote\")\r\n  |> range(start: 2020-10-29T15:34:30Z, stop:2021-10-29T15:34:30Z)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"daily\" and\r\n    r.valmean == \"open\" and\r\n    r.symbol == \"BTC\"\r\n  )
@@ -38,6 +40,20 @@ public class TestTsCurveFunc {
     @Value("classpath:tscurve/serial-test-data-20211112-20211113.json")
     private Resource d1Data;
 
+
+    @Test
+    public void testPeakRebound() {
+
+        double peakMaxWaitSeconds = 60 * 6;
+        double macroAmplitudeRate = 0;
+        Map map = loadMap(difReboundData);
+        PeakLogicDto.MacroPeakLogicDto md = new PeakLogicDto.MacroPeakLogicDto();
+        md.setPeakMaxWaitSeconds(peakMaxWaitSeconds);
+        md.setAmplitudeRate(macroAmplitudeRate);
+        Map mdsm = JsonUtils.toByJson(md, Map.class);
+        var ans = TsCurveFunc.getInstance().findPeak(map, mdsm);
+        System.out.println(ans);
+    }
 
     @Test
     public void testPeakFinder() {

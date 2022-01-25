@@ -15,7 +15,7 @@
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "code" : "const difPeak = ${cs.difPeak};\r\nconst lastDifMap = ${lastDifMap};\r\n\r\nfunction getPositionSide(){\r\n    const longOrderInfo = lastDifMap['LONG'];\r\n    const shortOrderInfo = lastDifMap['SHORT'];\r\n    if (longOrderInfo==null && shortOrderInfo==null) return 'NO_ORDER';\r\n    if(longOrderInfo==null) return 'SHORT';\r\n    if(shortOrderInfo==null) return 'LONG';\r\n    const longDate = new Date(longOrderInfo.orderPack.created_at);\r\n    const shortDate = new Date(shortOrderInfo.orderPack.created_at);\r\n    return longDate>shortDate ? 'SHORT':'LONG';\r\n    \r\n}\r\n\r\nconst positionSide = getPositionSide();\r\n\r\n$bzk.putObj('positionSide',positionSide);\r\n\r\nfunction getLastInfo(){\r\n    return lastDifMap[positionSide];\r\n}\r\n\r\nconst lastInfo = getLastInfo();\r\n\r\n$bzk.put('lastInfo',JSON.stringify(lastInfo));\r\n\r\n\r\nfunction genOrderObjJson(){\r\n\r\n    return JSON.stringify({\r\n        \"targetPrice\":-1,\r\n        \"stopPrice\": -1,\r\n        \"gapRate\":0.003,\r\n        \"attachName\":'DifRebound'\r\n    });\r\n}\r\n$bzk.put('~orderLimitBody',genOrderObjJson());\r\n\r\nfunction getOrderPeakDtimd(){\r\n    const peaks = difPeak.trendInfo.peaks;\r\n    if(peaks.length<3) return -1;\r\n    return peaks[2].key;\r\n}\r\n$bzk.put('orderPeakTime',getOrderPeakDtimd());\r\n\r\ntrue;",
+      "code" : "const difPeak = ${cs.difPeak};\r\nconst lastDifMap = ${lastDifMap};\r\nconst dif = ${cs.dif};\r\n\r\nfunction getPositionSide(){\r\n    const longOrderInfo = lastDifMap['LONG'];\r\n    const shortOrderInfo = lastDifMap['SHORT'];\r\n    if (longOrderInfo==null && shortOrderInfo==null) return 'NO_ORDER';\r\n    if(longOrderInfo!=null) return 'SHORT';\r\n    if(shortOrderInfo!=null) return 'LONG';\r\n    const longDate = new Date(longOrderInfo.orderPack.created_at);\r\n    const shortDate = new Date(shortOrderInfo.orderPack.created_at);\r\n    return longDate>shortDate ? 'SHORT':'LONG';\r\n    \r\n}\r\n\r\n\r\nconst positionSide = getPositionSide();\r\nconst lastOrderPositionSide = positionSide == 'LONG' ? 'SHORT' : 'LONG';\r\n\r\n$bzk.putObj('positionSide',positionSide);\r\n\r\nfunction getLastInfo(){\r\n    return lastDifMap[lastOrderPositionSide];\r\n}\r\n\r\nconst lastInfo = getLastInfo();\r\n\r\n$bzk.put('lastInfo',JSON.stringify(lastInfo));\r\n\r\n\r\nfunction genOrderObjJson(){\r\n\r\n    return JSON.stringify({\r\n        \"targetPrice\":-1,\r\n        \"stopPrice\": -1,\r\n        \"gapRate\":0.003,\r\n        \"attachName\":'DifRebound'\r\n    });\r\n}\r\n$bzk.put('~orderLimitBody',genOrderObjJson());\r\n\r\nfunction getOrderPeakAt(){\r\n    if(lastInfo==null)return -1;\r\n    const lastPeakAt = lastInfo.orderPack.attach.nearPeak.key;\r\n    return lastPeakAt;\r\n}\r\nconst orderPeakTime = getOrderPeakAt();\r\n$bzk.put('orderPeakTime',orderPeakTime);\r\n\r\n\r\nconst difList = $tsFunc.toPoints(dif);\r\nconst tarList = $tsFunc.slicePoints(difList,orderPeakTime);\r\n\r\n$bzk.putObj('lastPeakUntilNowList',tarList);\r\n\r\ntrue;",
       "polyglot" : "js",
       "resultLv" : "not_specify",
       "resultKey" : "InitVars"
@@ -59,12 +59,11 @@
       "uid" : "PrtQc5mK5fOc",
       "name" : "IsOPackPeak",
       "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
+        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
         "kind" : "NONE",
         "next" : null,
-        "left" : "!javascript===\nconst orderPeakTime = '${orderPeakTime}';\nconst lastInfoCreateAt = '${lastInfo.orderPack.created_at}';\n$tsFunc.subtractKeySeconds(orderPeakTime,lastInfoCreateAt);",
-        "right" : "400",
-        "type" : "greater"
+        "polyglot" : "js",
+        "code" : "const positionSide = '${positionSide}';\r\nconst tarList = ${lastPeakUntilNowList};\r\n\r\nfunction checkOK(){\r\n    for (const point of tarList) {\r\n        console.log(point);\r\n        if(positionSide=='LONG'){\r\n            if(point.val>0) return false;\r\n        }else if(positionSide=='SHORT'){\r\n            if(point.val<0) return false;\r\n        }\r\n\r\n    }   \r\n}\r\n\r\nfunction getPeak(){\r\n    \r\n    for (const point of tarList) {\r\n        console.log(point);\r\n        if(positionSide=='LONG'){\r\n            if(point.val>0) return false;\r\n        }else if(positionSide=='SHORT'){\r\n            if(point.val<0) return false;\r\n        }\r\n\r\n    }   \r\n}"
       },
       "transition" : {
         "toBox" : "",
@@ -162,5 +161,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 23
+  "version" : 25
 }
