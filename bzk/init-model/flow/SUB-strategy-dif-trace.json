@@ -137,10 +137,10 @@
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
-      "endTag" : "TODO Why",
+      "endTag" : "${symbol} ${positionSide} Ordered",
       "failEnd" : false,
       "endResultKeys" : [ ],
-      "resultCode" : ""
+      "resultCode" : "{\n  \"ordered\": true,\n  \"breakName\": \"NONE\"\n}"
     },
     "minLogLv" : "DEBUG"
   } ],
@@ -161,5 +161,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 17
+  "version" : 19
 }
