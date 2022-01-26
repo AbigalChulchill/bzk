@@ -19,6 +19,10 @@ public class TsCurveFunc {
     private TsCurveFunc() {
     }
 
+    public Map<String, Double> trimNull(Map<String, Double> rMap) {
+        return TsCurveUtils.trimNull(rMap);
+    }
+
     public double subtractKeySeconds(String k1, String k2) {
         return TsCurveUtils.subtractKeySeconds(k1, k2);
     }

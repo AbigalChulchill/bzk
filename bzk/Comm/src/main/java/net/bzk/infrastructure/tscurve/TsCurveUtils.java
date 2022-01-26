@@ -63,6 +63,11 @@ public class TsCurveUtils {
         return ans;
     }
 
+    public static Map<String, Double> trimNull(Map<String, Double> rMap) {
+        rMap.values().removeAll(Collections.singleton(null));
+        return rMap;
+    }
+
     public static List<Point> toPoints(Map<String, Double> rMap) {
         var keys = TsCurveUtils.sortIso8601(rMap.keySet());
         var firstKey = keys.get(0);

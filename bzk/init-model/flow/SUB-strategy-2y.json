@@ -4,6 +4,83 @@
   "name" : "SUB-strategy-2y",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "hLZ3d8T7Vkot",
+    "name" : "Strategy",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "vWD538GBmnZO",
+      "name" : "bottleneck",
+      "tryErrorble" : false,
+      "enable" : "true",
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flowUid" : "SSPBbWtmfHPV",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "__ALL__",
+        "val" : "${~__ALL__}"
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "__pk_result",
+        "toKey" : {
+          "lv" : "not_specify",
+          "key" : "call_resp"
+        }
+      } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "IegDp3FgglDY",
+      "name" : "FuseLONG",
+      "tryErrorble" : false,
+      "enable" : "true",
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "url" : "${finExManageApiUrl}",
+      "uriVariables" : { },
+      "body" : "!javascript===!return-json===\n\nconst lastKRange = ${cs.lastKRange};\nconst ans= {\n    \"name\": \"position/fuse\",\n    \"exchange\": \"binance\",\n    \"prd_name\": \"${symbol}\",\n    \"__bzk_api_key\": \"${finExManageApiKey}\",\n    \"positionSide\": \"LONG\",\n    \"fuseStrategy\": \"FUSE_FIXED_STEP\",\n    \"minCount\": 3,\n    \"priceStep\": lastKRange.val * 2,\n    \"rebuildByPriceStepRate\": 0.5,\n    \"noLoseBaseCount\": 3,\n    \"proportionalRate\": 1.05,\n    \"tags\": [\n        \"y2\"\n    ]\n};\nJSON.stringify(ans);",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : "fuseLONGResp"
+      }
+    }, {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "PCKm0u4pI6hV",
+      "name" : "FuseSHORT",
+      "tryErrorble" : false,
+      "enable" : "true",
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "url" : "${finExManageApiUrl}",
+      "uriVariables" : { },
+      "body" : "!javascript===!return-json===\n\nconst lastKRange = ${cs.lastKRange};\nconst ans= {\n    \"name\": \"position/fuse\",\n    \"exchange\": \"binance\",\n    \"prd_name\": \"${symbol}\",\n    \"__bzk_api_key\": \"${finExManageApiKey}\",\n    \"positionSide\": \"SHORT\",\n    \"fuseStrategy\": \"FUSE_FIXED_STEP\",\n    \"minCount\": 3,\n    \"priceStep\": lastKRange.val * 2,\n    \"rebuildByPriceStepRate\": 0.5,\n    \"noLoseBaseCount\": 3,\n    \"proportionalRate\": 1.05,\n    \"tags\": [\n        \"y2\"\n    ]\n};\nJSON.stringify(ans);",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : "fuseSHORTResp"
+      }
+    } ],
+    "links" : [ ],
+    "vars" : { },
+    "taskSort" : [ "vWD538GBmnZO", "IegDp3FgglDY", "PCKm0u4pI6hV" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "${symbol} ordered:${call_resp.ordered} ${call_resp.breakName}",
+      "failEnd" : false,
+      "endResultKeys" : [ ],
+      "resultCode" : ""
+    },
+    "minLogLv" : "DEBUG"
+  }, {
+    "clazz" : "net.bzk.flow.model.Box",
     "uid" : "UQC5RZ3iJLB7",
     "name" : "Box",
     "actions" : [ {
@@ -98,7 +175,7 @@
       "minLogLv" : "NONE",
       "url" : "${finProxyUrl}/proxy/tsdb/multiple",
       "uriVariables" : { },
-      "body" : "!javascript===!return-json===\n\nlet queryDtos = [];\n\nfunction genRealtimeKQuery(startCount){\n    const startM = (startCount*5)+'m';\n    return `\nfrom(bucket: \"quote\")\n  |> range(start: -`+startM+`)\n  |> filter(fn: (r) =>\n    r._measurement == \"realtime\" and\n    r.symbol == \"${symbol}\" \n  ) \n  `;\n}\n\nfunction genRealtimeMaQuery(maCount5m){\n    const startM = (maCount5m*5*2)+'m';\n    return `\nfrom(bucket: \"quote\")\n  |> range(start: -`+startM+`)\n  |> filter(fn: (r) =>\n    r._measurement == \"realtime\" and\n    r.symbol == \"${symbol}\" \n  )\n  |> movingAverage(n: `+maCount5m+` )\n  |> pivot(rowKey:[\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")\n  |> map(fn: (r) => ({ r with _value: (r.low + r.open +r.close + r.high)/4.0 }))  \n  `;\n    \n}\n\nfunction genDayMaQuery(maCount1d){\n    const startD = (maCount1d*3)+'d';\n    return `\nfrom(bucket: \"quote\")\n  |> range(start: -`+startD+`)\n  |> filter(fn: (r) =>\n    r._measurement == \"daily\" and\n    r.valmean == \"open\" and\n    r.symbol == \"${symbol}\" \n  )\n  |> movingAverage(n: `+maCount1d+` )\n  `;\n}\n\nfunction genDifMaQuery(maCount,range,absed,absRate,last){\n    const startM = (range*5)+'m';\n    const absRateSyntax = absed ? '  |>map(fn: (r) => ({ r with _value: math.abs(x: r._value)*'+absRate+' }))  ':'';\n    const lastSyntax = last ? '  |> last()' : '';\n    return `\n    import \"math\"\nfrom(bucket: \"quote\")\n  |> range(start: -`+startM+`)\n |> filter(fn: (r) =>\n    r._measurement == \"realtime\" and\n    r.symbol == \"${symbol}\" \n  )\n  |> pivot(rowKey:[\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")\n  |> map(fn: (r) => ({ r with _value: (r.low + r.open +r.close + r.high)/4.0 })) \n  |> difference()\n  `+absRateSyntax+` \n  |> movingAverage(n: `+maCount+` ) \n    `+lastSyntax;\n}\n\nfunction genMACDQuery(fastCount,slowCount){\n    const startM = (slowCount*5*5)+'m';\n    return `\nfrom(bucket: \"quote\")\n  |> range(start: -`+startM+`)\n  |> filter(fn: (r) =>\n    r._measurement == \"realtime\" and\n    r.symbol == \"${symbol}\" \n  )\n  |> pivot(rowKey:[\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")\n  |> map(fn: (r) => ({ r with _value: (r.low + r.open +r.close + r.high)/4.0 }))\n  |> map(fn: (r) => ({ r with cp: r._value   }))\n  |> movingAverage(n: `+fastCount+` )\n  |> map(fn: (r) => ({ r with _fast: r.cp -r._value    }))\n  |> map(fn: (r) => ({ r with _value: r.cp   }))\n  |> movingAverage(n: `+slowCount+` )\n  |> map(fn: (r) => ({ r with _slow: r.cp -r._value   }))\n  |> map(fn: (r) => ({ r with _value: r._slow - r._fast   }))\n  |> movingAverage(n: 9 )\n    `;\n}\n\nfunction genRSIDIF(maCount){\n    const startM = (maCount*5*4)+'m';\n        return `\nfrom(bucket: \"quote\")\n  |> range(start: -`+startM+`)\n  |> filter(fn: (r) =>\n    r._measurement == \"realtime\" and\n    r.symbol == \"${symbol}\" \n  )\n  |> pivot(rowKey:[\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")\n  |> map(fn: (r) => ({ r with _value: (r.low + r.open +r.close + r.high)/4.0 }))\n  |> map(fn: (r) => ({ r with cp: r._value   }))\n  |> difference()\n  |> movingAverage(n: `+maCount+` ) \n  |> relativeStrengthIndex(n: `+maCount+` ) \n    `;\n}\n\nfunction genSumDIF(){\n        return `\nmoveSum = (every, period, column=\"_value\", tables=<-) =>\n  tables\n    |> window(every: every, period: period)\n    |> sum(column:column)\n    |> duplicate(column: \"_stop\", as: \"_time\")\n    |> window(every: inf)\n\nfrom(bucket: \"quote\")\n  |> range(start: -150m)\n  |> filter(fn: (r) =>\n    r._measurement == \"realtime\" and\n    r.symbol == \"${symbol}\" \n  )\n  |> pivot(rowKey:[\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")\n  |> map(fn: (r) => ({ r with _value: (r.low + r.open +r.close + r.high)/4.0 }))  \n  |> map(fn: (r) => ({ r with orgv: r._value }))  \n  |> difference()\n  |>moveSum(every: 5m, period: 30m)\n    `;\n}\n\nfunction genKRange(maCount){\n    const startM = (maCount*5*2)+'m';\n        return `\nfrom(bucket: \"quote\")\n  |> range(start: -`+startM+`)\n  |> filter(fn: (r) =>\n    r._measurement == \"realtime\" and\n    r.symbol == \"${symbol}\" \n  )\n  |> pivot(rowKey:[\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")\n  |> map(fn: (r) => ({ r with _value: (  r.high-r.low ) }))  \n  |> movingAverage(n: `+maCount+` ) \n    `;\n}\n\nfunction appendQueryDto(query,uid){\n    const dto= {\n        'query':query,\n        'uid':uid\n    };\n    queryDtos.push(dto);\n}\n\nappendQueryDto(genRSIDIF(12*6),'rsiDif360m'); \nappendQueryDto(genSumDIF(),'dif'); \nappendQueryDto(genRealtimeKQuery(12*6),'k5m'); \nappendQueryDto(genDifMaQuery(120,120*2,true,\"8.0\",true),'difTH'); \nappendQueryDto(genMACDQuery(2,72),'macd10m120m'); // macd10m120m\nappendQueryDto(genKRange(12*6),'KRange360m'); // macd10m120m\n\n\nJSON.stringify(queryDtos);",
+      "body" : "!javascript===!return-json===\n\nlet queryDtos = [];\n\nfunction genRealtimeKQuery(startCount){\n    const startM = (startCount*5)+'m';\n    return `\nfrom(bucket: \"quote\")\n  |> range(start: -`+startM+`)\n  |> filter(fn: (r) =>\n    r._measurement == \"realtime\" and\n    r.symbol == \"${symbol}\" \n  ) \n  `;\n}\n\nfunction genRealtimeMaQuery(maCount5m){\n    const startM = (maCount5m*5*2)+'m';\n    return `\nfrom(bucket: \"quote\")\n  |> range(start: -`+startM+`)\n  |> filter(fn: (r) =>\n    r._measurement == \"realtime\" and\n    r.symbol == \"${symbol}\" \n  )\n  |> movingAverage(n: `+maCount5m+` )\n  |> pivot(rowKey:[\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")\n  |> map(fn: (r) => ({ r with _value: (r.low + r.open +r.close + r.high)/4.0 }))  \n  `;\n    \n}\n\nfunction genDayMaQuery(maCount1d){\n    const startD = (maCount1d*3)+'d';\n    return `\nfrom(bucket: \"quote\")\n  |> range(start: -`+startD+`)\n  |> filter(fn: (r) =>\n    r._measurement == \"daily\" and\n    r.valmean == \"open\" and\n    r.symbol == \"${symbol}\" \n  )\n  |> movingAverage(n: `+maCount1d+` )\n  `;\n}\n\nfunction genDifMaQuery(maCount,range,absed,absRate,last){\n    const startM = (range*5)+'m';\n    const absRateSyntax = absed ? '  |>map(fn: (r) => ({ r with _value: math.abs(x: r._value)*'+absRate+' }))  ':'';\n    const lastSyntax = last ? '  |> last()' : '';\n    return `\n    import \"math\"\nfrom(bucket: \"quote\")\n  |> range(start: -`+startM+`)\n |> filter(fn: (r) =>\n    r._measurement == \"realtime\" and\n    r.symbol == \"${symbol}\" \n  )\n  |> pivot(rowKey:[\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")\n  |> map(fn: (r) => ({ r with _value: (r.low + r.open +r.close + r.high)/4.0 })) \n  |> difference()\n  `+absRateSyntax+` \n  |> movingAverage(n: `+maCount+` ) \n    `+lastSyntax;\n}\n\nfunction genMACDQuery(fastCount,slowCount){\n    const startM = (slowCount*5*5)+'m';\n    return `\nfrom(bucket: \"quote\")\n  |> range(start: -`+startM+`)\n  |> filter(fn: (r) =>\n    r._measurement == \"realtime\" and\n    r.symbol == \"${symbol}\" \n  )\n  |> pivot(rowKey:[\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")\n  |> map(fn: (r) => ({ r with _value: (r.low + r.open +r.close + r.high)/4.0 }))\n  |> map(fn: (r) => ({ r with cp: r._value   }))\n  |> movingAverage(n: `+fastCount+` )\n  |> map(fn: (r) => ({ r with _fast: r.cp -r._value    }))\n  |> map(fn: (r) => ({ r with _value: r.cp   }))\n  |> movingAverage(n: `+slowCount+` )\n  |> map(fn: (r) => ({ r with _slow: r.cp -r._value   }))\n  |> map(fn: (r) => ({ r with _value: r._slow - r._fast   }))\n  |> movingAverage(n: 9 )\n    `;\n}\n\nfunction genRSIDIF(maCount){\n    const startM = (maCount*5*4)+'m';\n        return `\nfrom(bucket: \"quote\")\n  |> range(start: -`+startM+`)\n  |> filter(fn: (r) =>\n    r._measurement == \"realtime\" and\n    r.symbol == \"${symbol}\" \n  )\n  |> pivot(rowKey:[\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")\n  |> map(fn: (r) => ({ r with _value: (r.low + r.open +r.close + r.high)/4.0 }))\n  |> map(fn: (r) => ({ r with cp: r._value   }))\n  |> difference()\n  |> movingAverage(n: `+maCount+` ) \n  |> relativeStrengthIndex(n: `+maCount+` ) \n    `;\n}\n\nfunction genSumDIF(){\n        return `\na= from(bucket: \"quote\")\n  |> range(start: -150m)\n   |> filter(fn: (r) =>\n    r._measurement == \"realtime\" and\n    r.symbol == \"${symbol}\" \n  )\n  |> pivot(rowKey:[\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")\n  |> map(fn: (r) => ({ r with _value: (r.low + r.open +r.close + r.high)/4.0 }))  \n\norg = a\n    |> set(key: \"tag\", value: \"org\")\n    |> group()\n    \nshift = a\n    |> set(key: \"tag\", value: \"shift\")\n    |> timeShift(duration: 30m)\n    |> group()\n\nunion(tables: [org, shift])\n  |> pivot(rowKey:[\"_time\"], columnKey: [\"tag\"], valueColumn: \"_value\")\n  |>map(fn: (r) => ({ r with _value: r.org - r.shift }))   \n  |>map(fn: (r) => ({ r with alias: \"shiftDif\" }))   \n    `;\n}\n\nfunction genKRange(maCount){\n    const startM = (maCount*5*2)+'m';\n        return `\nfrom(bucket: \"quote\")\n  |> range(start: -`+startM+`)\n  |> filter(fn: (r) =>\n    r._measurement == \"realtime\" and\n    r.symbol == \"${symbol}\" \n  )\n  |> pivot(rowKey:[\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")\n  |> map(fn: (r) => ({ r with _value: (  r.high-r.low ) }))  \n  |> movingAverage(n: `+maCount+` ) \n    `;\n}\n\nfunction appendQueryDto(query,uid){\n    const dto= {\n        'query':query,\n        'uid':uid\n    };\n    queryDtos.push(dto);\n}\n\nappendQueryDto(genRSIDIF(12*6),'rsiDif360m'); \nappendQueryDto(genSumDIF(),'dif'); \nappendQueryDto(genRealtimeKQuery(12*6),'k5m'); \nappendQueryDto(genDifMaQuery(120,120*2,true,\"8.0\",true),'difTH'); \nappendQueryDto(genMACDQuery(2,72),'macd10m120m'); // macd10m120m\nappendQueryDto(genKRange(12*6),'KRange360m'); // macd10m120m\n\n\nJSON.stringify(queryDtos);",
       "method" : "POST",
       "headers" : { },
       "headersFlat" : "",
@@ -115,7 +192,7 @@
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "code" : "const tsdbAvgs = $bzk.g('TSDBAvgs');\nconst tsdbAvgsMap = {};\nconst trimLastNotFullMapUids = ['dif'];\nfunction injectTSDBAvgs(){\n    for (const e of tsdbAvgs) {\n        console.log(e);\n        const results = e.get('result');\n        if(results.size()==1){\n            let v =results.get(0).get('values');\n            const uid = e.get('uid');\n            if(trimLastNotFullMapUids.includes(uid)){\n                v = $tsFunc.trimLastNotFullMap(v,60*5);\n            }\n            tsdbAvgsMap[uid] = v\n            $bzk.putObj('~cs.'+e.get('uid'),v);\n        }else if(results.size()>=2){\n            for(let i=0;i<results.size();i++){\n                const v =results.get(i).get('values');\n                const cols = results.get(i).get('columns');\n                $bzk.putObj('~cs.'+e.get('uid')+'.'+cols.get('_field'),v);\n            }\n        }\n\n    }\n\n}\n\ninjectTSDBAvgs();\n\nconst rMap = ${y2Vals};\n\n\n\nfunction setupWaitPicker(uid,waitCount,_rMap){\n    const ops = {\n        logicType:\"MACRO\",\n        peakMaxWaitSeconds:waitCount*5*60\n    };\n    const ans= $tsFunc.findPeak(_rMap,ops);\n    \n    $bzk.putObj('~'+uid,ans);\n}\n\nfunction setupBigger(prefix,_rMap){\n    const sortIso8601Keys = $tsFunc.sortIso8601Key(_rMap);\n\n    const previousKey = sortIso8601Keys.get(1);\n    const lastKey = sortIso8601Keys.get(0);\n\n\n    $bzk.putObj('~'+prefix+'.previousMax',howBigger(_rMap,true,previousKey));\n    $bzk.putObj('~'+prefix+'.previousMin',howBigger(_rMap,false,previousKey));\n    $bzk.putObj('~'+prefix+'.lastMax',howBigger(_rMap,true,lastKey));\n    $bzk.putObj('~'+prefix+'.lastMin',howBigger(_rMap,false,lastKey));\n    $bzk.putObj('~'+prefix+'.previousVal',getMap(_rMap,previousKey));\n    $bzk.putObj('~'+prefix+'.lastVal',getMap(_rMap,lastKey));\n\n}\n\nfunction getMap(_rMap,key){\n    const ans = _rMap[key];\n    if (ans!=null) return ans;\n    return _rMap.get(key);\n}\n\nfunction howBigger(_rMap,big,key){\n        const obj = {\n            targetKey:key,\n            bigger:big\n        };\n        return $tsFunc.howBigger(_rMap,JSON.stringify(obj));\n}\n\nsetupWaitPicker('cs.difPeak',1,tsdbAvgsMap['dif']);\nsetupBigger('cs.priceBigger',rMap);\nsetupBigger('cs.difBigger',tsdbAvgsMap['dif']);\n\nconst KRange360m = tsdbAvgsMap['KRange360m'];\nconst lastKRange = $tsFunc.getLast(KRange360m);\n$bzk.putObj('~cs.lastKRange',lastKRange);\n\ntrue;",
+      "code" : "const tsdbAvgs = $bzk.g('TSDBAvgs');\nconst tsdbAvgsMap = {};\nconst trimNullMapUids = ['dif'];\nfunction injectTSDBAvgs(){\n    for (const e of tsdbAvgs) {\n        console.log(e);\n        const results = e.get('result');\n        if(results.size()==1){\n            let v =results.get(0).get('values');\n            const uid = e.get('uid');\n            if(trimNullMapUids.includes(uid)){\n                v = $tsFunc.trimNull(v);\n            }\n            tsdbAvgsMap[uid] = v\n            $bzk.putObj('~cs.'+e.get('uid'),v);\n        }else if(results.size()>=2){\n            for(let i=0;i<results.size();i++){\n                const v =results.get(i).get('values');\n                const cols = results.get(i).get('columns');\n                $bzk.putObj('~cs.'+e.get('uid')+'.'+cols.get('_field'),v);\n            }\n        }\n\n    }\n\n}\n\ninjectTSDBAvgs();\n\nconst rMap = ${y2Vals};\n\n\n\nfunction setupWaitPicker(uid,waitCount,_rMap){\n    const ops = {\n        logicType:\"MACRO\",\n        peakMaxWaitSeconds:waitCount*5*60\n    };\n    const ans= $tsFunc.findPeak(_rMap,ops);\n    \n    $bzk.putObj('~'+uid,ans);\n}\n\nfunction setupBigger(prefix,_rMap){\n    const sortIso8601Keys = $tsFunc.sortIso8601Key(_rMap);\n\n    const previousKey = sortIso8601Keys.get(1);\n    const lastKey = sortIso8601Keys.get(0);\n\n\n    $bzk.putObj('~'+prefix+'.previousMax',howBigger(_rMap,true,previousKey));\n    $bzk.putObj('~'+prefix+'.previousMin',howBigger(_rMap,false,previousKey));\n    $bzk.putObj('~'+prefix+'.lastMax',howBigger(_rMap,true,lastKey));\n    $bzk.putObj('~'+prefix+'.lastMin',howBigger(_rMap,false,lastKey));\n    $bzk.putObj('~'+prefix+'.previousVal',getMap(_rMap,previousKey));\n    $bzk.putObj('~'+prefix+'.lastVal',getMap(_rMap,lastKey));\n\n}\n\nfunction getMap(_rMap,key){\n    const ans = _rMap[key];\n    if (ans!=null) return ans;\n    return _rMap.get(key);\n}\n\nfunction howBigger(_rMap,big,key){\n        const obj = {\n            targetKey:key,\n            bigger:big\n        };\n        return $tsFunc.howBigger(_rMap,JSON.stringify(obj));\n}\n\nsetupWaitPicker('cs.difPeak',1,tsdbAvgsMap['dif']);\nsetupBigger('cs.priceBigger',rMap);\nsetupBigger('cs.difBigger',tsdbAvgsMap['dif']);\n\nconst KRange360m = tsdbAvgsMap['KRange360m'];\nconst lastKRange = $tsFunc.getLast(KRange360m);\n$bzk.putObj('~cs.lastKRange',lastKRange);\n\ntrue;",
       "polyglot" : "js",
       "resultLv" : "not_specify",
       "resultKey" : "analyzeAll"
@@ -189,83 +266,6 @@
       "resultCode" : ""
     },
     "minLogLv" : "DEBUG"
-  }, {
-    "clazz" : "net.bzk.flow.model.Box",
-    "uid" : "hLZ3d8T7Vkot",
-    "name" : "Strategy",
-    "actions" : [ {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "vWD538GBmnZO",
-      "name" : "bottleneck",
-      "tryErrorble" : false,
-      "enable" : "true",
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "flowUid" : "SSPBbWtmfHPV",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "__ALL__",
-        "val" : "${~__ALL__}"
-      } ],
-      "outputReflects" : [ {
-        "srcKey" : "__pk_result",
-        "toKey" : {
-          "lv" : "not_specify",
-          "key" : "call_resp"
-        }
-      } ]
-    }, {
-      "clazz" : "net.bzk.flow.model.HttpAction",
-      "uid" : "IegDp3FgglDY",
-      "name" : "FuseLONG",
-      "tryErrorble" : false,
-      "enable" : "true",
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "url" : "${finExManageApiUrl}",
-      "uriVariables" : { },
-      "body" : "!javascript===!return-json===\n\nconst lastKRange = ${cs.lastKRange};\nconst ans= {\n    \"name\": \"position/fuse\",\n    \"exchange\": \"binance\",\n    \"prd_name\": \"${symbol}\",\n    \"__bzk_api_key\": \"${finExManageApiKey}\",\n    \"positionSide\": \"LONG\",\n    \"fuseStrategy\": \"FUSE_FIXED_STEP\",\n    \"minCount\": 3,\n    \"priceStep\": lastKRange.val * 2,\n    \"rebuildByPriceStepRate\": 0.5,\n    \"noLoseBaseCount\": 3,\n    \"proportionalRate\": 1.05,\n    \"tags\": [\n        \"y2\"\n    ]\n};\nJSON.stringify(ans);",
-      "method" : "POST",
-      "headers" : { },
-      "headersFlat" : "",
-      "key" : {
-        "lv" : "not_specify",
-        "key" : "fuseLONGResp"
-      }
-    }, {
-      "clazz" : "net.bzk.flow.model.HttpAction",
-      "uid" : "PCKm0u4pI6hV",
-      "name" : "FuseSHORT",
-      "tryErrorble" : false,
-      "enable" : "true",
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "url" : "${finExManageApiUrl}",
-      "uriVariables" : { },
-      "body" : "!javascript===!return-json===\n\nconst lastKRange = ${cs.lastKRange};\nconst ans= {\n    \"name\": \"position/fuse\",\n    \"exchange\": \"binance\",\n    \"prd_name\": \"${symbol}\",\n    \"__bzk_api_key\": \"${finExManageApiKey}\",\n    \"positionSide\": \"SHORT\",\n    \"fuseStrategy\": \"FUSE_FIXED_STEP\",\n    \"minCount\": 3,\n    \"priceStep\": lastKRange.val * 2,\n    \"rebuildByPriceStepRate\": 0.5,\n    \"noLoseBaseCount\": 3,\n    \"proportionalRate\": 1.05,\n    \"tags\": [\n        \"y2\"\n    ]\n};\nJSON.stringify(ans);",
-      "method" : "POST",
-      "headers" : { },
-      "headersFlat" : "",
-      "key" : {
-        "lv" : "not_specify",
-        "key" : "fuseSHORTResp"
-      }
-    } ],
-    "links" : [ ],
-    "vars" : { },
-    "taskSort" : [ "vWD538GBmnZO", "IegDp3FgglDY", "PCKm0u4pI6hV" ],
-    "whileJudgment" : null,
-    "transition" : {
-      "toBox" : "",
-      "endTag" : "${symbol} ordered:${call_resp.ordered} ${call_resp.breakName}",
-      "failEnd" : false,
-      "endResultKeys" : [ ],
-      "resultCode" : ""
-    },
-    "minLogLv" : "DEBUG"
   } ],
   "varCfgNames" : [ "fin-proxy.json", "fin-exchange-manage.json" ],
   "vars" : {
@@ -284,5 +284,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 201
+  "version" : 203
 }
