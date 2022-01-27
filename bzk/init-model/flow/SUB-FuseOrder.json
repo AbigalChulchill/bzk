@@ -7,60 +7,99 @@
     "uid" : "a4NkW28jdISd",
     "name" : "Box",
     "actions" : [ {
-      "clazz" : "net.bzk.flow.model.HttpAction",
-      "uid" : "nmCu0fdfgf6S",
-      "name" : "PostLONG",
-      "tryErrorble" : false,
-      "enable" : true,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "url" : "${finExManageApiUrl}",
-      "uriVariables" : { },
-      "body" : "{\n  \"__bzk_api_key\": \"${finExManageApiKey}\",\n  \"name\": \"position/fuse/post\",\n  \"exchange\": \"binance\",\n  \"symbol\": \"${symbol}\",\n  \"positionSide\": \"LONG\",\n  \"tags\": [\n    \"tkst\"\n  ],\n  \"stopLoss\": {\n    \"balanceRate\": 0.25,\n    \"restopRate\": 0.01,\n    \"clearRate\": 1\n  },\n  \"stopTrailing\": {\n    \"steps\":${steps},\n    \"restopRate\": 0.002\n  }\n}",
-      "method" : "POST",
-      "headers" : { },
-      "headersFlat" : "",
-      "key" : {
-        "lv" : "not_specify",
-        "key" : "LONG_resp"
-      }
-    }, {
-      "clazz" : "net.bzk.flow.model.HttpAction",
-      "uid" : "U5ijIwhVXXzl",
-      "name" : "PostSHORT",
-      "tryErrorble" : false,
-      "enable" : true,
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "url" : "${finExManageApiUrl}",
-      "uriVariables" : { },
-      "body" : "{\n  \"__bzk_api_key\": \"${finExManageApiKey}\",\n  \"name\": \"position/fuse/post\",\n  \"exchange\": \"binance\",\n  \"symbol\": \"${symbol}\",\n  \"positionSide\": \"SHORT\",\n  \"tags\": [\n    \"tkst\"\n  ],\n  \"stopLoss\": {\n    \"balanceRate\": 0.2,\n    \"restopRate\": 0.01,\n    \"clearRate\": 1\n  },\n  \"stopTrailing\": {\n    \"steps\":${steps},\n    \"restopRate\": 0.002\n  }\n}",
-      "method" : "POST",
-      "headers" : { },
-      "headersFlat" : "",
-      "key" : {
-        "lv" : "not_specify",
-        "key" : "SHORT_resp"
-      }
-    }, {
-      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
-      "uid" : "TUKYi7VDrdP0",
+      "clazz" : "net.bzk.flow.model.Action$PolyglotAction",
+      "uid" : "viRNYSWGuVir",
       "name" : "Vars",
       "tryErrorble" : false,
-      "enable" : true,
+      "enable" : "true",
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "flatData" : [ {
-        "key" : "steps",
-        "val" : " [\n      {\n        \"profitRate\": -0.90,\n        \"clearRate\": 1,\n        \"fallRate\": 0.02\n      },\n      {\n        \"profitRate\": -0.05,\n        \"clearRate\": 0.8,\n        \"fallRate\": 0.03\n      },\n      {\n        \"profitRate\": -0.015,\n        \"clearRate\": 0.5,\n        \"fallRate\": 0.035\n      },\n      {\n        \"profitRate\": 0.05,\n        \"clearRate\": 0.5,\n        \"fallRate\": 0.04\n      },\n      {\n        \"profitRate\": 0.10,\n        \"clearRate\": 0.8,\n        \"fallRate\": 0.05\n      }\n    ]"
+      "code" : "const difPeak = ${cs.difPeak};\r\nconst positions = ${position};\r\n\r\nfunction getPositionSide(){\r\n    return difPeak.trendInfo.state == 'RISE' ? \"LONG\" : \"SHORT\";\r\n}\r\n\r\n\r\nconst positionSide = getPositionSide();\r\nconst stopPositionSide = positionSide == 'LONG' ? 'SHORT' : 'LONG';\r\n\r\n$bzk.putObj('positionSide',positionSide);\r\n$bzk.putObj('stopPositionSide',stopPositionSide);\r\n\r\nconst tarPostion = positions[stopPositionSide];\r\n$bzk.put('tarPostion',JSON.stringify(tarPostion));\r\n\r\nfunction genOrderObjJson(){\r\n\r\n    return JSON.stringify({\r\n        \"targetIdxShift\":1,\r\n        \"gapRate\":-1,\r\n        \"attachName\":'peakStop'\r\n    });\r\n}\r\n$bzk.put('~orderStopBody',genOrderObjJson());\r\n\r\ntrue;",
+      "polyglot" : "js",
+      "resultLv" : "not_specify",
+      "resultKey" : "initVar"
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "hSBxZdqD8vhx",
+      "name" : "Order",
+      "tryErrorble" : false,
+      "enable" : "true",
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flowUid" : "substoplimit",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "positionSide",
+        "val" : "${positionSide}"
+      }, {
+        "key" : "position",
+        "val" : "${position}"
+      }, {
+        "key" : "symbol",
+        "val" : "${symbol}"
+      }, {
+        "key" : "runStoped",
+        "val" : "true"
+      }, {
+        "key" : "trigger",
+        "val" : "fuse"
+      }, {
+        "key" : "runLimit",
+        "val" : "false"
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "__pk_result",
+        "toKey" : {
+          "lv" : "not_specify",
+          "key" : ""
+        }
       } ]
     } ],
-    "links" : [ ],
+    "links" : [ {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "tF0zk2zC3dUW",
+      "name" : "OverTime",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
+        "kind" : "NONE",
+        "next" : null,
+        "left" : "${cs.difPeak.trendInfo.nearPeak.dtime}",
+        "right" : "!javascript===\n60*5*2*1.05;",
+        "type" : "greater"
+      },
+      "transition" : {
+        "toBox" : "",
+        "endTag" : "${symbol} ${stopPositionSide} OverTime",
+        "failEnd" : false,
+        "endResultKeys" : [ ],
+        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"OverTime\"\n}"
+      },
+      "enable" : true
+    }, {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "gi4jptN8J514",
+      "name" : "NoPos",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
+        "kind" : "NONE",
+        "next" : null,
+        "left" : "!javascript===\nMath.abs( ${tarPostion.positionAmt})",
+        "right" : "0",
+        "type" : "lessthan_equal"
+      },
+      "transition" : {
+        "toBox" : "",
+        "endTag" : "${symbol} ${stopPositionSide} NoPos",
+        "failEnd" : false,
+        "endResultKeys" : [ ],
+        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"NoPos\"\n}"
+      },
+      "enable" : true
+    } ],
     "vars" : { },
-    "taskSort" : [ "TUKYi7VDrdP0", "nmCu0fdfgf6S", "U5ijIwhVXXzl" ],
+    "taskSort" : [ "viRNYSWGuVir", "tF0zk2zC3dUW", "gi4jptN8J514", "hSBxZdqD8vhx" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
@@ -83,8 +122,8 @@
     "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
     "boxUid" : "a4NkW28jdISd",
     "autoRegister" : false,
-    "requiredKeys" : [ "symbol" ],
-    "outputKeys" : [ ]
+    "requiredKeys" : [ "__ALL__" ],
+    "outputKeys" : [ "__pk_result" ]
   },
   "threadCfg" : {
     "corePoolSize" : 10,
@@ -92,5 +131,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 38
+  "version" : 44
 }

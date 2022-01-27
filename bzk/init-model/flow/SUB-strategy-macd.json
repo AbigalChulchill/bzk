@@ -62,28 +62,6 @@
       } ]
     }, {
       "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "3oi9e2ESsDQ3",
-      "name" : "CallBigger",
-      "tryErrorble" : false,
-      "enable" : "false",
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "flowUid" : "stopPBZlimit",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "__ALL__",
-        "val" : "${~__ALL__}"
-      } ],
-      "outputReflects" : [ {
-        "srcKey" : "__pk_result",
-        "toKey" : {
-          "lv" : "not_specify",
-          "key" : "stopLimitResult"
-        }
-      } ]
-    }, {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
       "uid" : "jTyoT1poRNiz",
       "name" : "CallDif",
       "tryErrorble" : false,
@@ -148,6 +126,28 @@
           "key" : "CallDifReboundResult"
         }
       } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "Wjr53g7AtENV",
+      "name" : "Fuse",
+      "tryErrorble" : false,
+      "enable" : "!javascript===\nconst CallDifTraceResult = ${CallDifTraceResult.ordered};\nconst CallDifResult = ${CallDifResult.ordered};\nconst CallDifReboundResult = ${CallDifReboundResult.ordered};\nconst ans = CallDifTraceResult || CallDifResult || CallDifReboundResult;\n!ans;\n",
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flowUid" : "FwGMPiyJdlPl",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "__ALL__",
+        "val" : "${~__ALL__}"
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "__pk_result",
+        "toKey" : {
+          "lv" : "not_specify",
+          "key" : "FuseResult"
+        }
+      } ]
     } ],
     "links" : [ {
       "clazz" : "net.bzk.flow.model.Link",
@@ -170,7 +170,7 @@
       "enable" : true
     } ],
     "vars" : { },
-    "taskSort" : [ "Div2tmjgl8JG", "POnGmKqao8p1", "DmpvFO68Ya38", "seAOjxSxI6jM", "M2I6HnVyI36q", "NPJloJ9SkiyJ", "3oi9e2ESsDQ3", "jTyoT1poRNiz" ],
+    "taskSort" : [ "Div2tmjgl8JG", "POnGmKqao8p1", "DmpvFO68Ya38", "seAOjxSxI6jM", "jTyoT1poRNiz", "M2I6HnVyI36q", "NPJloJ9SkiyJ", "Wjr53g7AtENV" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
@@ -196,5 +196,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 233
+  "version" : 237
 }
