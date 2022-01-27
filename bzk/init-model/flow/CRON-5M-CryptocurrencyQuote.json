@@ -58,7 +58,7 @@
     "period" : -1,
     "unit" : "SECONDS",
     "initialDelay" : 2,
-    "cronExpression" : "2 0/5 * * * *"
+    "cronExpression" : "0 0/5 * * * *"
   },
   "threadCfg" : {
     "corePoolSize" : 10,
@@ -66,5 +66,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 13
+  "version" : 15
 }
