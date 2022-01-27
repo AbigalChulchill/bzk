@@ -56,7 +56,7 @@
         "srcKey" : "__pk_result",
         "toKey" : {
           "lv" : "not_specify",
-          "key" : ""
+          "key" : "orderResult"
         }
       } ]
     }, {
@@ -144,16 +144,10 @@
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
-      "endTag" : "${symbol}",
+      "endTag" : "${symbol} ${stopPositionSide} Ordered",
       "failEnd" : false,
-      "endResultKeys" : [ {
-        "lv" : "not_specify",
-        "key" : "LONG_resp"
-      }, {
-        "lv" : "not_specify",
-        "key" : "SHORT_resp"
-      } ],
-      "resultCode" : ""
+      "endResultKeys" : [ ],
+      "resultCode" : "{\n  \"ordered\": true,\n  \"breakName\": \"NONE\"\n}"
     },
     "minLogLv" : "DEBUG"
   } ],
@@ -172,5 +166,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 50
+  "version" : 51
 }
