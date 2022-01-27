@@ -15,7 +15,7 @@
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "code" : "const difPeak = ${cs.difPeak};\r\nconst positions = ${position};\r\n\r\nfunction getPositionSide(){\r\n    return difPeak.trendInfo.state == 'RISE' ? \"LONG\" : \"SHORT\";\r\n}\r\n\r\n\r\nconst positionSide = getPositionSide();\r\nconst stopPositionSide = positionSide == 'LONG' ? 'SHORT' : 'LONG';\r\n\r\n$bzk.putObj('positionSide',positionSide);\r\n$bzk.putObj('stopPositionSide',stopPositionSide);\r\n\r\nconst tarPostion = positions[stopPositionSide];\r\n$bzk.put('tarPostion',JSON.stringify(tarPostion));\r\n\r\nfunction genOrderObjJson(){\r\n\r\n    return JSON.stringify({\r\n        \"targetIdxShift\":1,\r\n        \"gapRate\":-1,\r\n        \"attachName\":'peakStop'\r\n    });\r\n}\r\n$bzk.put('~orderStopBody',genOrderObjJson());\r\n\r\ntrue;",
+      "code" : "const difPeak = ${cs.difPeak};\r\nconst positions = ${position};\r\n\r\nfunction getPositionSide(){\r\n    return difPeak.trendInfo.state == 'RISE' ? \"LONG\" : \"SHORT\";\r\n}\r\n\r\n\r\nconst positionSide = getPositionSide();\r\nconst stopPositionSide = positionSide == 'LONG' ? 'SHORT' : 'LONG';\r\n\r\n$bzk.putObj('positionSide',positionSide);\r\n$bzk.putObj('stopPositionSide',stopPositionSide);\r\n\r\nconst tarPostion = positions[stopPositionSide];\r\n$bzk.put('tarPostion',JSON.stringify(tarPostion));\r\n\r\n\r\n\r\ntrue;",
       "polyglot" : "js",
       "resultLv" : "not_specify",
       "resultKey" : "initVar"
@@ -48,6 +48,9 @@
       }, {
         "key" : "runLimit",
         "val" : "false"
+      }, {
+        "key" : "orderStopBody",
+        "val" : "!javascript===\nconst exPrice = ${binanceQuote.all.avgPrice};\nconst tarPostion = ${tarPostion};\nconst body= {\n        \"targetIdxShift\":1,\n        \"gapRate\":-1,\n        \"attachName\":'peakStop',\n        \"attach\":{\n            \"stopPrice\":exPrice,\n            \"positionAmt\":tarPostion.positionAmt\n        }\n};\n\nbody;"
       } ],
       "outputReflects" : [ {
         "srcKey" : "__pk_result",
@@ -56,6 +59,25 @@
           "key" : ""
         }
       } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "dHnvjwV3y2aZ",
+      "name" : "lastStop",
+      "tryErrorble" : false,
+      "enable" : "true",
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "url" : "${finExManageApiUrl}",
+      "uriVariables" : { },
+      "body" : "{\n    \"name\": \"order_pack/last\",\n    \"exchange\": \"binance\",\n     \"filter_map\": {\n        \"odPack\": {\n            \"prd_name\": \"${symbol}\",\n            \"positionSide\":\"${stopPositionSide}\",\n            \"attach_name\":\"peakStop\"\n        }\n    },\n    \"__bzk_api_key\": \"${finExManageApiKey}\"\n}",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : "lastInfo"
+      }
     } ],
     "links" : [ {
       "clazz" : "net.bzk.flow.model.Link",
@@ -97,9 +119,28 @@
         "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"NoPos\"\n}"
       },
       "enable" : true
+    }, {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "UAQMAEclMM9j",
+      "name" : "LastPriceAmt",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
+        "kind" : "NONE",
+        "next" : null,
+        "polyglot" : "js",
+        "code" : "const exPrice = ${binanceQuote.all.avgPrice};\nconst lastOrderPrice = ${lastInfo.orderPack.attach.stopPrice};\nconst lastAmt = ${lastInfo.orderPack.attach.positionAmt};\nconst tarPostion = ${tarPostion};\nconst positionSide = '${stopPositionSide}';\n\nfunction checkOK(){\n    if(lastOrderPrice == null) return false;\n    const priceOK=  $directionUtils.isHighPrice(positionSide,lastOrderPrice,exPrice);\n    const amtOK = lastAmt != tarPostion.positionAmt;\n    return priceOK || amtOK;\n}\n\n!check();"
+      },
+      "transition" : {
+        "toBox" : "",
+        "endTag" : "${symbol} ${stopPositionSide} LastPriceAmt",
+        "failEnd" : false,
+        "endResultKeys" : [ ],
+        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"LastPriceAmt\"\n}"
+      },
+      "enable" : true
     } ],
     "vars" : { },
-    "taskSort" : [ "viRNYSWGuVir", "tF0zk2zC3dUW", "gi4jptN8J514", "hSBxZdqD8vhx" ],
+    "taskSort" : [ "viRNYSWGuVir", "tF0zk2zC3dUW", "gi4jptN8J514", "dHnvjwV3y2aZ", "UAQMAEclMM9j", "hSBxZdqD8vhx" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
@@ -131,5 +172,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 44
+  "version" : 47
 }

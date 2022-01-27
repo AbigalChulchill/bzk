@@ -143,7 +143,7 @@
     "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
     "boxUid" : "stopO9zVlimit",
     "autoRegister" : false,
-    "requiredKeys" : [ "positionSide", "position", "symbol", "orderLimitBody", "runStoped", "trigger", "runLimit" ],
+    "requiredKeys" : [ "positionSide", "position", "symbol", "orderLimitBody", "runStoped", "trigger", "runLimit", "orderStopBody" ],
     "outputKeys" : [ "__pk_result" ]
   },
   "threadCfg" : {
@@ -152,5 +152,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 47
+  "version" : 49
 }
