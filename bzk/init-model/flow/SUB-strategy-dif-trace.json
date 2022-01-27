@@ -15,7 +15,7 @@
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "code" : "const difBigger = ${cs.difBigger};\r\nconst lastDifMap = ${lastDifMap};\r\n\r\nfunction getPositionSide(){\r\n    const lastDif = difBigger.lastVal;\r\n    const previousDif = difBigger.previousVal;\r\n    if(previousDif>0){\r\n        return lastDif<previousDif ?'SHORT' : 'SHORT_NO_REBOUND';\r\n    }else{\r\n        return lastDif>previousDif ?'LONG' : 'LONG_NO_REBOUND';\r\n    }\r\n    \r\n}\r\n\r\nconst positionSide = getPositionSide();\r\n\r\n$bzk.putObj('positionSide',positionSide);\r\n\r\nfunction getLastInfo(){\r\n    return lastDifMap[positionSide];\r\n}\r\n\r\nconst lastInfo = getLastInfo();\r\n\r\n$bzk.put('lastInfo',JSON.stringify(lastInfo));\r\n\r\n\r\nfunction genOrderObjJson(){\r\n\r\n    return JSON.stringify({\r\n        \"targetPrice\":-1,\r\n        \"stopPrice\": -1,\r\n        \"gapRate\":0.0025,\r\n        \"attachName\":'DifTraced'\r\n    });\r\n}\r\n$bzk.put('~orderLimitBody',genOrderObjJson());\r\n\r\ntrue;",
+      "code" : "const lastDifMap = ${lastDifMap};\r\nconst difPeak = ${cs.difPeak};\r\nconst k5mLow = ${cs.k5m.low};\r\nconst k5mHigh = ${cs.k5m.high};\r\nconst nearPeak = difPeak.trendInfo.nearPeak;\r\n\r\nfunction getPositionSide(){\r\n    return difPeak.trendInfo.state == 'RISE' ? \"LONG\" : \"SHORT\";\r\n}\r\n\r\nconst positionSide = getPositionSide();\r\n\r\n$bzk.putObj('positionSide',positionSide);\r\n\r\nfunction getLastInfo(){\r\n    return lastDifMap[positionSide];\r\n}\r\n\r\nconst lastInfo = getLastInfo();\r\n\r\n$bzk.put('lastInfo',JSON.stringify(lastInfo));\r\n\r\nfunction getStopPrice(){\r\n\r\n    if(positionSide=='LONG'){\r\n        return k5mLow[nearPeak.key];\r\n    }else if(positionSide == 'SHORT'){\r\n        return k5mHigh[nearPeak.key];\r\n    }\r\n    throw new Error('getStopPrice not support='+positionSide);\r\n}\r\n\r\nfunction genOrderObjJson(){\r\n    const peakPrice=getStopPrice();\r\n    return JSON.stringify({\r\n        \"targetPrice\":-1,\r\n        \"stopPrice\": -1,\r\n        \"gapRate\":0.0025,\r\n        \"attachName\":'DifTraced',\r\n        \"attach\":{\r\n            \"stopPrice\":peakPrice,\r\n            \"nearPeak\":nearPeak\r\n        }\r\n    });\r\n}\r\n$bzk.put('~orderLimitBody',genOrderObjJson());\r\n\r\ntrue;",
       "polyglot" : "js",
       "resultLv" : "not_specify",
       "resultKey" : "InitVars"
@@ -45,6 +45,9 @@
       }, {
         "key" : "runStoped",
         "val" : "true"
+      }, {
+        "key" : "trigger",
+        "val" : "trace"
       } ],
       "outputReflects" : [ {
         "srcKey" : "__pk_result",
@@ -101,7 +104,7 @@
         "kind" : "NONE",
         "next" : null,
         "left" : "!javascript===\nconst lastInfo = ${lastInfo};\n$tsFunc.subtractKeySecondsToNow(lastInfo.orderPack.created_at);",
-        "right" : "!javascript===\n60*60*1.5;",
+        "right" : "!javascript===\n60*60*3;",
         "type" : "greater"
       },
       "transition" : {
@@ -161,5 +164,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 19
+  "version" : 22
 }

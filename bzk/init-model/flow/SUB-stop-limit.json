@@ -44,7 +44,7 @@
         "val" : "[\"st\"]"
       }, {
         "key" : "trigger",
-        "val" : "limit"
+        "val" : "${trigger}"
       } ],
       "outputReflects" : [ ]
     }, {
@@ -82,7 +82,7 @@
         "val" : "[\"macd\"]"
       }, {
         "key" : "trigger",
-        "val" : "stop"
+        "val" : "${trigger}"
       } ],
       "outputReflects" : [ ]
     } ],
@@ -137,13 +137,14 @@
         "isolatedMargin" : 0,
         "positionSide" : "SHORT"
       }
-    }
+    },
+    "trigger" : "stoplimit"
   },
   "entry" : {
     "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
     "boxUid" : "stopO9zVlimit",
     "autoRegister" : false,
-    "requiredKeys" : [ "positionSide", "position", "symbol", "orderLimitBody", "runStoped" ],
+    "requiredKeys" : [ "positionSide", "position", "symbol", "orderLimitBody", "runStoped", "trigger" ],
     "outputKeys" : [ "__pk_result" ]
   },
   "threadCfg" : {
@@ -152,5 +153,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 41
+  "version" : 43
 }

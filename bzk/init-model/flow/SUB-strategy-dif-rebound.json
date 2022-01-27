@@ -45,6 +45,9 @@
       }, {
         "key" : "runStoped",
         "val" : "true"
+      }, {
+        "key" : "trigger",
+        "val" : "dif-rebound"
       } ],
       "outputReflects" : [ {
         "srcKey" : "__pk_result",
@@ -161,5 +164,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 29
+  "version" : 31
 }
