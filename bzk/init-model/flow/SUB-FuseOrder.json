@@ -128,7 +128,7 @@
         "kind" : "NONE",
         "next" : null,
         "polyglot" : "js",
-        "code" : "const exPrice = ${binanceQuote.all.avgPrice};\nconst lastOrderPrice = ${lastInfo.orderPack.attach.stopPrice};\nconst lastAmt = ${lastInfo.orderPack.attach.positionAmt};\nconst tarPostion = ${tarPostion};\nconst positionSide = '${stopPositionSide}';\n\nfunction checkOK(){\n    if(lastOrderPrice == null) return true;\n    const priceOK=  $directionUtils.isHighPrice(positionSide,lastOrderPrice,exPrice);\n    const amtOK = lastAmt != tarPostion.positionAmt;\n    return priceOK || amtOK;\n}\n\n!checkOK();"
+        "code" : "const exPrice = ${binanceQuote.all.avgPrice};\nconst packInfo = ${lastInfo.odPack.orderPack};\nconst lastOrderPrice = packInfo.attach.stopPrice;\nconst lastAmt = packInfo.attach.positionAmt;\nconst tarPostion = ${tarPostion};\nconst positionSide = '${stopPositionSide}';\n\nfunction checkOK(){\n    if(lastOrderPrice == null) return true;\n    const priceOK=  $directionUtils.isHighPrice(positionSide,lastOrderPrice,exPrice);\n    const amtOK = lastAmt != tarPostion.positionAmt;\n    return priceOK || amtOK;\n}\n\n!checkOK();"
       },
       "transition" : {
         "toBox" : "",
@@ -166,5 +166,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 51
+  "version" : 52
 }
