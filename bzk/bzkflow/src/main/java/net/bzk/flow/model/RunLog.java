@@ -51,7 +51,7 @@ public class RunLog implements Serializable {
     private HashMap<String, Object> varVals;
     private String actionName;
 
-    @Indexed(name = "create_at_index", direction = IndexDirection.DESCENDING, expireAfterSeconds = 60 * 60 * 20)
+    @Indexed(name = "create_at_index", direction = IndexDirection.DESCENDING, expireAfterSeconds = 60 * 60 * 15)
     private Date createAt;
 
 }
