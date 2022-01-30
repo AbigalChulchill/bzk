@@ -117,7 +117,7 @@
         "kind" : "NONE",
         "next" : null,
         "left" : "${difNearPeak.dtime}",
-        "right" : "660",
+        "right" : "360",
         "type" : "greater"
       },
       "transition" : {
@@ -159,5 +159,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 59
+  "version" : 61
 }

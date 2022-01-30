@@ -85,7 +85,7 @@
         "kind" : "NONE",
         "next" : null,
         "left" : "${cs.difPeak.trendInfo.nearPeak.dtime}",
-        "right" : "!javascript===\n60*5*2*1.05;",
+        "right" : "!javascript===\n60*5*1*1.3;",
         "type" : "greater"
       },
       "transition" : {
@@ -164,5 +164,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 31
+  "version" : 34
 }
