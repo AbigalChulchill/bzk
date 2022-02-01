@@ -44,13 +44,10 @@
         "val" : "${orderLimitBody}"
       }, {
         "key" : "runStoped",
-        "val" : "true"
+        "val" : "false"
       }, {
         "key" : "trigger",
         "val" : "dif"
-      }, {
-        "key" : "orderStopBody",
-        "val" : "!javascript===\nconst exPrice = ${binanceQuote.all.avgPrice};\nconst tarPostion = ${tarPostion};\nconst body= {\n        \"targetIdxShift\":1,\n        \"gapRate\":-1,\n        \"attachName\":'peakStop',\n        \"attach\":{\n            \"stopPrice\":exPrice,\n            \"positionAmt\":tarPostion.positionAmt\n        }\n};\n\nbody;"
       } ],
       "outputReflects" : [ {
         "srcKey" : "__pk_result",
@@ -162,5 +159,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 63
+  "version" : 64
 }
