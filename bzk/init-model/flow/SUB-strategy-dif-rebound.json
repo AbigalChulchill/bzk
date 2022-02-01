@@ -44,7 +44,7 @@
         "val" : "${orderLimitBody}"
       }, {
         "key" : "runStoped",
-        "val" : "true"
+        "val" : "false"
       }, {
         "key" : "trigger",
         "val" : "dif-rebound"
@@ -164,5 +164,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 34
+  "version" : 36
 }

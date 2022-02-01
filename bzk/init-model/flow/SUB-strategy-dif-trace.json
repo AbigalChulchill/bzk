@@ -44,7 +44,7 @@
         "val" : "${orderLimitBody}"
       }, {
         "key" : "runStoped",
-        "val" : "true"
+        "val" : "false"
       }, {
         "key" : "trigger",
         "val" : "trace"
@@ -164,5 +164,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 22
+  "version" : 24
 }

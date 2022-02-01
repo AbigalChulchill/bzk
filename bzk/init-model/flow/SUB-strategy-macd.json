@@ -131,7 +131,7 @@
       "uid" : "Wjr53g7AtENV",
       "name" : "Fuse",
       "tryErrorble" : false,
-      "enable" : "!javascript===\nconst CallDifTraceResult = ${CallDifTraceResult.ordered};\nconst CallDifResult = ${CallDifResult.ordered};\nconst CallDifReboundResult = ${CallDifReboundResult.ordered};\nconst ans = CallDifTraceResult || CallDifResult || CallDifReboundResult;\n!ans;\n",
+      "enable" : "!javascript===\nconst CallDifTraceResult = ${CallDifTraceResult.ordered};\nconst CallDifResult = ${CallDifResult.ordered};\nconst CallDifReboundResult = ${CallDifReboundResult.ordered};\nconst ans =  CallDifResult ;\n!ans;\n",
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
@@ -196,5 +196,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 237
+  "version" : 239
 }
