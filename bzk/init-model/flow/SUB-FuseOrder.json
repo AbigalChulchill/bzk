@@ -15,7 +15,7 @@
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "code" : "const difPeak = ${cs.difPeak};\r\nconst positions = ${position};\r\n\r\nfunction getPositionSide(){\r\n    return difPeak.trendInfo.state == 'RISE' ? \"LONG\" : \"SHORT\";\r\n}\r\n\r\n\r\nconst positionSide = getPositionSide();\r\nconst stopPositionSide = positionSide == 'LONG' ? 'SHORT' : 'LONG';\r\n\r\n$bzk.putObj('positionSide',positionSide);\r\n$bzk.putObj('stopPositionSide',stopPositionSide);\r\n\r\nconst tarPostion = positions[stopPositionSide];\r\n$bzk.put('tarPostion',JSON.stringify(tarPostion));\r\n\r\n\r\n\r\ntrue;",
+      "code" : "const difPeak = ${cs.mdifPeak};\r\nconst positions = ${position};\r\n\r\nfunction getPositionSide(){\r\n    return difPeak.trendInfo.state == 'RISE' ? \"LONG\" : \"SHORT\";\r\n}\r\n\r\n\r\nconst positionSide = getPositionSide();\r\nconst stopPositionSide = positionSide == 'LONG' ? 'SHORT' : 'LONG';\r\n\r\n$bzk.putObj('positionSide',positionSide);\r\n$bzk.putObj('stopPositionSide',stopPositionSide);\r\n\r\nconst tarPostion = positions[stopPositionSide];\r\n$bzk.put('tarPostion',JSON.stringify(tarPostion));\r\n\r\n\r\n\r\ntrue;",
       "polyglot" : "js",
       "resultLv" : "not_specify",
       "resultKey" : "initVar"
@@ -87,7 +87,7 @@
         "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
         "kind" : "NONE",
         "next" : null,
-        "left" : "${cs.difPeak.trendInfo.nearPeak.dtime}",
+        "left" : "${cs.mdifPeak.trendInfo.nearPeak.dtime}",
         "right" : "!javascript===\n60*5*2*1.05;",
         "type" : "greater"
       },
@@ -166,5 +166,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 53
+  "version" : 55
 }

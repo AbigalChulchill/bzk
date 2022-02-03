@@ -15,7 +15,7 @@
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "code" : "const lastDifMap = ${lastDifMap};\r\nconst difPeak = ${cs.difPeak};\r\nconst k5mLow = ${cs.k5m.low};\r\nconst k5mHigh = ${cs.k5m.high};\r\nconst nearPeak = difPeak.trendInfo.nearPeak;\r\n\r\nfunction getPositionSide(){\r\n    return difPeak.trendInfo.state == 'RISE' ? \"LONG\" : \"SHORT\";\r\n}\r\n\r\nconst positionSide = getPositionSide();\r\n\r\n$bzk.putObj('positionSide',positionSide);\r\n\r\nfunction getLastInfo(){\r\n    return lastDifMap[positionSide];\r\n}\r\n\r\nconst lastInfo = getLastInfo();\r\n\r\n$bzk.put('lastInfo',JSON.stringify(lastInfo));\r\n\r\nfunction getStopPrice(){\r\n\r\n    if(positionSide=='LONG'){\r\n        return k5mLow[nearPeak.key];\r\n    }else if(positionSide == 'SHORT'){\r\n        return k5mHigh[nearPeak.key];\r\n    }\r\n    throw new Error('getStopPrice not support='+positionSide);\r\n}\r\n\r\nfunction genOrderObjJson(){\r\n    const peakPrice=getStopPrice();\r\n    return JSON.stringify({\r\n        \"targetPrice\":-1,\r\n        \"stopPrice\": -1,\r\n        \"gapRate\":0.0025,\r\n        \"attachName\":'DifTraced',\r\n        \"attach\":{\r\n            \"stopPrice\":peakPrice,\r\n            \"nearPeak\":nearPeak\r\n        }\r\n    });\r\n}\r\n$bzk.put('~orderLimitBody',genOrderObjJson());\r\n\r\ntrue;",
+      "code" : "const lastDifMap = ${lastDifMap};\r\nconst difPeak = ${cs.difPeak};\r\nconst mdifPeak = ${cs.mdifPeak};\r\nconst k5mLow = ${cs.k5m.low};\r\nconst k5mHigh = ${cs.k5m.high};\r\nconst nearPeak = difPeak.trendInfo.nearPeak;\r\n\r\nfunction getPositionSide(){\r\n    return difPeak.trendInfo.state == 'RISE' ? \"LONG\" : \"SHORT\";\r\n}\r\n\r\nconst positionSide = getPositionSide();\r\n\r\n$bzk.putObj('positionSide',positionSide);\r\n\r\n\r\nfunction getMPositionSide(){\r\n    return mdifPeak.trendInfo.state == 'RISE' ? \"LONG\" : \"SHORT\";\r\n}\r\n\r\nconst mpositionSide = getMPositionSide();\r\n\r\n$bzk.putObj('mpositionSide',mpositionSide);\r\n\r\nfunction getLastInfo(){\r\n    return lastDifMap[positionSide];\r\n}\r\n\r\nconst lastInfo = getLastInfo();\r\n\r\n$bzk.put('lastInfo',JSON.stringify(lastInfo));\r\n\r\nfunction getStopPrice(){\r\n\r\n    if(positionSide=='LONG'){\r\n        return k5mLow[nearPeak.key];\r\n    }else if(positionSide == 'SHORT'){\r\n        return k5mHigh[nearPeak.key];\r\n    }\r\n    throw new Error('getStopPrice not support='+positionSide);\r\n}\r\n\r\nfunction genOrderObjJson(){\r\n    const peakPrice=getStopPrice();\r\n    return JSON.stringify({\r\n        \"targetPrice\":-1,\r\n        \"stopPrice\": -1,\r\n        \"gapRate\":0.0025,\r\n        \"attachName\":'DifTraced',\r\n        \"attach\":{\r\n            \"stopPrice\":peakPrice,\r\n            \"nearPeak\":nearPeak\r\n        }\r\n    });\r\n}\r\n$bzk.put('~orderLimitBody',genOrderObjJson());\r\n\r\ntrue;",
       "polyglot" : "js",
       "resultLv" : "not_specify",
       "resultKey" : "InitVars"
@@ -104,7 +104,7 @@
         "kind" : "NONE",
         "next" : null,
         "left" : "!javascript===\nconst lastInfo = ${lastInfo};\n$tsFunc.subtractKeySecondsToNow(lastInfo.orderPack.created_at);",
-        "right" : "!javascript===\n60*60*3;",
+        "right" : "!javascript===\n60*60*4;",
         "type" : "greater"
       },
       "transition" : {
@@ -134,9 +134,50 @@
         "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"CPosSide\"\n}"
       },
       "enable" : true
+    }, {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "UEP0km6q5GWR",
+      "name" : "SideDif",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionTxt",
+        "kind" : "NONE",
+        "next" : null,
+        "left" : "${positionSide}",
+        "right" : "${mpositionSide}",
+        "not" : true,
+        "type" : "equal"
+      },
+      "transition" : {
+        "toBox" : "",
+        "endTag" : "${symbol} ${positionSide} SideDif",
+        "failEnd" : false,
+        "endResultKeys" : [ ],
+        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"SideDif\"\n}"
+      },
+      "enable" : true
+    }, {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "Co1P2wZbkvGT",
+      "name" : "MPeakBye",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
+        "kind" : "NONE",
+        "next" : null,
+        "left" : "${cs.mdifPeak.trendInfo.nearPeak.dtime}",
+        "right" : "330",
+        "type" : "greater_equal"
+      },
+      "transition" : {
+        "toBox" : "",
+        "endTag" : "${symbol} ${positionSide} MPeakBye",
+        "failEnd" : false,
+        "endResultKeys" : [ ],
+        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"MPeakBye\"\n}"
+      },
+      "enable" : true
     } ],
     "vars" : { },
-    "taskSort" : [ "Qvqn3l33fFem", "DKTiAduexdfC", "vf5kuyx39UQw", "frq4EfAYEZ1D", "PrtQc5mK5fOc", "yBV3YHFsHfCI" ],
+    "taskSort" : [ "Qvqn3l33fFem", "DKTiAduexdfC", "UEP0km6q5GWR", "Co1P2wZbkvGT", "vf5kuyx39UQw", "frq4EfAYEZ1D", "PrtQc5mK5fOc", "yBV3YHFsHfCI" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
@@ -164,5 +205,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 24
+  "version" : 26
 }

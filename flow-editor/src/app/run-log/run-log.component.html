@@ -38,7 +38,7 @@
       [routerLink]="['/',{ outlets: {primary:['job',originRunLog.flowUid,'log',originRunLog.runFlowUid] , sidebar: null } }]"
       type="button" class="btn alert btn-success" *ngIf="originRunLog"> <i class="fas fa-chevron-circle-up"></i></a>
 
-    <a target="_blank" [routerLink]="['/',{ outlets: {primary:['job',jobUid] , sidebar: null } }]" type="button"
+    <a target="_blank" [routerLink]="['/',{ outlets: {primary:['job',jobUid] , sidebar: ['job',jobUid] } }]" type="button"
       class="btn alert btn-success"> <i class="far fa-arrow-alt-circle-left"></i></a>
     <div class="alert alert-primary" role="alert" *ngIf="job">
       {{job.model.name}}
