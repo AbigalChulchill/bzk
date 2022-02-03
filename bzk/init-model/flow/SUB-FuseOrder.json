@@ -78,6 +78,25 @@
         "lv" : "not_specify",
         "key" : "lastInfo"
       }
+    }, {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "OLrVy3Ta1UxM",
+      "name" : "GetNewOds",
+      "tryErrorble" : false,
+      "enable" : "true",
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "url" : "${finExManageApiUrl}",
+      "uriVariables" : { },
+      "body" : "{\n    \"name\": \"order/query/get\",\n    \"exchange\": \"binance\",\n    \"symbol\": \"${symbol}\",\n    \"positionSide\":\"${stopPositionSide}\",\n    \"orderType\":\"STOP_MARKET\",\n    \"status\":\"NEW\",\n    \"__bzk_api_key\": \"${finExManageApiKey}\"\n}",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : "newOdsInfo"
+      }
     } ],
     "links" : [ {
       "clazz" : "net.bzk.flow.model.Link",
@@ -128,7 +147,7 @@
         "kind" : "NONE",
         "next" : null,
         "polyglot" : "js",
-        "code" : "const exPrice = ${binanceQuote.all.avgPrice};\nconst packInfo = ${lastInfo.odPack.orderPack};\nconst tarPostion = ${tarPostion};\nconst positionSide = '${stopPositionSide}';\n\nfunction checkOK(){\n    if(packInfo == null) return true;\n    const lastOrderPrice = packInfo.attach.stopPrice;\n    const lastAmt = packInfo.attach.positionAmt;\n    const priceOK=  $directionUtils.isHighPrice(positionSide,lastOrderPrice,exPrice);\n    const amtOK = lastAmt != tarPostion.positionAmt;\n    return priceOK || amtOK;\n}\n\n!checkOK();"
+        "code" : "const exPrice = ${binanceQuote.all.avgPrice};\nconst packInfo = ${lastInfo.odPack.orderPack};\nconst tarPostion = ${tarPostion};\nconst positionSide = '${stopPositionSide}';\nconst newOdsInfo = ${newOdsInfo};\n\nfunction checkOK(){ //true: order \n    if(packInfo == null) return true;\n    const lastOrderPrice = packInfo.attach.stopPrice;\n    const lastAmt = newOdsInfo.origQty;\n    const priceOK=  $directionUtils.isHighPrice(positionSide,lastOrderPrice,exPrice);\n    const amtOK = lastAmt != tarPostion.positionAmt;\n    return priceOK || amtOK;\n}\n\n!checkOK();"
       },
       "transition" : {
         "toBox" : "",
@@ -140,7 +159,7 @@
       "enable" : true
     } ],
     "vars" : { },
-    "taskSort" : [ "viRNYSWGuVir", "tF0zk2zC3dUW", "gi4jptN8J514", "dHnvjwV3y2aZ", "UAQMAEclMM9j", "hSBxZdqD8vhx" ],
+    "taskSort" : [ "viRNYSWGuVir", "tF0zk2zC3dUW", "gi4jptN8J514", "dHnvjwV3y2aZ", "OLrVy3Ta1UxM", "UAQMAEclMM9j", "hSBxZdqD8vhx" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
@@ -166,5 +185,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 55
+  "version" : 57
 }
