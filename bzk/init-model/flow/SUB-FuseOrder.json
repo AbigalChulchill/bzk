@@ -147,7 +147,7 @@
         "kind" : "NONE",
         "next" : null,
         "polyglot" : "js",
-        "code" : "const exPrice = ${binanceQuote.all.avgPrice};\nconst packInfo = ${lastInfo.odPack.orderPack};\nconst tarPostion = ${tarPostion};\nconst positionSide = '${stopPositionSide}';\nconst newOdsInfo = ${newOdsInfo};\n\nfunction checkOK(){ //true: order \n    if(packInfo == null) return true;\n    const lastOrderPrice = packInfo.attach.stopPrice;\n    const lastAmt = newOdsInfo.origQty;\n    const priceOK=  $directionUtils.isHighPrice(positionSide,lastOrderPrice,exPrice);\n    const amtOK = lastAmt != tarPostion.positionAmt;\n    return priceOK || amtOK;\n}\n\n!checkOK();"
+        "code" : "const exPrice = ${binanceQuote.all.avgPrice};\nconst packInfo = ${lastInfo.odPack.orderPack};\nconst tarPostion = ${tarPostion};\nconst positionSide = '${stopPositionSide}';\nconst newOdsInfo = ${newOdsInfo};\n\nfunction checkOK(){ //true: order \n    if(packInfo == null) return true;\n    const lastOrderPrice = packInfo.attach.stopPrice;\n    const lastAmt = newOdsInfo.origQty;\n    const priceOK=  $directionUtils.isHighPrice(positionSide,lastOrderPrice,exPrice);\n    const amtOK = Math.abs( tarPostion.positionAmt) > lastAmt;\n    return priceOK || amtOK;\n}\n\n!checkOK();"
       },
       "transition" : {
         "toBox" : "",
@@ -185,5 +185,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 57
+  "version" : 59
 }
