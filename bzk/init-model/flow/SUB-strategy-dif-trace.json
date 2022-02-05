@@ -56,24 +56,37 @@
           "key" : "stopLimitResult"
         }
       } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$PolyglotAction",
+      "uid" : "bFQCXjDFsG8P",
+      "name" : "LastInfoVar",
+      "tryErrorble" : false,
+      "enable" : "true",
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "code" : "const lastInfo = ${lastInfo};\r\nconst positions = ${position};\r\nconst positionSide = '${positionSide}';\r\n\r\nfunction sumOrigQty(){\r\n    let ans = 0; \r\n    for (const o of lastInfo.orders) {\r\n        ans+= o.origQty;\r\n    } \r\n    return ans;\r\n}\r\n\r\nconst allOrigQty = sumOrigQty();\r\n$bzk.putObj('allOrigQty',allOrigQty);\r\n\r\nfunction calcOrderRate(){\r\n    const tarPos = positions[positionSide];\r\n    const posAmt = Math.abs(tarPos.positionAmt);\r\n    return posAmt / allOrigQty;\r\n}\r\n\r\nconst orderRate = calcOrderRate();\r\n$bzk.putObj('orderRate',orderRate);",
+      "polyglot" : "js",
+      "resultLv" : "not_specify",
+      "resultKey" : "LastInfoVar"
     } ],
     "links" : [ {
       "clazz" : "net.bzk.flow.model.Link",
       "uid" : "PrtQc5mK5fOc",
-      "name" : "PriceOver",
+      "name" : "PriceAmtCheck",
       "condition" : {
         "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
         "kind" : "NONE",
         "next" : null,
         "polyglot" : "js",
-        "code" : "const exPrice = ${binanceQuote.all.avgPrice};\r\nconst lastOrderPrice = ${lastInfo.orderPack.attach.stopPrice};\r\nconst positionSide = '${positionSide}';\r\n\r\nfunction check(){\r\n    if(lastOrderPrice == null) return true;\r\n    return $directionUtils.isHighPrice(positionSide,lastOrderPrice,exPrice);\r\n}\r\n\r\ncheck();"
+        "code" : "const exPrice = ${binanceQuote.all.avgPrice};\r\nconst lastOrderPrice = ${lastInfo.orderPack.attach.stopPrice};\r\nconst positionSide = '${positionSide}';\r\nconst orderRate = ${orderRate};\r\n\r\nfunction check(){\r\n    if(lastOrderPrice == null) return true;\r\n    const orderPeakPosed =  $directionUtils.isHighPrice(positionSide,lastOrderPrice,exPrice);\r\n    if(!orderPack) return false;\r\n    const difP = Math.abs( lastOrderPrice-exPrice)/exPrice;\r\n    if (difP>${priceOverRate} ) return true;\r\n    return orderRate >${positionAmtLessTh};\r\n}\r\n\r\ncheck();"
       },
       "transition" : {
         "toBox" : "",
-        "endTag" : "${symbol} ${positionSide} PriceOver",
+        "endTag" : "${symbol} ${positionSide} PriceAmtCheck",
         "failEnd" : false,
         "endResultKeys" : [ ],
-        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"PriceOver\"\n}"
+        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"PriceAmtCheck\"\n}"
       },
       "enable" : true
     }, {
@@ -177,7 +190,7 @@
       "enable" : true
     } ],
     "vars" : { },
-    "taskSort" : [ "Qvqn3l33fFem", "DKTiAduexdfC", "UEP0km6q5GWR", "Co1P2wZbkvGT", "vf5kuyx39UQw", "frq4EfAYEZ1D", "PrtQc5mK5fOc", "yBV3YHFsHfCI" ],
+    "taskSort" : [ "Qvqn3l33fFem", "DKTiAduexdfC", "UEP0km6q5GWR", "Co1P2wZbkvGT", "vf5kuyx39UQw", "bFQCXjDFsG8P", "frq4EfAYEZ1D", "PrtQc5mK5fOc", "yBV3YHFsHfCI" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
@@ -190,7 +203,9 @@
   } ],
   "varCfgNames" : [ "fin-exchange-manage.json" ],
   "vars" : {
-    "symbol" : "ETH"
+    "symbol" : "ETH",
+    "priceOverRate" : 0.05,
+    "positionAmtLessTh" : 0.3
   },
   "entry" : {
     "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
@@ -205,5 +220,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 26
+  "version" : 28
 }
