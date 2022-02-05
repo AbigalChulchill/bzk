@@ -65,7 +65,7 @@
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "code" : "const lastInfo = ${lastInfo};\r\nconst positions = ${position};\r\nconst positionSide = '${positionSide}';\r\n\r\nfunction sumOrigQty(){\r\n    let ans = 0; \r\n    for (const o of lastInfo.orders) {\r\n        ans+= o.origQty;\r\n    } \r\n    return ans;\r\n}\r\n\r\nconst allOrigQty = sumOrigQty();\r\n$bzk.putObj('allOrigQty',allOrigQty);\r\n\r\nfunction calcOrderRate(){\r\n    const tarPos = positions[positionSide];\r\n    const posAmt = Math.abs(tarPos.positionAmt);\r\n    return posAmt / allOrigQty;\r\n}\r\n\r\nconst orderRate = calcOrderRate();\r\n$bzk.putObj('orderRate',orderRate);",
+      "code" : "const lastInfo = ${lastInfo};\r\nconst positions = ${position};\r\nconst positionSide = '${positionSide}';\r\nconst exPrice = ${binanceQuote.all.avgPrice};\r\nconst lastOrderPrice = ${lastInfo.orderPack.attach.stopPrice};\r\n\r\nconst orderPeakPosed =  $directionUtils.isHighPrice(positionSide,lastOrderPrice,exPrice);\r\n$bzk.putObj('orderPeakPosed',orderPeakPosed);\r\n\r\nfunction sumOrigQty(){\r\n    let ans = 0; \r\n    for (const o of lastInfo.orders) {\r\n        ans+= o.origQty;\r\n    } \r\n    return ans;\r\n}\r\n\r\nconst allOrigQty = sumOrigQty();\r\n$bzk.putObj('allOrigQty',allOrigQty);\r\n\r\nfunction calcOrderRate(){\r\n    const tarPos = positions[positionSide];\r\n    const posAmt = Math.abs(tarPos.positionAmt);\r\n    return posAmt / allOrigQty;\r\n}\r\n\r\nconst orderRate = calcOrderRate();\r\n$bzk.putObj('orderRate',orderRate);",
       "polyglot" : "js",
       "resultLv" : "not_specify",
       "resultKey" : "LastInfoVar"
@@ -79,7 +79,7 @@
         "kind" : "NONE",
         "next" : null,
         "polyglot" : "js",
-        "code" : "const exPrice = ${binanceQuote.all.avgPrice};\r\nconst lastOrderPrice = ${lastInfo.orderPack.attach.stopPrice};\r\nconst positionSide = '${positionSide}';\r\nconst orderRate = ${orderRate};\r\n\r\nfunction check(){\r\n    if(lastOrderPrice == null) return true;\r\n    const orderPeakPosed =  $directionUtils.isHighPrice(positionSide,lastOrderPrice,exPrice);\r\n    if(!orderPeakPosed) return false;\r\n    const difP = Math.abs( lastOrderPrice-exPrice)/exPrice;\r\n    if (difP>${priceOverRate} ) return true;\r\n    return orderRate >${positionAmtLessTh};\r\n}\r\n\r\ncheck();"
+        "code" : "const exPrice = ${binanceQuote.all.avgPrice};\r\nconst lastOrderPrice = ${lastInfo.orderPack.attach.stopPrice};\r\nconst positionSide = '${positionSide}';\r\nconst orderRate = ${orderRate};\r\n\r\nfunction check(){\r\n    if(lastOrderPrice == null) return true;\r\n    const orderPeakPosed =  ${orderPeakPosed};\r\n    if(!orderPeakPosed) return false;\r\n    const difP = Math.abs( lastOrderPrice-exPrice)/exPrice;\r\n    if (difP>${priceOverRate} ) return true;\r\n    return orderRate >${positionAmtLessTh};\r\n}\r\n\r\ncheck();"
       },
       "transition" : {
         "toBox" : "",
@@ -220,5 +220,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 30
+  "version" : 31
 }
