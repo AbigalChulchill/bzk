@@ -79,7 +79,7 @@
         "kind" : "NONE",
         "next" : null,
         "polyglot" : "js",
-        "code" : "const exPrice = ${binanceQuote.all.avgPrice};\r\nconst lastOrderPrice = ${lastInfo.orderPack.attach.stopPrice};\r\nconst positionSide = '${positionSide}';\r\nconst orderRate = ${orderRate};\r\n\r\nfunction check(){\r\n    if(lastOrderPrice == null) return true;\r\n    const orderPeakPosed =  $directionUtils.isHighPrice(positionSide,lastOrderPrice,exPrice);\r\n    if(!orderPack) return false;\r\n    const difP = Math.abs( lastOrderPrice-exPrice)/exPrice;\r\n    if (difP>${priceOverRate} ) return true;\r\n    return orderRate >${positionAmtLessTh};\r\n}\r\n\r\ncheck();"
+        "code" : "const exPrice = ${binanceQuote.all.avgPrice};\r\nconst lastOrderPrice = ${lastInfo.orderPack.attach.stopPrice};\r\nconst positionSide = '${positionSide}';\r\nconst orderRate = ${orderRate};\r\n\r\nfunction check(){\r\n    if(lastOrderPrice == null) return true;\r\n    const orderPeakPosed =  $directionUtils.isHighPrice(positionSide,lastOrderPrice,exPrice);\r\n    if(!orderPeakPosed) return false;\r\n    const difP = Math.abs( lastOrderPrice-exPrice)/exPrice;\r\n    if (difP>${priceOverRate} ) return true;\r\n    return orderRate >${positionAmtLessTh};\r\n}\r\n\r\ncheck();"
       },
       "transition" : {
         "toBox" : "",
@@ -220,5 +220,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 28
+  "version" : 30
 }
