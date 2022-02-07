@@ -98,9 +98,6 @@
         "endResultKeys" : [ {
           "lv" : "not_specify",
           "key" : "cs.difBigger.lastVal"
-        }, {
-          "lv" : "not_specify",
-          "key" : "thVal"
         } ],
         "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"OverTH\"\n}"
       },
@@ -158,5 +155,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 68
+  "version" : 69
 }
