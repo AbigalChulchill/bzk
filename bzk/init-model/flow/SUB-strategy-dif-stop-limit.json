@@ -15,7 +15,7 @@
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "code" : "const difPeak = ${cs.difPeak};\r\nconst difPoints = $tsFunc.toPoints(${cs.dif});\r\nconst difTH = ${cs.difTH};\r\nconst k5mLow = ${cs.k5m.low};\r\nconst k5mHigh = ${cs.k5m.high};\r\nconst positions = ${position};\r\n\r\nfunction getThVal(){\r\n    var key;\r\n    for (var k in difTH) {\r\n        return difTH[k];\r\n    }\r\n}\r\n\r\nfunction getPositionSide(){\r\n    return difPeak.trendInfo.state == 'FALL' ? 'SHORT':'LONG';\r\n}\r\n\r\nconst positionSide = getPositionSide();\r\nconst stopPositionSide = positionSide == 'LONG' ? 'SHORT' : 'LONG';\r\nconst tarPostion = positions[stopPositionSide];\r\n$bzk.put('tarPostion',JSON.stringify(tarPostion));\r\n\r\n\r\nconst nearPeak = difPeak.trendInfo.nearPeak;\r\n\r\n\r\nfunction getStopPrice(){\r\n\r\n    if(positionSide=='LONG'){\r\n        return k5mLow[nearPeak.key];\r\n    }else if(positionSide == 'SHORT'){\r\n        return k5mHigh[nearPeak.key];\r\n    }\r\n    throw new Error('getStopPrice not support='+positionSide);\r\n}\r\n\r\nfunction genOrderObjJson(){\r\n    const peakPrice=getStopPrice();\r\n    return JSON.stringify({\r\n        \"targetPrice\":peakPrice,\r\n        \"stopPrice\": -1,\r\n        \"gapRate\":-1,\r\n        \"attachName\":'DifTrace',\r\n        \"attach\":{\r\n            \"stopPrice\":peakPrice,\r\n            \"nearPeak\":nearPeak\r\n        }\r\n    });\r\n}\r\n\r\n$bzk.putObj('positionSide',positionSide);\r\n$bzk.put('difNearPeak',JSON.stringify( nearPeak));\r\n$bzk.putObj('~thVal',getThVal());\r\n$bzk.put('~orderLimitBody',genOrderObjJson());\r\ntrue;",
+      "code" : "const difPeak = ${cs.difPeak};\r\nconst difPoints = $tsFunc.toPoints(${cs.dif});\r\nconst k5mLow = ${cs.k5m.low};\r\nconst k5mHigh = ${cs.k5m.high};\r\nconst positions = ${position};\r\n\r\n\r\n\r\nfunction getPositionSide(){\r\n    return difPeak.trendInfo.state == 'FALL' ? 'SHORT':'LONG';\r\n}\r\n\r\nconst positionSide = getPositionSide();\r\nconst stopPositionSide = positionSide == 'LONG' ? 'SHORT' : 'LONG';\r\nconst tarPostion = positions[stopPositionSide];\r\n$bzk.put('tarPostion',JSON.stringify(tarPostion));\r\n\r\n\r\nconst nearPeak = difPeak.trendInfo.nearPeak;\r\n\r\n\r\nfunction getStopPrice(){\r\n\r\n    if(positionSide=='LONG'){\r\n        return k5mLow[nearPeak.key];\r\n    }else if(positionSide == 'SHORT'){\r\n        return k5mHigh[nearPeak.key];\r\n    }\r\n    throw new Error('getStopPrice not support='+positionSide);\r\n}\r\n\r\nfunction genOrderObjJson(){\r\n    const peakPrice=getStopPrice();\r\n    return JSON.stringify({\r\n        \"targetPrice\":peakPrice,\r\n        \"stopPrice\": -1,\r\n        \"gapRate\":-1,\r\n        \"attachName\":'DifTrace',\r\n        \"attach\":{\r\n            \"stopPrice\":peakPrice,\r\n            \"nearPeak\":nearPeak\r\n        }\r\n    });\r\n}\r\n\r\n$bzk.putObj('positionSide',positionSide);\r\n$bzk.put('difNearPeak',JSON.stringify( nearPeak));\r\n$bzk.put('~orderLimitBody',genOrderObjJson());\r\ntrue;",
       "polyglot" : "js",
       "resultLv" : "not_specify",
       "resultKey" : "vars"
@@ -91,7 +91,7 @@
         "kind" : "NONE",
         "next" : null,
         "left" : "!javascript===\nMath.abs( ${difNearPeak.val});",
-        "right" : "${thVal}",
+        "right" : "${difRateThreshold}",
         "type" : "lessthan_equal"
       },
       "transition" : {
@@ -145,7 +145,9 @@
     "minLogLv" : "DEBUG"
   } ],
   "varCfgNames" : [ ],
-  "vars" : { },
+  "vars" : {
+    "difRateThreshold" : 0.005
+  },
   "entry" : {
     "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
     "boxUid" : "AB8uzjML8NdQ",
@@ -159,5 +161,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 64
+  "version" : 66
 }

@@ -15,7 +15,7 @@
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "code" : "const difPeak = ${cs.mdifPeak};\r\nconst positions = ${position};\r\n\r\nfunction getPositionSide(){\r\n    return difPeak.trendInfo.state == 'RISE' ? \"LONG\" : \"SHORT\";\r\n}\r\n\r\n\r\nconst positionSide = getPositionSide();\r\nconst stopPositionSide = positionSide == 'LONG' ? 'SHORT' : 'LONG';\r\n\r\n$bzk.putObj('positionSide',positionSide);\r\n$bzk.putObj('stopPositionSide',stopPositionSide);\r\n\r\nconst tarPostion = positions[stopPositionSide];\r\n$bzk.put('tarPostion',JSON.stringify(tarPostion));\r\n\r\n\r\n\r\ntrue;",
+      "code" : "const difPeak = ${cs.mdifPeak};\r\nconst positions = ${position};\r\nconst k5mLow = ${cs.k5m.low};\r\nconst k5mHigh = ${cs.k5m.high};\r\n\r\nfunction getStopPositionSide(){\r\n    return difPeak.trendInfo.state == 'RISE' ? \"LONG\" : \"SHORT\";\r\n}\r\n\r\n\r\nconst stopPositionSide = getStopPositionSide();\r\nconst positionSide  = stopPositionSide == 'LONG' ? 'SHORT' : 'LONG';\r\n\r\n$bzk.putObj('positionSide',positionSide);\r\n$bzk.putObj('stopPositionSide',stopPositionSide);\r\n$bzk.putObj('kSize',(k5mHigh-k5mLow)*${kSizeRate});\r\n\r\nconst tarPostion = positions[stopPositionSide];\r\n$bzk.put('tarPostion',JSON.stringify(tarPostion));\r\n\r\nfunction getGap(){\r\n    const entryPrice = tarPostion.entryPrice;\r\n    const markPrice = tarPostion.markPrice;\r\n    const positionSide = tarPostion.positionSide;\r\n    const difP = positionSide == 'LONG' ? (markPrice - entryPrice) : (entryPrice-markPrice) ;\r\n    return difP;\r\n}\r\n$bzk.putObj('positionGap',getGap());\r\n\r\ntrue;",
       "polyglot" : "js",
       "resultLv" : "not_specify",
       "resultKey" : "initVar"
@@ -50,7 +50,7 @@
         "val" : "false"
       }, {
         "key" : "orderStopBody",
-        "val" : "!javascript===\nconst exPrice = ${binanceQuote.all.avgPrice};\nconst tarPostion = ${tarPostion};\nconst body= {\n        \"targetIdxShift\":1,\n        \"gapRate\":-1,\n        \"attachName\":'peakStop',\n        \"attach\":{\n            \"stopPrice\":exPrice,\n            \"positionAmt\":tarPostion.positionAmt\n        }\n};\n\nbody;"
+        "val" : "!javascript===\nconst exPrice = ${binanceQuote.all.avgPrice};\nconst tarPostion = ${tarPostion};\nconst positionGap = ${positionGap};\nconst kSize = ${kSize};\n\nfunction calcTargetPrice(){\n    if(positionGap>kSize) return tarPostion.entryPrice;\n    return tarPostion.liquidationPrice;\n}\n\n\n\nconst body= {\n        \"targetIdxShift\":1,\n        \"gapRate\":-1,\n        \"attachName\":'peakStop',\n        \"targetPrice\":\n        \"attach\":{\n            \"stopPrice\":exPrice,\n            \"positionAmt\":tarPostion.positionAmt\n        }\n};\n\nbody;"
       } ],
       "outputReflects" : [ {
         "srcKey" : "__pk_result",
@@ -100,26 +100,6 @@
     } ],
     "links" : [ {
       "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "tF0zk2zC3dUW",
-      "name" : "OverTime",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
-        "kind" : "NONE",
-        "next" : null,
-        "left" : "${cs.mdifPeak.trendInfo.nearPeak.dtime}",
-        "right" : "!javascript===\n60*5*2*1.05;",
-        "type" : "greater"
-      },
-      "transition" : {
-        "toBox" : "",
-        "endTag" : "${symbol} ${stopPositionSide} OverTime",
-        "failEnd" : false,
-        "endResultKeys" : [ ],
-        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"OverTime\"\n}"
-      },
-      "enable" : true
-    }, {
-      "clazz" : "net.bzk.flow.model.Link",
       "uid" : "gi4jptN8J514",
       "name" : "NoPos",
       "condition" : {
@@ -159,7 +139,7 @@
       "enable" : true
     } ],
     "vars" : { },
-    "taskSort" : [ "viRNYSWGuVir", "tF0zk2zC3dUW", "gi4jptN8J514", "dHnvjwV3y2aZ", "OLrVy3Ta1UxM", "UAQMAEclMM9j", "hSBxZdqD8vhx" ],
+    "taskSort" : [ "viRNYSWGuVir", "gi4jptN8J514", "dHnvjwV3y2aZ", "OLrVy3Ta1UxM", "UAQMAEclMM9j", "hSBxZdqD8vhx" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
@@ -171,7 +151,9 @@
     "minLogLv" : "DEBUG"
   } ],
   "varCfgNames" : [ "fin-exchange-manage.json" ],
-  "vars" : { },
+  "vars" : {
+    "kSizeRate" : 1.5
+  },
   "entry" : {
     "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
     "boxUid" : "a4NkW28jdISd",
@@ -185,5 +167,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 59
+  "version" : 61
 }
