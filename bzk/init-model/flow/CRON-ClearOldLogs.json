@@ -47,10 +47,29 @@
       "minLogLv" : "NONE",
       "func" : "gc",
       "data" : "{}"
+    }, {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "voNRnEDL5u9c",
+      "name" : "CALL_OrderLOGs",
+      "tryErrorble" : false,
+      "enable" : "true",
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "url" : "${finProxyUrl}/proxy/tsdb/delete",
+      "uriVariables" : { },
+      "body" : "!javascript===\n\nlet stop = new Date();\n\nstop.setSeconds(stop.getSeconds() - 24*60*60*30*9);\nvar stopiso = stop.toISOString();\n\nconst ans = {\n    \"stop\":stopiso,\n    \"predicate\":\"_measurement=\\\"order-measurement\\\"\"\n};\nans;",
+      "method" : "DELETE",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : ""
+      }
     } ],
     "links" : [ ],
     "vars" : { },
-    "taskSort" : [ "qVts85DycAln", "V4n8lARxLx88", "cq1pOylBlvcA" ],
+    "taskSort" : [ "qVts85DycAln", "V4n8lARxLx88", "cq1pOylBlvcA", "voNRnEDL5u9c" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
@@ -78,5 +97,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 32
+  "version" : 34
 }
