@@ -89,7 +89,7 @@
       "asynced" : false,
       "inputData" : [ {
         "key" : "body",
-        "val" : "!javascript===\nconst defaultObj= {\n  \"symbol\": \"${symbol}\",\n  \"size\": 10,\n  \"positionSide\": \"${stopPositionSide}\",\n  \"withdrawAmountRate\": 1,\n  \"priceBuffRate\": 1.001,\n  \"name\": \"order/post\",\n  \"exchange\": \"binance\",\n  \"strategy\": \"STOP_MARKET\",\n  \"proportionalRate\": 1.05,\n  \"proportionalReverse\": true,\n  \"targetPrice\": ${stopPositionEntryPrice},\n  \"positionRate\": 1\n};\nconst mergeObj = ${orderStopBody};\nconst postObj= Object.assign(defaultObj,mergeObj);\npostObj;"
+        "val" : "!javascript===\n\nconst exPrice = ${binanceQuote.all.avgPrice};\nconst tarPostion = ${tarPostion};\nconst positionGap = ${positionGap};\nconst kSize = ${kSize};\n\nfunction calcTargetPrice(){\n if(positionGap>kSize) return tarPostion.entryPrice;\n return tarPostion.liquidationPrice;\n}\n\n\n\nconst mergeObj= {\n \"targetIdxShift\":1,\n \"gapRate\":-1,\n \"attachName\":'peakStop',\n \"targetPrice\":calcTargetPrice(),\n \"attach\":{\n \"stopPrice\":exPrice,\n \"positionAmt\":tarPostion.positionAmt\n }\n};\n\n\n\nconst defaultObj= {\n  \"symbol\": \"${symbol}\",\n  \"size\": 10,\n  \"positionSide\": \"${stopPositionSide}\",\n  \"withdrawAmountRate\": 1,\n  \"priceBuffRate\": 1.001,\n  \"name\": \"order/post\",\n  \"exchange\": \"binance\",\n  \"strategy\": \"STOP_MARKET\",\n  \"proportionalRate\": 1.05,\n  \"proportionalReverse\": true,\n  \"targetPrice\": ${stopPositionEntryPrice},\n  \"positionRate\": 1\n};\n\nconst postObj= Object.assign(defaultObj,mergeObj);\npostObj;"
       }, {
         "key" : "tags",
         "val" : "[\"fuse\"]"
@@ -168,5 +168,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 66
+  "version" : 68
 }
