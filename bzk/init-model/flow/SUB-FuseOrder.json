@@ -15,50 +15,10 @@
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "code" : "const difPeak = ${cs.mdifPeak};\r\nconst positions = ${position};\r\nconst k5mLow = $tsFunc.getLast( ${cs.k5m.low});\r\nconst k5mHigh = $tsFunc.getLast(${cs.k5m.high});\r\n\r\nfunction getStopPositionSide(){\r\n    return difPeak.trendInfo.state == 'RISE' ? \"LONG\" : \"SHORT\";\r\n}\r\n\r\n\r\nconst stopPositionSide = getStopPositionSide();\r\nconst positionSide  = stopPositionSide == 'LONG' ? 'SHORT' : 'LONG';\r\n\r\n$bzk.putObj('positionSide',positionSide);\r\n$bzk.putObj('stopPositionSide',stopPositionSide);\r\n$bzk.putObj('kSize',(k5mHigh.val-k5mLow.val)*${kSizeRate});\r\n\r\nconst tarPostion = positions[stopPositionSide];\r\n$bzk.put('tarPostion',JSON.stringify(tarPostion));\r\n\r\nfunction getGap(){\r\n    const entryPrice = tarPostion.entryPrice;\r\n    const markPrice = tarPostion.markPrice;\r\n    const positionSide = tarPostion.positionSide;\r\n    const difP = positionSide == 'LONG' ? (markPrice - entryPrice) : (entryPrice-markPrice) ;\r\n    return difP;\r\n}\r\n$bzk.putObj('positionGap',getGap());\r\n\r\ntrue;",
+      "code" : "const stopPositionSide = '${stopPositionSide}';\r\nconst positions = ${position};\r\nconst k5mLow = $tsFunc.getLast( ${cs.k5m.low});\r\nconst k5mHigh = $tsFunc.getLast(${cs.k5m.high});\r\n\r\nfunction getStopPositionSide(){\r\n    return difPeak.trendInfo.state == 'RISE' ? \"LONG\" : \"SHORT\";\r\n}\r\n\r\nconst positionSide  = stopPositionSide == 'LONG' ? 'SHORT' : 'LONG';\r\n\r\n$bzk.putObj('positionSide',positionSide);\r\n$bzk.putObj('stopPositionSide',stopPositionSide);\r\n$bzk.putObj('kSize',(k5mHigh.val-k5mLow.val)*${kSizeRate});\r\n\r\nconst tarPostion = positions[stopPositionSide];\r\n$bzk.put('tarPostion',JSON.stringify(tarPostion));\r\n\r\nfunction getGap(){\r\n    const entryPrice = tarPostion.entryPrice;\r\n    const markPrice = tarPostion.markPrice;\r\n    const positionSide = tarPostion.positionSide;\r\n    const difP = positionSide == 'LONG' ? (markPrice - entryPrice) : (entryPrice-markPrice) ;\r\n    return difP;\r\n}\r\n$bzk.putObj('positionGap',getGap());\r\n\r\ntrue;",
       "polyglot" : "js",
       "resultLv" : "not_specify",
       "resultKey" : "initVar"
-    }, {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "hSBxZdqD8vhx",
-      "name" : "Order",
-      "tryErrorble" : false,
-      "enable" : "true",
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "flowUid" : "substoplimit",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "positionSide",
-        "val" : "${positionSide}"
-      }, {
-        "key" : "position",
-        "val" : "${position}"
-      }, {
-        "key" : "symbol",
-        "val" : "${symbol}"
-      }, {
-        "key" : "runStoped",
-        "val" : "true"
-      }, {
-        "key" : "trigger",
-        "val" : "fuse"
-      }, {
-        "key" : "runLimit",
-        "val" : "false"
-      }, {
-        "key" : "orderStopBody",
-        "val" : "!javascript===\nconst exPrice = ${binanceQuote.all.avgPrice};\nconst tarPostion = ${tarPostion};\nconst positionGap = ${positionGap};\nconst kSize = ${kSize};\n\nfunction calcTargetPrice(){\n    if(positionGap>kSize) return tarPostion.entryPrice;\n    return tarPostion.liquidationPrice;\n}\n\n\n\nconst body= {\n        \"targetIdxShift\":1,\n        \"gapRate\":-1,\n        \"attachName\":'peakStop',\n        \"targetPrice\":calcTargetPrice(),\n        \"attach\":{\n            \"stopPrice\":exPrice,\n            \"positionAmt\":tarPostion.positionAmt\n        }\n};\n\nbody;"
-      } ],
-      "outputReflects" : [ {
-        "srcKey" : "__pk_result",
-        "toKey" : {
-          "lv" : "not_specify",
-          "key" : "orderResult"
-        }
-      } ]
     }, {
       "clazz" : "net.bzk.flow.model.HttpAction",
       "uid" : "dHnvjwV3y2aZ",
@@ -97,6 +57,47 @@
         "lv" : "not_specify",
         "key" : "newOdsInfo"
       }
+    }, {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "jJnAb38ISvI6",
+      "name" : "CancelStop",
+      "tryErrorble" : false,
+      "enable" : "true",
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "url" : "${finExManageApiUrl}",
+      "uriVariables" : { },
+      "body" : "{\n    \"symbol\": \"${symbol}\",\n    \"status\":\"NEW\",\n    \"orderType\":\"STOP_MARKET\",\n    \"positionSide\":\"${stopPositionSide}\",\n    \"name\": \"order/delete_by_filter\",\n    \"exchange\": \"binance\",\n    \"__bzk_api_key\": \"${finExManageApiKey}\"\n}",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : "cs"
+      }
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "oKZELnYiGQv1",
+      "name" : "ORDER_STOP",
+      "tryErrorble" : false,
+      "enable" : "true",
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flowUid" : "02eQyaMwyojZ",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "body",
+        "val" : "!javascript===\nconst defaultObj= {\n  \"symbol\": \"${symbol}\",\n  \"size\": 10,\n  \"positionSide\": \"${stopPositionSide}\",\n  \"withdrawAmountRate\": 1,\n  \"priceBuffRate\": 1.001,\n  \"name\": \"order/post\",\n  \"exchange\": \"binance\",\n  \"strategy\": \"STOP_MARKET\",\n  \"proportionalRate\": 1.05,\n  \"proportionalReverse\": true,\n  \"targetPrice\": ${stopPositionEntryPrice},\n  \"positionRate\": 1\n};\nconst mergeObj = ${orderStopBody};\nconst postObj= Object.assign(defaultObj,mergeObj);\npostObj;"
+      }, {
+        "key" : "tags",
+        "val" : "[\"fuse\"]"
+      }, {
+        "key" : "trigger",
+        "val" : "fuse"
+      } ],
+      "outputReflects" : [ ]
     } ],
     "links" : [ {
       "clazz" : "net.bzk.flow.model.Link",
@@ -139,7 +140,7 @@
       "enable" : true
     } ],
     "vars" : { },
-    "taskSort" : [ "viRNYSWGuVir", "gi4jptN8J514", "dHnvjwV3y2aZ", "OLrVy3Ta1UxM", "UAQMAEclMM9j", "hSBxZdqD8vhx" ],
+    "taskSort" : [ "viRNYSWGuVir", "gi4jptN8J514", "dHnvjwV3y2aZ", "OLrVy3Ta1UxM", "UAQMAEclMM9j", "jJnAb38ISvI6", "oKZELnYiGQv1" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
@@ -158,7 +159,7 @@
     "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
     "boxUid" : "a4NkW28jdISd",
     "autoRegister" : false,
-    "requiredKeys" : [ "__ALL__" ],
+    "requiredKeys" : [ "__ALL__", "stopPositionSide" ],
     "outputKeys" : [ "__pk_result" ]
   },
   "threadCfg" : {
@@ -167,5 +168,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 63
+  "version" : 66
 }

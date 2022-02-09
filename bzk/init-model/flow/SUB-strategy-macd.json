@@ -126,28 +126,6 @@
           "key" : "CallDifReboundResult"
         }
       } ]
-    }, {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "Wjr53g7AtENV",
-      "name" : "Fuse",
-      "tryErrorble" : false,
-      "enable" : "true",
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "flowUid" : "FwGMPiyJdlPl",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "__ALL__",
-        "val" : "${~__ALL__}"
-      } ],
-      "outputReflects" : [ {
-        "srcKey" : "__pk_result",
-        "toKey" : {
-          "lv" : "not_specify",
-          "key" : "FuseResult"
-        }
-      } ]
     } ],
     "links" : [ {
       "clazz" : "net.bzk.flow.model.Link",
@@ -170,7 +148,7 @@
       "enable" : true
     } ],
     "vars" : { },
-    "taskSort" : [ "Div2tmjgl8JG", "POnGmKqao8p1", "DmpvFO68Ya38", "Wjr53g7AtENV", "seAOjxSxI6jM", "jTyoT1poRNiz", "M2I6HnVyI36q", "NPJloJ9SkiyJ" ],
+    "taskSort" : [ "Div2tmjgl8JG", "POnGmKqao8p1", "DmpvFO68Ya38", "seAOjxSxI6jM", "jTyoT1poRNiz", "M2I6HnVyI36q", "NPJloJ9SkiyJ" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
@@ -196,5 +174,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 243
+  "version" : 245
 }

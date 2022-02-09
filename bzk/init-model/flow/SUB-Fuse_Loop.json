@@ -1,0 +1,90 @@
+{
+  "clazz" : "net.bzk.flow.model.Flow",
+  "uid" : "SUBFuseLoop",
+  "name" : "SUB-Fuse_Loop",
+  "boxs" : [ {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "SlINz2lOTApz",
+    "name" : "RUN",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$VarModifyAction",
+      "uid" : "VBcwBUuoBz8z",
+      "name" : "LoopGen",
+      "tryErrorble" : false,
+      "enable" : "true",
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flatData" : [ {
+        "key" : "curPos",
+        "val" : "!javascript===\nconst poss = ${poss};\nconst idx = ${posIdx};\nposs[idx];"
+      }, {
+        "key" : "posIdx",
+        "val" : "!javascript===\n${posIdx}+1"
+      } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "uCYOwWdhTX61",
+      "name" : "CallFuse",
+      "tryErrorble" : true,
+      "enable" : "true",
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flowUid" : "FwGMPiyJdlPl",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "__ALL__",
+        "val" : "${~__ALL__}"
+      }, {
+        "key" : "stopPositionSide",
+        "val" : "${curPos}"
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "__pk_result",
+        "toKey" : {
+          "lv" : "not_specify",
+          "key" : "cf"
+        }
+      } ]
+    } ],
+    "links" : [ ],
+    "vars" : {
+      "posIdx" : 0,
+      "poss" : [ "SHORT", "LONG" ]
+    },
+    "taskSort" : [ "VBcwBUuoBz8z", "uCYOwWdhTX61" ],
+    "whileJudgment" : {
+      "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
+      "kind" : "NONE",
+      "next" : null,
+      "left" : "${posIdx}",
+      "right" : "!javascript===\nconst poss = ${poss};\nconst len= poss.length;\nlen;",
+      "type" : "lessthan"
+    },
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "RunALL",
+      "failEnd" : false,
+      "endResultKeys" : [ ],
+      "resultCode" : ""
+    },
+    "minLogLv" : "DEBUG"
+  } ],
+  "varCfgNames" : [ "crypto-symbol.json" ],
+  "vars" : { },
+  "entry" : {
+    "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
+    "boxUid" : "SlINz2lOTApz",
+    "autoRegister" : false,
+    "requiredKeys" : [ "__ALL__" ],
+    "outputKeys" : [ ]
+  },
+  "threadCfg" : {
+    "corePoolSize" : 10,
+    "maximumPoolSize" : 50,
+    "keepAliveTime" : 500,
+    "aliveUnit" : "MINUTES"
+  },
+  "version" : 24
+}

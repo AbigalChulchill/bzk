@@ -215,10 +215,26 @@
           "key" : "call_resp"
         }
       } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "HPpOeiZjZD4N",
+      "name" : "CallFuse",
+      "tryErrorble" : false,
+      "enable" : "true",
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flowUid" : "SUBFuseLoop",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "__ALL__",
+        "val" : "${~__ALL__}"
+      } ],
+      "outputReflects" : [ ]
     } ],
     "links" : [ ],
     "vars" : { },
-    "taskSort" : [ "vWD538GBmnZO" ],
+    "taskSort" : [ "vWD538GBmnZO", "HPpOeiZjZD4N" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
@@ -246,5 +262,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 215
+  "version" : 219
 }
