@@ -89,7 +89,7 @@
       "asynced" : false,
       "inputData" : [ {
         "key" : "body",
-        "val" : "!javascript===\nconst exPrice = ${binanceQuote.all.avgPrice};\nconst tarPostion = ${tarPostion};\nconst positionGap = ${positionGap};\nconst kSize = ${kSize};\n\nfunction calcTargetPrice(){\n    if(positionGap<0) return tarPostion.liquidationPrice;\n    const m = positionGap/kSize   ;\n    const rate = Math.pow(0.1,m)+1\n    const dp = tarPostion.entryPrice - tarPostion.liquidationPrice;\n    return tarPostion.liquidationPrice +( dp * rate);\n}\n\nconst mergeObj= {\n \"targetIdxShift\":1,\n \"gapRate\":-1,\n \"attachName\":'peakStop',\n \"targetPrice\":calcTargetPrice(),\n \"attach\":{\n    \"stopPrice\":exPrice,\n    \"positionAmt\":tarPostion.positionAmt\n }\n};\n\nconst defaultObj= {\n  \"symbol\": \"${symbol}\",\n  \"size\": 10,\n  \"positionSide\": \"${stopPositionSide}\",\n  \"withdrawAmountRate\": 1,\n  \"priceBuffRate\": 1.001,\n  \"name\": \"order/post\",\n  \"exchange\": \"binance\",\n  \"strategy\": \"STOP_MARKET\",\n  \"proportionalRate\": 1.05,\n  \"proportionalReverse\": true,\n  \"positionRate\": 1\n};\n\nconst postObj= Object.assign(defaultObj,mergeObj);\npostObj;"
+        "val" : "!javascript===\nconst exPrice = ${binanceQuote.all.avgPrice};\nconst tarPostion = ${tarPostion};\nconst positionGap = ${positionGap};\nconst kSize = ${kSize};\n\nfunction calcTargetPrice(){\n    if(positionGap<0) return tarPostion.liquidationPrice;\n    const m = positionGap/kSize   ;\n    const rate = -Math.pow(0.1,m)+1\n    const dp = tarPostion.entryPrice - tarPostion.liquidationPrice;\n    return tarPostion.liquidationPrice +( dp * rate);\n}\n\nconst mergeObj= {\n \"targetIdxShift\":1,\n \"gapRate\":-1,\n \"attachName\":'peakStop',\n \"targetPrice\":calcTargetPrice(),\n \"attach\":{\n    \"stopPrice\":exPrice,\n    \"positionAmt\":tarPostion.positionAmt\n }\n};\n\nconst defaultObj= {\n  \"symbol\": \"${symbol}\",\n  \"size\": 10,\n  \"positionSide\": \"${stopPositionSide}\",\n  \"withdrawAmountRate\": 1,\n  \"priceBuffRate\": 1.001,\n  \"name\": \"order/post\",\n  \"exchange\": \"binance\",\n  \"strategy\": \"STOP_MARKET\",\n  \"proportionalRate\": 1.05,\n  \"proportionalReverse\": true,\n  \"positionRate\": 1\n};\n\nconst postObj= Object.assign(defaultObj,mergeObj);\npostObj;"
       }, {
         "key" : "tags",
         "val" : "[\"fuse\"]"
@@ -168,5 +168,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 73
+  "version" : 75
 }
