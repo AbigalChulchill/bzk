@@ -4,6 +4,61 @@
   "name" : "SUB-strategy-2y",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "hLZ3d8T7Vkot",
+    "name" : "Strategy",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "vWD538GBmnZO",
+      "name" : "bottleneck",
+      "tryErrorble" : false,
+      "enable" : "true",
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flowUid" : "SSPBbWtmfHPV",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "__ALL__",
+        "val" : "${~__ALL__}"
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "__pk_result",
+        "toKey" : {
+          "lv" : "not_specify",
+          "key" : "call_resp"
+        }
+      } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "HPpOeiZjZD4N",
+      "name" : "CallFuse",
+      "tryErrorble" : false,
+      "enable" : "true",
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flowUid" : "SUBFuseLoop",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "__ALL__",
+        "val" : "${~__ALL__}"
+      } ],
+      "outputReflects" : [ ]
+    } ],
+    "links" : [ ],
+    "vars" : { },
+    "taskSort" : [ "vWD538GBmnZO", "HPpOeiZjZD4N" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "${symbol} ordered:${call_resp.ordered} ${call_resp.breakName}",
+      "failEnd" : false,
+      "endResultKeys" : [ ],
+      "resultCode" : ""
+    },
+    "minLogLv" : "DEBUG"
+  }, {
+    "clazz" : "net.bzk.flow.model.Box",
     "uid" : "UQC5RZ3iJLB7",
     "name" : "Box",
     "actions" : [ {
@@ -168,7 +223,7 @@
       "minLogLv" : "NONE",
       "url" : "${finExManageApiUrl}",
       "uriVariables" : { },
-      "body" : "{\n    \"name\": \"order_pack/last\",\n    \"exchange\": \"binance\",\n     \"filter_map\": {\n        \"LONG\": {\n            \"prd_name\": \"${symbol}\",\n            \"positionSide\":\"LONG\",\n            \"attach_name_IN\":[\"DifTrace\",\"DifTraced\"]\n        },\n        \"SHORT\": {\n            \"prd_name\": \"${symbol}\",\n            \"positionSide\":\"SHORT\",\n            \"attach_name_IN\":[\"DifTrace\",\"DifTraced\"]\n        }\n    },\n    \"__bzk_api_key\": \"${finExManageApiKey}\"\n}",
+      "body" : "{\n    \"name\": \"order_pack/last\",\n    \"exchange\": \"binance\",\n     \"filter_map\": {\n        \"DifTrace_LONG\": {\n            \"prd_name\": \"${symbol}\",\n            \"positionSide\":\"LONG\",\n            \"attach_name\":\"DifTrace\"\n        },\n        \"DifTrace_SHORT\": {\n            \"prd_name\": \"${symbol}\",\n            \"positionSide\":\"SHORT\",\n            \"attach_name\":\"DifTrace\"\n        },\n         \"DifTraced_LONG\": {\n            \"prd_name\": \"${symbol}\",\n            \"positionSide\":\"LONG\",\n            \"attach_name\":\"DifTraced\"\n        },\n        \"DifTraced_SHORT\": {\n            \"prd_name\": \"${symbol}\",\n            \"positionSide\":\"SHORT\",\n            \"attach_name\":\"DifTraced\"\n        }\n    },\n    \"__bzk_api_key\": \"${finExManageApiKey}\"\n}",
       "method" : "POST",
       "headers" : { },
       "headersFlat" : "",
@@ -184,61 +239,6 @@
     "transition" : {
       "toBox" : "hLZ3d8T7Vkot",
       "endTag" : null,
-      "failEnd" : false,
-      "endResultKeys" : [ ],
-      "resultCode" : ""
-    },
-    "minLogLv" : "DEBUG"
-  }, {
-    "clazz" : "net.bzk.flow.model.Box",
-    "uid" : "hLZ3d8T7Vkot",
-    "name" : "Strategy",
-    "actions" : [ {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "vWD538GBmnZO",
-      "name" : "bottleneck",
-      "tryErrorble" : false,
-      "enable" : "true",
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "flowUid" : "SSPBbWtmfHPV",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "__ALL__",
-        "val" : "${~__ALL__}"
-      } ],
-      "outputReflects" : [ {
-        "srcKey" : "__pk_result",
-        "toKey" : {
-          "lv" : "not_specify",
-          "key" : "call_resp"
-        }
-      } ]
-    }, {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "HPpOeiZjZD4N",
-      "name" : "CallFuse",
-      "tryErrorble" : false,
-      "enable" : "true",
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "flowUid" : "SUBFuseLoop",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "__ALL__",
-        "val" : "${~__ALL__}"
-      } ],
-      "outputReflects" : [ ]
-    } ],
-    "links" : [ ],
-    "vars" : { },
-    "taskSort" : [ "vWD538GBmnZO", "HPpOeiZjZD4N" ],
-    "whileJudgment" : null,
-    "transition" : {
-      "toBox" : "",
-      "endTag" : "${symbol} ordered:${call_resp.ordered} ${call_resp.breakName}",
       "failEnd" : false,
       "endResultKeys" : [ ],
       "resultCode" : ""
@@ -262,5 +262,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 219
+  "version" : 221
 }
