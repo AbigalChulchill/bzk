@@ -38,7 +38,7 @@
       "asynced" : false,
       "inputData" : [ {
         "key" : "body",
-        "val" : "!javascript===\nconst defaultObj= {\n  \"symbol\": \"${symbol}\",\n  \"size\": 5,\n  \"positionSide\": \"${positionSide}\",\n  \"withdrawAmountRate\": 0.08,\n  \"priceBuffRate\": 1,\n  \"name\": \"order/post\",\n  \"exchange\": \"binance\",\n  \"strategy\": \"LIMIT\",\n  \"proportionalRate\": 1.186,\n  \"closeLoseThreshold\":0.05,\n  \"martingaleRate\":1\n};\nconst mergeObj = ${orderLimitBody};\nconst postObj= Object.assign(defaultObj,mergeObj);\npostObj;"
+        "val" : "!javascript===\nconst defaultObj= {\n  \"symbol\": \"${symbol}\",\n  \"size\": 3,\n  \"positionSide\": \"${positionSide}\",\n  \"withdrawAmountRate\": 0.08,\n  \"priceBuffRate\": 1,\n  \"name\": \"order/post\",\n  \"exchange\": \"binance\",\n  \"strategy\": \"LIMIT\",\n  \"proportionalRate\": 1.5,\n  \"closeLoseThreshold\":0.05,\n  \"martingaleRate\":1\n};\nconst mergeObj = ${orderLimitBody};\nconst postObj= Object.assign(defaultObj,mergeObj);\npostObj;"
       }, {
         "key" : "tags",
         "val" : "[\"st\"]"
@@ -152,5 +152,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 55
+  "version" : 57
 }

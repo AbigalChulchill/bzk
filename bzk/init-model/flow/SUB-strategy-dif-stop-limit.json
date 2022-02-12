@@ -88,7 +88,7 @@
         "kind" : "NONE",
         "next" : null,
         "left" : "!javascript===\nMath.abs( ${difNearPeak.val});",
-        "right" : "${difRateThreshold}",
+        "right" : "${thVal}",
         "type" : "lessthan_equal"
       },
       "transition" : {
@@ -139,9 +139,7 @@
     "minLogLv" : "DEBUG"
   } ],
   "varCfgNames" : [ ],
-  "vars" : {
-    "difRateThreshold" : 0.005
-  },
+  "vars" : { },
   "entry" : {
     "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
     "boxUid" : "AB8uzjML8NdQ",
@@ -155,5 +153,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 71
+  "version" : 73
 }
