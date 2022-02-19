@@ -1,7 +1,7 @@
 {
   "clazz" : "net.bzk.flow.model.Flow",
   "uid" : "SSPBbWtmfHPV",
-  "name" : "SUB-strategy-macd",
+  "name" : "SUB-strategy-order",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
     "uid" : "MINMAX52of8",
@@ -38,28 +38,6 @@
         "lv" : "not_specify",
         "key" : "cl"
       }
-    }, {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "NPJloJ9SkiyJ",
-      "name" : "CallTake",
-      "tryErrorble" : false,
-      "enable" : "true",
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "flowUid" : "C72RPBZMZzy1",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "__ALL__",
-        "val" : "${~__ALL__}"
-      } ],
-      "outputReflects" : [ {
-        "srcKey" : "__pk_result",
-        "toKey" : {
-          "lv" : "not_specify",
-          "key" : "takeResult"
-        }
-      } ]
     }, {
       "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
       "uid" : "jTyoT1poRNiz",
@@ -148,7 +126,7 @@
       "enable" : true
     } ],
     "vars" : { },
-    "taskSort" : [ "Div2tmjgl8JG", "POnGmKqao8p1", "DmpvFO68Ya38", "jTyoT1poRNiz", "seAOjxSxI6jM", "M2I6HnVyI36q", "NPJloJ9SkiyJ" ],
+    "taskSort" : [ "Div2tmjgl8JG", "POnGmKqao8p1", "DmpvFO68Ya38", "jTyoT1poRNiz", "seAOjxSxI6jM", "M2I6HnVyI36q" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
@@ -174,5 +152,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 249
+  "version" : 251
 }
