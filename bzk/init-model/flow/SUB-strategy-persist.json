@@ -1,7 +1,7 @@
 {
   "clazz" : "net.bzk.flow.model.Flow",
   "uid" : "eH4vMOnKs3ps",
-  "name" : "SUB-strategy-dif-stop-limit",
+  "name" : "SUB-strategy-persist",
   "boxs" : [ {
     "clazz" : "net.bzk.flow.model.Box",
     "uid" : "AB8uzjML8NdQ",
@@ -153,5 +153,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 74
+  "version" : 76
 }
