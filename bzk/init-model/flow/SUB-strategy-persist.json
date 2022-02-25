@@ -15,71 +15,34 @@
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "code" : "const difPeak = ${cs.difPeak};\r\nconst difPoints = $tsFunc.toPoints(${cs.dif});\r\nconst difTH = ${cs.difTH};\r\nconst k5mLow = ${cs.k5m.low};\r\nconst k5mHigh = ${cs.k5m.high};\r\nconst positions = ${position};\r\n\r\nfunction getThVal(){\r\n    var key;\r\n    for (var k in difTH) {\r\n        return difTH[k];\r\n    }\r\n}\r\n\r\nfunction getPositionSide(){\r\n    return difPeak.trendInfo.state == 'FALL' ? 'SHORT':'LONG';\r\n}\r\n\r\nconst positionSide = getPositionSide();\r\nconst stopPositionSide = positionSide == 'LONG' ? 'SHORT' : 'LONG';\r\nconst tarPostion = positions[stopPositionSide];\r\n$bzk.put('tarPostion',JSON.stringify(tarPostion));\r\n\r\n\r\nconst nearPeak = difPeak.trendInfo.nearPeak;\r\n\r\n\r\nfunction getStopPrice(){\r\n\r\n    if(positionSide=='LONG'){\r\n        return k5mLow[nearPeak.key];\r\n    }else if(positionSide == 'SHORT'){\r\n        return k5mHigh[nearPeak.key];\r\n    }\r\n    throw new Error('getStopPrice not support='+positionSide);\r\n}\r\n\r\nfunction genOrderObjJson(){\r\n    const peakPrice=getStopPrice();\r\n    return JSON.stringify({\r\n        // \"targetPrice\":peakPrice,\r\n        \"stopPrice\": -1,\r\n        // \"gapRate\":-1,\r\n        \"attachName\":'DifTrace',\r\n        \"attach\":{\r\n            \"stopPrice\":peakPrice,\r\n            \"nearPeak\":nearPeak\r\n        }\r\n    });\r\n}\r\n\r\n$bzk.putObj('positionSide',positionSide);\r\n$bzk.put('difNearPeak',JSON.stringify( nearPeak));\r\n$bzk.putObj('~thVal',getThVal());\r\n$bzk.put('~orderLimitBody',genOrderObjJson());\r\ntrue;",
+      "code" : "const highLowPersistPoints = $tsFunc.toPoints(${cs.highLowPersistTime});\r\nconst highLowPersistTimeTh= ${strategyCfg.highLowPersistTimeTh};\r\nconst positions = ${position};\r\nconst k5mLow = ${cs.k5m.low};\r\nconst k5mHigh = ${cs.k5m.high};\r\n\r\nfunction getPositionSide(){\r\n    return highLowPersistPoints.get(0).val >0 ? 'SHORT':'LONG';\r\n}\r\n\r\nconst positionSide = getPositionSide();\r\nconst stopPositionSide = positionSide == 'LONG' ? 'SHORT' : 'LONG';\r\nconst tarPostion = positions[stopPositionSide];\r\n$bzk.put('tarPostion',JSON.stringify(tarPostion));\r\n\r\n\r\nfunction getStopPrice(){\r\n\r\n    if(positionSide=='LONG'){\r\n        return k5mLow[highLowPersistPoints.get(0).key];\r\n    }else if(positionSide == 'SHORT'){\r\n        return k5mHigh[highLowPersistPoints.get(0).key];\r\n    }\r\n    throw new Error('getStopPrice not support='+positionSide);\r\n}\r\n\r\nfunction getRate(){\r\n    const size= highLowPersistPoints.size();\r\n    if(positionSide=='LONG'){\r\n        let checkCount = 0;\r\n        for(let i=0;i<size;i++){\r\n            const p = highLowPersistPoints.get(i);\r\n            if( p.val < highLowPersistTimeTh) checkCount++;\r\n\r\n        }\r\n        return checkCount/size;\r\n    }else if(positionSide == 'SHORT'){\r\n        let checkCount = 0;\r\n        for(let i=0;i<size;i++){\r\n            const p = highLowPersistPoints.get(i);\r\n            if( p.val > highLowPersistTimeTh) checkCount++;\r\n\r\n        }\r\n        return checkCount/size;\r\n    }\r\n    throw new Error('getStopPrice not support='+positionSide);\r\n    \r\n}\r\n\r\nfunction genOrderObjJson(){\r\n    const peakPrice=getStopPrice();\r\n    return JSON.stringify({\r\n        \"withdrawAmountRate\": 0.2* getRate(),\r\n        // \"targetPrice\":peakPrice,\r\n        \"stopPrice\": -1,\r\n        // \"gapRate\":-1,\r\n        \"attachName\":'DifTrace',\r\n        \"attach\":{\r\n            \"stopPrice\":peakPrice\r\n        }\r\n    });\r\n}\r\n$bzk.put('highLowPersistPoints',JSON.stringify( highLowPersistPoints));\r\n$bzk.putObj('positionSide',positionSide);\r\n$bzk.put('~orderLimitBody',genOrderObjJson());\r\ntrue;",
       "polyglot" : "js",
       "resultLv" : "not_specify",
       "resultKey" : "vars"
     }, {
       "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "wcOS08RF0tY6",
-      "name" : "CallStopLimit",
+      "uid" : "WjIW7PqQkYER",
+      "name" : "LimitOrder",
       "tryErrorble" : false,
-      "enable" : "true",
+      "enable" : "!javascript===\nconst allowPositionSide = ${strategyCfg.allowPositionSide};\nallowPositionSide.includes(${positionSide});\n",
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "flowUid" : "substoplimit",
+      "flowUid" : "02eQyaMwyojZ",
       "asynced" : false,
       "inputData" : [ {
-        "key" : "positionSide",
-        "val" : "${positionSide}"
+        "key" : "body",
+        "val" : "!javascript===\nconst defaultObj= {\n  \"symbol\": \"${symbol}\",\n  \"size\": 3,\n  \"positionSide\": \"${positionSide}\",\n  \"withdrawAmountRate\": 0.08,\n  \"priceBuffRate\": 1,\n  \"name\": \"order/post\",\n  \"exchange\": \"binance\",\n  \"strategy\": \"LIMIT\",\n  \"proportionalRate\": 1.5,\n  \"closeLoseThreshold\":0.05,\n  \"martingaleRate\":1,\n  \"gapRate\":0.02\n};\nconst mergeObj = ${orderLimitBody};\nconst postObj= Object.assign(defaultObj,mergeObj);\npostObj;"
       }, {
-        "key" : "position",
-        "val" : "${position}"
-      }, {
-        "key" : "symbol",
-        "val" : "${symbol}"
-      }, {
-        "key" : "orderLimitBody",
-        "val" : "${orderLimitBody}"
-      }, {
-        "key" : "runStoped",
-        "val" : "false"
+        "key" : "tags",
+        "val" : "[\"pt\"]"
       }, {
         "key" : "trigger",
-        "val" : "dif"
+        "val" : "persist"
       } ],
-      "outputReflects" : [ {
-        "srcKey" : "__pk_result",
-        "toKey" : {
-          "lv" : "not_specify",
-          "key" : "stopLimitResult"
-        }
-      } ]
+      "outputReflects" : [ ]
     } ],
     "links" : [ {
-      "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "T5IC58bnUYi6",
-      "name" : "CRebound",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
-        "kind" : "NONE",
-        "next" : null,
-        "polyglot" : "js",
-        "code" : "const difPeak = ${cs.difPeak};\nconst difNearPeak = ${difNearPeak};\nconst positionSide = '${positionSide}';\nconst thVal = ${thVal};\nconst difBigger = ${cs.difBigger};\n\nfunction checkLONG(){\n    const tarTh = -1 * thVal;\n    if(difPeak.last.val>thVal) return false;\n    if(difNearPeak.val>thVal) throw new Error('checkLONG difNearPeak.val='+difNearPeak.val+\" thVal=\"+thVal);\n    return difBigger.previousVal<difBigger.lastVal;\n}\n\nfunction checkSHORT(){\n    const tarTh =  thVal;\n    if(difPeak.last.val<thVal) return false;\n    if(difNearPeak.val<thVal) throw new Error('checkSHORT difNearPeak.val='+difNearPeak.val+\" thVal=\"+thVal);\n    return difBigger.previousVal>difBigger.lastVal;\n}\n\nfunction check(){\n    if(positionSide == 'LONG'){\n        return checkLONG();\n    }else if(positionSide == 'SHORT'){\n        return checkSHORT();\n    }\n    throw new Error(positionSide);\n}\n\n\n!check();"
-      },
-      "transition" : {
-        "toBox" : "",
-        "endTag" : "${symbol} ${positionSide} CRebound",
-        "failEnd" : false,
-        "endResultKeys" : [ {
-          "lv" : "not_specify",
-          "key" : "cs.difPeak.last"
-        } ],
-        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"CRebound\"\n}"
-      },
-      "enable" : true
-    }, {
       "clazz" : "net.bzk.flow.model.Link",
       "uid" : "ARQTOmYaHf9f",
       "name" : "OverTH",
@@ -87,8 +50,8 @@
         "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
         "kind" : "NONE",
         "next" : null,
-        "left" : "!javascript===\nMath.abs( ${difNearPeak.val});",
-        "right" : "${thVal}",
+        "left" : "!javascript===\nconst highLowPersistPoints = ${highLowPersistPoints};\nMath.abs( highLowPersistPoints[0].val);",
+        "right" : "${strategyCfg.highLowPersistTimeTh}",
         "type" : "lessthan_equal"
       },
       "transition" : {
@@ -102,32 +65,9 @@
         "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"OverTH\"\n}"
       },
       "enable" : true
-    }, {
-      "clazz" : "net.bzk.flow.model.Link",
-      "uid" : "Ip2jdhO8VTwD",
-      "name" : "OverTime",
-      "condition" : {
-        "clazz" : "net.bzk.flow.model.Condition$ConditionNum",
-        "kind" : "NONE",
-        "next" : null,
-        "left" : "${difNearPeak.dtime}",
-        "right" : "360",
-        "type" : "greater"
-      },
-      "transition" : {
-        "toBox" : "",
-        "endTag" : "${symbol} ${positionSide} OverTime",
-        "failEnd" : false,
-        "endResultKeys" : [ {
-          "lv" : "not_specify",
-          "key" : "difNearPeak"
-        } ],
-        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"OverTime\"\n}"
-      },
-      "enable" : true
     } ],
     "vars" : { },
-    "taskSort" : [ "66NmfSdxlftf", "ARQTOmYaHf9f", "T5IC58bnUYi6", "Ip2jdhO8VTwD", "wcOS08RF0tY6" ],
+    "taskSort" : [ "66NmfSdxlftf", "ARQTOmYaHf9f", "WjIW7PqQkYER" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
@@ -153,5 +93,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 76
+  "version" : 85
 }

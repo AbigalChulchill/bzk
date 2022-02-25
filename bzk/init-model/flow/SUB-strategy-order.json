@@ -41,7 +41,7 @@
     }, {
       "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
       "uid" : "jTyoT1poRNiz",
-      "name" : "CallDif",
+      "name" : "CallPersist",
       "tryErrorble" : false,
       "enable" : "true",
       "devBoxVars" : { },
@@ -57,51 +57,7 @@
         "srcKey" : "__pk_result",
         "toKey" : {
           "lv" : "not_specify",
-          "key" : "CallDifResult"
-        }
-      } ]
-    }, {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "seAOjxSxI6jM",
-      "name" : "CDifTrace",
-      "tryErrorble" : false,
-      "enable" : "!javascript===\nconst difOrdered = ${CallDifResult.ordered};\n!difOrdered;",
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "flowUid" : "6MRqv4Te57zl",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "__ALL__",
-        "val" : "${~__ALL__}"
-      } ],
-      "outputReflects" : [ {
-        "srcKey" : "__pk_result",
-        "toKey" : {
-          "lv" : "not_specify",
-          "key" : "CallDifTraceResult"
-        }
-      } ]
-    }, {
-      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
-      "uid" : "M2I6HnVyI36q",
-      "name" : "CDifRebound",
-      "tryErrorble" : false,
-      "enable" : "!javascript===\nconst difOrdered = ${CallDifResult.ordered};\nconst difTraceOrdered = ${CallDifTraceResult.ordered};\n\n!difOrdered && !difTraceOrdered;",
-      "devBoxVars" : { },
-      "devFlowVars" : { },
-      "minLogLv" : "NONE",
-      "flowUid" : "6MRqvrebound",
-      "asynced" : false,
-      "inputData" : [ {
-        "key" : "__ALL__",
-        "val" : "${~__ALL__}"
-      } ],
-      "outputReflects" : [ {
-        "srcKey" : "__pk_result",
-        "toKey" : {
-          "lv" : "not_specify",
-          "key" : "CallDifReboundResult"
+          "key" : "CallPersistResult"
         }
       } ]
     } ],
@@ -126,7 +82,7 @@
       "enable" : true
     } ],
     "vars" : { },
-    "taskSort" : [ "Div2tmjgl8JG", "POnGmKqao8p1", "DmpvFO68Ya38", "jTyoT1poRNiz", "seAOjxSxI6jM", "M2I6HnVyI36q" ],
+    "taskSort" : [ "Div2tmjgl8JG", "POnGmKqao8p1", "DmpvFO68Ya38", "jTyoT1poRNiz" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
@@ -152,5 +108,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 251
+  "version" : 253
 }
