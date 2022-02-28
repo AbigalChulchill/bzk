@@ -24,7 +24,7 @@
       "uid" : "WjIW7PqQkYER",
       "name" : "LimitOrder",
       "tryErrorble" : false,
-      "enable" : "!javascript===\nconst allowPositionSide = ${strategyCfg.allowPositionSide};\nallowPositionSide.includes(${positionSide});\n",
+      "enable" : "!javascript===\nconst allowPositionSide = ${strategyCfg.allowPositionSide};\nconst positionSide = '${positionSide}';\nallowPositionSide.includes(positionSide);\n",
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
@@ -93,5 +93,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 85
+  "version" : 87
 }
