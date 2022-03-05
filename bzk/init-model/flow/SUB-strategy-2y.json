@@ -224,7 +224,7 @@
   "vars" : {
     "symbol" : "BTC",
     "strategyCfg" : {
-      "allowPositionSide" : [ "LONG" ],
+      "allowPositionSide" : [ "LONG", "SHORT" ],
       "highLowPersistTimeTh" : 30
     }
   },
@@ -241,5 +241,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 240
+  "version" : 242
 }
