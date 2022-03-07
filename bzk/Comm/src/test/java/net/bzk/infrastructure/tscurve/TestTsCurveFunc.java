@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.Resource;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -40,6 +41,26 @@ public class TestTsCurveFunc {
     @Value("classpath:tscurve/serial-test-data-20211112-20211113.json")
     private Resource d1Data;
 
+    @Value("classpath:tscurve/serial-test-data-support-2y.json")
+    private Resource support2yData;
+
+    @Test
+    public void testSupportPoints() {
+        double peakMaxWaitSeconds = 60 * 5;
+        double macroAmplitudeRate = 0;
+        Map map = loadMap(support2yData);
+        Map<String, Double> _map = new HashMap<>();
+        for (var kv : map.entrySet()) {
+            Map.Entry<String, Integer> _kv = (Map.Entry<String, Integer>) kv;
+            _map.put(_kv.getKey(), Double.parseDouble(_kv.getValue() + ""));
+        }
+        PeakLogicDto.MacroPeakLogicDto md = new PeakLogicDto.MacroPeakLogicDto();
+        md.setPeakMaxWaitSeconds(peakMaxWaitSeconds);
+        md.setAmplitudeRate(macroAmplitudeRate);
+        Map mdsm = JsonUtils.toByJson(md, Map.class);
+        var ans = TsCurveFunc.getInstance().findPeak(_map, mdsm);
+        System.out.println(ans);
+    }
 
     @Test
     public void testPeakRebound() {
@@ -121,7 +142,7 @@ public class TestTsCurveFunc {
         Map map = loadMap(d1Data);
         PeakLogicDto.BiggerPeakLogicDto md = new PeakLogicDto.BiggerPeakLogicDto();
         md.setPersistTime(persistTime);
-        md.setReversePersistTime(60*30);
+        md.setReversePersistTime(60 * 30);
         Map mdsm = JsonUtils.toByJson(md, Map.class);
         var ans = TsCurveFunc.getInstance().findPeak(map, mdsm);
         System.out.println(ans);
