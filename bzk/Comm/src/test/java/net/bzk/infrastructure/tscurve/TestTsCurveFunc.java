@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.Resource;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,12 +44,15 @@ public class TestTsCurveFunc {
 
     @Value("classpath:tscurve/serial-test-data-support-2y.json")
     private Resource support2yData;
+    @Value("classpath:tscurve/serial-test-data-2y-all.json")
+    private Resource y2AllData;
 
     @Test
     public void testSupportPoints() {
         double peakMaxWaitSeconds = 60 * 5;
         double macroAmplitudeRate = 0;
         Map map = loadMap(support2yData);
+        Map<String, Double> allData = loadMap(y2AllData);
         Map<String, Double> _map = new HashMap<>();
         for (var kv : map.entrySet()) {
             Map.Entry<String, Integer> _kv = (Map.Entry<String, Integer>) kv;
@@ -60,6 +64,18 @@ public class TestTsCurveFunc {
         Map mdsm = JsonUtils.toByJson(md, Map.class);
         var ans = TsCurveFunc.getInstance().findPeak(_map, mdsm);
         System.out.println(ans);
+        var maxList= ans.getTrendInfo().getMaxList().values();
+        List<Map<String,Object>> outPs = new ArrayList<>();
+        for(var k : maxList){
+            var val= TsCurveFunc.getInstance().getNearVal(k.key,allData);
+            Map<String,Object> rowA = new HashMap();
+            rowA.put("price",val);
+            rowA.put("persist",k.val);
+            rowA.put("key",k.key);
+            outPs.add(rowA);
+        }
+        System.out.println(outPs);
+
     }
 
     @Test

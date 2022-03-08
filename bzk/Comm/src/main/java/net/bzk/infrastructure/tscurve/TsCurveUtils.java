@@ -16,13 +16,13 @@ public class TsCurveUtils {
         RISE, FALL
     }
 
-    public static Map<String, Double> trimLastNotFullMap(Map<String, Double> rMap,double fullSecond){
+    public static Map<String, Double> trimLastNotFullMap(Map<String, Double> rMap, double fullSecond) {
         var keys = sortIso8601(rMap.keySet());
-        if(keys.size()<=1) return  rMap;
+        if (keys.size() <= 1) return rMap;
         String k0 = keys.get(0);
         String k1 = keys.get(1);
-        double subTime = subtractKeySeconds(k0,k1);
-        if(subTime<fullSecond) {
+        double subTime = subtractKeySeconds(k0, k1);
+        if (subTime < fullSecond) {
             rMap.remove(k0);
         }
         return rMap;
@@ -99,6 +99,16 @@ public class TsCurveUtils {
             }
         }
         return new ArrayList<>();
+    }
+
+    public static double getNearVal(String key, Map<String, Double> rMap) {
+        var keys = sortIso8601(rMap.keySet());
+        String nearKey = keys.stream().min((a, b) -> {
+            double aDiff = Math.abs(subtractKeySeconds(key, a)) ;
+            double bDiff = Math.abs(subtractKeySeconds(key, b));
+            return Double.compare(aDiff, bDiff);
+        }).get();
+        return rMap.get(nearKey);
     }
 
     public static double avgByPoints(List<Point> points) {

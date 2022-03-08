@@ -90,6 +90,9 @@ public class TsCurveFunc {
         return TsCurveUtils.sortIso8601(rMap.keySet());
     }
 
+    public double getNearVal(String key, Map<String, Double> rMap) {
+        return TsCurveUtils.getNearVal(key, rMap);
+    }
 
     public Double subtractKeySecondsToNow(String key) {
         return TsCurveUtils.subtractKeySecondsToNow(key);
