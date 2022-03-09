@@ -151,10 +151,32 @@
         "lv" : "not_specify",
         "key" : "y2Vals"
       }
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "J34a3uPjiUoO",
+      "name" : "supportUpdate",
+      "tryErrorble" : false,
+      "enable" : "true",
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flowUid" : "tAXBHmuGTb9e",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "y2Vals",
+        "val" : "${y2Vals}"
+      }, {
+        "key" : "support",
+        "val" : "${support}"
+      }, {
+        "key" : "symbol",
+        "val" : "${symbol}"
+      } ],
+      "outputReflects" : [ ]
     } ],
     "links" : [ ],
     "vars" : { },
-    "taskSort" : [ "VOW12BtJqie5", "wEgu1VJnO1KQ", "JRXb3aUYrssP", "nONU5vc3Jzg8", "YXOO8IaDkXfV", "bdp2D8EmHQHn", "afqbSMjT5kKT", "RLwmvyfnRDzM" ],
+    "taskSort" : [ "VOW12BtJqie5", "wEgu1VJnO1KQ", "JRXb3aUYrssP", "nONU5vc3Jzg8", "J34a3uPjiUoO", "YXOO8IaDkXfV", "bdp2D8EmHQHn", "afqbSMjT5kKT", "RLwmvyfnRDzM" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "hLZ3d8T7Vkot",
@@ -241,5 +263,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 246
+  "version" : 252
 }

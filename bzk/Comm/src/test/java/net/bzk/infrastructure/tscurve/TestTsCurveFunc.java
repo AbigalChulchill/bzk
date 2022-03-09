@@ -51,18 +51,18 @@ public class TestTsCurveFunc {
     public void testSupportPoints() {
         double peakMaxWaitSeconds = 60 * 5;
         double macroAmplitudeRate = 0;
-        Map map = loadMap(support2yData);
+        Map supportMap = loadMap(support2yData);
         Map<String, Double> allData = loadMap(y2AllData);
-        Map<String, Double> _map = new HashMap<>();
-        for (var kv : map.entrySet()) {
+        Map<String, Double> _supportMap = new HashMap<>();
+        for (var kv : supportMap.entrySet()) {
             Map.Entry<String, Integer> _kv = (Map.Entry<String, Integer>) kv;
-            _map.put(_kv.getKey(), Double.parseDouble(_kv.getValue() + ""));
+            _supportMap.put(_kv.getKey(), Double.parseDouble(_kv.getValue() + ""));
         }
         PeakLogicDto.MacroPeakLogicDto md = new PeakLogicDto.MacroPeakLogicDto();
         md.setPeakMaxWaitSeconds(peakMaxWaitSeconds);
         md.setAmplitudeRate(macroAmplitudeRate);
         Map mdsm = JsonUtils.toByJson(md, Map.class);
-        var ans = TsCurveFunc.getInstance().findPeak(_map, mdsm);
+        var ans = TsCurveFunc.getInstance().findPeak(_supportMap, mdsm);
         System.out.println(ans);
         var maxList= ans.getTrendInfo().getMaxList().values();
         List<Map<String,Object>> outPs = new ArrayList<>();

@@ -105,10 +105,10 @@
     "clazz" : "net.bzk.flow.model.Entry$FixedRateEntry",
     "boxUid" : "ajyASBWbeZV6",
     "autoRegister" : true,
-    "period" : 86400,
+    "period" : -1,
     "unit" : "SECONDS",
-    "initialDelay" : 8,
-    "cronExpression" : null
+    "initialDelay" : 2,
+    "cronExpression" : "0 0 0 * * *"
   },
   "threadCfg" : {
     "corePoolSize" : 10,
@@ -116,5 +116,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 24
+  "version" : 27
 }

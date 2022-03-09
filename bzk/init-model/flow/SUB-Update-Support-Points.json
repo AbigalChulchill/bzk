@@ -1,0 +1,84 @@
+{
+  "clazz" : "net.bzk.flow.model.Flow",
+  "uid" : "tAXBHmuGTb9e",
+  "name" : "SUB-Update-Support-Points",
+  "boxs" : [ {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "EUETHojT92P9",
+    "name" : "Box",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$PolyglotAction",
+      "uid" : "KwYVOsOKU03w",
+      "name" : "Init",
+      "tryErrorble" : false,
+      "enable" : "true",
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "code" : "const y2Vals = ${y2Vals};\r\nconst support = ${support};\r\nconst peakLogicDto = {\r\n    logicType:'MACRO',\r\n    peakMaxWaitSeconds : 60 * 5,\r\n    amplitudeRate : 0\r\n};\r\n\r\nconst peakInfo = $tsFunc.findPeak(support,peakLogicDto);\r\nvar maxList= peakInfo.getTrendInfo().getAllList().values();\r\nmaxList;\r\nlet result = [];\r\n\r\nfor (const p of maxList) {\r\n    var val=  $tsFunc.getNearVal(p.key,y2Vals);\r\n    \r\n    const row = {\r\n      price:val,\r\n      persist:p.val,\r\n      key:p.key\r\n    };\r\n    result.push(row);\r\n}\r\nresult;\r\n",
+      "polyglot" : "js",
+      "resultLv" : "not_specify",
+      "resultKey" : "peakInfos"
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$PolyglotAction",
+      "uid" : "x7zwClv0na6J",
+      "name" : "GenBody",
+      "tryErrorble" : false,
+      "enable" : "true",
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "code" : "const peakInfos= ${peakInfos};\nconst sbl='${symbol}';\nconst ans = [];\n\nfor (const p of peakInfos) {\n    setupkData(p);\n}\n\nfunction setupkData(p){\n    genPointDto('support_price',p.price,p.key);\n}\n\n\n\n\n\nfunction genPointDto(field,v,time){\n  const row = {\n      measurement : 'analyze',\n      tags:{\n        symbol : sbl,\n        category:'cryptocurrency',\n        support: 'persist_time'\n      },\n      field: field,\n      val:v,\n      time :time\n  };\n  ans.push(row);\n  //return row;\n}\n\nans;\n",
+      "polyglot" : "js",
+      "resultLv" : "not_specify",
+      "resultKey" : "body"
+    }, {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "WjY6cglu6exB",
+      "name" : "Send",
+      "tryErrorble" : false,
+      "enable" : "true",
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "url" : "${finProxyUrl}/proxy/tsdb/insert/multiple",
+      "uriVariables" : { },
+      "body" : "${body}",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : "insertDBResult"
+      }
+    } ],
+    "links" : [ ],
+    "vars" : { },
+    "taskSort" : [ "KwYVOsOKU03w", "x7zwClv0na6J", "WjY6cglu6exB" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "TODO Why",
+      "failEnd" : false,
+      "endResultKeys" : [ ],
+      "resultCode" : ""
+    },
+    "minLogLv" : "DEBUG"
+  } ],
+  "varCfgNames" : [ "fin-proxy.json" ],
+  "vars" : { },
+  "entry" : {
+    "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
+    "boxUid" : "EUETHojT92P9",
+    "autoRegister" : false,
+    "requiredKeys" : [ "y2Vals", "support", "symbol" ],
+    "outputKeys" : [ ]
+  },
+  "threadCfg" : {
+    "corePoolSize" : 10,
+    "maximumPoolSize" : 50,
+    "keepAliveTime" : 500,
+    "aliveUnit" : "MINUTES"
+  },
+  "version" : 17
+}
