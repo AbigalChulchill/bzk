@@ -15,7 +15,7 @@
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "code" : "const y2Vals = ${y2Vals};\r\nconst support = ${support};\r\nconst peakLogicDto = {\r\n    logicType:'MACRO',\r\n    peakMaxWaitSeconds : 60 * 5,\r\n    amplitudeRate : 0\r\n};\r\n\r\nconst peakInfo = $tsFunc.findPeak(support,peakLogicDto);\r\nvar maxList= peakInfo.getTrendInfo().getAllList().values();\r\nmaxList;\r\nlet result = [];\r\n\r\nfor (const p of maxList) {\r\n    var val=  $tsFunc.getNearVal(p.key,y2Vals);\r\n    \r\n    const row = {\r\n      price:val,\r\n      persist:p.val,\r\n      key:p.key\r\n    };\r\n    result.push(row);\r\n}\r\nresult;\r\n",
+      "code" : "const y2Vals = ${y2Vals};\r\nconst support = ${support};\r\nconst lastSupportPeak = ${lastSupportPeak};\r\nconst quote = ${quote};\r\n\r\nconst peakLogicDto = {\r\n    logicType:'MACRO',\r\n    peakMaxWaitSeconds : 60 * 5,\r\n    amplitudeRate : 0\r\n};\r\n\r\nconst peakInfo = $tsFunc.findPeak(support,peakLogicDto);\r\n$bzk.putObj('peakInfo',peakInfo);\r\nvar allList= peakInfo.getTrendInfo().getAllList().values();\r\n\r\nlet result = [];\r\n\r\nfor (const p of allList) {\r\n    var val=  $tsFunc.getNearVal(p.key,y2Vals);\r\n    const row = {\r\n      price:val,\r\n      persist:p.val,\r\n      key:p.key\r\n    };\r\n    result.push(row);\r\n}\r\n\r\nfunction injectTopSupportGap(){\r\n    const price = quote.all.avgPrice;\r\n    const maxList = peakInfo.getTrendInfo().getMaxList().values();\r\n    let smallGap = Number.MAX_SAFE_INTEGER;\r\n    let ans = null;\r\n    for (const maxp of maxList) {\r\n        var val=  $tsFunc.getNearVal(maxp.key,y2Vals);\r\n        if (val < price) continue;\r\n        const gap = val - price;\r\n        if(gap<smallGap){\r\n            smallGap = gap;\r\n            ans = maxp;\r\n        }\r\n    }\r\n    $bzk.putObj('topGap',smallGap);\r\n    $bzk.putObj('topGapThPoint',ans);\r\n}\r\n\r\nfunction injectBottomSupportGap(){\r\n    const price = quote.all.avgPrice;\r\n    const minList = peakInfo.getTrendInfo().getMinList().values();\r\n    let smallGap = Number.MAX_SAFE_INTEGER;\r\n    let ans = null;\r\n    for (const minp of minList) {\r\n        var val=  $tsFunc.getNearVal(minp.key,y2Vals);\r\n        if (val > price) continue;\r\n        const gap = price - val ;\r\n        if(gap<smallGap){\r\n            smallGap = gap;\r\n            ans = minp;\r\n        }\r\n    }\r\n    $bzk.putObj('bottomGap',smallGap);\r\n    $bzk.putObj('bottomGapThPoint',ans);\r\n}\r\n\r\nfunction injectLastTimeKey(){\r\n    const points= $tsFunc.toPoints(y2Vals);\r\n    const ans= points[0].key;\r\n    $bzk.putObj('timeKey',ans);\r\n}\r\n\r\n\r\n\r\ninjectLastTimeKey();\r\ninjectTopSupportGap();\r\ninjectBottomSupportGap();\r\n\r\n\r\n\r\nfunction flatPeakInfo(){\r\n    if(!lastSupportPeak) return null;\r\n    for (const [key, value] of Object.entries(lastSupportPeak)) {\r\n        return {\r\n            time:key,\r\n            val:value\r\n        }\r\n    }\r\n    throw new Error('It`s Imposible');\r\n}\r\nconst lastPeakObj = flatPeakInfo();\r\n$bzk.put('lastPeakObj',JSON.stringify(lastPeakObj));\r\n\r\nfunction injectUpToDate(){\r\n    if(! lastPeakObj) return false;\r\n    const lastAt = result[0].key;\r\n    const ans= lastAt == lastPeakObj.time;\r\n    $bzk.putObj('upToDate',ans);\r\n}\r\n\r\ninjectUpToDate();\r\n\r\nresult;\r\n",
       "polyglot" : "js",
       "resultLv" : "not_specify",
       "resultKey" : "peakInfos"
@@ -28,7 +28,7 @@
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "code" : "const peakInfos= ${peakInfos};\nconst sbl='${symbol}';\nconst ans = [];\n\nfor (const p of peakInfos) {\n    setupkData(p);\n}\n\nfunction setupkData(p){\n    genPointDto('support_price',p.price,p.key);\n}\n\n\n\n\n\nfunction genPointDto(field,v,time){\n  const row = {\n      measurement : 'analyze',\n      tags:{\n        symbol : sbl,\n        category:'cryptocurrency',\n        support: 'persist_time'\n      },\n      field: field,\n      val:v,\n      time :time\n  };\n  ans.push(row);\n  //return row;\n}\n\nans;\n",
+      "code" : "const upToDate = ${upToDate};\nconst peakInfos= ${peakInfos};\nconst sbl='${symbol}';\nconst ans = [];\n\n\n\nif(!upToDate){\n    for (const p of peakInfos) {\n        setupkData(p);\n    }\n}\n\nfunction setupkData(p){\n    genPointDto('support_price',p.price,p.key);\n}\n\nfunction genPointDto(field,v,time){\n  const row = {\n      measurement : 'analyze',\n      tags:{\n        symbol : sbl,\n        category:'cryptocurrency',\n        support: 'persist_time'\n      },\n      field: field,\n      val:v,\n      time :time\n  };\n  ans.push(row);\n  //return row;\n}\n\nans.push({\n      measurement : 'analyze',\n      tags:{\n        symbol : sbl,\n        category:'cryptocurrency',\n      },\n      field: 'topGap',\n      val:${topGap},\n      time :'${timeKey}'\n  });\n\nans.push({\n      measurement : 'analyze',\n      tags:{\n        symbol : sbl,\n        category:'cryptocurrency',\n      },\n      field: 'bottomGap',\n      val:${bottomGap},\n      time :'${timeKey}'\n  });\n\nans;\n",
       "polyglot" : "js",
       "resultLv" : "not_specify",
       "resultKey" : "body"
@@ -58,7 +58,7 @@
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
-      "endTag" : "TODO Why",
+      "endTag" : "${symbol}  upToDate=${upToDate}",
       "failEnd" : false,
       "endResultKeys" : [ ],
       "resultCode" : ""
@@ -71,7 +71,7 @@
     "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
     "boxUid" : "EUETHojT92P9",
     "autoRegister" : false,
-    "requiredKeys" : [ "y2Vals", "support", "symbol" ],
+    "requiredKeys" : [ "y2Vals", "support", "symbol", "lastSupportPeak", "quote" ],
     "outputKeys" : [ ]
   },
   "threadCfg" : {
@@ -80,5 +80,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 17
+  "version" : 41
 }
