@@ -28,7 +28,7 @@
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "code" : "const upToDate = ${upToDate};\nconst peakInfos= ${peakInfos};\nconst sbl='${symbol}';\nconst ans = [];\n\n\n\nif(!upToDate){\n    for (const p of peakInfos) {\n        setupkData(p);\n    }\n}\n\nfunction setupkData(p){\n    genPointDto('support_price',p.price,p.key);\n}\n\nfunction genPointDto(field,v,time){\n  const row = {\n      measurement : 'analyze',\n      tags:{\n        symbol : sbl,\n        category:'cryptocurrency',\n        support: 'persist_time'\n      },\n      field: field,\n      val:v,\n      time :time\n  };\n  ans.push(row);\n  //return row;\n}\n\nans.push({\n      measurement : 'analyze',\n      tags:{\n        symbol : sbl,\n        category:'cryptocurrency',\n      },\n      field: 'topGap',\n      val:${topGap},\n      time :'${timeKey}'\n  });\n\nans.push({\n      measurement : 'analyze',\n      tags:{\n        symbol : sbl,\n        category:'cryptocurrency',\n      },\n      field: 'bottomGap',\n      val:${bottomGap},\n      time :'${timeKey}'\n  });\n\nans;\n",
+      "code" : "const upToDate = ${upToDate};\nconst peakInfos= ${peakInfos};\nconst sbl='${symbol}';\nconst ans = [];\n\n\n\nif(!upToDate){\n    for (const p of peakInfos) {\n        setupkData(p);\n    }\n}\n\nfunction setupkData(p){\n    genPointDto('support_price',p.price,p.key);\n}\n\nfunction genPointDto(field,v,time){\n  const row = {\n      measurement : 'analyze',\n      tags:{\n        symbol : sbl,\n        category:'cryptocurrency',\n        support: 'persist_time'\n      },\n      field: field,\n      val:v,\n      time :time\n  };\n  ans.push(row);\n  //return row;\n}\n\n// ans.push({\n//       measurement : 'analyze',\n//       tags:{\n//         symbol : sbl,\n//         category:'cryptocurrency',\n//       },\n//       field: 'topGap',\n//       val:${topGap},\n//       time :'${timeKey}'\n//   });\n\n// ans.push({\n//       measurement : 'analyze',\n//       tags:{\n//         symbol : sbl,\n//         category:'cryptocurrency',\n//       },\n//       field: 'bottomGap',\n//       val:${bottomGap},\n//       time :'${timeKey}'\n//   });\n\nans;\n",
       "polyglot" : "js",
       "resultLv" : "not_specify",
       "resultKey" : "body"
@@ -80,5 +80,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 41
+  "version" : 43
 }
