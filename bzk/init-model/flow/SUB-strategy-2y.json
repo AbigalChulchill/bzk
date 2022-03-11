@@ -211,7 +211,7 @@
       "uid" : "J34a3uPjiUoO",
       "name" : "supportUpdate",
       "tryErrorble" : false,
-      "enable" : "false",
+      "enable" : "true",
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
@@ -229,9 +229,6 @@
       }, {
         "key" : "lastSupportPeak",
         "val" : "${cs.lastSupportPeak}"
-      }, {
-        "key" : "quote",
-        "val" : "${~binanceQuote}"
       } ],
       "outputReflects" : [ ]
     } ],
@@ -269,5 +266,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 263
+  "version" : 265
 }
