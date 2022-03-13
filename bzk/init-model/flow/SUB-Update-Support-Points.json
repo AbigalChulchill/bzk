@@ -15,7 +15,7 @@
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "code" : "const y2Vals = ${y2Vals};\r\nconst support = ${support};\r\nconst lastSupportPeak = ${lastSupportPeak};\r\n\r\nconst peakLogicDto = {\r\n    logicType:'MACRO',\r\n    peakMaxWaitSeconds : 60 * 5,\r\n    amplitudeRate : 0\r\n};\r\n\r\nconst peakInfo = $tsFunc.findPeak(support,peakLogicDto);\r\n$bzk.putObj('peakInfo',peakInfo);\r\nvar allList= peakInfo.getTrendInfo().getAllList().values();\r\n\r\nlet result = [];\r\n\r\nfor (const p of allList) {\r\n    var val=  $tsFunc.getNearVal(p.key,y2Vals);\r\n    const row = {\r\n      price:val,\r\n      persist:p.val,\r\n      key:p.key\r\n    };\r\n    result.push(row);\r\n}\r\n\r\nfunction injectLastTimeKey(){\r\n    const points= $tsFunc.toPoints(y2Vals);\r\n    const ans= points[0].key;\r\n    $bzk.putObj('timeKey',ans);\r\n}\r\n\r\ninjectLastTimeKey();\r\n\r\nfunction flatPeakInfo(){\r\n    if(!lastSupportPeak) return null;\r\n    for (const [key, value] of Object.entries(lastSupportPeak)) {\r\n        return {\r\n            time:key,\r\n            val:value\r\n        }\r\n    }\r\n    throw new Error('It`s Imposible');\r\n}\r\nconst lastPeakObj = flatPeakInfo();\r\n$bzk.put('lastPeakObj',JSON.stringify(lastPeakObj));\r\n\r\nfunction injectUpToDate(){\r\n    if(! lastPeakObj) return false;\r\n    const lastAt = result[0].key;\r\n    const ans= lastAt == lastPeakObj.time;\r\n    $bzk.putObj('upToDate',ans);\r\n}\r\n\r\ninjectUpToDate();\r\n\r\nresult;\r\n",
+      "code" : "const y2Vals = ${y2Vals};\r\nconst support = ${support};\r\nconst lastSupportPeak = ${lastSupportPeak};\r\n\r\nconst peakLogicDto = {\r\n    logicType:'MACRO',\r\n    peakMaxWaitSeconds : 60 * 5,\r\n    amplitudeRate : 0\r\n};\r\n\r\nconst peakInfo = $tsFunc.findPeak(support,peakLogicDto);\r\n$bzk.putObj('peakInfo',peakInfo);\r\nvar allList= peakInfo.getTrendInfo().getAllList().values();\r\n\r\nlet result = [];\r\n\r\nfor (const p of allList) {\r\n    var val=  $tsFunc.getNearVal(p.key,y2Vals);\r\n    const row = {\r\n      price:val,\r\n      persist:p.val,\r\n      key:p.key\r\n    };\r\n    result.push(row);\r\n}\r\n\r\nfunction injectLastTimeKey(){\r\n    const points= $tsFunc.toPoints(y2Vals);\r\n    const ans= points[0].key;\r\n    $bzk.putObj('timeKey',ans);\r\n}\r\n\r\ninjectLastTimeKey();\r\n\r\nfunction flatPeakInfo(){\r\n    if(!lastSupportPeak) return null;\r\n    for (const [key, value] of Object.entries(lastSupportPeak)) {\r\n        return {\r\n            time:key,\r\n            val:value\r\n        }\r\n    }\r\n    throw new Error('It`s Imposible');\r\n}\r\nconst lastPeakObj = flatPeakInfo();\r\n$bzk.put('lastPeakObj',JSON.stringify(lastPeakObj));\r\n\r\nfunction injectUpToDate(){\r\n    if(! lastPeakObj){\r\n        $bzk.putObj('upToDate',false);\r\n        return ;\r\n    } \r\n    const lastAt = result[0].key;\r\n    const ans= lastAt == lastPeakObj.time;\r\n    $bzk.putObj('upToDate',ans);\r\n}\r\n\r\ninjectUpToDate();\r\n\r\nresult;\r\n",
       "polyglot" : "js",
       "resultLv" : "not_specify",
       "resultKey" : "peakInfos"
@@ -28,7 +28,7 @@
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "code" : "const upToDate = ${upToDate};\nconst peakInfos= ${peakInfos};\nconst lastPeakObj = ${lastPeakObj};\nconst sbl='${symbol}';\nconst ans = [];\n\n\n\nif(!upToDate){\n    for (const p of peakInfos) {\n        if(isExist(p)) continue;\n        setupkData(p);\n    }\n}\n\nfunction isExist(p){\n    const lastAt = new Date(lastPeakObj.time);\n    const pAt = new Date(p.key);\n    return lastAt > pAt;\n\n}\n\nfunction setupkData(p){\n    genPointDto('support_price',p.price,p.key);\n}\n\nfunction genPointDto(field,v,time){\n  const row = {\n      measurement : 'analyze',\n      tags:{\n        symbol : sbl,\n        category:'cryptocurrency',\n        support: 'persist_time'\n      },\n      field: field,\n      val:v,\n      time :time\n  };\n  ans.push(row);\n}\n\n\n\nans;\n",
+      "code" : "const upToDate = ${upToDate};\nconst peakInfos= ${peakInfos};\nconst lastPeakObj = ${lastPeakObj};\nconst sbl='${symbol}';\nconst ans = [];\n\n\n\nif(!upToDate){\n    for (const p of peakInfos) {\n        // if(isExist(p)) continue;\n        setupkData(p);\n    }\n}\n\n// function isExist(p){\n//     const lastAt = new Date(lastPeakObj.time);\n//     const pAt = new Date(p.key);\n//     return lastAt > pAt;\n// }\n\nfunction setupkData(p){\n    genPointDto('support_price',p.price,p.key);\n}\n\nfunction genPointDto(field,v,time){\n  const row = {\n      measurement : 'analyze',\n      tags:{\n        symbol : sbl,\n        category:'cryptocurrency',\n        support: 'persist_time'\n      },\n      field: field,\n      val:v,\n      time :time\n  };\n  ans.push(row);\n}\n\n\n\nans;\n",
       "polyglot" : "js",
       "resultLv" : "not_specify",
       "resultKey" : "body"
@@ -51,10 +51,29 @@
         "lv" : "not_specify",
         "key" : "insertDBResult"
       }
+    }, {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "mLJfpzGt3wEj",
+      "name" : "CleanOld",
+      "tryErrorble" : false,
+      "enable" : "!javascript===\nconst body= ${body};\n\nfunction isEmpty(obj) {\n    return Object.keys(obj).length === 0;\n}\n\n!isEmpty(body);",
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "url" : "${finProxyUrl}/proxy/tsdb/delete",
+      "uriVariables" : { },
+      "body" : "!javascript===\nlet stop = new Date();\nlet stopIso = stop.toISOString();\nstop.setSeconds(stop.getSeconds() - 60*60*24*365*2);\nlet startiso = stop.toISOString();\nconst ans = {\n    stop:stopIso,\n    start:startiso,\n    predicate:\"_measurement = \\\"analyze\\\" and support=\\\"persist_time\\\" and symbol=\\\"${symbol}\\\"\"\n}\nans;",
+      "method" : "DELETE",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : "cleanResult"
+      }
     } ],
     "links" : [ ],
     "vars" : { },
-    "taskSort" : [ "KwYVOsOKU03w", "x7zwClv0na6J", "WjY6cglu6exB" ],
+    "taskSort" : [ "KwYVOsOKU03w", "x7zwClv0na6J", "mLJfpzGt3wEj", "WjY6cglu6exB" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
@@ -80,5 +99,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 48
+  "version" : 53
 }
