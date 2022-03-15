@@ -257,8 +257,7 @@
     "strategyCfg" : {
       "allowPositionSide" : [ "LONG", "SHORT" ],
       "highLowPersistTimeTh" : 30,
-      "targetPriceBuff" : 0.006
-    }
+      "targetPriceBuff" : 0.006    }
   },
   "entry" : {
     "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
@@ -273,5 +272,4 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 271
-}
+  "version" : 271}
