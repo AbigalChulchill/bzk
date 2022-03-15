@@ -1,0 +1,93 @@
+{
+  "clazz" : "net.bzk.flow.model.Flow",
+  "uid" : "3DEotGxeoNpe",
+  "name" : "SUB-strategy-target-price",
+  "boxs" : [ {
+    "clazz" : "net.bzk.flow.model.Box",
+    "uid" : "xQhW6WOsk42T",
+    "name" : "Box",
+    "actions" : [ {
+      "clazz" : "net.bzk.flow.model.Action$PolyglotAction",
+      "uid" : "8Zpvs0MSRwee",
+      "name" : "InitVars",
+      "tryErrorble" : false,
+      "enable" : "true",
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "code" : "const supportPeak = ${supportPeak};\r\nconst targetPriceBuff = ${strategyCfg.targetPriceBuff};\r\n\r\nconst supportLast = supportPeak[supportPeak.length-1];\r\n\r\nfunction calcPositionSide(){\r\n    return supportLast.persist > 0 ? 'SHORT' : 'LONG';\r\n}\r\n\r\nconst positionSide = calcPositionSide();\r\nconst tarPrice = $directionUtils.plusPriceByRate(positionSide,supportLast.price,targetPriceBuff);\r\n$bzk.putObj('positionSide',positionSide);\r\n$bzk.putObj('tarPrice',tarPrice);\r\n\r\nfunction genOrderObjJson(){\r\n    \r\n    return JSON.stringify({\r\n        \"withdrawAmountRate\": 0.1,\r\n        // \"targetPrice\":peakPrice,\r\n        \"stopPrice\": -1,\r\n        // \"gapRate\":-1,\r\n        \"attachName\":'TargetPrice',\r\n        \"attach\":{\r\n            \"tarPrice\":tarPrice\r\n        }\r\n    });\r\n}\r\n\r\n$bzk.put('~orderLimitBody',genOrderObjJson());\r\n\r\ntrue;",
+      "polyglot" : "js",
+      "resultLv" : "not_specify",
+      "resultKey" : "InitVars"
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "oLOHdyOW7yPp",
+      "name" : "LimitOrder",
+      "tryErrorble" : false,
+      "enable" : "!javascript===\nconst allowPositionSide = ${strategyCfg.allowPositionSide};\nconst positionSide = '${positionSide}';\nallowPositionSide.includes(positionSide);\n",
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flowUid" : "02eQyaMwyojZ",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "body",
+        "val" : "!javascript===\nconst defaultObj= {\n  \"symbol\": \"${symbol}\",\n  \"size\": 10,\n  \"positionSide\": \"${positionSide}\",\n  \"withdrawAmountRate\": 0.08,\n  \"priceBuffRate\": 1,\n  \"name\": \"order/post\",\n  \"exchange\": \"binance\",\n  \"strategy\": \"LIMIT\",\n  \"proportionalRate\": 1.5,\n  \"closeLoseThreshold\":0.05,\n  \"martingaleRate\":1,\n  \"gapRate\":0.006\n};\nconst mergeObj = ${orderLimitBody};\nconst postObj= Object.assign(defaultObj,mergeObj);\npostObj;"
+      }, {
+        "key" : "tags",
+        "val" : "[\"tp\"]"
+      }, {
+        "key" : "trigger",
+        "val" : "targetPrice"
+      } ],
+      "outputReflects" : [ ]
+    } ],
+    "links" : [ {
+      "clazz" : "net.bzk.flow.model.Link",
+      "uid" : "u05DzkQebr3u",
+      "name" : "ByeTH",
+      "condition" : {
+        "clazz" : "net.bzk.flow.model.Condition$ConditionCode",
+        "kind" : "NONE",
+        "next" : null,
+        "polyglot" : "js",
+        "code" : "const binanceQuote = ${binanceQuote.all.lastPrice};\r\nconst tarPrice = ${tarPrice};\r\nconst positionSide = '${positionSide}';\r\n\r\n$directionUtils.isHighPrice(positionSide,tarPrice,binanceQuote)"
+      },
+      "transition" : {
+        "toBox" : "",
+        "endTag" : "${symbol} ${positionSide} OverTH",
+        "failEnd" : false,
+        "endResultKeys" : [ ],
+        "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"OverTH\"\n}"
+      },
+      "enable" : true
+    } ],
+    "vars" : { },
+    "taskSort" : [ "8Zpvs0MSRwee", "u05DzkQebr3u", "oLOHdyOW7yPp" ],
+    "whileJudgment" : null,
+    "transition" : {
+      "toBox" : "",
+      "endTag" : "${symbol} ${positionSide} LimitStop",
+      "failEnd" : false,
+      "endResultKeys" : [ ],
+      "resultCode" : "{\n  \"ordered\": true,\n  \"breakName\": \"NONE\"\n}"
+    },
+    "minLogLv" : "DEBUG"
+  } ],
+  "varCfgNames" : [ ],
+  "vars" : { },
+  "entry" : {
+    "clazz" : "net.bzk.flow.model.Entry$PluginEntry",
+    "boxUid" : "xQhW6WOsk42T",
+    "autoRegister" : false,
+    "requiredKeys" : [ "__ALL__" ],
+    "outputKeys" : [ "__pk_result" ]
+  },
+  "threadCfg" : {
+    "corePoolSize" : 10,
+    "maximumPoolSize" : 50,
+    "keepAliveTime" : 500,
+    "aliveUnit" : "MINUTES"
+  },
+  "version" : 8
+}

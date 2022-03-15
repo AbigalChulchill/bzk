@@ -60,6 +60,28 @@
           "key" : "CallPersistResult"
         }
       } ]
+    }, {
+      "clazz" : "net.bzk.flow.model.Action$SubFlowAction",
+      "uid" : "1YtXtzQr2tJD",
+      "name" : "CallTargetPrice",
+      "tryErrorble" : false,
+      "enable" : "true",
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "flowUid" : "3DEotGxeoNpe",
+      "asynced" : false,
+      "inputData" : [ {
+        "key" : "__ALL__",
+        "val" : "${~__ALL__}"
+      } ],
+      "outputReflects" : [ {
+        "srcKey" : "__pk_result",
+        "toKey" : {
+          "lv" : "not_specify",
+          "key" : "CallTargetResult"
+        }
+      } ]
     } ],
     "links" : [ {
       "clazz" : "net.bzk.flow.model.Link",
@@ -82,7 +104,7 @@
       "enable" : true
     } ],
     "vars" : { },
-    "taskSort" : [ "Div2tmjgl8JG", "POnGmKqao8p1", "DmpvFO68Ya38", "jTyoT1poRNiz" ],
+    "taskSort" : [ "Div2tmjgl8JG", "POnGmKqao8p1", "DmpvFO68Ya38", "jTyoT1poRNiz", "1YtXtzQr2tJD" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
@@ -108,5 +130,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 253
+  "version" : 256
 }

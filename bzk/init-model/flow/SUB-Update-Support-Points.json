@@ -79,7 +79,10 @@
       "toBox" : "",
       "endTag" : "${symbol}  upToDate=${upToDate}",
       "failEnd" : false,
-      "endResultKeys" : [ ],
+      "endResultKeys" : [ {
+        "lv" : "not_specify",
+        "key" : "peakInfos"
+      } ],
       "resultCode" : ""
     },
     "minLogLv" : "DEBUG"
@@ -91,7 +94,7 @@
     "boxUid" : "EUETHojT92P9",
     "autoRegister" : false,
     "requiredKeys" : [ "y2Vals", "support", "symbol", "lastSupportPeak" ],
-    "outputKeys" : [ ]
+    "outputKeys" : [ "peakInfos" ]
   },
   "threadCfg" : {
     "corePoolSize" : 10,
@@ -99,5 +102,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 53
+  "version" : 59
 }
