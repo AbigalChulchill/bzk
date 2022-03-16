@@ -15,7 +15,7 @@
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
-      "code" : "const supportPeak = ${supportPeak};\r\nconst targetPriceBuff = ${strategyCfg.targetPriceBuff};\r\n\r\nfunction getLastPeak(){\r\n    let _at = new Date('1975-03-16T03:20:35.601+0000');\r\n    let ans = null;\r\n    for (const sp of supportPeak) {\r\n        const keyAt= new Date(sp.key);\r\n        if(keyAt>_at){\r\n            _at = keyAt;\r\n            ans = sp;\r\n        }\r\n    }\r\n    return ans;\r\n}\r\n\r\nconst supportLast = getLastPeak();\r\n\r\nfunction calcPositionSide(){\r\n    return supportLast.persist > 0 ? 'SHORT' : 'LONG';\r\n}\r\n\r\nconst positionSide = calcPositionSide();\r\nconst tarPrice = $directionUtils.plusPriceByRate(positionSide,supportLast.price,targetPriceBuff);\r\n$bzk.putObj('positionSide',positionSide);\r\n$bzk.putObj('tarPrice',tarPrice);\r\n\r\nfunction genOrderObjJson(){\r\n    \r\n    return JSON.stringify({\r\n        \"withdrawAmountRate\": 0.1,\r\n        // \"targetPrice\":peakPrice,\r\n        \"stopPrice\": -1,\r\n        // \"gapRate\":-1,\r\n        \"attachName\":'TargetPrice',\r\n        \"attach\":{\r\n            \"tarPrice\":tarPrice\r\n        }\r\n    });\r\n}\r\n\r\n$bzk.put('~orderLimitBody',genOrderObjJson());\r\n\r\ntrue;",
+      "code" : "const supportPeak = ${supportPeak};\r\n\r\n\r\nfunction getLastPeak(){\r\n    let _at = new Date('1975-03-16T03:20:35.601+0000');\r\n    let ans = null;\r\n    for (const sp of supportPeak) {\r\n        const keyAt= new Date(sp.key);\r\n        if(keyAt>_at){\r\n            _at = keyAt;\r\n            ans = sp;\r\n        }\r\n    }\r\n    return ans;\r\n}\r\n\r\nconst supportLast = getLastPeak();\r\n\r\n$bzk.put('supportLast',JSON.stringify(supportLast));\r\n\r\nfunction calcPositionSide(){\r\n    return supportLast.persist > 0 ? 'SHORT' : 'LONG';\r\n}\r\n\r\nconst positionSide = calcPositionSide();\r\n//const tarPrice = $directionUtils.plusPriceByRate(positionSide,supportLast.price,targetPriceBuff);\r\n$bzk.putObj('positionSide',positionSide);\r\n//$bzk.putObj('tarPrice',tarPrice);\r\n\r\nfunction genOrderObjJson(){\r\n    \r\n    return JSON.stringify({\r\n        \"withdrawAmountRate\": 0.1,\r\n        // \"targetPrice\":peakPrice,\r\n        \"stopPrice\": -1,\r\n        // \"gapRate\":-1,\r\n        \"attachName\":'TargetPrice',\r\n        \"attach\":{\r\n            \"tarPrice\":tarPrice\r\n        }\r\n    });\r\n}\r\n\r\n$bzk.put('~orderLimitBody',genOrderObjJson());\r\n\r\ntrue;",
       "polyglot" : "js",
       "resultLv" : "not_specify",
       "resultKey" : "InitVars"
@@ -51,11 +51,11 @@
         "kind" : "NONE",
         "next" : null,
         "polyglot" : "js",
-        "code" : "const binanceQuote = ${binanceQuote.all.lastPrice};\r\nconst tarPrice = ${tarPrice};\r\nconst positionSide = '${positionSide}';\r\n\r\n$directionUtils.isHighPrice(positionSide,tarPrice,binanceQuote)"
+        "code" : "const binanceQuote = ${binanceQuote.all.lastPrice};\r\nconst targetPriceBuff = ${strategyCfg.targetPriceBuff};\r\nconst positionSide = '${positionSide}';\r\nconst supportLast = ${supportLast};\r\n\r\nconst highPrice = $directionUtils.plusPriceByRate(positionSide,supportLast.price,targetPriceBuff);\r\nconst lowPrice = $directionUtils.plusPriceByRate(positionSide,supportLast.price,-targetPriceBuff);\r\n\r\nconst highPriced= $directionUtils.isHighPrice(positionSide,highPrice,binanceQuote);\r\nconst lowPriced= !$directionUtils.isHighPrice(positionSide,lowPrice,binanceQuote);\r\n\r\n$bzk.putObj('highPriced',highPriced);\r\n$bzk.putObj('lowPriced',lowPriced);\r\n\r\nhighPriced || lowPriced;"
       },
       "transition" : {
         "toBox" : "",
-        "endTag" : "${symbol} ${positionSide} OverTH",
+        "endTag" : "${symbol} ${positionSide} high=${highPriced} low=${lowPriced} OverTH",
         "failEnd" : false,
         "endResultKeys" : [ ],
         "resultCode" : "{\n  \"ordered\": false,\n  \"breakName\": \"OverTH\"\n}"
@@ -89,5 +89,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 11
+  "version" : 13
 }

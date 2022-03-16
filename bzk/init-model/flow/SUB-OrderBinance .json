@@ -60,13 +60,32 @@
         "lv" : "not_specify",
         "key" : "tsdbPosted"
       }
+    }, {
+      "clazz" : "net.bzk.flow.model.HttpAction",
+      "uid" : "OCb0DnpJzPWK",
+      "name" : "MAXPost",
+      "tryErrorble" : true,
+      "enable" : "true",
+      "devBoxVars" : { },
+      "devFlowVars" : { },
+      "minLogLv" : "NONE",
+      "url" : "${finExManageApiUrl}",
+      "uriVariables" : { },
+      "body" : "!javascript===\nlet body = ${body} ;\nbody.exchange = 'maicoin_max';\nbody.symbol= body.symbol+'TWD';\nbody;\n",
+      "method" : "POST",
+      "headers" : { },
+      "headersFlat" : "",
+      "key" : {
+        "lv" : "not_specify",
+        "key" : ""
+      }
     } ],
     "links" : [ ],
     "vars" : {
       "idx" : 0,
       "quotes" : [ ]
     },
-    "taskSort" : [ "3H1IkGkleZp5", "OcPQySOCy0Gn", "iD0dtfzuxhXl" ],
+    "taskSort" : [ "3H1IkGkleZp5", "OcPQySOCy0Gn", "OCb0DnpJzPWK", "iD0dtfzuxhXl" ],
     "whileJudgment" : null,
     "transition" : {
       "toBox" : "",
@@ -110,5 +129,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 57
+  "version" : 59
 }
