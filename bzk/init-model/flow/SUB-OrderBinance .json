@@ -65,7 +65,7 @@
       "uid" : "OCb0DnpJzPWK",
       "name" : "MAXPost",
       "tryErrorble" : true,
-      "enable" : "true",
+      "enable" : "!javascript===\nconst body = ${body};\nbody.positionSide == 'LONG';",
       "devBoxVars" : { },
       "devFlowVars" : { },
       "minLogLv" : "NONE",
@@ -129,5 +129,5 @@
     "keepAliveTime" : 500,
     "aliveUnit" : "MINUTES"
   },
-  "version" : 59
+  "version" : 61
 }
